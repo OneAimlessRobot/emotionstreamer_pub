@@ -6,3 +6,5 @@ FILE* logstream;
 u_int64_t logging;
 
 char curr_dir[PATHSIZE];
+
+socklen_t socklenvar[1]= {sizeof(struct sockaddr)};

@@ -35,6 +35,7 @@ static void init_con(int sockfd, struct sockaddr_in * s_addr,struct sockaddr_in 
 				con_obj.udp_addr_size= sizeof(*addr);
 				con_obj.sockfd_udp=sockfd;
 				memcpy(&(con_obj.udp_con_addr),s_addr,sizeof(*s_addr));
+				//con_obj.udp_con_addr.sin_addr.s_addr=htonl(INADDR_ANY);
 				con_obj.udp_con_addr.sin_port=port;
 				memcpy(&(con_obj.udp_from_addr),addr,sizeof(*addr));
 				memset(con_obj.file_path,0,PATHSIZE);
@@ -50,7 +51,7 @@ void con_go(int sockfd, uint32_t curr_port,struct sockaddr_in* c_addr,struct soc
 				signal(SIGPIPE, sigint_handler);
 				
 				
-				struct sockaddr_in curr_con_addr;
+				//struct sockaddr_in curr_con_addr;
 				char in_file_name[PATHSIZE]={0},
 				req_type_in_buff[BUFFSIZE]={0},
 				file_path[PATHSIZE]={0};
@@ -62,6 +63,7 @@ void con_go(int sockfd, uint32_t curr_port,struct sockaddr_in* c_addr,struct soc
 				init_con(sockfd, s_addr,c_addr,curr_port);
 
 				result=bind(con_obj.sockfd_udp,(struct sockaddr *)&(con_obj.udp_con_addr),con_obj.udp_addr_size);
+				print_sock_addr(con_obj.sockfd_udp);
 				handle_error("Bind error");
 				//Lendo o request do cliente
 				result=(readsome_udp(con_obj.sockfd_udp,req_type_in_buff,DEF_DATASIZE,CLIENT_DATA_TIMES_PAIR,0)<=0);

@@ -1,6 +1,7 @@
 #include "../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/fileshit.h"
@@ -8,7 +9,7 @@
 #include "../Includes/player.h"
 #include "../Includes/client.h"
 static struct sockaddr_in server_address_udp;
-//static struct sockaddr_in client_address_udp;
+static struct sockaddr_in client_address_udp;
 static long int dataSize;
 static int client_udp_sock;
 static uint32_t server_udp_port;
@@ -24,16 +25,26 @@ static void sigint_handler(int signal){
 	exit(-1);
 }
 
+
 static void sigpipe_handler(int signal){
 	sigint_handler(signal);
 }
+
+static void init_addr(struct sockaddr_in* addr, char* hostname_str,uint32_t port){
+
+	addr->sin_family=AF_INET;
+	addr->sin_port= port;
+	
+	struct hostent* hp= gethostbyname(hostname_str);
+
+	memcpy(&(addr->sin_addr),hp->h_addr,hp->h_length);
+
+
+}
 static void server_greet(char buff[DEF_DATASIZE]){
 	
-	client_udp_sock= socket(AF_INET,SOCK_DGRAM,0);
-	if(client_udp_sock==-1){
-		raise(SIGINT);
-	}
-
+	
+	
 	//port exchange with server
 	sendsome_udp(client_udp_sock,buff,DEF_DATASIZE,CLIENT_DATA_TIMES_PAIR,&server_address_udp);
 	
@@ -85,7 +96,7 @@ static void server_courtesy_dance(char buff[DEF_DATASIZE]){
 
 }
 //Strings todas 0 ended
-int clientStart(char* req_field,char* file_name,uint32_t udp_s_port, char* s_hostname){
+int clientStart(char* req_field,char* file_name,uint32_t udp_s_port, char* s_hostname, char* c_hostname){
 	signal(SIGINT,sigint_handler);
 	signal(SIGPIPE,sigpipe_handler);
 	
@@ -99,12 +110,12 @@ int clientStart(char* req_field,char* file_name,uint32_t udp_s_port, char* s_hos
 	
 	char req_str_res[BUFFSIZE]={0};
 
-	char file_path[PATHSIZE]={0};
+	char file_path[PATHSIZE*2]={0};
 	
 	char recvd_req_str_res[BUFFSIZE]={0};
 	req_type_to_str(the_type,req_str_res);
 	
-	snprintf(file_path,PATHSIZE-1,"%s%s",curr_dir,file_name);
+	snprintf(file_path,PATHSIZE+1,"%s%s",curr_dir,file_name);
 	
 	snprintf(buff,DEF_DATASIZE-1,"%s",DEFAULT_CON_STRING);
 	
@@ -113,15 +124,20 @@ int clientStart(char* req_field,char* file_name,uint32_t udp_s_port, char* s_hos
 		raise(SIGINT);
 	}
 
-	server_address_udp.sin_family=AF_INET;
-	server_address_udp.sin_port= udp_s_port;
+	init_addr(&server_address_udp,s_hostname,udp_s_port);
+	
+	init_addr(&client_address_udp,c_hostname,udp_s_port);
 
-	struct hostent* hp= gethostbyname(s_hostname);
+	client_udp_sock= socket(AF_INET,SOCK_DGRAM,0);
+	if(client_udp_sock==-1){
+		raise(SIGINT);
+	}
 
-	memcpy(&(server_address_udp.sin_addr),hp->h_addr,hp->h_length);
+	bind(client_udp_sock,(struct sockaddr*)(&client_address_udp),*socklenvar);
 
-
+	print_sock_addr(client_udp_sock); 
 	server_courtesy_dance(buff);
+	print_sock_addr(client_udp_sock); 
 	print_addr_aux("End. do server agora:",&server_address_udp);
 	printf(CONNECTION_ESTABLISHED_MSG,inet_ntoa(server_address_udp.sin_addr));
         printf("Enviamos request do tipo: %s\n",req_str_res);

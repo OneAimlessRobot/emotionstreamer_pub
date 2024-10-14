@@ -7,6 +7,7 @@
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
+#include "../../extra_funcs/Includes/sock_ops.h"
 #include "../Includes/engine.h"
 
 server_state state;
@@ -102,6 +103,7 @@ static void con_accepting_loop(void){
 
 				printf("Accepted connection from %s\nCurr port: %u\nForking...\n",inet_ntoa(state.client_udp_addr.sin_addr),curr_port);
 				sock= socket(AF_INET,SOCK_DGRAM,0);
+				setNonBlocking(sock);
 				pid=fork();
 
 			}
@@ -118,6 +120,10 @@ static void con_accepting_loop(void){
                         	perror("Erro no fork no loop de conexoes do server!!!\n");
 				raise(SIGINT);
 			}
+			else{
+
+				close(sock);
+			}
 		}
 		else if(iResult<0){
 
@@ -131,10 +137,23 @@ static void con_accepting_loop(void){
 }
 static void con_accepting_loop_single(void){
 
-			
-			int create_socket,sock;
+		while(state.server_is_on){
+			int iResult,
+				create_socket,
+				sock;
 			char buff[DEF_DATASIZE]={0};
 		
+	                struct timeval tv;
+	                tv.tv_sec=SERVER_TIMEOUT_CON_SEC;
+	                tv.tv_usec=SERVER_TIMEOUT_CON_USEC;
+		
+
+	                FD_ZERO(&state.rdfds);
+	                FD_SET(state.server_sock_udp,&state.rdfds);
+			
+	                iResult=select(state.server_sock_udp+1,&state.rdfds,(fd_set*)0,(fd_set*)0,&tv);
+	        	if(iResult>0){
+			
 			if((create_socket=port_exchange_client_greet(buff))){
 				sock= socket(AF_INET,SOCK_DGRAM,0);
 				printf("Accepted connection from %s\nCurr port: %u\nForking...\n",inet_ntoa(state.client_udp_addr.sin_addr),curr_port);
@@ -145,7 +164,14 @@ static void con_accepting_loop_single(void){
 				raise(SIGINT);
 			}
 			con_go(sock,curr_port,&state.client_udp_addr,&state.server_udp_addr);
+			
 			raise(SIGINT);
+			}
+			else{
+				printf("Timed out! ( more that %ds waiting 4 udp). Trying again...Curr port: %u\n",SERVER_TIMEOUT_CON_SEC,curr_port);
+               	
+			}
+	}
 }
 
 void serverInit(char* addr,uint32_t udp_s_port){
@@ -199,6 +225,7 @@ void serverInit(char* addr,uint32_t udp_s_port){
         inet_ntop( AF_INET, &ipAddr, state.address_str, INET_ADDRSTRLEN );
 	state.server_is_on=1;
 	con_accepting_loop_single();
+	//con_accepting_loop();
 	printf("Server morreu!!!!! (Saida por SIGINT)\n");
 	
 }
