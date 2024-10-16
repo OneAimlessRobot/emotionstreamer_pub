@@ -27,5 +27,5 @@ typedef struct cli_connection{
 }cli_connection;
 */
 //Strings todas 0 ended
-int clientStart(char* req_field,char* file_name,uint32_t udp_s_port, char* s_hostname, char* c_hostname);
+int clientStart(char* req_field,char* file_name,uint32_t udp_s_port, char* s_hostname);
 #endif

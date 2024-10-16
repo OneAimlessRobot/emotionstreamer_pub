@@ -11,7 +11,6 @@
 #include "../Includes/engine.h"
 
 server_state state;
-static uint32_t curr_port=0;
 
 static void addr_comp_err_aux(char* prompt,struct sockaddr_in* addr1,struct sockaddr_in* addr2){
 
@@ -58,11 +57,10 @@ static int port_exchange_client_greet(char buff[DEF_DATASIZE]){
 
 		printf("Received port string: |%s|\n",buff);
 		if(!strs_are_strictly_equal(buff,DEFAULT_PORT_STRING)){
-			curr_port++;
 			create_socket=1;
 			memset(buff,0,DEF_DATASIZE);
-			snprintf(buff,DEF_DATASIZE-1,"%u",htonl(curr_port));
-			printf("Porta a ser enviada: %u\nVersao nossa: %u\n",htonl(curr_port),curr_port);
+			snprintf(buff,DEF_DATASIZE-1,"%u",htonl(state.tcp_s_port));
+			printf("Porta a ser enviada: %u\nVersao nossa: %lu\n",htonl(state.tcp_s_port),state.tcp_s_port);
 			sendsome_udp(state.server_sock_udp,buff,DEF_DATASIZE,CLIENT_DATA_TIMES_PAIR,(&(state.client_udp_addr)));
 
 		}
@@ -101,10 +99,17 @@ static void con_accepting_loop(void){
 	                
 			if((create_socket=port_exchange_client_greet(buff))){
 
-				printf("Accepted connection from %s\nCurr port: %u\nForking...\n",inet_ntoa(state.client_udp_addr.sin_addr),curr_port);
-				sock= socket(AF_INET,SOCK_DGRAM,0);
-				setNonBlocking(sock);
-				pid=fork();
+				sock= accept(state.server_sock_tcp,(struct sockaddr*)(&state.client_tcp_addr),socklenvar);
+				if(sock>=0){
+
+					print_addr_aux("Accepted connection from:",&state.client_tcp_addr);
+					setNonBlocking(sock);
+					pid=fork();
+
+				}
+				else{
+					pid=1;
+				}
 
 			}
 			else{
@@ -113,7 +118,7 @@ static void con_accepting_loop(void){
 				pid=1;
 			}
 			if(!pid){
-				con_go(sock,curr_port,&state.client_udp_addr,&state.server_udp_addr);
+				con_go(sock,&state.client_udp_addr);
 				raise(SIGINT);
                 	}
         		else if(pid<0){
@@ -131,7 +136,7 @@ static void con_accepting_loop(void){
 		}
 		else{
 
-			printf("Timed out! ( more that %ds waiting 4 udp). Trying again...Curr port: %u\n",SERVER_TIMEOUT_CON_SEC,curr_port);
+			printf("Timed out! ( more that %ds waiting 4 udp). Trying again...\n",SERVER_TIMEOUT_CON_SEC);
                	}
 	}
 }
@@ -155,23 +160,62 @@ static void con_accepting_loop_single(void){
 	        	if(iResult>0){
 			
 			if((create_socket=port_exchange_client_greet(buff))){
-				sock= socket(AF_INET,SOCK_DGRAM,0);
-				printf("Accepted connection from %s\nCurr port: %u\nForking...\n",inet_ntoa(state.client_udp_addr.sin_addr),curr_port);
+				sock= accept(state.server_sock_tcp,(struct sockaddr*)(&state.client_tcp_addr),socklenvar);
+				if(sock>=0){
+
+					print_addr_aux("Accepted connection from:",&state.client_tcp_addr);
+					setNonBlocking(sock);
+				}
 			}
 			else{
 				printf("Rejected connection from %s\n",inet_ntoa(state.client_udp_addr.sin_addr));
 				perror("Interrupção no modulo do server!!!!\n");
 				raise(SIGINT);
 			}
-			con_go(sock,curr_port,&state.client_udp_addr,&state.server_udp_addr);
+			con_go(sock,&state.client_tcp_addr);
 			
 			raise(SIGINT);
 			}
 			else{
-				printf("Timed out! ( more that %ds waiting 4 udp). Trying again...Curr port: %u\n",SERVER_TIMEOUT_CON_SEC,curr_port);
+				printf("Timed out! ( more that %ds waiting 4 udp). Trying again...\n",SERVER_TIMEOUT_CON_SEC);
                	
 			}
 	}
+}
+
+static void setup_server_udp_stuff(char* addr){
+
+
+	
+        state.server_sock_udp= socket(AF_INET,SOCK_DGRAM,0);
+        int ptr=1;
+        setsockopt(state.server_sock_udp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
+        if(state.server_sock_udp==-1){
+                raise(SIGINT);
+
+        }
+
+	init_addr(&state.server_udp_addr,addr,state.udp_s_port);
+
+	bind(state.server_sock_udp,(struct sockaddr*)(&state.server_udp_addr),*socklenvar);
+
+}
+static void setup_server_tcp_stuff(char* addr){
+
+
+	state.server_sock_tcp= socket(AF_INET,SOCK_STREAM,0);
+        int ptr=1;
+        setsockopt(state.server_sock_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
+        if(state.server_sock_tcp==-1){
+                raise(SIGINT);
+
+        }
+
+	init_addr(&state.server_tcp_addr,addr,(state.tcp_s_port=state.udp_s_port+1));
+
+	bind(state.server_sock_tcp,(struct sockaddr*)(&state.server_tcp_addr),*socklenvar);
+
+	listen(state.server_sock_tcp,MAX_CLIENTS_HARD_LIMIT);
 }
 
 void serverInit(char* addr,uint32_t udp_s_port){
@@ -184,48 +228,25 @@ void serverInit(char* addr,uint32_t udp_s_port){
 	logstream=stderr;
 	
 	memset(&state,0,sizeof(server_state));
-
-        state.server_sock_udp= socket(AF_INET,SOCK_DGRAM,0);
-        int ptr=1;
-        setsockopt(state.server_sock_udp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
-        if(state.server_sock_udp==-1){
-                raise(SIGINT);
-
-        }
-
-        //especificar socket;
-        /*
-	fcntl(state.server_sock_udp,F_SETFL,O_ASYNC|O_NONBLOCK);
-        ioctl(state.server_sock_udp,FIOASYNC,&(int){1});
-        long flags= fcntl(state.server_sock_udp,F_GETFL);
-        flags |= O_NONBLOCK|O_ASYNC;
-        fcntl(state.server_sock_udp,F_SETFL,flags);
-	*/
-        
-	curr_port=state.udp_s_port=udp_s_port;
 	
-	state.client_udp_addr.sin_family=AF_INET;
-        
-	state.server_udp_addr.sin_family=AF_INET;
-        state.server_udp_addr.sin_port= curr_port;
-        
-	curr_port++;
-	struct hostent* hp= gethostbyname(addr);
-        memcpy(&(state.server_udp_addr.sin_addr),hp->h_addr,hp->h_length);
+	state.udp_s_port=udp_s_port;
+
+        setup_server_udp_stuff(addr);
+	
+	setup_server_tcp_stuff(addr);
 	
 	
 	printf("Endereço de receçao do server é:\n%s. Porta: %lu\n", inet_ntoa(state.server_udp_addr.sin_addr),state.udp_s_port);
 	
         
-	socklen_t socklength=sizeof(state.server_udp_addr);
-        bind(state.server_sock_udp,(struct sockaddr*)(&state.server_udp_addr),socklength);
-
+	
+	
         struct sockaddr_in* pV4Addr = (struct sockaddr_in*)&state.server_udp_addr;
         struct in_addr ipAddr = pV4Addr->sin_addr;
         inet_ntop( AF_INET, &ipAddr, state.address_str, INET_ADDRSTRLEN );
 	state.server_is_on=1;
-	con_accepting_loop_single();
-	//con_accepting_loop();
+	//con_accepting_loop_single();
+	con_accepting_loop();
 	printf("Server morreu!!!!! (Saida por SIGINT)\n");
 	
 }

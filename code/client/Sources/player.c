@@ -1,4 +1,6 @@
-/*#include "../Includes/preprocessor.h"
+#include "../Includes/preprocessor.h"
+#include "../../player/SDL2/include/SDL.h"
+#include "../../player/SDL2/include/SDL_mixer.h"
 #include "../Includes/menu.h"
 #include "../Includes/player.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
@@ -206,4 +208,4 @@ int player_init(const char* filename){
 
 	return 0;
 }
-*/
+

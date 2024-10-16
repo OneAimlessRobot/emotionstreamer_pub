@@ -26,26 +26,21 @@ static void sigint_handler(int useless){
 	
 	printf("Recebemos sinal dentro de um processo de conexão. Sinal: %d\n",useless);
 	con_obj.is_on=0;
-	close(con_obj.sockfd_udp);
+	close(con_obj.sockfd_tcp);
 	exit(useless);
 }
-static void init_con(int sockfd, struct sockaddr_in * s_addr,struct sockaddr_in * addr, uint32_t port){
+static void init_con(int sockfd,struct sockaddr_in * addr){
 
 				con_obj.is_on=1;
-				con_obj.udp_addr_size= sizeof(*addr);
-				con_obj.sockfd_udp=sockfd;
-				memcpy(&(con_obj.udp_con_addr),s_addr,sizeof(*s_addr));
-				//con_obj.udp_con_addr.sin_addr.s_addr=htonl(INADDR_ANY);
-				con_obj.udp_con_addr.sin_port=port;
-				memcpy(&(con_obj.udp_from_addr),addr,sizeof(*addr));
+				con_obj.sockfd_tcp=sockfd;
+				memcpy(&(con_obj.tcp_from_addr),addr,*socklenvar);
 				memset(con_obj.file_path,0,PATHSIZE);
-				print_addr_aux("Addresss do server:",&con_obj.udp_con_addr);
-				print_addr_aux("Addresss do cliente:",&con_obj.udp_from_addr);
+				print_addr_aux("Addresss do cliente:",&con_obj.tcp_from_addr);
 				
 }
 
 
-void con_go(int sockfd, uint32_t curr_port,struct sockaddr_in* c_addr,struct sockaddr_in* s_addr){
+void con_go(int sockfd,struct sockaddr_in* c_addr){
 				
 				signal(SIGINT, sigint_handler);
 				signal(SIGPIPE, sigint_handler);
@@ -60,23 +55,20 @@ void con_go(int sockfd, uint32_t curr_port,struct sockaddr_in* c_addr,struct soc
 				struct stat file_info;
 				
 				//buff[DEF_DATASIZE]={0},
-				init_con(sockfd, s_addr,c_addr,curr_port);
+				init_con(sockfd,c_addr);
 
-				result=bind(con_obj.sockfd_udp,(struct sockaddr *)&(con_obj.udp_con_addr),con_obj.udp_addr_size);
-				print_sock_addr(con_obj.sockfd_udp);
-				handle_error("Bind error");
 				//Lendo o request do cliente
-				result=(readsome_udp(con_obj.sockfd_udp,req_type_in_buff,DEF_DATASIZE,CLIENT_DATA_TIMES_PAIR,0)<=0);
+				result=(readsome(con_obj.sockfd_tcp,req_type_in_buff,DEF_DATASIZE,CLIENT_DATA_TIMES_PAIR)<=0);
 				printf("Request recebido: %s\n",req_type_in_buff);
 				handle_error("Read error");
 				req_type recvd_type= str_to_req_type(req_type_in_buff);
 				
 				//Se depois deste send...
-				result=(sendsome_udp(con_obj.sockfd_udp,req_type_in_buff,DEF_DATASIZE,CLIENT_DATA_TIMES_PAIR,&con_obj.udp_from_addr)<=0);
+				result=(sendsome(con_obj.sockfd_tcp,req_type_in_buff,DEF_DATASIZE,CLIENT_DATA_TIMES_PAIR)<=0);
 				handle_error("Send error");
 				//este read suceder, n importa o que recebe, o cliente recebeu autorizaçao para nos dar o filename
 				
-				result=(readsome_udp(con_obj.sockfd_udp,in_file_name,PATHSIZE-1,CLIENT_DATA_TIMES_PAIR,0)<=0);
+				result=(readsome(con_obj.sockfd_tcp,in_file_name,PATHSIZE-1,CLIENT_DATA_TIMES_PAIR)<=0);
 				printf("Filename recebido: %s\n",in_file_name);
 				handle_error("Recv error");
 				//(Quis ler o request e o filename em transferencias diferentes)
@@ -102,7 +94,7 @@ void con_go(int sockfd, uint32_t curr_port,struct sockaddr_in* c_addr,struct soc
 	                        	flags2 |= O_NONBLOCK;
 	                        	fcntl(fp,F_SETFL,flags2);
 
-	                        	printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(con_obj.udp_from_addr.sin_addr),file_path);
+	                        	printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(con_obj.tcp_from_addr.sin_addr),file_path);
 	                       		perror("Nao foi possivel abrir nada!!!!\n");
 	                        	if(dir_listing_str){
 						free(dir_listing_str);
@@ -117,13 +109,13 @@ void con_go(int sockfd, uint32_t curr_port,struct sockaddr_in* c_addr,struct soc
 					fstat(fp,&file_info);
 					snprintf(file_size_buff_out,DEF_DATASIZE,"%ld",file_info.st_size);
 					//enviando datasize
-					sendsome_udp(con_obj.sockfd_udp,file_size_buff_out,DEF_DATASIZE,SERVER_DATA_TIMES_PAIR,&con_obj.udp_from_addr);
+					sendsome(con_obj.sockfd_tcp,file_size_buff_out,DEF_DATASIZE,SERVER_DATA_TIMES_PAIR);
 					handle_error("Send error");
 					//Se este read suceder, n importa o que recebe, significa que o cliente recebeu o size
-					readsome_udp(con_obj.sockfd_udp,file_size_buff_out,DEF_DATASIZE,SERVER_DATA_TIMES_PAIR,0);
+					readsome(con_obj.sockfd_tcp,file_size_buff_out,DEF_DATASIZE,SERVER_DATA_TIMES_PAIR);
 					handle_error("Read error");
 
-					sendallfd_udp(con_obj.sockfd_udp,fp,SERVER_DATA_TIMES_PAIR,&con_obj.udp_from_addr);
+					sendallfd(con_obj.sockfd_tcp,fp,SERVER_DATA_TIMES_PAIR);
 					
 					if(recvd_type==PEEK){
 						deleteDirListingFile();
