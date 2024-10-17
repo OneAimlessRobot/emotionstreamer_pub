@@ -33,8 +33,7 @@
 #define DEFAULT_HOWLONG_STRING "howlong"
 #define ACK_STRING "sure"
 #define NACK_STRING "foff"
-#define MUSIC_CLIENT_OUTPUT_PATH "/songs_out/"
-#define MUSIC_SERVER_INPUT_PATH "/songs_in/"
+#define MUSIC_SERVER_INPUT_PATH "/songs_in/raw_songs/"
 #define MAX_CLIENTS_HARD_LIMIT 1000
 #define SIG_STOPSERVER 19199
 #define PATHSIZE 20000

@@ -251,10 +251,3 @@ void serverInit(char* addr,uint32_t udp_s_port){
 	
 }
 
-
-/*				if(memcmp(&curr_con_addr,&state.client_udp_addr,sizeof(state.client_udp_addr))){
-					
-					addr_comp_err_aux("Addr comparison error:",&state.client_udp_addr,&curr_con_addr);
-					raise(SIGINT);
-				}
-*/
