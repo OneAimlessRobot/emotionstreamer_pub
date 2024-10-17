@@ -621,7 +621,7 @@ extern DECLSPEC Mix_Chunk * SDLCALL Mix_LoadWAV(const char *file);
  * fly. Also, crucially, there are as many channels for chunks as the app can
  * allocate, but SDL_mixer only offers a single "music" channel.
  *
- * When done with this music, the app should dispose of it with a call to
+ * When done with this music, the9 app should dispose of it with a call to
  * Mix_FreeMusic().
  *
  * \param file a file path from where to load music data.

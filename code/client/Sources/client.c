@@ -1,4 +1,7 @@
 #include "../Includes/preprocessor.h"
+#include "../../player/SDL2/include/SDL.h"
+#include "../../player/SDL2/include/SDL_mixer.h"
+#include "../../player/SDL2/include/SDL_rwops.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
@@ -6,7 +9,8 @@
 #include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/protocol.h"
-#include "../Includes/player.h"
+#include "../../extra_funcs/Includes/streamer_const.h"
+#include "../Includes/streamer_client.h"
 #include "../Includes/client.h"
 static struct sockaddr_in server_ip_address;
 static long int dataSize;
@@ -177,35 +181,27 @@ int clientStart(char* req_field,char* file_name,uint32_t udp_s_port, char* s_hos
         }
 
 
-	
+
 	switch(the_type){
 
 	case PLAY:
-		if((fd= creat(file_path,0777))<0){
-			perror(FILE_CREATION_ERROR);
-			raise(SIGINT);
-		}
-		else{
-			printf(CREATED_FILE_PATH_MSG, file_path);
-		}
+		//O SERVER É quem começa a enviar!!!!!!
+		//SERVER COMECA A ENVIAR A STREAM A PARTIR DAQUI!!!!!!!!
+		//readalltofd(client_tcp_sock,fd,CLIENT_DATA_TIMES_PAIR);
+		printf("Download feito! Tocando...\n");
+		player_init_stream(client_tcp_sock);
 		break;
 	case PEEK:
 		fd=1;
 		printf(CONTENT_PEEK_INCOMMING);
+		readalltofd(client_tcp_sock,fd,CLIENT_DATA_TIMES_PAIR);
+		
 		break;
 	default:
 		printf(UNKNOWN_REQ);
-		raise(SIGINT);
 		break;
 	}
-
-	readalltofd(client_tcp_sock,fd,CLIENT_DATA_TIMES_PAIR);
-	
-	if(fd>2){
-		close(fd);
-		printf("Download feito! Tocando...\n");
-		player_init(file_path);
-	}
+	raise(SIGINT);
 	return 0;
 }
 

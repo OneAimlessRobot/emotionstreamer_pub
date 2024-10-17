@@ -4,9 +4,14 @@
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
+#include "../../player/SDL2/include/SDL.h"
+#include "../../player/SDL2/include/SDL_mixer.h"
+#include "../../player/SDL2/include/SDL_rwops.h"
 #include "../Includes/load_html.h"
 #include "../Includes/connection.h"
 #include "../Includes/engine.h"
+#include "../../extra_funcs/Includes/streamer_const.h"
+#include "../Includes/streamer_server.h"
 
 static connection con_obj;
 static int result=0;
@@ -25,13 +30,11 @@ static void handle_error(char* prompt){
 static void sigint_handler(int useless){
 	
 	printf("Recebemos sinal dentro de um processo de conexão. Sinal: %d\n",useless);
-	con_obj.is_on=0;
-	close(con_obj.sockfd_tcp);
+	close_stream();
 	exit(useless);
 }
 static void init_con(int sockfd,struct sockaddr_in * addr){
 
-				con_obj.is_on=1;
 				con_obj.sockfd_tcp=sockfd;
 				memcpy(&(con_obj.tcp_from_addr),addr,*socklenvar);
 				memset(con_obj.file_path,0,PATHSIZE);
@@ -115,10 +118,13 @@ void con_go(int sockfd,struct sockaddr_in* c_addr){
 					readsome(con_obj.sockfd_tcp,file_size_buff_out,DEF_DATASIZE,SERVER_DATA_TIMES_PAIR);
 					handle_error("Read error");
 
-					sendallfd(con_obj.sockfd_tcp,fp,SERVER_DATA_TIMES_PAIR);
-					
 					if(recvd_type==PEEK){
+						sendallfd(con_obj.sockfd_tcp,fp,SERVER_DATA_TIMES_PAIR);
 						deleteDirListingFile();
+					}
+					else if(recvd_type==PLAY){
+						begin_stream(con_obj.sockfd_tcp,fp,SERVER_DATA_TIMES_PAIR);
+					
 					}
 					close(fp);
 				}

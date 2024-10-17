@@ -27,6 +27,10 @@
 
 #define DEFAULT_CON_STRING "bring_it"
 #define DEFAULT_PORT_STRING "bring_the_port"
+#define DEFAULT_GOTIT_STRING "got_it"
+#define DEFAULT_MORE_STRING "more"
+#define DEFAULT_ENOUGH_STRING "enough"
+#define DEFAULT_HOWLONG_STRING "howlong"
 #define ACK_STRING "sure"
 #define NACK_STRING "foff"
 #define MUSIC_CLIENT_OUTPUT_PATH "/songs_out/"

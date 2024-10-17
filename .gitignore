@@ -10,4 +10,5 @@
 *.d
 *.mp3
 *.swp
+*.raw
 .metadata/
