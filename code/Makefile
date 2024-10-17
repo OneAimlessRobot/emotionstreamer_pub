@@ -13,10 +13,21 @@ GLIBS += -I$(GLDIR)/SDL2/include -Wl,-rpath,$(GLDIR)/SDL2/lib -Wl,--enable-new-d
 GLIBS += -L$(GLDIR)/ncurses/lib $(GLDIR)/ncurses/lib/libncurses.a $(GLDIR)/ncurses/lib/libncursesw.a $(GLDIR)/ncurses/lib/libtinfo.a
 GLIBS += -I$(GLDIR)/ncurses/include -Wl,-rpath,$(GLDIR)/ncurses/lib -Wl,--enable-new-dtags -lncurses -lncursesw -ltinfo
 
+SDL_CFLAGS := $(shell sdl2-config --cflags)
+SDL_LDFLAGS := $(shell sdl2-config --libs)
+
+LDFLAGS := $(SDL_LDFLAGS) -lSDL2_mixer
+
+SDLFLAGS := $(pkg-config sdl2 --cflags) `-Wl, --enable-new-dtags`
+SDLLIBS :=  $(pkg-config sdl2 --libs) -lSDL2_mixer
+
+LDLIBS :=  -lm
 
 
-LDLIBS=  -lm
 LDLIBS_PTHREAD= -lpthread
+
+LDLIBS2 += $(LDLIBS) $(LDLIBS_PTHREAD) $(LDFLAGS)
+
 INCLUDE= ./Includes .
 SOURCES= . ./Sources
 
@@ -34,15 +45,16 @@ CLIENT_NOSDL_RESOURCES= ./client_no_sdl/resources
 
 
 RESDIR= ./resources
- 
+
 CURRDIR=echo `pwd`
- 
-CC= clang
+
+CC= cc
 DEPFLAGS= -MP -MD
 
-CFLAGS= -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS) 
+CFLAGS += -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
 
-SDLFLAGS= `sdl2-config --libs`
+CFLAGS2 :=  $(CFLAGS) $(SDL_CFLAGS) -O3
+
 
 SOURCEFILES=$(foreach D,$(SOURCES), $(wildcard $(D)/*.c))
 
@@ -97,8 +109,8 @@ CLIENT_NOSDL_STUFF=  $(CLIENT_NOSDL_OBJECTS)
 SERVERSTUFF= $(SERVEROBJECTS)
 
 client: $(CLIENTBIN)
-	echo $(LDLIBS)
-	echo $(CURRDIR)
+	echo $(SDL_CFLAGS)
+	echo $(SDL_LDFLAGS)
 
 client_no_sdl: $(CLIENTBIN_NOSDL)
 	echo $(LDLIBS)
@@ -115,16 +127,16 @@ main: $(BINARY)
 
 
 $(BINARY): $(OBJECTS)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(RESOURCEFILES)  $(LDLIBS)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(RESOURCEFILES)  $(LDLIBS2)
 
 $(SERVERBIN): $(SERVERSTUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS2) 
 
 $(CLIENTBIN_NOSDL): $(CLIENT_NOSDL_STUFF)
-	$(CC) -g -v  $(CFLAGS) $(SDLFLAGS) -o  $@ $^ $(CLIENT_NOSDL_RESOURCEFILES)  $(LDLIBS)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENT_NOSDL_RESOURCEFILES)  $(LDLIBS2)
 
 $(CLIENTBIN): $(CLIENTSTUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES)  $(LDLIBS) $(GLIBS) $(LDLIBS_PTHREAD)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES)    $(LDLIBS2)
 
 
 

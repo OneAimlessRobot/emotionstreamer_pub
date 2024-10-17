@@ -1,7 +1,11 @@
 #include "../Includes/preprocessor.h"
-#include "../../player/SDL2/include/SDL.h"
+/*#include "../../player/SDL2/include/SDL.h"
 #include "../../player/SDL2/include/SDL_mixer.h"
 #include "../../player/SDL2/include/SDL_rwops.h"
+*/
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_rwops.h>
 #include "../Includes/menu.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
