@@ -3,9 +3,7 @@
 typedef struct stream_server_mem{
 
 	int stream_on;
-	int sockfd;
-	FILE* fpoint;
-	SDL_RWops* sound_data;
+	int sockfd,sound_data;
 	unsigned char raw_data[CHUNK_SIZE];
 	char client_reply_buff[DEF_DATASIZE+1];
 	int_pair pair;

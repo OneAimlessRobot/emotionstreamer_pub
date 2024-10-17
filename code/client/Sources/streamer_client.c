@@ -49,17 +49,14 @@ if (!Mix_QuerySpec(&freq, &fmt, &chans))
 //--------------------------------------------------------
 
 
-static int chunks_read=0;
 static stream_client_mem stream_struct={
-                                     	 0,
-                                         0,
-					 0,
-                                         NULL,
-                                         {NULL},
-                                         NULL,
-                                         {0},
-                                         {0},
-                                         {0}};
+                                     	0,
+                                        0,
+					0,
+                                        NULL,
+                                        {0},
+					{0},
+					{0}};
 
 
 
@@ -75,10 +72,16 @@ static void play_chk_cache(void){
 	int delay_time_cache=getChunkTimeMilliseconds(stream_struct.chk);
 	Mix_PlayChannel(-1, stream_struct.chk, 0);
 	SDL_Delay(delay_time_cache);
+	Mix_FreeChunk(stream_struct.chk);
+	stream_struct.chk=NULL;
 }
 static void cleanSDL(void){
 
+	if(stream_struct.chk){
 
+		Mix_FreeChunk(stream_struct.chk);
+	}
+	
 	Mix_CloseAudio();
 	Mix_Quit();
 	SDL_Quit();
@@ -101,6 +104,20 @@ static void initSDL(void){
 	Mix_Volume(-1,128);
 
 
+
+}
+static void play_lingering(void){
+
+	if((stream_struct.curr_chk_index)&&((stream_struct.curr_chk_index)%STREAM_CACHE_SIZE_CHUNKS)){
+		int remaining_len_bytes=((stream_struct.curr_chk_index)%STREAM_CACHE_SIZE_CHUNKS)*CHUNK_SIZE;
+		
+		stream_struct.chk=Mix_QuickLoad_RAW(stream_struct.chunk_data_cache,remaining_len_bytes);
+		int delay_time_cache=getChunkTimeMilliseconds(stream_struct.chk);
+		Mix_PlayChannel(-1, stream_struct.chk, 0);
+		SDL_Delay(delay_time_cache);
+		Mix_FreeChunk(stream_struct.chk);
+		stream_struct.chk=NULL;
+	}
 
 }
 static void stop(void){
@@ -176,10 +193,12 @@ static int read_play_chunk_func(void){
 
 
 
-static void stream_func(int sock){
+static void stream_func(void){
 
 	int result=0;
 	while(stream_struct.stream_on&&((result=read_play_chunk_func())>0)){}
+	
+	play_lingering();
 
 }
 
@@ -192,7 +211,7 @@ int player_init_stream(int server_sock){
 
 	initSDL();
 	init_stream(server_sock,CLIENT_DATA_TIMES_PAIR);
-	stream_func(server_sock);
+	stream_func();
 
 	stop();
 

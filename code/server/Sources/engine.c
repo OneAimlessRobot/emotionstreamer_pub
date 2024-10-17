@@ -81,7 +81,7 @@ static void con_accepting_loop(void){
 			
 			int iResult,
 				create_socket,
-				sock,
+				sock=-1,
 				pid=-1;
 			char buff[DEF_DATASIZE]={0};
 		
@@ -145,7 +145,7 @@ static void con_accepting_loop_single(void){
 		while(state.server_is_on){
 			int iResult,
 				create_socket,
-				sock;
+				sock=-1;
 			char buff[DEF_DATASIZE]={0};
 		
 	                struct timeval tv;

@@ -37,7 +37,7 @@ RESDIR= ./resources
  
 CURRDIR=echo `pwd`
  
-CC= cc
+CC= clang
 DEPFLAGS= -MP -MD
 
 CFLAGS= -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS) 
@@ -118,7 +118,7 @@ $(BINARY): $(OBJECTS)
 	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(RESOURCEFILES)  $(LDLIBS)
 
 $(SERVERBIN): $(SERVERSTUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(GLIBS) $(LDLIBS)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS)
 
 $(CLIENTBIN_NOSDL): $(CLIENT_NOSDL_STUFF)
 	$(CC) -g -v  $(CFLAGS) $(SDLFLAGS) -o  $@ $^ $(CLIENT_NOSDL_RESOURCEFILES)  $(LDLIBS)

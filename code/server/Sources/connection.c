@@ -4,9 +4,6 @@
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
-#include "../../player/SDL2/include/SDL.h"
-#include "../../player/SDL2/include/SDL_mixer.h"
-#include "../../player/SDL2/include/SDL_rwops.h"
 #include "../Includes/load_html.h"
 #include "../Includes/connection.h"
 #include "../Includes/engine.h"
@@ -92,11 +89,11 @@ void con_go(int sockfd,struct sockaddr_in* c_addr){
 				memcpy(con_obj.file_path,file_path,PATHSIZE);
 				printf("A file path é: %s\n",file_path);
 				if((fp=open(file_path,O_RDONLY,0777))<0){
-					
+					/*
 	                        	long flags2= fcntl(fp,F_GETFL);
 	                        	flags2 |= O_NONBLOCK;
 	                        	fcntl(fp,F_SETFL,flags2);
-
+					*/
 	                        	printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(con_obj.tcp_from_addr.sin_addr),file_path);
 	                       		perror("Nao foi possivel abrir nada!!!!\n");
 	                        	if(dir_listing_str){

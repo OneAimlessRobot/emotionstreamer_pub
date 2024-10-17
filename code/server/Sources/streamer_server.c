@@ -1,7 +1,4 @@
 #include "../../Includes/preprocessor.h"
-#include "../../player/SDL2/include/SDL.h"
-#include "../../player/SDL2/include/SDL_mixer.h"
-#include "../../player/SDL2/include/SDL_rwops.h"
 #include "../../extra_funcs/Includes/protocol.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
@@ -13,8 +10,7 @@
 stream_server_mem stream_struct={
 					0,
 					0,
-					NULL,
-					NULL,
+					0,
 					{0},
 					{0},
 					{0}};
@@ -24,7 +20,6 @@ void close_stream(void){
 
 	stream_struct.stream_on=0;
 	close(stream_struct.sockfd);
-	SDL_RWclose(stream_struct.sound_data);
 
 }
 
@@ -67,11 +62,7 @@ static void init_stream(int client_sock, int fd, int_pair pair){
 	stream_struct.stream_on=1;
 	stream_struct.sockfd=client_sock;
 	memcpy((void*)stream_struct.pair,pair,sizeof(int_pair));
-	stream_struct.fpoint=fdopen(fd,"r");
-
-
-	stream_struct.sound_data= SDL_RWFromFP(stream_struct.fpoint,SDL_TRUE);
-
+	stream_struct.sound_data=fd;
 
 
 }
@@ -112,7 +103,7 @@ static void send_chunk_func(void){
 static void stream(void){
 
 
-	while(SDL_RWread(stream_struct.sound_data,stream_struct.raw_data,1,CHUNK_SIZE)&&stream_struct.stream_on){
+	while((read(stream_struct.sound_data,stream_struct.raw_data,CHUNK_SIZE)>0)&&stream_struct.stream_on){
 
 			send_chunk_func();
 
