@@ -1,6 +1,5 @@
 #include "../../Includes/preprocessor.h"
 #include "../Includes/sockio_tcp.h"
-#include "../../client/Includes/client.h"
 #include "../Includes/fileshit.h"
 
 
@@ -31,10 +30,10 @@ int sendsome(int sd,char buff[],u_int64_t size,int_pair times){
 
 int sendallfd(int sock,int fd,int_pair times){
 
-char buff[BUFFSIZE];
+char buff[DEF_DATASIZE];
 int numread;
 int sent=0;
-while ((numread = read(fd,buff,BUFFSIZE)) > 0) {
+while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
     
     int totalsent = 0;
     while (totalsent < numread) {
@@ -119,23 +118,56 @@ int readsome(int sd,char buff[],u_int64_t size,int_pair times){
 }
 
 
-int readall(int sock,char buff[],int_pair times){
-        int64_t len=1;
-
-while(1){
-        len=readsome(sock,buff,DEF_DATASIZE,times);
-	if(len<=0){
+int sendall(int sock,char buff[],int size,int_pair times){
+        int64_t len=0;
+	int64_t total=0;
+	for(len=sendsome(sock,buff+total,size-total,times);(len>0)&&(total!=size);total+=len){
 	
-                break;
-	
+			len=sendsome(sock,buff+total,size-total,times);
 	}
+	
+	if(!(total-size)){
+		if(logging){
+		fprintf(logstream,"sendall bem sucedido!! A socket e %d\n",sock);
+		
+		}
+	}
+	else if(errno==EPIPE){
+
+		if(logging){
+		fprintf(logstream,"Pipe partido!!! A socket e %d\n",sock);
+		}
+		return -2;
+	}
+	else if(errno==ENOTCONN){
+		if(logging){
+		fprintf(logstream,"sendall saiu com erro!!!!!:\nAvisando server para desconectar!\n%s\n",strerror(errno));
+		}
+		
+		return -2;
+	}
+	else if(len!=-2){
+		if(logging){
+		fprintf(logstream,"sendall saiu com erro!!!!!:\n%s\n",strerror(errno));
+		}
+	}
+	
+        return total;
 
 }
+
+int readall(int sock,char buff[],int size,int_pair times){
+        int64_t len=0;
+	int64_t total=0;
+	for(len=readsome(sock,buff+total,size-total,times);(len>0)&&(total!=size);total+=len){
 	
-	if(len<=0){
-	if (errno == EAGAIN || errno == EWOULDBLOCK) {
-        	if(logging){
+			len=readsome(sock,buff+total,size-total,times);
+	}
+	
+	if(!(total-size)){
+		if(logging){
 		fprintf(logstream,"readall bem sucedido!! A socket e %d\n",sock);
+		
 		}
 	}
 	else if(errno==EPIPE){
@@ -158,24 +190,24 @@ while(1){
 		}
 	}
 	
-	}
-        
-        return 0;
+        return total;
 
 }
 
 int readalltofd(int sock,int fd,int_pair times){
         int64_t len=1;
-	char buff[BUFFSIZE];
-	int64_t buffsize= sizeof(buff);
+	char buff[DEF_DATASIZE]={0};
 	while(1){
 		len=readsome(sock,buff,DEF_DATASIZE,times);
-		if(len<=0){
+		if(len>0){
+			write(fd,buff,len);
+		}
+		else{
+
 			break;	
 		}
 
-		write(fd,buff,len);
-		memset(buff,0,buffsize);
+		memset(buff,0,DEF_DATASIZE);
 	}
 	if(len<0){
 	if (errno == EAGAIN || errno == EWOULDBLOCK) {

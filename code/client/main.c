@@ -4,7 +4,9 @@
 
 int main(int argc, char ** argv){
 
-	
+	logstream=stderr;
+	logging=1;
+
 	
 	if(argc!=5){
 

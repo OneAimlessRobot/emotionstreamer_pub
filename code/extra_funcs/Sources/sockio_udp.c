@@ -1,6 +1,5 @@
 #include "../../Includes/preprocessor.h"
 #include "../Includes/sockio_udp.h"
-#include "../../client/Includes/client.h"
 #include "../Includes/fileshit.h"
 
 
@@ -34,10 +33,10 @@ int sendsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockadd
 
 int sendallfd_udp(int sock,int fd,int_pair times,struct sockaddr_in *udp_addr_dst){
 
-char buff[BUFFSIZE];
+char buff[DEF_DATASIZE];
 int numread;
 int sent=0;
-while ((numread = read(fd,buff,BUFFSIZE)) > 0) {
+while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
     
     int totalsent = 0;
     while (totalsent < numread) {
@@ -173,8 +172,7 @@ while(1){
 
 int readalltofd_udp(int sock,int fd,int_pair times,struct sockaddr_in* udp_addr_src){
         int64_t len=1;
-	char buff[BUFFSIZE];
-	int64_t buffsize= sizeof(buff);
+	char buff[DEF_DATASIZE]={0};
 	while(1){
 		len=readsome_udp(sock,buff,DEF_DATASIZE,times,udp_addr_src);
 		if(len<=0){
@@ -182,7 +180,7 @@ int readalltofd_udp(int sock,int fd,int_pair times,struct sockaddr_in* udp_addr_
 		}
 
 		write(fd,buff,len);
-		memset(buff,0,buffsize);
+		memset(buff,0,DEF_DATASIZE);
 	}
 	if(len<0){
 	if (errno == EAGAIN || errno == EWOULDBLOCK) {

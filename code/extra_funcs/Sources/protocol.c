@@ -21,19 +21,19 @@ req_type str_to_req_type(char* str){
 	return NA;
 
 }
-void req_type_to_str(req_type type,char buff[BUFFSIZE]){
+void req_type_to_str(req_type type,char buff[DEF_DATASIZE]){
 
-	memset(buff,0,BUFFSIZE);
+	memset(buff,0,DEF_DATASIZE);
 	switch(type){
 
 		case PLAY:
-			snprintf(buff, BUFFSIZE, "play");
+			snprintf(buff, DEF_DATASIZE, "play");
 		break;
 		case PEEK:
-			snprintf(buff, BUFFSIZE, "peek");
+			snprintf(buff, DEF_DATASIZE, "peek");
 		break;
 		default:
-			snprintf(buff, BUFFSIZE, "NONE");
+			snprintf(buff, DEF_DATASIZE, "NONE");
 		break;
 	
 
@@ -66,25 +66,25 @@ stream_cmd str_to_stream_cmd(char* str){
 	return NOP;
 
 }
-void stream_cmd_to_str(stream_cmd type,char buff[BUFFSIZE]){
+void stream_cmd_to_str(stream_cmd type,char buff[DEF_DATASIZE]){
 
-	memset(buff,0,BUFFSIZE);
+	memset(buff,0,DEF_DATASIZE);
 	switch(type){
 
 		case TOGGLE:
-			snprintf(buff, BUFFSIZE, "toggle");
+			snprintf(buff, DEF_DATASIZE, "toggle");
 		break;
 		case STOP:
-			snprintf(buff, BUFFSIZE, "stop");
+			snprintf(buff, DEF_DATASIZE, "stop");
 		break;
 		case REWIND:
-			snprintf(buff, BUFFSIZE, "rewind");
+			snprintf(buff, DEF_DATASIZE, "rewind");
 		break;
 		case TIME:
-			snprintf(buff, BUFFSIZE, "time");
+			snprintf(buff, DEF_DATASIZE, "time");
 		break;
 		default:
-			snprintf(buff, BUFFSIZE, "NONE");
+			snprintf(buff, DEF_DATASIZE, "NONE");
 		break;
 	
 

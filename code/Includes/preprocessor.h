@@ -1,8 +1,3 @@
-/*
-#include "../player/SDL2/include/SDL.h"
-#include "../player/SDL2/include/SDL_mixer.h"
-#include "../player/SDL2/include/SDL_rwops.h"
-*/
 #include <stdio.h>
 #include <errno.h>
 #include <arpa/inet.h>
@@ -25,19 +20,12 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#define DEFAULT_CON_STRING "bring_it"
-#define DEFAULT_PORT_STRING "bring_the_port"
-#define DEFAULT_GOTIT_STRING "got_it"
-#define DEFAULT_MORE_STRING "more"
-#define DEFAULT_ENOUGH_STRING "enough"
-#define DEFAULT_HOWLONG_STRING "howlong"
-#define ACK_STRING "sure"
+#define ACK_STRING "sup"
+#define CON_STRING "hey"
 #define NACK_STRING "foff"
 #define MUSIC_SERVER_INPUT_PATH "/songs_in/raw_songs/"
 #define MAX_CLIENTS_HARD_LIMIT 1000
 #define SIG_STOPSERVER 19199
-#define PATHSIZE 20000
 #define DEF_DATASIZE 1024
-#define MAX_DATASIZE 100000
+#define PATHSIZE 1024
 #define MAX_TRIES 10
-#define BUFFSIZE 1024

@@ -62,13 +62,13 @@ char* generateDirListing(void){
 		return NULL;
 	}
 	remove(tmpDir);
-	char* currListing=malloc(BUFFSIZE);
+	char* currListing=malloc(PATHSIZE);
 	dprintf(fd,"Conteudos do server:\n");
 
 	while(1){
 
-		memset(currListing,0,BUFFSIZE);
-		fgets(currListing,BUFFSIZE,fstream);
+		memset(currListing,0,PATHSIZE);
+		fgets(currListing,PATHSIZE,fstream);
 
 		currListing[strlen(currListing)-1]=0;
 		if(!strs_are_strictly_equal(currListing,close_keyword)){

@@ -13,7 +13,7 @@ int main(int argc, char ** argv){
         }
 	memset(curr_dir,0,PATHSIZE);
 	getcwd(curr_dir,PATHSIZE-1);
-	snprintf(curr_dir+strlen(curr_dir),BUFFSIZE,"%s",MUSIC_SERVER_INPUT_PATH);
+	snprintf(curr_dir+strlen(curr_dir),DEF_DATASIZE,"%s",MUSIC_SERVER_INPUT_PATH);
 
 	printf("Curr dir: %s\n", curr_dir);
 	

@@ -1,0 +1,114 @@
+#include "../../Includes/preprocessor.h"
+#include "../../extra_funcs/Includes/protocol.h"
+#include "../../extra_funcs/Includes/auxfuncs.h"
+#include "../../extra_funcs/Includes/fileshit.h"
+#include "../../extra_funcs/Includes/sockio_tcp.h"
+#include "../../extra_funcs/Includes/sockio_udp.h"
+#include "../Includes/load_html.h"
+#include "../../extra_funcs/Includes/connection.h"
+#include "../../extra_funcs/Includes/streamer_const.h"
+#include "../../extra_funcs/Includes/stream.h"
+#include "../Includes/streamer_server.h"
+
+static connection con_obj;
+static int result=0;
+//retorna 0 se o objecto tava vazio. 1 se n tava
+
+
+//null terminated string
+static void handle_error(char* prompt){
+
+	if(result){
+		perror(prompt);
+		raise(SIGINT);
+	}
+
+}
+static void sigpipe_handler(int useless){
+
+
+	printf("Recebemos sinal dentro de um processo de conexão. Sinal: %d\n",useless);
+	printf("Desc. Erro: %s\nCodigo Erro: %d\n",strerror(errno),errno);
+	close_stream();
+	exit(useless);
+
+}
+static void sigint_handler(int useless){
+	close(stream_struct.sockfd);
+	sigpipe_handler(useless);
+}
+
+static void port_exchange_client_greet(void){
+
+	
+	int create_socket=0;
+	
+	readsome_udp(state.server_sock_udp,buff,DEF_DATASIZE,CLIENT_DATA_TIMES_PAIR,(&(state.client_udp_addr)));
+	
+	return create_socket;
+}
+
+
+void con_go(int sockfd){
+
+				signal(SIGINT, sigint_handler);
+				signal(SIGPIPE, sigpipe_handler);
+
+				char* dir_listing_str=NULL;
+				int fp;
+				struct stat file_info;
+
+				init_con(sockfd,c_addr);
+
+
+				req_type recvd_type= str_to_req_type(req_type_in_buff);
+				//(Quis ler o request e o filename em transferencias diferentes)
+				switch(recvd_type){
+
+					case PLAY:
+						snprintf(file_path,3*PATHSIZE-1,"%s%s",curr_dir,in_file_name);
+						break;
+					case PEEK:
+						dir_listing_str=generateDirListing();
+						snprintf(file_path,strlen(dir_listing_str)+1,"%s",dir_listing_str);
+						break;
+					default:
+						printf(UNKNOWN_REQ);
+						raise(SIGINT);
+						break;
+				}
+				printf("A file path é: %s\n",file_path);
+				if((fp=open(file_path,O_RDONLY,0777))<0){
+					
+					printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(con_obj.tcp_from_addr.sin_addr),file_path);
+	                       		perror("Nao foi possivel abrir nada!!!!\n");
+	                        	if(dir_listing_str){
+						free(dir_listing_str);
+						dir_listing_str=NULL;
+					}
+					raise(SIGINT);
+	                	}
+				else{
+				
+					fstat(fp,&file_info);
+					snprintf(file_size_buff_out,DEF_DATASIZE,"%ld",file_info.st_size);
+					//enviando datasize
+					sendsome(con_obj.sockfd_tcp,file_size_buff_out,DEF_DATASIZE,SERVER_DATA_TIMES_PAIR);
+					handle_error("Send error");
+					//Se este read suceder, n importa o que recebe, significa que o cliente recebeu o size
+					readsome(con_obj.sockfd_tcp,file_size_buff_out,DEF_DATASIZE,SERVER_DATA_TIMES_PAIR);
+					handle_error("Read error");
+
+					if(recvd_type==PEEK){
+						sendallfd(con_obj.sockfd_tcp,fp,SERVER_DATA_TIMES_PAIR);
+						deleteDirListingFile();
+					}
+					else if(recvd_type==PLAY){
+						begin_stream(con_obj.sockfd_tcp,fp,SERVER_DATA_TIMES_PAIR);
+					
+					}
+					close(fp);
+				}
+				close_stream();
+}
+

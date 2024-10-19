@@ -5,119 +5,75 @@
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
+#include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/streamer_server.h"
 
-stream_server_mem stream_struct={
-					0,
-					0,
-					0,
-					{0},
-					{0},
-					{0}};
 
+static server_stream_t stream_struct={
+					NULL,
+					-1,
+					{0}
+					};
+
+
+static void stop_server_stream(server_stream_t* strm){
+
+        close_con(strm->con_obj);
+        printf("SAIMOS DA STREAM DO SERVER! Vamos ver errno:%s\n",strerror(errno));
+        close(strm->local_fd);
+}
+
+static int send_chunk_to_client(server_stream_t* strm,int_pair pair){
+
+        int result=sendsome_udp(strm->con_obj->sockfd_udp,(char*)strm->chunk_data_cache,CHUNK_SIZE,pair,&strm->con_obj->peer_udp_addr);
+        int time_to_wait=0;
+	char response[DEF_DATASIZE];
+	if(result<0){
+
+                stop_server_stream(strm);
+
+        }
+        result=con_read_tcp(strm->con_obj,pair);
+	if(result<0){
+
+                stop_server_stream(strm);
+
+        }
+	sscanf((char*)strm->con_obj->data,"%s %d",response,&time_to_wait);
+	
+	if(time_to_wait >0){
+
+		usleep(time_to_wait*1000);
+		//con_read_tcp(strm->con_obj,SERVER_DROP_CHUNK_TIMES_PAIR);
+	}
+        return result;
+}
+
+static void server_stream(server_stream_t* strm){
+
+        while((read(strm->local_fd,strm->chunk_data_cache,CHUNK_SIZE)>0)&&(send_chunk_to_client(strm,SERVER_DATA_TIMES_PAIR)>0)){}
+
+}
+
+static int init_server_stream(server_stream_t* strm,int fd,con_t* con_obj){
+
+
+        strm->con_obj=con_obj;
+        strm->local_fd=fd;
+        server_stream(strm);
+        stop_server_stream(strm);
+        return 0;
+}
 
 void close_stream(void){
 
-	stream_struct.stream_on=0;
-	close(stream_struct.sockfd);
-
+	stop_server_stream(&stream_struct);
 }
 
+void begin_stream(con_t*con_obj,int fd){
 
+	init_server_stream(&stream_struct,fd,con_obj);
 
-static void init_stream(int client_sock, int fd, int_pair pair);
-
-
-
-
-/*
-extern DECLSPEC Mix_Chunk * SDLCALL Mix_QuickLoad_RAW(Uint8 *mem, Uint32 len);
-
-		stream_struct.chk=Mix_QuickLoad_RAW(stream_struct.raw_data, sizeof(stream_struct.raw_data);
-
-
-extern DECLSPEC void *SDLCALL SDL_LoadFile(const char *file, size_t *datasize);
-
-extern DECLSPEC Sint64 SDLCALL SDL_RWseek(SDL_RWops *context,
-                                          Sint64 offset, int whence);
-
-extern DECLSPEC Sint64 SDLCALL SDL_RWtell(SDL_RWops *context);
-
-extern DECLSPEC size_t SDLCALL SDL_RWread(SDL_RWops *context,
-                                          void *ptr, size_t size,
-                                          size_t maxnum);
-
-	SDL_RWread(stream_struct.sound_data,(char*)(stream_struct.chk),sizeof(Mix_Chunk),1);
-
-extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromFP(FILE * fp, SDL_bool autoclose);
-
-
-extern DECLSPEC size_t SDLCALL SDL_RWwrite(SDL_RWops *context,
-                                           const void *ptr, size_t size,
-                                           size_t num);
-*/
-
-static void init_stream(int client_sock, int fd, int_pair pair){
-
-	stream_struct.stream_on=1;
-	stream_struct.sockfd=client_sock;
-	memcpy((void*)stream_struct.pair,pair,sizeof(int_pair));
-	stream_struct.sound_data=fd;
-
-
-}
-
-static void send_chunk_func(void){
-
-	memset(stream_struct.client_reply_buff,0,DEF_DATASIZE+1);
-
-
-	sendsome(stream_struct.sockfd,(char*)stream_struct.raw_data,CHUNK_SIZE ,stream_struct.pair);
-
-	readsome(stream_struct.sockfd,(char*)stream_struct.client_reply_buff,DEF_DATASIZE,stream_struct.pair);
-
-	if(!strs_are_strictly_equal(DEFAULT_MORE_STRING,stream_struct.client_reply_buff)){
-
-	}
-	else if(!strs_are_strictly_equal(DEFAULT_ENOUGH_STRING,stream_struct.client_reply_buff)){
-		memset(stream_struct.client_reply_buff,0,DEF_DATASIZE+1);
-		snprintf(stream_struct.client_reply_buff,DEF_DATASIZE,"%s",DEFAULT_HOWLONG_STRING);
-		sendsome(stream_struct.sockfd,(char*) stream_struct.client_reply_buff,DEF_DATASIZE,stream_struct.pair);
-		memset(stream_struct.client_reply_buff,0,DEF_DATASIZE+1);
-		int time_to_wait_ms=0;
-		readsome(stream_struct.sockfd,(char*) stream_struct.client_reply_buff,DEF_DATASIZE,stream_struct.pair);
-
-		sscanf(stream_struct.client_reply_buff,"%d",&time_to_wait_ms);
-
-		usleep(time_to_wait_ms*1000);
-
-	}
-	else{
-
-		printf("Resposta estranha %s\n",stream_struct.client_reply_buff);
-		raise(SIGINT);
-	}
-	memset(stream_struct.raw_data,0,CHUNK_SIZE);
-	
-}
-static void stream(void){
-
-
-	while((read(stream_struct.sound_data,stream_struct.raw_data,CHUNK_SIZE)>0)&&stream_struct.stream_on){
-
-			send_chunk_func();
-
-		}
-
-
-
-}
-
-void begin_stream(int client_sock,int fd,int_pair tpair){
-
-	init_stream(client_sock,fd,tpair);
-	
-	stream();
 
 }
 
