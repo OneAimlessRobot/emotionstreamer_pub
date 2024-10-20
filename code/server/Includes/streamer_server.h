@@ -4,7 +4,7 @@
 
 typedef struct server_stream_t{
 
-
+	  int initted;
           struct con_t* con_obj;
           int local_fd;
           //unsigned char chunk_data_cache[CHUNK_SIZE*STREAM_CACHE_SIZE_CHUNKS];

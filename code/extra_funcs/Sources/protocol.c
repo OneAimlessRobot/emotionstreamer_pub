@@ -2,6 +2,8 @@
 #include "../Includes/auxfuncs.h"
 #include "../Includes/protocol.h"
 #include "../Includes/fileshit.h"
+#include "../Includes/sockio.h"
+#include "../Includes/configs.h"
 
 
 req_type str_to_req_type(char* str){
@@ -21,19 +23,19 @@ req_type str_to_req_type(char* str){
 	return NA;
 
 }
-void req_type_to_str(req_type type,char buff[DEF_DATASIZE]){
+void req_type_to_str(req_type type,char buff[]){
 
-	memset(buff,0,DEF_DATASIZE);
+	memset(buff,0,cfg_datasize);
 	switch(type){
 
 		case PLAY:
-			snprintf(buff, DEF_DATASIZE, "play");
+			snprintf(buff, cfg_datasize, "play");
 		break;
 		case PEEK:
-			snprintf(buff, DEF_DATASIZE, "peek");
+			snprintf(buff, cfg_datasize, "peek");
 		break;
 		default:
-			snprintf(buff, DEF_DATASIZE, "NONE");
+			snprintf(buff, cfg_datasize, "NONE");
 		break;
 	
 
@@ -66,25 +68,25 @@ stream_cmd str_to_stream_cmd(char* str){
 	return NOP;
 
 }
-void stream_cmd_to_str(stream_cmd type,char buff[DEF_DATASIZE]){
+void stream_cmd_to_str(stream_cmd type,char buff[]){
 
-	memset(buff,0,DEF_DATASIZE);
+	memset(buff,0,cfg_datasize);
 	switch(type){
 
 		case TOGGLE:
-			snprintf(buff, DEF_DATASIZE, "toggle");
+			snprintf(buff, cfg_datasize, "toggle");
 		break;
 		case STOP:
-			snprintf(buff, DEF_DATASIZE, "stop");
+			snprintf(buff, cfg_datasize, "stop");
 		break;
 		case REWIND:
-			snprintf(buff, DEF_DATASIZE, "rewind");
+			snprintf(buff, cfg_datasize, "rewind");
 		break;
 		case TIME:
-			snprintf(buff, DEF_DATASIZE, "time");
+			snprintf(buff, cfg_datasize, "time");
 		break;
 		default:
-			snprintf(buff, DEF_DATASIZE, "NONE");
+			snprintf(buff, cfg_datasize, "NONE");
 		break;
 	
 

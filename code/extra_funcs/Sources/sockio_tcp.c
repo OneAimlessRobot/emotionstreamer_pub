@@ -1,4 +1,6 @@
 #include "../../Includes/preprocessor.h"
+#include "../Includes/sockio.h"
+#include "../Includes/configs.h"
 #include "../Includes/sockio_tcp.h"
 #include "../Includes/fileshit.h"
 
@@ -30,10 +32,11 @@ int sendsome(int sd,char buff[],u_int64_t size,int_pair times){
 
 int sendallfd(int sock,int fd,int_pair times){
 
-char buff[DEF_DATASIZE];
+char buff[cfg_datasize];
+memset(buff,0,cfg_datasize);
 int numread;
 int sent=0;
-while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
+while ((numread = read(fd,buff,cfg_datasize)) > 0) {
     
     int totalsent = 0;
     while (totalsent < numread) {
@@ -196,18 +199,20 @@ int readall(int sock,char buff[],int size,int_pair times){
 
 int readalltofd(int sock,int fd,int_pair times){
         int64_t len=1;
-	char buff[DEF_DATASIZE]={0};
+	char buff[cfg_datasize];
+	memset(buff,0,cfg_datasize);
+
 	while(1){
-		len=readsome(sock,buff,DEF_DATASIZE,times);
+		len=readsome(sock,buff,cfg_datasize,times);
 		if(len>0){
 			write(fd,buff,len);
 		}
 		else{
 
-			break;	
+			break;
 		}
 
-		memset(buff,0,DEF_DATASIZE);
+		memset(buff,0,cfg_datasize);
 	}
 	if(len<0){
 	if (errno == EAGAIN || errno == EWOULDBLOCK) {

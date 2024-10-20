@@ -1,7 +1,7 @@
 #ifndef STREAMER_CONST_H
 #define STREAMER_CONST_H
 
-#define FREQ 48000
+#define FREQ 44000
 
 #define CHUNK_BIG 4096
 #define CHUNK_SMALL 1024

@@ -2,6 +2,9 @@
 #include "../../extra_funcs/Includes/protocol.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/fileshit.h"
+#include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/configs.h"
+#include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../Includes/load_html.h"
@@ -12,27 +15,43 @@
 
 static con_t server_con_obj;
 
+void sigint_handler(int useless){
 
 
-void con_go(int sockfd_tcp){
+	close_con(&server_con_obj + (0*useless));
 
-				char file_name[DEF_DATASIZE]={0};
-				char file_path[DEF_DATASIZE*2 +2]={0};
+}
+void sigpipe_handler(int useless){
+
+	sigint_handler(useless);
+
+}
+
+
+void con_go(int sockfd_tcp,int curr_port){
+				signal(SIGINT, sigint_handler);
+				signal(SIGPIPE, sigpipe_handler);
+	
+
+				char file_name[cfg_datasize];
+				memset(file_name,0,cfg_datasize);
+				char file_path[cfg_datasize*2 +2];
+				memset(file_path,0,cfg_datasize+2+2);
 				char req_buff[PATHSIZE]={0};
 				char* dir_listing_str=NULL;
 				int fp;
 
 				init_con(&server_con_obj,sockfd_tcp,SERVER_C);
 
-				greet(&server_con_obj);
+				greet(&server_con_obj,curr_port);
 				
 				clear_con_data(&server_con_obj);
 
-				con_read_tcp(&server_con_obj,SERVER_DATA_TIMES_PAIR);
+				con_read_tcp(&server_con_obj,server_data_times_pair);
 				
-				sscanf((char*)server_con_obj.data,"%s %s",req_buff,file_name);
+				sscanf((char*)server_con_obj.tcp_data,"%s %s",req_buff,file_name);
 				
-				printf("Buff recebido: %s\n",server_con_obj.data);
+				printf("Buff recebido: %s\n",server_con_obj.tcp_data);
 				
 				req_type recvd_type= str_to_req_type(req_buff);
 				//(Quis ler o request e o filename em transferencias diferentes)
@@ -50,12 +69,11 @@ void con_go(int sockfd_tcp){
 					default:
 						printf(UNKNOWN_REQ);
 						raise(SIGINT);
-						break;
+						return;
 				}
-				printf("A file path é: %s\n",file_path);
-				
 				if((fp=open(file_path,O_RDONLY,0777))<0){
 					
+					//setNonBlocking(fp);
 					printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(server_con_obj.peer_tcp_addr.sin_addr),file_path);
 	                       		perror("Nao foi possivel abrir nada!!!!\n");
 	                        	if(dir_listing_str){
@@ -68,18 +86,15 @@ void con_go(int sockfd_tcp){
 				
 					
 					if(recvd_type==PEEK){
-						sendallfd(server_con_obj.sockfd_tcp,fp,SERVER_DATA_TIMES_PAIR);
+						sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						deleteDirListingFile();
 					}
 					else if(recvd_type==PLAY){
-					
-						
+
+						printf("A file path é: %s\n",file_path);
 						begin_stream(&server_con_obj,fp);
-					
-						//printf("Not implemented\n");
 					}
 
 				}
-				raise(SIGINT);
 }
 

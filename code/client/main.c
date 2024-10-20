@@ -1,13 +1,18 @@
 #include "../Includes/preprocessor.h"
 #include "Includes/client.h"
 #include "../extra_funcs/Includes/fileshit.h"
+#include "../extra_funcs/Includes/sockio.h"
+#include "../extra_funcs/Includes/configs.h"
 
 int main(int argc, char ** argv){
 
+
+	read_values_cfg();
+	print_values_cfg();
 	logstream=stderr;
 	logging=1;
 
-	
+
 	if(argc!=5){
 
 		printf("Utilizacao correta:\narg1: tipo de pedido (play ou peek. Tocar uma musica ou consultar musicas. Com Peek, Sai logo e a musica fornecida é ignorada).\narg2: Nome da musica a tocar\narg3: porta udp do server\narg4: ipv4 do server\n");

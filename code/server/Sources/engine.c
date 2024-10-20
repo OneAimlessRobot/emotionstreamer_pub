@@ -4,6 +4,7 @@
 #include "../../extra_funcs/Includes/protocol.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/configs.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
@@ -12,16 +13,16 @@
 #include "../Includes/engine.h"
 
 static server_state state;
-
+static int curr_port=0;
 static void serverStop(int useless){
 
-	state.server_is_on=0;
-	exit(useless);
+	state.server_is_on=0*useless;
 }
 static void sigpipe_handler(int useless){
 
 	perror("Interrupção no modulo do server!!!!\n");
 	serverStop(useless);
+	exit(useless);
 
 }
 static void sigint_handler(int useless){
@@ -65,7 +66,8 @@ static void con_accepting_loop(void){
 				}
 				
 			if(!pid){
-				con_go(sock);
+				con_go(sock,curr_port);
+				
 				serverStop(0);
                 	}
         		else if(pid<0){
@@ -73,7 +75,7 @@ static void con_accepting_loop(void){
 				raise(SIGPIPE);
 			}
 			else{
-
+				curr_port+=4;
 				close(sock);
 			}
 		}
@@ -83,7 +85,7 @@ static void con_accepting_loop(void){
 		}
 		else{
 
-			printf("Timed out! ( more that %ds waiting 4 udp). Trying again...\n",SERVER_TIMEOUT_CON_SEC);
+			printf("Timed out! ( more that %lus waiting 4 udp). Trying again...\n",server_con_times_pair[0]);
                	}
 	}
 }
@@ -100,7 +102,10 @@ static void setup_server_tcp_stuff(char* addr,int tcp_s_port){
         setsockopt(state.server_sock_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
 	init_addr(&state.server_tcp_addr,addr,tcp_s_port);
 
-	bind(state.server_sock_tcp,(struct sockaddr*)(&state.server_tcp_addr),*socklenvar);
+	if(bind(state.server_sock_tcp,(struct sockaddr*)(&state.server_tcp_addr),*socklenvar)){
+		raise(SIGPIPE);
+
+	}
 
 	listen(state.server_sock_tcp,MAX_CLIENTS_HARD_LIMIT);
 }
@@ -110,6 +115,7 @@ void serverInit(char* addr,uint32_t tcp_s_port){
 
 	signal(SIGINT,sigint_handler);
         signal(SIGPIPE,sigpipe_handler);
+	curr_port=tcp_s_port;
 	logging=1;
 	logstream=stderr;
 	memset(&state,0,sizeof(server_state));

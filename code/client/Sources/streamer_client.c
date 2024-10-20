@@ -5,6 +5,8 @@
 #include "../Includes/menu.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
+#include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/configs.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/fileshit.h"
@@ -23,7 +25,7 @@ static client_stream_t stream_struct={
 static void zero_chk_cache(client_stream_t* strm){
 
 
-        memset(strm->chunk_data_cache,0, CHUNK_SIZE);
+        memset(strm->chunk_data_cache,0, cfg_chunk_size);
 
 
 }
@@ -40,16 +42,30 @@ static void cleanSDL(client_stream_t* strm){
         SDL_Quit();
 
 }
-
 static void stop_client_stream(client_stream_t* strm){
-
-        close_con(strm->con_obj);
-        cleanSDL(strm);
-        printf("SAIMOS DA STREAM DO CLIENTE! Vamos ver errno:%s\n",strerror(errno));
-
+	if(strm->innited){
+       		cleanSDL(strm);
+        	printf("SAIMOS DA STREAM DO CLIENTE! Vamos ver errno:%s\n",strerror(errno));
+		strm->con_obj->is_on=0;
+		strm->innited=0;
+	}
+	
 }
 
 
+static void sigint_handler(int useless){
+
+
+	stop_client_stream(&stream_struct + (0*useless));
+	exit(useless);
+
+}
+
+static void sigpipe_handler(int useless){
+
+	sigint_handler(useless);
+
+}
 static void make_chunk(client_stream_t* strm){
 
 	strm->chk=Mix_QuickLoad_RAW(strm->chunk_data_cache,(strm->curr_chk_index));
@@ -69,36 +85,45 @@ static int process_chunk(client_stream_t* strm){
 
 
 	int wait=0;
-	strm->curr_chk_index+=CHUNK_SIZE;
+	strm->curr_chk_index+=cfg_chunk_size;
 	if((strm->curr_chk_index)==sizeof(strm->chunk_data_cache)){
 		make_chunk(strm);
         	wait=1;
 		strm->curr_chk_index=0;
 
 	}
-        snprintf((char*)strm->con_obj->data,DEF_DATASIZE,"%s %d",ACK_STRING,wait);
         return wait;
 }
 
+static int read_chunk_tcp(client_stream_t* strm,int_pair pair){
+
+	 return readsome(strm->con_obj->sockfd_tcp,(char*)(strm->chunk_data_cache+strm->curr_chk_index),cfg_chunk_size,pair);
+
+}
+static int read_chunk_udp(client_stream_t* strm,int_pair pair){
+
+        return readsome_udp(strm->con_obj->sockfd_udp,(char*)(strm->chunk_data_cache+strm->curr_chk_index),cfg_chunk_size,pair,&strm->con_obj->peer_udp_addr);
+}
+
+
 int get_server_chunk(client_stream_t* strm,int_pair pair){
 
-        int result= readsome_udp(strm->con_obj->sockfd_udp,(char*)(strm->chunk_data_cache+strm->curr_chk_index),CHUNK_SIZE,pair,&strm->con_obj->peer_udp_addr);
-        if(result<0){
-
-                stop_client_stream(strm);
-
-        }
-	int wait=process_chunk(strm);
-        result=con_send_tcp(strm->con_obj,pair);
-        if(wait){
-		play_chunk(strm);
-		con_send_tcp(strm->con_obj,CLIENT_DATA_TIMES_PAIR);
-	}
+        int result= read_chunk_udp(strm, pair);
 	if(result<0){
 
-                stop_client_stream(strm);
+                return result;
+	}
+	int wait=process_chunk(strm);
+	snprintf((char*)strm->con_obj->ack_udp_data,cfg_datasize,"%s %d",ACK_STRING,wait);
+	result=con_send_udp_ack(strm->con_obj,pair);
+        if(result<0){
 
-        }
+                return result;
+	}
+	if(wait){
+		play_chunk(strm);
+		result= con_send_udp_ack(strm->con_obj,server_drop_chunks_times_pair);
+	}
 	return result;
 
 }
@@ -113,7 +138,7 @@ static void initSDL(client_stream_t* strm){
                 fprintf(logstream,"Erro a inicializar SDL_MIXER!!!!!!! Isto vai parar!!!!\n Não foi possivel tocar o ficheiro!!!! Erro: %s\n",strerror(errno));
                 exit(-1);
         }
-        if(Mix_OpenAudio(FREQ,MIX_DEFAULT_FORMAT,MIX_DEFAULT_CHANNELS,CHUNK_SIZE)){
+        if(Mix_OpenAudio(cfg_freq,MIX_DEFAULT_FORMAT,MIX_DEFAULT_CHANNELS,cfg_chunk_size)){
                 fprintf(logstream,"Erro a abrir SDL AUDIO!!!!!!! Isto vai parar!!!!\n Não foi possivel tocar o ficheiro!!!!\n Erro: %s\n",strerror(errno));
                 exit(-1);
         }
@@ -126,32 +151,30 @@ static void initSDL(client_stream_t* strm){
 
 static void client_stream(client_stream_t* strm){
 
-        while(strm->con_obj->is_on&&(get_server_chunk(strm,CLIENT_DATA_TIMES_PAIR)>0)){}
-
+        while(strm->con_obj->is_on&&(get_server_chunk(strm,client_data_times_pair)>0)){}
+	
 
 }
 
 static int init_client_stream(client_stream_t* strm,con_t* con_obj){
-
-
+	
+	signal(SIGINT,sigint_handler);
+	signal(SIGPIPE,sigpipe_handler);
+	initSDL(strm);
         strm->con_obj=con_obj;
-        initSDL(strm);
         client_stream(strm);
-        stop_client_stream(strm);
-        return 0;
+        raise(SIGINT);
+	return 0;
 }
 
 
 
 void player_stop_stream(void){
-	stop_client_stream(&stream_struct);
-
+	raise(SIGINT);
 }
 
-int player_init_stream(con_t* con_obj){
+void player_init_stream(con_t* con_obj){
 
 	init_client_stream(&stream_struct,con_obj);
-
-	return 0;
 }
 

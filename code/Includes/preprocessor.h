@@ -10,6 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
+#include <stdint.h>
 #include <time.h>
 #include <signal.h>
 #include <sys/types.h>
@@ -24,6 +25,7 @@
 #define CON_STRING "hey"
 #define NACK_STRING "foff"
 #define MUSIC_SERVER_INPUT_PATH "/songs_in/raw_songs/"
+#define CONFIG_FILE_PATH "../config/sizes.cfg"
 #define MAX_CLIENTS_HARD_LIMIT 1000
 #define SIG_STOPSERVER 19199
 #define DEF_DATASIZE 1024

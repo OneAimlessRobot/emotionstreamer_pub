@@ -15,7 +15,7 @@ typedef struct client_stream_t{
 }client_stream_t;
 
 
-int player_init_stream(con_t* con_obj);
+void player_init_stream(con_t* con_obj);
 void player_stop_stream(void);
 
 #endif

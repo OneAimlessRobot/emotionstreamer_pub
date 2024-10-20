@@ -4,6 +4,7 @@
 #include <SDL2/SDL_rwops.h>
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/configs.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
@@ -14,24 +15,28 @@
 #include "../Includes/streamer_client.h"
 #include "../Includes/client.h"
 
-static struct sockaddr_in server_ip_address;
+static struct sockaddr_in server_ip_address,client_ip_address;
 
 static con_t client_con_obj;
 
 static void sigpipe_handler(int signal){
 
+	close_con(&client_con_obj);
 	exit(-1);
 }
 static void sigint_handler(int signal){
 
+	close_con(&client_con_obj);
 	exit(-1);
 }
 
 //Strings todas 0 ended
 int clientStart(char* req_field,char* file_name,uint32_t tcp_s_port, char* s_hostname){
+	
 	signal(SIGINT,sigint_handler);
 	signal(SIGPIPE,sigpipe_handler);
 
+	
 	req_type the_type= str_to_req_type(req_field);
 
 
@@ -49,15 +54,16 @@ int clientStart(char* req_field,char* file_name,uint32_t tcp_s_port, char* s_hos
 		raise(SIGINT);
 	}
 
-	tryConnect(&client_sock,CLIENT_CON_TIMES_PAIR,&server_ip_address);
+	tryConnect(&client_sock,client_con_times_pair,&server_ip_address);
 
 	init_con(&client_con_obj,client_sock,CLIENT_C);
 
-	greet(&client_con_obj);
+	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
+	greet(&client_con_obj,client_con_obj.this_tcp_addr.sin_port);
 
-	snprintf((char*)client_con_obj.data,DEF_DATASIZE,"%s %s",req_field,file_name);
+	snprintf((char*)client_con_obj.tcp_data,cfg_datasize,"%s %s",req_field,file_name);
 
-	con_send_tcp(&client_con_obj,CLIENT_DATA_TIMES_PAIR);
+	con_send_tcp(&client_con_obj,client_data_times_pair);
 
 	
 
@@ -68,13 +74,14 @@ int clientStart(char* req_field,char* file_name,uint32_t tcp_s_port, char* s_hos
 		break;
 	case PEEK:
 		printf(CONTENT_PEEK_INCOMMING);
-		readalltofd(client_con_obj.sockfd_tcp,1,CLIENT_DATA_TIMES_PAIR);
+		readalltofd(client_con_obj.sockfd_tcp,1,client_data_times_pair);
+		raise(SIGINT);
 		break;
 	default:
 		printf(UNKNOWN_REQ);
+		raise(SIGINT);
 		break;
 	}
-	raise(SIGINT);
 	return 0;
 }
 

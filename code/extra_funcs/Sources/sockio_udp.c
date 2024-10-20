@@ -1,4 +1,6 @@
 #include "../../Includes/preprocessor.h"
+#include "../Includes/sockio.h"
+#include "../Includes/configs.h"
 #include "../Includes/sockio_udp.h"
 #include "../Includes/fileshit.h"
 
@@ -33,10 +35,11 @@ int sendsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockadd
 
 int sendallfd_udp(int sock,int fd,int_pair times,struct sockaddr_in *udp_addr_dst){
 
-char buff[DEF_DATASIZE];
+char buff[cfg_datasize];
+memset(buff,0,cfg_datasize);
 int numread;
 int sent=0;
-while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
+while ((numread = read(fd,buff,cfg_datasize)) > 0) {
     
     int totalsent = 0;
     while (totalsent < numread) {
@@ -128,7 +131,7 @@ int readall_udp(int sock,char buff[],int_pair times,struct sockaddr_in *udp_addr
         int64_t len=1;
 
 while(1){
-        len=readsome_udp(sock,buff,DEF_DATASIZE,times,udp_addr_src);
+        len=readsome_udp(sock,buff,cfg_datasize,times,udp_addr_src);
 	if(len<=0){
 	
                 break;
@@ -172,15 +175,16 @@ while(1){
 
 int readalltofd_udp(int sock,int fd,int_pair times,struct sockaddr_in* udp_addr_src){
         int64_t len=1;
-	char buff[DEF_DATASIZE]={0};
+	char buff[cfg_datasize];
+	memset(buff,0,cfg_datasize);
 	while(1){
-		len=readsome_udp(sock,buff,DEF_DATASIZE,times,udp_addr_src);
+		len=readsome_udp(sock,buff,cfg_datasize,times,udp_addr_src);
 		if(len<=0){
 			break;	
 		}
 
 		write(fd,buff,len);
-		memset(buff,0,DEF_DATASIZE);
+		memset(buff,0,cfg_datasize);
 	}
 	if(len<0){
 	if (errno == EAGAIN || errno == EWOULDBLOCK) {

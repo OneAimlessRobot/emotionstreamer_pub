@@ -3,7 +3,7 @@
 
 
 //file_path is 0 ended!!!!!!
-void con_go(int sockfd_tcp);
+void con_go(int sockfd_tcp,int curr_port);
 
 
 #endif
