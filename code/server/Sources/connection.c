@@ -99,6 +99,7 @@ void con_go(int sockfd_tcp,int curr_port){
 					if(recvd_type==PEEK){
 						sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						deleteDirListingFile();
+						raise(SIGINT);
 					}
 					else if(recvd_type==PLAY){
 
