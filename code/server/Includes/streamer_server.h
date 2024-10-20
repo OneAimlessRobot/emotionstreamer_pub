@@ -8,15 +8,17 @@ typedef struct server_stream_t{
           struct con_t* con_obj;
           int local_fd;
           //unsigned char chunk_data_cache[CHUNK_SIZE*STREAM_CACHE_SIZE_CHUNKS];
-          unsigned char chunk_data_cache[CHUNK_SIZE];
+          unsigned char* chunk_data_cache;
 
 }server_stream_t;
 
 
 //strings are null terminated!
-//objects are all innited
+//con_obj is innited
+//BUFF COMES FROM THE OUTSIDE!
 //fds are valid
-void begin_stream(con_t* con_obj,int fd);
+//DOES NOT FREE BUFFS OR INITIALIZE BUFFS
+void begin_stream(con_t* con_obj,int fd,  unsigned char* stream_buff);
 
 void close_stream(void);
 #endif

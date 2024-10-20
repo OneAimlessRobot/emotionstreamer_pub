@@ -8,6 +8,7 @@
 #include "../Includes/sockio_tcp.h"
 #include "../Includes/connection.h"
 
+
 void clear_con_data(con_t* con_obj){
 
 	memset(con_obj->tcp_data,0,cfg_datasize+1);
@@ -25,14 +26,17 @@ static void prep_con(con_t* con_obj){
 
 
 void close_con(con_t* con_obj){
-
-	close(con_obj->sockfd_tcp);
-	close(con_obj->sockfd_udp);
-	close(con_obj->ack_sockfd_udp);
-
+	
+	if(con_obj->is_on){
+		close(con_obj->sockfd_tcp);
+		close(con_obj->sockfd_udp);
+		close(con_obj->ack_sockfd_udp);
+		con_obj->is_on=0;
+		printf("Fechamos conexão!!!!\n");
+	}
 }
 
-void init_con(con_t* con_obj,int sockfd_tcp,con_type type){
+void init_con(con_t* con_obj,int sockfd_tcp,con_type type, buff_triple con_buffs){
 
 				prep_con(con_obj);
 				con_obj->is_on=1;
@@ -40,7 +44,12 @@ void init_con(con_t* con_obj,int sockfd_tcp,con_type type){
                                 con_obj->sockfd_tcp=sockfd_tcp;
                                 getpeername(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->peer_tcp_addr),socklenvar);
 				getsockname(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->this_tcp_addr),socklenvar);
-				
+
+
+				con_obj->tcp_data=con_buffs[0];
+				con_obj->udp_data=con_buffs[1];
+				con_obj->ack_udp_data=con_buffs[2];
+
 				memset(con_obj->tcp_data,0,cfg_datasize+1);
 				memset(con_obj->udp_data,0,cfg_datasize+1);
 				memset(con_obj->ack_udp_data,0,cfg_datasize+1);

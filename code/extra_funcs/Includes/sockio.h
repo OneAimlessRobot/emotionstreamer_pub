@@ -18,6 +18,7 @@
 #define SERVER_TIMEOUT_DATA_USEC 1
 
 typedef long unsigned int int_pair[2];
+typedef unsigned char* buff_triple[3];
 
 #define SERVER_DATA_TIMES_PAIR ((int_pair)){SERVER_TIMEOUT_DATA_SEC,SERVER_TIMEOUT_DATA_USEC}
 #define CLIENT_DATA_TIMES_PAIR ((int_pair){CLIENT_TIMEOUT_DATA_SEC,CLIENT_TIMEOUT_DATA_USEC})

@@ -14,12 +14,13 @@
 #include "../../extra_funcs/Includes/ripped_code.h"
 #include "../Includes/streamer_client.h"
 
+
 static client_stream_t stream_struct={
 					0,
 					NULL,
 					0,
                                         NULL,
-                                        {0}
+                                        NULL,
                                         };
 
 static void zero_chk_cache(client_stream_t* strm){
@@ -46,7 +47,7 @@ static void stop_client_stream(client_stream_t* strm){
 	if(strm->innited){
        		cleanSDL(strm);
         	printf("SAIMOS DA STREAM DO CLIENTE! Vamos ver errno:%s\n",strerror(errno));
-		strm->con_obj->is_on=0;
+		close_con(strm->con_obj);
 		strm->innited=0;
 	}
 	
@@ -86,7 +87,7 @@ static int process_chunk(client_stream_t* strm){
 
 	int wait=0;
 	strm->curr_chk_index+=cfg_chunk_size;
-	if((strm->curr_chk_index)==sizeof(strm->chunk_data_cache)){
+	if((strm->curr_chk_index)==(cfg_chunk_size*cfg_stream_cache_size_chunks)){
 		make_chunk(strm);
         	wait=1;
 		strm->curr_chk_index=0;
@@ -156,12 +157,14 @@ static void client_stream(client_stream_t* strm){
 
 }
 
-static int init_client_stream(client_stream_t* strm,con_t* con_obj){
+static int init_client_stream(client_stream_t* strm,con_t* con_obj, unsigned char* buff){
 	
 	signal(SIGINT,sigint_handler);
 	signal(SIGPIPE,sigpipe_handler);
 	initSDL(strm);
-        strm->con_obj=con_obj;
+	strm->chunk_data_cache=buff;
+	memset(strm->chunk_data_cache,0,cfg_chunk_size*cfg_stream_cache_size_chunks);
+	strm->con_obj=con_obj;
         client_stream(strm);
         raise(SIGINT);
 	return 0;
@@ -173,8 +176,8 @@ void player_stop_stream(void){
 	raise(SIGINT);
 }
 
-void player_init_stream(con_t* con_obj){
+void player_init_stream(con_t* con_obj,unsigned char* buff){
 
-	init_client_stream(&stream_struct,con_obj);
+	init_client_stream(&stream_struct,con_obj,buff);
 }
 

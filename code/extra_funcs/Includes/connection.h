@@ -20,15 +20,18 @@ typedef struct con_t{
          sockfd_udp,
          ack_sockfd_udp,
          sockfd_tcp;
-	 uint8_t udp_data[DEF_DATASIZE+1];
-	 uint8_t tcp_data[DEF_DATASIZE+1];
-	 uint8_t ack_udp_data[DEF_DATASIZE+1];
+	 uint8_t* udp_data;
+	 uint8_t* tcp_data;
+	 uint8_t* ack_udp_data;
 	 con_type type;
 }con_t;
 //sockfd_tcp tem de ser obtida com connect ou accept!!!!!!!
 
+//buff_triple COMES FROM THE OUTSIDE!
 
-void init_con(con_t* con_obj, int sockfd_tcp,con_type type);
+//DOES NOT FREE OR INITIALIZE THE BUFFS YOU GIVE IT!
+
+void init_con(con_t* con_obj, int sockfd_tcp,con_type type, buff_triple con_buffs);
 
 void close_con(con_t* con_obj);
 

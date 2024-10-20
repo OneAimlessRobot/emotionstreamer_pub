@@ -8,14 +8,18 @@ typedef struct client_stream_t{
 
           int innited;
           struct con_t* con_obj;
-          int curr_chk_index;
+          u_int64_t curr_chk_index;
           Mix_Chunk*  chk;
-          unsigned char chunk_data_cache[STREAM_CACHE_SIZE_CHUNKS*CHUNK_SIZE];
+          unsigned char* chunk_data_cache;
 
 }client_stream_t;
 
+//BUFFS COME FROM THE OUTSIDE!
+//DOES NOT FREE BUFFERS OR INITIALIZE BUFFS
 
-void player_init_stream(con_t* con_obj);
+//con_obj is innited
+
+void player_init_stream(con_t* con_obj, unsigned char* buff);
 void player_stop_stream(void);
 
 #endif

@@ -13,6 +13,8 @@
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../Includes/streamer_server.h"
 
+
+
 static con_t server_con_obj;
 
 void sigint_handler(int useless){
@@ -31,8 +33,17 @@ void sigpipe_handler(int useless){
 void con_go(int sockfd_tcp,int curr_port){
 				signal(SIGINT, sigint_handler);
 				signal(SIGPIPE, sigpipe_handler);
-	
 
+				unsigned char tcp_data[cfg_datasize+1];
+				unsigned char udp_data[cfg_datasize+1];
+				unsigned char ack_udp_data[cfg_datasize+1];
+				unsigned char stream_cache_data[cfg_chunk_size];
+
+
+				buff_triple con_buffs={NULL};
+				con_buffs[0]=tcp_data;
+				con_buffs[1]=udp_data;
+				con_buffs[2]=ack_udp_data;
 				char file_name[cfg_datasize];
 				memset(file_name,0,cfg_datasize);
 				char file_path[cfg_datasize*2 +2];
@@ -41,7 +52,7 @@ void con_go(int sockfd_tcp,int curr_port){
 				char* dir_listing_str=NULL;
 				int fp;
 
-				init_con(&server_con_obj,sockfd_tcp,SERVER_C);
+				init_con(&server_con_obj,sockfd_tcp,SERVER_C,con_buffs);
 
 				greet(&server_con_obj,curr_port);
 				
@@ -92,7 +103,7 @@ void con_go(int sockfd_tcp,int curr_port){
 					else if(recvd_type==PLAY){
 
 						printf("A file path é: %s\n",file_path);
-						begin_stream(&server_con_obj,fp);
+						begin_stream(&server_con_obj,fp,stream_cache_data);
 					}
 
 				}

@@ -15,7 +15,7 @@ static server_stream_t stream_struct={
 					0,
 					NULL,
 					-1,
-					{0}
+					NULL
 					};
 
 
@@ -84,13 +84,15 @@ static void server_stream(server_stream_t* strm){
 
 }
 
-static int init_server_stream(server_stream_t* strm,int fd,con_t* con_obj){
+static int init_server_stream(server_stream_t* strm,int fd,con_t* con_obj,unsigned char* stream_buff){
 	
 	signal(SIGINT, sigint_handler);
 	signal(SIGPIPE, sigpipe_handler);
 	strm->initted=1;
         strm->con_obj=con_obj;
         strm->local_fd=fd;
+	strm->chunk_data_cache=stream_buff;
+	memset(strm->chunk_data_cache,0,cfg_chunk_size);
         server_stream(strm);
 	raise(SIGINT);
 	return 0;
@@ -101,9 +103,9 @@ void close_stream(void){
 	raise(SIGINT);
 }
 
-void begin_stream(con_t*con_obj,int fd){
+void begin_stream(con_t*con_obj,int fd, unsigned char* stream_buff){
 
-	init_server_stream(&stream_struct,fd,con_obj);
+	init_server_stream(&stream_struct,fd,con_obj, stream_buff);
 
 }
 

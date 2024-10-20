@@ -15,7 +15,7 @@
 #include "../Includes/streamer_client.h"
 #include "../Includes/client.h"
 
-static struct sockaddr_in server_ip_address,client_ip_address;
+static struct sockaddr_in server_ip_address;
 
 static con_t client_con_obj;
 
@@ -33,6 +33,15 @@ static void sigint_handler(int signal){
 //Strings todas 0 ended
 int clientStart(char* req_field,char* file_name,uint32_t tcp_s_port, char* s_hostname){
 	
+	unsigned char tcp_data[cfg_datasize+1];
+	unsigned char udp_data[cfg_datasize+1];
+	unsigned char ack_udp_data[cfg_datasize+1];
+	unsigned char stream_cache_data[cfg_chunk_size*cfg_stream_cache_size_chunks];
+
+	buff_triple con_buffs={NULL};
+        con_buffs[0]=tcp_data;
+        con_buffs[1]=udp_data;
+	con_buffs[2]=ack_udp_data;
 	signal(SIGINT,sigint_handler);
 	signal(SIGPIPE,sigpipe_handler);
 
@@ -56,7 +65,7 @@ int clientStart(char* req_field,char* file_name,uint32_t tcp_s_port, char* s_hos
 
 	tryConnect(&client_sock,client_con_times_pair,&server_ip_address);
 
-	init_con(&client_con_obj,client_sock,CLIENT_C);
+	init_con(&client_con_obj,client_sock,CLIENT_C,con_buffs);
 
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	greet(&client_con_obj,client_con_obj.this_tcp_addr.sin_port);
@@ -70,7 +79,7 @@ int clientStart(char* req_field,char* file_name,uint32_t tcp_s_port, char* s_hos
 	switch(the_type){
 
 	case PLAY:
-		player_init_stream(&client_con_obj);
+		player_init_stream(&client_con_obj, stream_cache_data);
 		break;
 	case PEEK:
 		printf(CONTENT_PEEK_INCOMMING);

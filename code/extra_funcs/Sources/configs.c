@@ -55,6 +55,20 @@ void read_values_cfg(void){
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
+	sscanf(curr_line_buff,"chunk_size: %lu",&cfg_chunk_size);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"cache_num_chunks: %lu",&cfg_stream_cache_size_chunks);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
 	sscanf(curr_line_buff,"datasize: %lu",&cfg_datasize);
 
 	clean_buff();
