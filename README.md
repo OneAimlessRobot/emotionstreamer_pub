@@ -1,6 +1,6 @@
 Um server de musicas. 
 Descubram como se usa palhaços. 
-Só compila e corre em Unix x86, 
+Garante-se que funciona em Unix x86 e arm64, 
 os executaveis que interessam estão nas pastas server e client
 quando os argumentos de linha de comandos n servem nos executaveis, diz-vos a sintaxe
 O projeto compila com um shell script na root chamado "makeAll.sh" 
