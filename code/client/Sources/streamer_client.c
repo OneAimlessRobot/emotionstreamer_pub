@@ -19,6 +19,7 @@ static client_stream_t stream_struct={
 					0,
 					NULL,
 					0,
+					{0},
                                         NULL,
                                         NULL,
                                         };
@@ -72,11 +73,22 @@ static void make_chunk(client_stream_t* strm){
 	strm->chk=Mix_QuickLoad_RAW(strm->chunk_data_cache,(strm->curr_chk_index));
 
 }
+static int fill_up_helper(client_stream_t*strm){
+	
+	memset(&strm->helper,0,sizeof(chunk_size_helper));
+	strm->helper.audio_len=strm->chk->alen;
+	if (!Mix_QuerySpec(&strm->helper.freq, &strm->helper.fmt, &strm->helper.chans)){
+		raise(SIGINT);
+
+	}
+	return getChunkTimeMilliseconds(&strm->helper);
+
+}
 static void play_chunk(client_stream_t* strm){
 
-	int delay_time_cache=getChunkTimeMilliseconds(strm->chk);
-        Mix_PlayChannel(-1, strm->chk, 0);
-        SDL_Delay(delay_time_cache);
+	int time_to_play=fill_up_helper(strm);
+	Mix_PlayChannel(-1, strm->chk, 0);
+        SDL_Delay(time_to_play);
         Mix_FreeChunk(strm->chk);
         strm->chk=NULL;
         zero_chk_cache(strm);

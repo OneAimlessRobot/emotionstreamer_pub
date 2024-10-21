@@ -9,6 +9,7 @@ typedef struct client_stream_t{
           int innited;
           struct con_t* con_obj;
           u_int64_t curr_chk_index;
+	  chunk_size_helper helper;
           Mix_Chunk*  chk;
           unsigned char* chunk_data_cache;
 
