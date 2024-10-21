@@ -20,3 +20,7 @@ N estraga nada... mas se usarem mp3 e coisas desse genero só dá uma chuva esqu
 SDL 2.26 requisito minimo.
 
 P threads também.
+
+Optimizei config default.
+
+Agora o server ja compila sem SDL2
