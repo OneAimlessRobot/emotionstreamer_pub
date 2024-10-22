@@ -13,11 +13,11 @@ LDFLAGS := $(SDL_LDFLAGS)
 
 LDLIBS :=  -lm
 
-LDLIBS_ASOUND := -lasound
+LDLIBS_SOUND := -lasound -lpulse -lpulse-simple
 
 LDLIBS_PTHREAD= -lpthread
 
-LDLIBS2 += $(LDLIBS) $(LDLIBS_PTHREAD) $(LDLIBS_ASOUND)
+LDLIBS2 += $(LDLIBS) $(LDLIBS_PTHREAD) $(LDLIBS_SOUND)
 
 INCLUDE= ./Includes .
 SOURCES= . ./Sources

@@ -1,5 +1,7 @@
 #include "../Includes/preprocessor.h"
-#include "/usr/include/alsa/asoundlib.h"
+#include <alsa/asoundlib.h>
+#include <pulse/error.h>
+#include <pulse/simple.h>
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
@@ -18,7 +20,9 @@ static client_stream_t stream_struct={
 					0,
 					{0},
 					NULL,
+					NULL,
                                         NULL,
+					0,
                                         };
 
 static void zero_chk_cache(client_stream_t* strm){
@@ -31,18 +35,41 @@ static void zero_chk_cache(client_stream_t* strm){
 
 static void cleanALSA(client_stream_t* strm){
 
-	if(strm->play_stream){
+	if(strm->play_stream_alsa){
 
-		snd_pcm_close(strm->play_stream);
+		snd_pcm_close(strm->play_stream_alsa);
+	}
+
+}
+static void cleanPA(client_stream_t* strm){
+
+	if(strm->play_stream_pa){
+
+		pa_simple_drain(strm->play_stream_pa, NULL);
+		pa_simple_free(strm->play_stream_pa);
 	}
 
 }
 static void stop_client_stream(client_stream_t* strm){
+	
+	
+	
 	if(strm->innited){
-       		cleanALSA(strm);
-        	printf("SAIMOS DA STREAM DO CLIENTE! Vamos ver errno:%s\n",strerror(errno));
+       		printf("SAIMOS DA STREAM DO CLIENTE! Vamos ver errno:%s\n",strerror(errno));
 		close_con(strm->con_obj);
 		strm->innited=0;
+		switch(strm->which_mode){
+
+			case PLAY_ALSA:
+				cleanALSA(strm);
+				break;
+			case PLAY_PA:
+				cleanPA(strm);
+				break;
+			default:
+				break;
+
+		}
 	}
 	
 }
@@ -62,27 +89,33 @@ static void sigpipe_handler(int useless){
 	sigint_handler(useless);
 
 }
-static void make_chunk(client_stream_t* strm){
+static void play_chunk_alsa(client_stream_t* strm){
 
-
-}
-
-static int fill_up_helper(client_stream_t*strm){
-	
-	memset(&strm->helper,0,sizeof(chunk_size_helper));
-	strm->helper.audio_len=strm->curr_chk_index;
-	strm->helper.freq=cfg_freq;
-	strm->helper.fmt=SIZE*8;
-	strm->helper.chans=CHANNELS;
-	return getChunkTimeMilliseconds(&strm->helper);
-
-}
-static void play_chunk(client_stream_t* strm){
-
-	int time=fill_up_helper(strm);
-	play_from_sound_device_alsa(strm->play_stream,(TYPE*)strm->chunk_data_cache,strm->curr_chk_index);
+	play_from_sound_device_alsa(strm->play_stream_alsa,(TYPE*)strm->chunk_data_cache,strm->curr_chk_index);
 	zero_chk_cache(strm);
 	strm->curr_chk_index=0;
+}
+static void play_chunk_pa(client_stream_t* strm){
+
+	play_from_sound_device_pa(strm->play_stream_pa,(TYPE*)strm->chunk_data_cache,strm->curr_chk_index);
+	zero_chk_cache(strm);
+	strm->curr_chk_index=0;
+}
+
+static void play_chunk(client_stream_t* strm){
+       		switch(strm->which_mode){
+
+			case PLAY_ALSA:
+				play_chunk_alsa(strm);
+				break;
+			case PLAY_PA:
+				play_chunk_pa(strm);
+				break;
+			default:
+				break;
+
+		}
+
 }
 static int process_chunk(client_stream_t* strm){
 
@@ -90,8 +123,7 @@ static int process_chunk(client_stream_t* strm){
 	int wait=0;
 	strm->curr_chk_index+=cfg_chunk_size;
 	if((strm->curr_chk_index)==(cfg_chunk_size*cfg_stream_cache_size_chunks)){
-		make_chunk(strm);
-        	wait=1;
+		wait=1;
 
 	}
         return wait;
@@ -133,14 +165,14 @@ int get_server_chunk(client_stream_t* strm,int_pair pair){
 static void initALSA(client_stream_t* strm){
 
 int err;
-if ((err=snd_pcm_open(&strm->play_stream, DEVICE, SND_PCM_STREAM_PLAYBACK, 0)) < 0){
+if ((err=snd_pcm_open(&strm->play_stream_alsa, DEVICE, SND_PCM_STREAM_PLAYBACK, 0)) < 0){
      printf("Playback open error: %s\n", snd_strerror(err));
      exit(-1);
 }
 
 	strm->innited=1;
 
-if ((err =snd_pcm_set_params(strm->play_stream,SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED,CHANNELS,cfg_freq, 1, 50000) ) < 0 ){
+if ((err =snd_pcm_set_params(strm->play_stream_alsa,SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED,CHANNELS,cfg_freq, 1, cfg_latency_us) ) < 0 ){
 	        printf("Playback open error: %s\n", snd_strerror(err));
  		raise(SIGINT);
 	}
@@ -154,12 +186,38 @@ static void client_stream(client_stream_t* strm){
 	process_chunk(strm);
 	play_chunk(strm);
 }
+static void initPA(client_stream_t*strm){
+     pa_sample_spec ss = {
+         .format = PA_SAMPLE_S16LE,
+         .rate = cfg_freq,
+         .channels = CHANNELS
+     };
 
-static int init_client_stream(client_stream_t* strm,con_t* con_obj, unsigned char* buff){
-	
+     if (!(strm->play_stream_pa = pa_simple_new(NULL, "client.exe", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &errno))) {
+         fprintf(stderr, "pa_simple_new() failed: %s\n", pa_strerror(errno));
+         return;
+	}
+	strm->innited=1;
+
+}
+static int init_client_stream(client_stream_t* strm,con_t* con_obj, unsigned char* buff,method which_mode)
+{
 	signal(SIGINT,sigint_handler);
 	signal(SIGPIPE,sigpipe_handler);
-	initALSA(strm);
+	strm->which_mode=which_mode;
+       	switch(strm->which_mode){
+
+		case PLAY_ALSA:
+			initALSA(strm);
+			break;
+		case PLAY_PA:
+			initPA(strm);
+			break;
+		default:
+			break;
+
+	}
+	
 	strm->chunk_data_cache=buff;
 	memset(strm->chunk_data_cache,0,cfg_chunk_size*cfg_stream_cache_size_chunks);
 	strm->con_obj=con_obj;
@@ -174,8 +232,8 @@ void player_stop_stream(void){
 	raise(SIGINT);
 }
 
-void player_init_stream(con_t* con_obj,unsigned char* buff){
+void player_init_stream(con_t* con_obj,unsigned char* buff,method which_mode){
 
-	init_client_stream(&stream_struct,con_obj,buff);
+	init_client_stream(&stream_struct,con_obj,buff,which_mode);
 }
 

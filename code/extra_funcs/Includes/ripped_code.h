@@ -13,4 +13,5 @@ typedef struct chunk_size_helper{
 
 uint32_t getChunkTimeMilliseconds(chunk_size_helper* helper);
 int play_from_sound_device_alsa(snd_pcm_t* handle,TYPE sound_buff_to_play[],int size);
+int play_from_sound_device_pa(pa_simple* handle,TYPE sound_buff_to_play[],int size);
 #endif

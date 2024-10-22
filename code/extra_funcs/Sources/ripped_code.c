@@ -1,9 +1,11 @@
 #include "../../Includes/preprocessor.h"
+#include <pulse/error.h>
+#include <pulse/simple.h>
 #include <sys/ioctl.h> //for ioctl()
 #include <linux/soundcard.h> //SOUND_PCM*
 #include "../Includes/sockio.h"
 #include "../Includes/configs.h"
-#include "/usr/include/alsa/asoundlib.h"
+#include <alsa/asoundlib.h>
 #include "../Includes/ripped_code.h"
 
 
@@ -86,7 +88,7 @@ int play_from_sound_device_alsa(snd_pcm_t* handle,TYPE sound_buff_to_play[],int 
   int err;
   snd_pcm_sframes_t frames;
   int samples= size/SIZE;
-  printf("Numero de samples a ser tocadas: %d\n",samples);
+  printf("Numero de frames a ser tocadas: %d\n",samples/CHANNELS);
   frames = snd_pcm_writei(handle,sound_buff_to_play, samples/CHANNELS);
   printf("Frames escritas: %ld\n",frames);
   if (frames < 0){
@@ -96,4 +98,16 @@ int play_from_sound_device_alsa(snd_pcm_t* handle,TYPE sound_buff_to_play[],int 
     	printf("snd_pcm_writei failed: %s\n", snd_strerror(err));
   }
   return 0;
+}
+
+int play_from_sound_device_pa(pa_simple* handle,TYPE sound_buff_to_play[],int size)
+{
+    if (pa_simple_write(handle, sound_buff_to_play, size, NULL) < 0) {
+        fprintf(stderr, "pa_simple_write() failed: %s\n", pa_strerror(errno));
+        return 1;
+    }
+
+ //   pa_simple_drain(handle, NULL);
+
+    return 0;
 }

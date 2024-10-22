@@ -1,5 +1,7 @@
 #include "../Includes/preprocessor.h"
-#include "/usr/include/alsa/asoundlib.h"
+#include <alsa/asoundlib.h>
+#include <pulse/error.h>
+#include <pulse/simple.h>
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/configs.h"
@@ -78,7 +80,7 @@ int clientStart(char* req_field,char* file_name,uint32_t tcp_s_port, char* s_hos
 	switch(the_type){
 
 	case PLAY:
-		player_init_stream(&client_con_obj, stream_cache_data);
+		player_init_stream(&client_con_obj, stream_cache_data,PLAY_PA);
 		break;
 	case PEEK:
 		printf(CONTENT_PEEK_INCOMMING);

@@ -10,6 +10,7 @@ char server_music_folder_path[PATHSIZE]={0};
 
 //EM BYTES E HZ!
 u_int64_t cfg_chunk_size=CHUNK_SIZE,
+        cfg_latency_us=DEF_LATENCY_US,
         cfg_freq=FREQ,
 	cfg_datasize=DEF_DATASIZE,
         cfg_stream_cache_size_chunks=STREAM_CACHE_SIZE_CHUNKS;
@@ -42,6 +43,13 @@ void read_values_cfg(void){
 		raise(SIGINT);
 	}
 	
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"latency_us: %lu",&cfg_latency_us);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -129,11 +137,13 @@ void read_values_cfg(void){
 void print_values_cfg(void){
 
 
-	printf("chunk_size: %lu\n",cfg_chunk_size/CHANNELS);
+	printf("chunk_size: %lu bytes\n",cfg_chunk_size);
+
+	printf("latency_us: %lu\n",cfg_latency_us);
 
 	printf("freq: %lu\n",cfg_freq);
 
-	printf("datasize: %lu\n",cfg_datasize);
+	printf("datasize: %lu bytes\n",cfg_datasize);
 
 	printf("client_timeouts_data: %lus %lu us\n",client_data_times_pair[0],client_data_times_pair[1]);
 
@@ -146,7 +156,7 @@ void print_values_cfg(void){
 
 	printf("server_drop_chunk_timeouts: %lus %luus\n",server_drop_chunks_times_pair[0],server_drop_chunks_times_pair[1]);
 
-	printf("stream_chunk_num: %lu\n",cfg_stream_cache_size_chunks);
+	printf("stream_chunk_num: %lu chunks\n",cfg_stream_cache_size_chunks);
 
 	printf("server_music_folder_path: %s\n",server_music_folder_path);
 

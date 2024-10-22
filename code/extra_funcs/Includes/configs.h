@@ -8,7 +8,9 @@
 
 #define CONFIG_READ_LINE_BUFF_SIZE 1025
 
-extern u_int64_t cfg_chunk_size,
+extern u_int64_t
+	cfg_latency_us,
+	cfg_chunk_size,
 	cfg_freq,
 	cfg_datasize,
 	cfg_stream_cache_size_chunks;
