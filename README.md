@@ -21,3 +21,5 @@ P threads também.
 Optimizei config default.
 
 Funciona com pulseaudio ou com ALSA. (Um deles tem que estar instalado)
+
+**SO FUNCIONA COM FICHEIROS EM FORMATO PCM!!!!!!!!! (SE NAO ESTAO, CONVERTE!)**
