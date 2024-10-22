@@ -16,9 +16,6 @@ Existe uma config no folder "configs", onde tambem podem mudar onde o server vai
 
 N estraga nada... mas se usarem mp3 e coisas desse genero só dá uma chuva esquisita.
 
-
-SDL 2.26 requisito minimo.
-
 P threads também.
 
 Optimizei config default.
