@@ -23,4 +23,4 @@ P threads também.
 
 Optimizei config default.
 
-Agora o server ja compila sem SDL2
+Funciona com pulseaudio ou com ALSA. (Um deles tem que estar instalado)
