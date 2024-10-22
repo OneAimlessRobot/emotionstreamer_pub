@@ -45,7 +45,7 @@ static void cleanPA(client_stream_t* strm){
 
 	if(strm->play_stream_pa){
 
-		pa_simple_drain(strm->play_stream_pa, NULL);
+		pa_simple_flush(strm->play_stream_pa, NULL);
 		pa_simple_free(strm->play_stream_pa);
 	}
 
@@ -55,8 +55,7 @@ static void stop_client_stream(client_stream_t* strm){
 	
 	
 	if(strm->innited){
-       		printf("SAIMOS DA STREAM DO CLIENTE! Vamos ver errno:%s\n",strerror(errno));
-		close_con(strm->con_obj);
+       		close_con(strm->con_obj);
 		strm->innited=0;
 		switch(strm->which_mode){
 
@@ -70,8 +69,9 @@ static void stop_client_stream(client_stream_t* strm){
 				break;
 
 		}
+		printf("SAIMOS DA STREAM DO CLIENTE! Vamos ver errno:%s\n",strerror(errno));
 	}
-	
+
 }
 
 
