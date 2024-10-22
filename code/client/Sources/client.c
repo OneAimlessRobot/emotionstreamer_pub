@@ -1,7 +1,5 @@
 #include "../Includes/preprocessor.h"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_rwops.h>
+#include "/usr/include/alsa/asoundlib.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/configs.h"

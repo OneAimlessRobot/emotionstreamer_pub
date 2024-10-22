@@ -1,5 +1,10 @@
 #ifndef CONFIGS_H
 #define CONFIGS_H
+#define TYPE int16_t
+#define SIZE sizeof(TYPE)
+#define SAMPLE_MAX (pow(2,SIZE*8 - 1) - 1)
+#define CHANNELS 2
+#define DEVICE "default"
 
 #define CONFIG_READ_LINE_BUFF_SIZE 1025
 

@@ -129,7 +129,7 @@ void read_values_cfg(void){
 void print_values_cfg(void){
 
 
-	printf("chunk_size: %lu\n",cfg_chunk_size);
+	printf("chunk_size: %lu\n",cfg_chunk_size/CHANNELS);
 
 	printf("freq: %lu\n",cfg_freq);
 

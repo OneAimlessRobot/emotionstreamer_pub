@@ -10,7 +10,7 @@ typedef struct client_stream_t{
           struct con_t* con_obj;
           u_int64_t curr_chk_index;
 	  chunk_size_helper helper;
-          Mix_Chunk*  chk;
+          snd_pcm_t*  play_stream;
           unsigned char* chunk_data_cache;
 
 }client_stream_t;

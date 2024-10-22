@@ -6,25 +6,18 @@ CLIENTBIN= ./client/client.exe
 
 GLDIR= ./player
 
-GLIBS := -L$(GLDIR)/SDL2/lib $(GLDIR)/SDL2/lib/libSDL2.a  $(GLDIR)/SDL2/lib/libSDL2_mixer.a -lm -ldl -lpthread
-GLIBS += -I$(GLDIR)/SDL2/include -Wl,-rpath,$(GLDIR)/SDL2/lib -Wl,--enable-new-dtags -lSDL2 -lSDL2_mixer
 GLIBS += -L$(GLDIR)/ncurses/lib $(GLDIR)/ncurses/lib/libncurses.a $(GLDIR)/ncurses/lib/libncursesw.a $(GLDIR)/ncurses/lib/libtinfo.a
 GLIBS += -I$(GLDIR)/ncurses/include -Wl,-rpath,$(GLDIR)/ncurses/lib -Wl,--enable-new-dtags -lncurses -lncursesw -ltinfo
 
-SDL_CFLAGS := $(shell sdl2-config --cflags)
-SDL_LDFLAGS := $(shell sdl2-config --libs)
-
-LDFLAGS := $(SDL_LDFLAGS) -lSDL2_mixer
-
-SDLFLAGS := $(pkg-config sdl2 --cflags) `-Wl, --enable-new-dtags`
-SDLLIBS :=  $(pkg-config sdl2 --libs) -lSDL2_mixer
+LDFLAGS := $(SDL_LDFLAGS) 
 
 LDLIBS :=  -lm
 
+LDLIBS_ASOUND := -lasound
 
 LDLIBS_PTHREAD= -lpthread
 
-LDLIBS2 += $(LDLIBS) $(LDLIBS_PTHREAD) $(LDFLAGS)
+LDLIBS2 += $(LDLIBS) $(LDLIBS_PTHREAD) $(LDLIBS_ASOUND)
 
 INCLUDE= ./Includes .
 SOURCES= . ./Sources
@@ -108,10 +101,10 @@ $(BINARY): $(OBJECTS)
 	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(RESOURCEFILES)  $(LDLIBS2)
 
 $(SERVERBIN): $(SERVERSTUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS) $(LDLIBS_PTHREAD)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES)  $(LDLIBS2)
 
 $(CLIENTBIN): $(CLIENTSTUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES)    $(LDLIBS2)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES) $(LDLIBS2)
 
 
 
