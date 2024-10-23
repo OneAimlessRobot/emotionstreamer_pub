@@ -71,7 +71,7 @@ void con_go(int sockfd_tcp,int curr_port){
 				switch(recvd_type){
 
 					case PLAY:
-						snprintf(file_path,sizeof(file_path)-1,"%s%s.wav",curr_dir,file_name);
+						snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,EXTENSION);
 						break;
 					case PEEK:
 						dir_listing_str=generateDirListing();

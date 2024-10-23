@@ -1,6 +1,8 @@
 
 #include "../../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
+#include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/configs.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../Includes/load_html.h"
 
@@ -28,7 +30,7 @@ static void generateDirListingPrimitive(void){
 	//THIS LINE HAS RIPPED CODE! FIND ALL BASEFILENAMES WITH EXTENSION '.WAV', but dont show the extension! (IMPORTANT FOR SECURITY)
 	//https://www.baeldung.com/linux/find-filenames-no-extension
 	//https://stackoverflow.com/questions/1447625/list-files-with-certain-extensions-with-ls-and-grep
-        snprintf(cmd,PATHSIZE,"find %s -name '*.wav' | xargs -I{} basename {} '.wav' > %s",currSearchedDir,tmpDir);
+        snprintf(cmd,PATHSIZE,"find %s -name '*%s' | xargs -I{} basename {} '*%s' > %s",currSearchedDir,EXTENSION,EXTENSION,tmpDir);
         //END OF RIPPEDD CODE
 	system(cmd);
         memset(cmd,0,PATHSIZE);
