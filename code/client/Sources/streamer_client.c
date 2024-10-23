@@ -156,6 +156,8 @@ int get_server_chunk(client_stream_t* strm,int_pair pair){
 	}
 	if(wait){
 		play_chunk(strm);
+		clear_con_data(strm->con_obj);
+		snprintf((char*)strm->con_obj->ack_udp_data,cfg_datasize-1,"%s",CON_STRING);
 		result= con_send_udp_ack(strm->con_obj,server_drop_chunks_times_pair);
 	}
 	return result;

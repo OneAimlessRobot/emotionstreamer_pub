@@ -94,7 +94,7 @@ int play_from_sound_device_alsa(snd_pcm_t* handle,TYPE sound_buff_to_play[],int 
   if (frames < 0){
 	frames = snd_pcm_recover(handle, frames, 0);
   }
-  if (frames < 0) {
+  if ((err=frames) < 0) {
     	printf("snd_pcm_writei failed: %s\n", snd_strerror(err));
   }
   return 0;

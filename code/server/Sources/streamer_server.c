@@ -72,7 +72,11 @@ static int send_chunk_to_client(server_stream_t* strm,int_pair pair){
 
 	if(time_to_wait >0){
 
-		result= con_read_udp_ack(strm->con_obj,server_drop_chunks_times_pair);
+		con_read_udp_ack(strm->con_obj,server_drop_chunks_times_pair);
+		result= !(strs_are_strictly_equal((char*)strm->con_obj->ack_udp_data,CON_STRING));
+		if(!result){
+			printf("Má resposta de cliente!!!! Fechando a conexão!!!\n");
+		}
 	}
         return result;
 }
