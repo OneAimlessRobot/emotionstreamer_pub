@@ -12,7 +12,7 @@
 #include "../../extra_funcs/Includes/protocol.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/connection.h"
-#include "../../extra_funcs/Includes/ripped_code.h"
+#include "../Includes/ripped_code.h"
 #include "../Includes/streamer_client.h"
 #include "../Includes/client.h"
 

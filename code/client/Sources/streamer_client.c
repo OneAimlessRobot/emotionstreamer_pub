@@ -10,7 +10,7 @@
 #include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/connection.h"
-#include "../../extra_funcs/Includes/ripped_code.h"
+#include "../Includes/ripped_code.h"
 #include "../Includes/streamer_client.h"
 
 

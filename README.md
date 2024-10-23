@@ -11,7 +11,7 @@ Existe uma config no folder "configs", onde tambem podem mudar onde o server vai
 
 
 
-***SÒ FUNCIONA COM FICHEIROS AUDIO RAW (DESCOMPRIMIDOS)***
+***SÒ FUNCIONA COM FICHEIROS AUDIO WAV (SE NAO ESTAO, CONVERTE!)***
 
 
 N estraga nada... mas se usarem mp3 e coisas desse genero só dá uma chuva esquisita.
@@ -20,6 +20,6 @@ P threads também.
 
 Optimizei config default.
 
-Funciona com pulseaudio ou com ALSA. (Um deles tem que estar instalado)
+Funciona com pulseaudio ou com ALSA. (Um deles tem que estar instalado.)
 
-**SO FUNCIONA COM FICHEIROS EM FORMATO PCM!!!!!!!!! (SE NAO ESTAO, CONVERTE!)**
+O server compila sem as bibliotecas de audio! (Usa 'make cleanall && make server' para compilares Só o server)

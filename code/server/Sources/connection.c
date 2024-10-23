@@ -71,7 +71,7 @@ void con_go(int sockfd_tcp,int curr_port){
 				switch(recvd_type){
 
 					case PLAY:
-						snprintf(file_path,sizeof(file_path)-1,"%s%s",curr_dir,file_name);
+						snprintf(file_path,sizeof(file_path)-1,"%s%s.wav",curr_dir,file_name);
 						break;
 					case PEEK:
 						dir_listing_str=generateDirListing();
@@ -104,6 +104,7 @@ void con_go(int sockfd_tcp,int curr_port){
 					else if(recvd_type==PLAY){
 
 						printf("A file path é: %s\n",file_path);
+						read(fp,file_name,44);//GET RID OF WAV HEADER! IMPORTANT! 44 BYTES!
 						begin_stream(&server_con_obj,fp,stream_cache_data);
 					}
 

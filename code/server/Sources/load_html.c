@@ -25,8 +25,12 @@ static void generateDirListingPrimitive(void){
         char* cmd= malloc(PATHSIZE);
         memset(cmd,0,PATHSIZE);
 	snprintf(currSearchedDir,PATHSIZE,"%s",curr_dir);
-        snprintf(cmd,PATHSIZE,"ls -1 %s > %s",currSearchedDir,tmpDir);
-        system(cmd);
+	//THIS LINE HAS RIPPED CODE! FIND ALL BASEFILENAMES WITH EXTENSION '.WAV', but dont show the extension! (IMPORTANT FOR SECURITY)
+	//https://www.baeldung.com/linux/find-filenames-no-extension
+	//https://stackoverflow.com/questions/1447625/list-files-with-certain-extensions-with-ls-and-grep
+        snprintf(cmd,PATHSIZE,"find %s -name '*.wav' | xargs -I{} basename {} '.wav' > %s",currSearchedDir,tmpDir);
+        //END OF RIPPEDD CODE
+	system(cmd);
         memset(cmd,0,PATHSIZE);
 	snprintf(cmd,PATHSIZE,"echo \"%s\" >> %s",close_keyword,tmpDir);
         system(cmd);
