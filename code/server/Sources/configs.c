@@ -49,8 +49,15 @@ void read_values_cfg_server(void){
 
 		fclose(cfg_fp);
 		raise(SIGINT);
-	}
+ 	}
 	sscanf(curr_line_buff,"server_timeouts_con: %lu %lu",&server_con_times_pair[0],&server_con_times_pair[1]);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+ 	}
+	sscanf(curr_line_buff,"server_timeouts_drop_chunks: %lu %lu",&server_drop_chunks_times_pair[0],&server_drop_chunks_times_pair[1]);
 	clean_buff();
 
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -72,6 +79,8 @@ void print_values_cfg_server(void){
 	printf("server_timeouts_data: %lus %lu us\n",server_data_times_pair[0],server_data_times_pair[1]);
 
 	printf("server_timeouts_con: %lus %lu us\n",server_con_times_pair[0],server_con_times_pair[1]);
+
+	printf("server_timeouts_drop_chunks: %lus %lu us\n",server_drop_chunks_times_pair[0],server_drop_chunks_times_pair[1]);
 
 	printf("server_music_folder_path: %s\n",server_music_folder_path);
 
