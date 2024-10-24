@@ -2,7 +2,7 @@
 #define PROTOCOL_H
 
 
-typedef enum req_type{PLAY,PEEK,NA}req_type;
+typedef enum req_type{PLAY,PEEK,DOWN,NA}req_type;
 typedef enum stream_cmd{TOGGLE,STOP,REWIND,TIME,NOP}stream_cmd;
 
 //todas as strings sao terminadas a 0
@@ -20,7 +20,7 @@ stream_cmd str_to_stream_cmd(char* str);
 void stream_cmd_to_str(stream_cmd type,char buff[]);
 
 
-#define UNKNOWN_REQ "Request desconhecido: Requests válidos são:\npeek- Ver ficheiros de audio dentro do server.\nget- Transferir e tocar um ficheiro do server.\n"
+#define UNKNOWN_REQ "Request desconhecido: Requests válidos são:\npeek- Ver musicas no server.\nplay- tocar um ficheiro do server.\ndown- transferir um ficheiro do server\n"
 
 
 

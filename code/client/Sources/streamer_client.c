@@ -6,6 +6,7 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/configs.h"
+#include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/fileshit.h"
@@ -158,7 +159,7 @@ int get_server_chunk(client_stream_t* strm,int_pair pair){
 		play_chunk(strm);
 		clear_con_data(strm->con_obj);
 		snprintf((char*)strm->con_obj->ack_udp_data,cfg_datasize-1,"%s",CON_STRING);
-		result= con_send_udp_ack(strm->con_obj,server_drop_chunks_times_pair);
+		result= con_send_udp_ack(strm->con_obj,client_data_times_pair);
 	}
 	return result;
 

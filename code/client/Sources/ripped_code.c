@@ -5,6 +5,7 @@
 #include <linux/soundcard.h> //SOUND_PCM*
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/configs.h"
+#include "../Includes/configs.h"
 #include <alsa/asoundlib.h>
 #include "../Includes/ripped_code.h"
 

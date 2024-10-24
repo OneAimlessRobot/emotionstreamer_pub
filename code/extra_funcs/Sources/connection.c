@@ -202,14 +202,14 @@ static void greet_client(con_t* con_obj,int_pair pair,int curr_port){
 }
 
 
-void greet(con_t*con_obj,int curr_port){
+void greet(con_t*con_obj,int_pair times_pair,int curr_port){
 
 	switch(con_obj->type){
 		case SERVER_C:
-			greet_server(con_obj,server_data_times_pair,curr_port);
+			greet_server(con_obj,times_pair,curr_port);
 			break;
 		case CLIENT_C:
-			greet_client(con_obj,client_data_times_pair,curr_port);
+			greet_client(con_obj,times_pair,curr_port);
 			break;
 		default:
 			break;

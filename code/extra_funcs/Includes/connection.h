@@ -50,5 +50,5 @@ int con_send_udp_ack(con_t* con_obj, int_pair pair);
 //initialize con_obj first!!!
 void clear_con_data(con_t* con_obj);
 
-void greet(con_t*con_obj,int curr_port);
+void greet(con_t*con_obj,int_pair times_pair, int curr_port);
 #endif

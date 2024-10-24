@@ -19,6 +19,11 @@ req_type str_to_req_type(char* str){
 		return PEEK;
 
 	}
+	if(!strs_are_strictly_equal(str,"down")){
+
+		return DOWN;
+
+	}
 
 	return NA;
 
@@ -33,6 +38,9 @@ void req_type_to_str(req_type type,char buff[]){
 		break;
 		case PEEK:
 			snprintf(buff, cfg_datasize, "peek");
+		break;
+		case DOWN:
+			snprintf(buff, cfg_datasize, "down");
 		break;
 		default:
 			snprintf(buff, cfg_datasize, "NONE");

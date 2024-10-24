@@ -24,7 +24,6 @@
 #define ACK_STRING "sup"
 #define CON_STRING "hey"
 #define NACK_STRING "foff"
-#define MUSIC_SERVER_INPUT_PATH "/songs_in/raw_songs/"
 #define CONFIG_FILE_PATH "../config/sizes.cfg"
 #define MAX_CLIENTS_HARD_LIMIT 1000
 #define SIG_STOPSERVER 19199

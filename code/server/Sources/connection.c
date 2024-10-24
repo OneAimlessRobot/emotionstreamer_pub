@@ -4,6 +4,7 @@
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/configs.h"
+#include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
@@ -49,12 +50,11 @@ void con_go(int sockfd_tcp,int curr_port){
 				char file_path[cfg_datasize*2 +2];
 				memset(file_path,0,cfg_datasize+2+2);
 				char req_buff[PATHSIZE]={0};
-				char* dir_listing_str=NULL;
 				int fp;
 
 				init_con(&server_con_obj,sockfd_tcp,SERVER_C,con_buffs);
 
-				greet(&server_con_obj,curr_port);
+				greet(&server_con_obj,server_con_times_pair,curr_port);
 				
 				clear_con_data(&server_con_obj);
 
@@ -71,10 +71,17 @@ void con_go(int sockfd_tcp,int curr_port){
 				switch(recvd_type){
 
 					case PLAY:
+						
+						printf("Play pedido!\n");
+						snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,EXTENSION);
+						break;
+					case DOWN:
+						printf("Download pedido!\n");
 						snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,EXTENSION);
 						break;
 					case PEEK:
-						dir_listing_str=generateDirListing();
+						printf("Peek pedido!\n");
+						char* dir_listing_str=generateDirListing();
 						snprintf(file_path,strlen(dir_listing_str)+1,"%s",dir_listing_str);
 						break;
 					default:
@@ -87,10 +94,7 @@ void con_go(int sockfd_tcp,int curr_port){
 					//setNonBlocking(fp);
 					printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(server_con_obj.peer_tcp_addr.sin_addr),file_path);
 	                       		perror("Nao foi possivel abrir nada!!!!\n");
-	                        	if(dir_listing_str){
-						free(dir_listing_str);
-						dir_listing_str=NULL;
-					}
+	                        	
 					raise(SIGINT);
 	                	}
 				else{
@@ -99,6 +103,12 @@ void con_go(int sockfd_tcp,int curr_port){
 					if(recvd_type==PEEK){
 						sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						deleteDirListingFile();
+						raise(SIGINT);
+					}
+					else if(recvd_type==DOWN){
+
+						printf("A file path é: %s\n",file_path);
+						sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						raise(SIGINT);
 					}
 					else if(recvd_type==PLAY){

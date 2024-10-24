@@ -5,6 +5,7 @@
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/configs.h"
+#include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/sock_ops.h"

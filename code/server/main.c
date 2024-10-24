@@ -4,11 +4,14 @@
 #include "../extra_funcs/Includes/fileshit.h"
 #include "../extra_funcs/Includes/sockio.h"
 #include "../extra_funcs/Includes/configs.h"
+#include "Includes/configs.h"
 
 int main(int argc, char ** argv){
 
-	read_values_cfg();
-        print_values_cfg();
+	read_values_cfg_general();
+        print_values_cfg_general();
+	read_values_cfg_server();
+        print_values_cfg_server();
 	if(argc!=3){
 
                 printf("Precisas do address deste server (arg1) e de uma porta udp(arg2) para o server!!!\n");

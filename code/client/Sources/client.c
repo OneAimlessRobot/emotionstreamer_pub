@@ -5,6 +5,7 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/configs.h"
+#include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
@@ -19,7 +20,7 @@
 static struct sockaddr_in server_ip_address;
 
 static con_t client_con_obj;
-
+int fp=-1;
 static void sigpipe_handler(int signal){
 
 	close_con(&client_con_obj);
@@ -69,7 +70,7 @@ int clientStart(char* req_field,char* file_name,uint32_t tcp_s_port, char* s_hos
 	init_con(&client_con_obj,client_sock,CLIENT_C,con_buffs);
 
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
-	greet(&client_con_obj,client_con_obj.this_tcp_addr.sin_port);
+	greet(&client_con_obj,client_con_times_pair,client_con_obj.this_tcp_addr.sin_port);
 
 	snprintf((char*)client_con_obj.tcp_data,cfg_datasize,"%s %s",req_field,file_name);
 
@@ -81,6 +82,18 @@ int clientStart(char* req_field,char* file_name,uint32_t tcp_s_port, char* s_hos
 
 	case PLAY:
 		player_init_stream(&client_con_obj, stream_cache_data,PLAY_PA);
+		break;
+	case DOWN:
+		printf(CONTENT_DOWNLOAD_INCOMMING);
+		char file_path[PATHSIZE*3-1]={0};
+		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,EXTENSION);
+		printf("A file_path é: %s\n",file_path);
+                if((fp=creat(file_path,0777))<0){
+				perror("Nao foi possivel transferir ficheiro!!!!\n");
+                                raise(SIGINT);
+                }
+		readalltofd(client_con_obj.sockfd_tcp,fp,client_data_times_pair);
+		raise(SIGINT);
 		break;
 	case PEEK:
 		printf(CONTENT_PEEK_INCOMMING);
