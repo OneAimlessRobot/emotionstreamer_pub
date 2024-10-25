@@ -5,7 +5,7 @@
 
 static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
-
+static char client_logs_file_name[PATHSIZE]={0};
 //EM BYTES E HZ!
 u_int64_t cfg_chunk_size=CHUNK_SIZE,
 	cfg_datasize=DEF_DATASIZE;

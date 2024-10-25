@@ -23,3 +23,5 @@ Optimizei config default.
 Funciona com pulseaudio ou com ALSA. (Um deles tem que estar instalado.)
 
 O server compila sem as bibliotecas de audio! (Usa 'make cleanall && make server' para compilares Só o server)
+
+O cliente necessita de ncurses para compilar

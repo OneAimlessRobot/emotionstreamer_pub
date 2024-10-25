@@ -1,7 +1,7 @@
 #ifndef CONFIGS__SERVER_H
 #define CONFIGS__SERVER_H
 #define CONFIG_FILE_PATH_SERVER "./configs/sizes.cfg"
-#define MUSIC_SERVER_INPUT_PATH "./songs_in/raw_songs/"
+#define MUSIC_SERVER_INPUT_PATH "/songs_in/raw_songs/"
 
 
 extern char server_music_folder_path[PATHSIZE];

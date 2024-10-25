@@ -11,6 +11,6 @@ int sendallfd(int sock,int fd,int_pair times);
 
 int readsome(int sd,char buff[],u_int64_t size,int_pair times);
 
-int readalltofd(int sock,int fd,int_pair times);
+int readalltofd(int sock,int fd,int down_size,int_pair times);
 
 #endif

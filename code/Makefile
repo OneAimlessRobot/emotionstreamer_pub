@@ -6,18 +6,15 @@ CLIENTBIN= ./client/client.exe
 
 GLDIR= ./player
 
-GLIBS += -L$(GLDIR)/ncurses/lib $(GLDIR)/ncurses/lib/libncurses.a $(GLDIR)/ncurses/lib/libncursesw.a $(GLDIR)/ncurses/lib/libtinfo.a
-GLIBS += -I$(GLDIR)/ncurses/include -Wl,-rpath,$(GLDIR)/ncurses/lib -Wl,--enable-new-dtags -lncurses -lncursesw -ltinfo
-
 LDFLAGS := $(SDL_LDFLAGS) 
 
-LDLIBS :=  -lm
+LDLIBS :=  -lm 
 
 LDLIBS_SOUND := -lasound -lpulse -lpulse-simple
 
-LDLIBS_PTHREAD= -lpthread
+LDLIBS_PTHREAD= -lpthread -lncurses 
 
-LDLIBS2 += $(LDLIBS) $(LDLIBS_PTHREAD) $(LDLIBS_SOUND)
+LDLIBS2 += $(LDLIBS) $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) 
 
 INCLUDE= ./Includes .
 SOURCES= . ./Sources
@@ -35,7 +32,7 @@ RESDIR= ./resources
 
 CURRDIR=echo `pwd`
 
-CC= cc
+CC= clang
 DEPFLAGS= -MP -MD
 
 CFLAGS += -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
@@ -101,7 +98,7 @@ $(BINARY): $(OBJECTS)
 	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(RESOURCEFILES)  $(LDLIBS2)
 
 $(SERVERBIN): $(SERVERSTUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS) $(LDLIBS_PTHREAD) 
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS)
 
 $(CLIENTBIN): $(CLIENTSTUFF)
 	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES) $(LDLIBS2)

@@ -80,6 +80,7 @@ static void sigint_handler(int useless){
 
 	printf("SIGINT! ");
 	stop_client_stream(&stream_struct + (0*useless));
+	fclose(logstream);
 	exit(useless);
 
 }

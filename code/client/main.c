@@ -12,10 +12,21 @@ int main(int argc, char ** argv){
 	print_values_cfg_general();
 	read_values_cfg_client();
 	print_values_cfg_client();
-	logstream=stderr;
-	logging=1;
+	logging=0;
+	int fd=-1;
+	int result= strnlen(client_music_folder_path,PATHSIZE-1);
+	if(!result){
+        	fd= open(LOG_FILE_NAME_CLIENT,O_TRUNC|O_WRONLY|O_CREAT,0777);
+	}
+	else{
+        	fd= open(client_logs_file_name,O_TRUNC|O_WRONLY|O_CREAT,0777);
+	}
+	if(fd<0){
+		perror("Não foi possivel criar ficheiro de logs!\n");
+		return 0;
 
-
+	}
+	logstream=fdopen(fd,"w");
 	if(argc!=5){
 
 		printf("Utilizacao correta:\narg1: tipo de pedido (play ou peek. Tocar uma musica ou consultar musicas. Com Peek, Sai logo e a musica fornecida é ignorada).\narg2: Nome da musica a tocar\narg3: porta udp do server\narg4: ipv4 do server\n");
@@ -23,7 +34,7 @@ int main(int argc, char ** argv){
 	}
 	memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
-        int result= strnlen(client_music_folder_path,PATHSIZE-1);
+        result= strnlen(client_music_folder_path,PATHSIZE-1);
         if(!result){
 
                 snprintf(curr_dir+strlen(curr_dir),PATHSIZE,"%s",MUSIC_CLIENT_INPUT_PATH);
@@ -34,7 +45,7 @@ int main(int argc, char ** argv){
 	printf("Curr dir: %s\n", curr_dir);
 
 	clientStart(argv[1],argv[2],atol(argv[3]),argv[4]);
-
+	
 
 
 	return 0;

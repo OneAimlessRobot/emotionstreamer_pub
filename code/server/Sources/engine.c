@@ -10,8 +10,8 @@
 #include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/connection.h"
-#include "../Includes/connection.h"
 #include "../Includes/engine.h"
+#include "../Includes/connection.h"
 
 static server_state state;
 static int curr_port=0;
@@ -65,12 +65,12 @@ static void con_accepting_loop(void){
 					perror("Rejected connection!");
 					pid=1;
 				}
-				
 			if(!pid){
-				con_go(sock,curr_port);
-				
+				con_go(&state,sock,curr_port);
 				serverStop(0);
-                	}
+				close(state.server_sock_tcp);
+				
+			}
         		else if(pid<0){
                         	perror("Erro no fork no loop de conexoes do server!!!\n");
 				raise(SIGPIPE);

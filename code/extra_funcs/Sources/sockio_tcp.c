@@ -1,4 +1,5 @@
 #include "../../Includes/preprocessor.h"
+#include "../Includes/auxfuncs.h"
 #include "../Includes/sockio.h"
 #include "../Includes/configs.h"
 #include "../Includes/sockio_tcp.h"
@@ -18,7 +19,7 @@ int sendsome(int sd,char buff[],u_int64_t size,int_pair times){
 
                 return send(sd,buff,size,0);
                 }
-		else if(!iResult){
+			else if(!iResult){
                	return -2;
 		}
 		else{
@@ -35,13 +36,13 @@ int sendallfd(int sock,int fd,int_pair times){
 char buff[cfg_datasize];
 memset(buff,0,cfg_datasize);
 int numread;
+int all_that_was_sent=0;
 int sent=0;
 while ((numread = read(fd,buff,cfg_datasize)) > 0) {
     
-    int totalsent = 0;
-    while (totalsent < numread) {
         errno=0;
-	sent = sendsome(sock, buff + totalsent,  numread - totalsent,times);
+	sent = sendsome(sock, buff,  numread,times);
+	memset(buff,0,cfg_datasize);
 	if(sent==-2){
 
 		if(logging){
@@ -77,20 +78,15 @@ while ((numread = read(fd,buff,cfg_datasize)) > 0) {
 		if(logging){
                 fprintf(logstream,"Outro erro qualquer!!!!!: %d %s\n",errno,strerror(errno));
                 }
-	
 		break;
 	}
         }
-	else{
+		all_that_was_sent+=sent;
+	}
 	if(logging){
-	fprintf(logstream,"send de %d bytes feito!!!!!\n",sent);
+	fprintf(logstream,"send de %d bytes feito!!!!!\n",all_that_was_sent);
 	}
-	totalsent += sent;
-    	}
-	}
-}
-
-return 0;
+	return 0;
 }
 
 
@@ -197,22 +193,27 @@ int readall(int sock,char buff[],int size,int_pair times){
 
 }
 
-int readalltofd(int sock,int fd,int_pair times){
-        int64_t len=1;
+int readalltofd(int sock,int fd,int down_size,int_pair times){
+        int32_t len=1;
+	int32_t written=1;
+	int32_t total=0;
 	char buff[cfg_datasize];
 	memset(buff,0,cfg_datasize);
-
-	while(1){
+	for(;(len>0||len==-2);){
 		len=readsome(sock,buff,cfg_datasize,times);
-		if(len>0){
-			write(fd,buff,len);
+		if(len==-2){
+			printf("Timeout no read!!!!\n");
+			continue;
 		}
-		else{
-
-			break;
-		}
-
+		written=write(fd,buff,len);
+		total+=written;
 		memset(buff,0,cfg_datasize);
+	}
+	if(!(total-down_size)){
+		if(logging){
+		fprintf(logstream,"readall bem sucedido!! A socket e %d\n",sock);
+
+		}
 	}
 	if(len<0){
 	if (errno == EAGAIN || errno == EWOULDBLOCK) {
@@ -241,6 +242,12 @@ int readalltofd(int sock,int fd,int_pair times){
 	}
 	
 	}
+	if(logging){
+		fprintf(logstream,"readalltofd bem sucedido. A socket e %d\nLemos %d de %d bytes\n",sock,total,down_size);
+
+	}
+	memset(buff,0,cfg_datasize);
+	sendsome(sock,buff,cfg_datasize,times);
 	
         return 0;
 
