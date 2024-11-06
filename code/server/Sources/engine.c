@@ -133,8 +133,6 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	slave_args arg_s={0};
 	
 
-	arg_s.send_str=HB_SEND_STRING;
-	arg_s.reply_str=HB_REPLY_STRING;
 	arg_s.lower_name=buff;
 	arg_s.exit_signal=SIGTERM;
 	arg_s.ack_timeout_lim= server_ack_timeout_lim;

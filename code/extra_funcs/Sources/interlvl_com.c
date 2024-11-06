@@ -82,7 +82,7 @@ void* slave_thread(void* args){
         while(acess_var_mtx(arg_struct->var_mtx,arg_struct->loop_var,0,V_LOOK)){
 
         clear_con_data(&con_obj);
-        snprintf((char*)con_obj.ack_udp_data,DEF_DATASIZE-1,"%s",arg_struct->send_str);
+        snprintf((char*)con_obj.ack_udp_data,DEF_DATASIZE-1,"%s",HB_SEND_STRING);
         result=con_send_udp_ack(&con_obj,arg_struct->data_times_pair);
         if(result<=0){
 
@@ -98,7 +98,7 @@ void* slave_thread(void* args){
         }
         clear_con_data(&con_obj);
         result= con_read_udp_ack(&con_obj,arg_struct->data_times_pair);
-        int cmp=strs_are_strictly_equal((char*)con_obj.ack_udp_data,arg_struct->reply_str);
+        int cmp=strs_are_strictly_equal((char*)con_obj.ack_udp_data,HB_REPLY_STRING);
         if(cmp||(result<=0)){
 
                 if(result==-2){
@@ -167,19 +167,19 @@ static void do_indexed_con_op(int i,overseer_args* arg_s,int is_reply,int reply_
 	pthread_mutex_lock(arg_s->cons->set_mtx);
         clear_con_data(&arg_s->cons->con_arr[i]);
         reply_result[0]=con_read_udp_ack(&arg_s->cons->con_arr[i],arg_s->data_times_pair);
-        reply_result[1]=strs_are_strictly_equal((char*)arg_s->cons->con_arr[i].ack_udp_data,arg_s->send_str);
+        reply_result[1]=strs_are_strictly_equal((char*)arg_s->cons->con_arr[i].ack_udp_data,HB_SEND_STRING);
         pthread_mutex_unlock(arg_s->cons->set_mtx);
 	}
 	else{
 	pthread_mutex_lock(arg_s->cons->set_mtx);
         clear_con_data(&arg_s->cons->con_arr[i]);
-        snprintf((char*)arg_s->cons->con_arr[i].ack_udp_data,DEF_DATASIZE-1,"%s",arg_s->reply_str);
+        snprintf((char*)arg_s->cons->con_arr[i].ack_udp_data,DEF_DATASIZE-1,"%s",HB_REPLY_STRING);
         reply_result[0]=con_send_udp_ack(&arg_s->cons->con_arr[i],arg_s->data_times_pair);
         pthread_mutex_unlock(arg_s->cons->set_mtx);
         }
 }
 
-void kill_con(con_set* set,int index){
+static void kill_con(con_set* set,int index){
 
         pthread_mutex_lock(set->set_mtx);
         close_con(&set->con_arr[index]);

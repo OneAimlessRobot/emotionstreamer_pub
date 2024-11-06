@@ -26,8 +26,6 @@
 #define ACK_STRING "sup"
 #define HB_SEND_STRING "imhere."
 #define HB_REPLY_STRING "you never left. You never left."
-#define MASTER_SEND_STRING "imhere."
-#define MASTER_REPLY_STRING "you never left. You never left."
 #define CON_STRING "hey"
 #define NACK_STRING "foff"
 #define EXTENSION ".wav"

@@ -53,7 +53,6 @@ static int down_file_size(void){
 		}
 		clear_con_data(&client_con_obj);
 		snprintf((char*)client_con_obj.ack_udp_data,DEF_DATASIZE,"%s",CON_STRING);
-		printf("Resposta enviada: %s\n",(char*)client_con_obj.ack_udp_data);
 		con_send_udp_ack(&client_con_obj,client_data_times_pair);
 		printf(CONTENT_DOWNLOAD_INCOMMING,down_size);
 		clear_con_data(&client_con_obj);

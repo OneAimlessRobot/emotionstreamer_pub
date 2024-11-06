@@ -10,6 +10,9 @@
 *.d
 *.swp
 *.mp3
+*.wav
+*.save
+*.raw
 .metadata/
 
 

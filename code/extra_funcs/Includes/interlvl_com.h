@@ -10,7 +10,7 @@ void module_type_to_string(module_type type, char* buff);
 
 typedef struct slave_args{
 
-	char* conf_str,*send_str,*reply_str,
+	char* conf_str,
 		*lower_name;
 	struct sockaddr_in this_addr,
 		master_addr;
@@ -46,7 +46,6 @@ typedef struct overseer_args{
 	pthread_mutex_t* start_cond_mtx;
 	pthread_mutex_t* var_mtx;
 	struct con_set* cons;
-	char* send_str,*reply_str;
 	int_pair data_times_pair;
 	uint16_t ack_timeout_lim;
 
@@ -59,7 +58,6 @@ void* watch_dog_func(void* args);
 void init_con_set(con_set* set,con_t* con_buff,int* timeout_buff,int* fd_buff,int max_size,pthread_mutex_t* mtx,pthread_cond_t* cond);
 void close_all_fds(con_set* set);
 void add_con(con_set* set,con_t*con,char* buff);
-void kill_con(con_set* set,int index);
 void* slave_thread(void* args);
 void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected);
 #endif

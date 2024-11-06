@@ -207,8 +207,6 @@ void start_master(char* hostname, uint16_t port){
 	acceptor.is_on=1;
 
 
-        arg_o.send_str=MASTER_SEND_STRING;
-        arg_o.reply_str=MASTER_REPLY_STRING;
         arg_o.is_on=&acceptor.is_on;
         arg_o.exit_signal=SIGINT;
         arg_o.ack_timeout_lim= master_ack_timeout_lim;

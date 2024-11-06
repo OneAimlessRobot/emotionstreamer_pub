@@ -200,8 +200,6 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	acceptor.is_on=1;
 
 
-        arg_s.send_str=MASTER_SEND_STRING;
-        arg_s.reply_str=MASTER_REPLY_STRING;
         arg_s.lower_name=buff;
         arg_s.exit_signal=SIGINT;
         arg_s.ack_timeout_lim= hb_ack_timeout_lim;
@@ -212,8 +210,6 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_s.trg_cond=&master_cond;
 	arg_s.type=HB_SERVER;
 
-        arg_o.send_str=HB_SEND_STRING;
-        arg_o.reply_str=HB_REPLY_STRING;
         arg_o.is_on=&acceptor.is_on;
         arg_o.exit_signal=SIGINT;
         arg_o.ack_timeout_lim= hb_ack_timeout_lim;
