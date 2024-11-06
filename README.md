@@ -1,7 +1,7 @@
 Um server de musicas. 
 Descubram como se usa palhaços. 
 Garante-se que funciona em Unix x86 e arm64, 
-os executaveis que interessam estão nas pastas server, client, server browser e heart_beat
+os executaveis que interessam estão nas pastas server, client, server browser, heartbeat e master_server
 quando os argumentos de linha de comandos n servem nos executaveis, diz-vos a sintaxe
 O projeto compila com um shell script na root chamado "makeAll.sh" 
 Divirtam-se chavalos.
@@ -31,7 +31,7 @@ ter o objetivo de fazer com que n funcione...)
 
 lançam o server assim:
 
-./(executavel do server) (ip):(porta)
+./(executavel do server) (ip):(porta) (heart
 
 
 O server cria um fork por cada conexão. (suporta varios clientes em simultaneo)
@@ -224,6 +224,54 @@ O diagrama de fluxo é o seguinte:
     v                     v
     
   cliente           Server browser
+
+
+
+Update: Agora temos nodes modulares! Esta tudo explicado na imagem.
+
+
+Servers sao lançados com:
+
+
+./server.exe (nosso ip):(nossa porta) (ip dum heartbeat/master):(porta dum heartbeat/master)
+
+./heartbeat.exe (nosso ip):(nossa porta) (ip dum heartbeat/master):(porta dum heartbeat/master)
+
+./master.exe (nosso ip):(nossa porta)
+
+Podem encadealos de acordo com a imagem. (Facilita distribuição. Servers sao como folhas, clientes o ceu, heartbeat servers a madeira e master servers a raiz.
+
+Nada de configs para dar os ips aos programs nem nada dessa parvoice.
+
+E sim. Podem só ter Master servers conectados a servers. Master servers tambem agem como heartbeat servers e partilham componentes.
+
+Isto agora é como uma lista ligada por rede. Os "Pointers" Sao definidos no modulo "interlvl_com.c", em que "Watchdogs" monitorizam "Slaves" em ips diferentes.
+
+Ainda hei de modularizar os threads monitores mas isso é para outra altura.
+
+Para já, temos só isto.
+
+Server browsers podem dar query a um server para perguntar quem é, ou o master (Gajo de cima) De um server, ou quais sao os seus filhos.
+
+
+Comandos para o server browser fazer isso sao:
+
+
+./server_browser.exe ('showme' ou 'showme_master') (ip:porta a investigar)
+
+O output apresenta se as entradas que estão abaixo são servers normais (server_mod) ou heartbeat servers (heartbeat_mod)
+
+clientes nao mudaram na operação
+
+
+
+
+
+
+
+
+
+
 
 
 
