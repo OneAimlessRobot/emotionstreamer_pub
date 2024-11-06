@@ -1,0 +1,36 @@
+static void circular_q_visual_print(chunk_queue* que){
+199
+200         if(!que){
+201
+202                 printw("Queue NULL\n");
+203                 return;
+204         }
+205         if(!(que->chunk_buff)){
+206
+207                 printw("Chunk buff NULL na queue\n");
+208                 return;
+209         }
+210         if(!(que->total_size)){
+211
+212
+213                 printw("Queue com sizes null!\nSize total da queue: %u bytes\n"
+214                                                         "Size de chunk da queue: %u bytes\n"
+215                                                         "Numero de chunks totais da queue: %u bytes\n",
+216                                                         que->total_size,
+217                                                         que->chunk_size,
+218                                                         que->max_occupied);
+219                 return;
+220         }
+221         char* bar=malloc(que->max_occupied+3);
+222         memset(bar,0,que->max_occupied+3);
+223         bar[0]='[';
+224         memset(bar+1,' ',que->max_occupied);
+225         bar[que->max_occupied+1]=']';
+226
+227
+228         int buff_ms=getQueueBufferedTime(que);
+229         printw("Queue visual:\nplay cursor: %u\nrecv cursor: %u\nCurr occupied: %u\nMax occupied: %u\n",que->play_cursor,que->recv_cursor,que->n_occupied,que->max_occupied);
+230         printw("Queue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %u\nTemos %u ms de audio no buffer!\n",que_is_empty(que) ? "SIM":"NAO",que_is_full(que)? "SIM":"NAO",que->n_occupied*que->chunk_size,buff_ms);
+231         printw("O buff:\n%s\n",bar);
+232         free(bar);
+233 }

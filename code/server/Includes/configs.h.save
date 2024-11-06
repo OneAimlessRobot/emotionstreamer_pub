@@ -1,0 +1,18 @@
+ #ifndef CONFIGS__SERVER_H
+#define CONFIGS__SERVER_H
+#define CONFIG_FILE_PATH_SERVER "./configs/sizes.cfg"
+#define MUSIC_SERVER_INPUT_PATH "/songs_in/raw_songs/"
+
+
+extern char server_music_folder_path[PATHSIZE];
+extern int_pair server_data_times_pair;
+extern int_pair server_con_times_pair;
+extern int_pair server_drop_chunks_times_pair;
+
+
+void read_values_cfg_server(void);
+void print_values_cfg_server(void);
+
+
+
+#endif

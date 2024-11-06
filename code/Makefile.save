@@ -1,0 +1,194 @@
+BINARY= emotionserver.exe
+
+SERVERBIN= ./server/server.exe
+
+CLIENTBIN= ./client/client.exe
+
+BROWSERBIN= ./server_browser/server_browser.exe
+
+HEARTBEATBIN= ./heartbeat/heart_beat.exe
+
+GLDIR= ./player
+
+LDFLAGS := $(SDL_LDFLAGS)
+
+LDLIBS :=  -lm
+
+LDLIBS_SOUND := -lasound -lpulse -lpulse-simple
+
+LDLIBS_PTHREAD= -lpthread
+
+LDLIBS_GRAPHICAL= -lncurses
+
+LDLIBS_SQLITE= -lsqlite3
+
+LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) $(LDLIBS_GRAPHICAL)
+
+LDLIBS_SERVER += $(LDLIBS_PTHREAD)
+
+
+INCLUDE= ./Includes .
+SOURCES= . ./Sources
+
+SERVERINCLUDE= ./server/Includes ./extra_funcs/Includes
+SERVERSOURCES= ./server/Sources ./server ./extra_funcs/Sources
+SERVERRESOURCES= ./server/resources
+
+CLIENTINCLUDE= ./client/Includes ./extra_funcs/Includes
+CLIENTSOURCES= ./client/Sources ./client ./extra_funcs/Sources
+CLIENTRESOURCES= ./client/resources
+
+BROWSERINCLUDE= ./server_browser/Includes ./extra_funcs/Includes
+BROWSERSOURCES= ./server_browser/Sources ./server_browser ./extra_funcs/Sources
+BROWSERRESOURCES= ./server_browser/resources
+
+HEARTBEATINCLUDE= ./heartbeat/Includes ./extra_funcs/Includes
+HEARTBEATSOURCES= ./heartbeat/Sources ./heartbeat ./extra_funcs/Sources
+HEARTBEATRESOURCES= ./heartbeat/resources
+
+
+RESDIR= ./resources
+
+CURRDIR=echo `pwd`
+
+CC= cc
+#CC=clang
+DEPFLAGS= -MP -MD
+
+#CFLAGS += -fsanitize=thread -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
+#CFLAGS += -fsanitize=address -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
+
+
+CFLAGS += -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
+
+SOURCEFILES=$(foreach D,$(SOURCES), $(wildcard $(D)/*.c))
+
+CLIENTSOURCEFILES=$(foreach D,$(CLIENTSOURCES), $(wildcard $(D)/*.c))
+
+SERVERSOURCEFILES=$(foreach D,$(SERVERSOURCES), $(wildcard $(D)/*.c))
+
+HEARTBEATSOURCEFILES=$(foreach D,$(HEARTBEATSOURCES), $(wildcard $(D)/*.c))
+
+BROWSERSOURCEFILES=$(foreach D,$(BROWSERSOURCES), $(wildcard $(D)/*.c))
+
+
+
+RESOURCEFILES=$(wildcard $(RESDIR)/*.o)
+
+SERVERRESOURCEFILES=$(wildcard $(SERVERRESOURCES)/*.o)
+
+CLIENTRESOURCEFILES=$(wildcard $(CLIENTRESOURCES)/*.o)
+
+BROWSERRESOURCEFILES=$(wildcard $(BROWSERRESOURCES)/*.o)
+
+HEARTBEATRESOURCEFILES=$(wildcard $(HEARTBEATRESOURCES)/*.o)
+
+
+OBJECTS=$(patsubst %.c,%.o,$(SOURCEFILES))
+
+CLIENTOBJECTS=$(patsubst %.c,%.o,$(CLIENTSOURCEFILES))
+
+
+SERVEROBJECTS=$(patsubst %.c,%.o,$(SERVERSOURCEFILES))
+
+BROWSEROBJECTS=$(patsubst %.c,%.o,$(BROWSERSOURCEFILES))
+
+HEARTBEATOBJECTS=$(patsubst %.c,%.o,$(HEARTBEATSOURCEFILES))
+
+
+ALLMODULES= $(RESOURCEFILES) $(OBJECTS) $(SERVEROBJECTS)  $(CLIENTOBJECTS) $(SERVERRESOURCEFILES) $(CLIENTRESOURCEFILES) $(HEARTBEATRESOURCES) $(HEARTBEATOBJECTS) $(BROWSERRESOURCES) $(BROWSEROBJECTS)
+
+SERVERMODULES= $(SERVEROBJECTS)  $(SERVERRESOURCEFILES)
+
+CLIENTMODULES= $(CLIENTOBJECTS) $(CLIENTRESOURCEFILES)
+
+HEARTBEATMODULES= $(HEARTBEATOBJECTS) $(HEARTBEATRESOURCEFILES)
+
+BROWSERMODULES= $(BROWSEROBJECTS) $(BROWSERRESOURCEFILES)
+
+
+DEPFILES= $(patsubst %.c,%.d,$(SOURCEFILES)) $(SERVERDEPFILES) $(CLIENTDEPFILES)
+
+
+SERVERDEPFILES= $(patsubst %.c,%.d,$(SERVERSOURCEFILES))
+
+CLIENTDEPFILES= $(patsubst %.c,%.d,$(CLIENTSOURCEFILES))
+
+HEARTBEATDEPFILES= $(patsubst %.c,%.d,$(HEARTBEATSOURCEFILES))
+
+BROWSERDEPFILES= $(patsubst %.c,%.d,$(BROWSERSOURCEFILES))
+
+
+
+CLIENTSTUFF=  $(CLIENTOBJECTS)
+
+SERVERSTUFF= $(SERVEROBJECTS)
+
+BROWSERSTUFF= $(BROWSEROBJECTS)
+
+HEARTBEATSTUFF= $(HEARTBEATOBJECTS)
+
+client: $(CLIENTBIN)
+	echo $(SDL_CFLAGS)
+	echo $(SDL_LDFLAGS)
+server: $(SERVERBIN)
+	echo $(LDLIBS)
+	echo $(CURRDIR)
+
+browser: $(HEARTBEATBIN)
+	echo $(LDLIBS)
+	echo $(CURRDIR)
+
+heartbeat: $(BROWSERBIN)
+	echo $(LDLIBS)
+	echo $(CURRDIR)
+
+
+main: $(BINARY)
+	echo $(LDLIBS)
+	echo $(CURRDIR)
+
+
+$(BINARY): $(OBJECTS)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(RESOURCEFILES)  $(LDLIBS2)
+
+$(SERVERBIN): $(SERVERSTUFF)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS_SERVER)
+
+$(CLIENTBIN): $(CLIENTSTUFF)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES) $(LDLIBS_CLIENT) $(LDLIBS)
+
+$(BROWSERBIN): $(BROWSERSTUFF)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(BROWSERRESOURCEFILES) $(LDLIBS_SERVER) $(LDLIBS)
+
+$(HEARTBEATBIN): $(HEARTBEATSTUFF)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(HEARTBEATRESOURCEFILES) $(LDLIBS_SERVER) $(LDLIBS) $(LDLIBS_SQLITE)
+
+
+
+
+
+%.o:%.c
+	$(CC) -g  $(CFLAGS) -c -o $@ $<  $(LDLIBS)
+	echo $(CFLAGS)
+
+cleanall:
+	rm -rf $(BINARY) $(SERVERBIN) $(CLIENTBIN)  $(ALLMODULES) $(DEPFILES)
+
+
+cleanserver:
+	rm -rf $(SERVERBIN) $(SERVERMODULES) $(DEPFILES) $(SERVERDEPFILES)
+
+
+cleanclient:
+	rm -rf $(CLIENTBIN) $(CLIENTMODULES) $(DEPFILES) $(CLIENTDEPFILES)
+
+
+cleanbrowser:
+	rm -rf $(BROWSERBIN) $(BROWSERMODULES) $(DEPFILES) $(BROWSERDEPFILES)
+
+cleanheartbeat:
+	rm -rf$(HEARTBEATBIN) $(HEARTBEATMODULES) $(DEPFILES) $(HEARTBEATDEPFILES)
+
+
+

@@ -1,0 +1,256 @@
+#include "../../Includes/preprocessor.h"
+#include "../../extra_funcs/Includes/auxfuncs.h"
+#include "../Includes/load_html.h"
+#include "../../extra_funcs/Includes/protocol.h"
+#include "../../extra_funcs/Includes/fileshit.h"
+#include "../../extra_funcs/Includes/sockio.h"
+#include "../Includes/configs.h"
+#include "../../extra_funcs/Includes/sockio_tcp.h"
+#include "../../extra_funcs/Includes/sockio_udp.h"
+#include "../../extra_funcs/Includes/sock_ops.h"
+#include "../../extra_funcs/Includes/connection.h"
+#include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../Includes/engine.h"
+#include "../Includes/connection.h"
+
+
+
+static server_state state;
+static uint16_t curr_port=0;
+static pthread_t hb_tid;
+static pthread_mutex_t hb_mtx=PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t eng_mtx=PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t eng_cond=PTHREAD_COND_INITIALIZER;
+static int started=0;
+static void serverStop(int useless){
+
+	acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
+	acess_var_mtx(&eng_mtx,&started,1,V_SET);
+	pthread_cond_signal(&eng_cond);
+
+}
+static void sigpipe_handler(int useless){
+
+	perror("Interrupção no modulo de engine!!!!\n");
+	serverStop(useless);
+
+}
+static void sigint_handler(int useless){
+
+	close(state.server_sock_tcp);
+	sigpipe_handler(useless);
+}
+
+static void con_accepting_loop(void){
+
+		printf("Chegamos ao loop de conexoes!\n");
+		pthread_mutex_lock(&eng_mtx);
+		while(!acess_var_mtx(&eng_mtx,&started,0,V_LOOK)){
+			printf("Esperando sinal do hearbeat thread!!!\n");
+			pthread_cond_wait(&eng_cond,&eng_mtx);
+		
+		}
+		pthread_mutex_unlock(&eng_mtx);
+
+
+		while(acess_var_mtx(&hb_mtx,&state.server_is_on,0,V_LOOK)){
+		
+			
+			int iResult,
+				sock=-1,
+				pid=-1;
+		
+	                struct timeval tv;
+	                tv.tv_sec=SERVER_TIMEOUT_CON_SEC;
+	                tv.tv_usec=SERVER_TIMEOUT_CON_USEC;
+		
+
+	                FD_ZERO(&state.rdfds);
+	                FD_SET(state.server_sock_tcp,&state.rdfds);
+			
+	                iResult=select(state.server_sock_tcp+1,&state.rdfds,(fd_set*)0,(fd_set*)0,&tv);
+	                
+			if(iResult>0){
+			
+				sock= accept(state.server_sock_tcp,NULL,NULL);
+				if(sock>=0){
+					
+					printf("Connection accepted!\n");
+					setNonBlocking(sock);
+					pid=fork();
+
+				}
+				else{
+					perror("Rejected connection!");
+					pid=1;
+				}
+			if(!pid){
+				con_go(&state,sock,curr_port);
+				serverStop(0);
+				close(state.server_sock_tcp);
+				
+			}
+        		else if(pid<0){
+                        	perror("Erro no fork no loop de conexoes do server!!!\n");
+				raise(SIGPIPE);
+			}
+			else{
+				curr_port+=4;
+				close(sock);
+			}
+		}
+		else if(iResult<0){
+
+			perror("Select error:");
+		}
+		else{
+
+			printf("Timed out! ( more that %lus waiting 4 udp). Trying again...\n",server_con_times_pair[0]);
+			printf("Nome do server atual: %s\n",state.name);
+			print_addr_aux("Endereço de server atual:",&state.server_tcp_addr);
+               	}
+	}
+}
+/*
+static void setup_heart_beat_con(void){
+
+
+        if(client_con_obj.sockfd_tcp<0){
+
+                raise(SIGINT);
+        }
+        init_addr(&server_ip_address,ent.hostname,ent.port);
+
+        if(!tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address)){
+
+                raise(SIGINT);
+        }
+
+
+
+}*/
+static void* heart_beat_thread(void* args){
+
+
+        unsigned char tcp_data[DEF_DATASIZE+1];
+        unsigned char udp_data[DEF_DATASIZE+1];
+        unsigned char ack_udp_data[DEF_DATASIZE+1];
+
+        buff_triple con_buffs={NULL};
+        con_buffs[0]=tcp_data;
+        con_buffs[1]=udp_data;
+        con_buffs[2]=ack_udp_data;
+
+
+	state.hb_con.sockfd_tcp= socket(AF_INET,SOCK_STREAM,0);
+
+        if(state.hb_con.sockfd_tcp<0){
+		perror("Socket nao criada no hb thread!!!\n");
+                raise(SIGINT);
+        }
+
+	FILE* heart_beat_addr_fp= fopen(HEART_BEAT_ADDR_FILE,"r");
+
+	if(!heart_beat_addr_fp){
+
+		perror("Nao deu para abrir ficheiro de server de heartbeats\n");
+		raise(SIGINT);
+	}
+
+	char ent_addr[PATHSIZE]={0};
+
+	if(!fgets(ent_addr,PATHSIZE,heart_beat_addr_fp)){
+
+		perror("Nao deu para parsear ficheiro de server de heartbeats");
+		fclose(heart_beat_addr_fp);
+		raise(SIGINT);
+
+
+	}
+
+	ip_cache_entry ent=(ip_cache_entry){{0},0};
+
+	parse_ip_cache_entry(ent_addr,&ent);
+
+        init_addr(&state.hb_addr,ent.hostname,ent.port);
+
+        print_addr_aux("Addr atual do server de heartbeat:",&state.hb_addr);
+	
+	if(!tryConnect(&state.hb_con.sockfd_tcp,server_con_times_pair,&state.hb_addr)){
+
+		perror("Nao deu para contactar server de heartbeats!!!!\n");
+                raise(SIGINT);
+        }
+	acess_var_mtx(&eng_mtx,&started,1,V_SET);
+	
+        print_addr_aux("Addr atual do server:",&state.server_tcp_addr);
+	
+	init_con(&state.hb_con,state.hb_con.sockfd_tcp,CLIENT_C,con_buffs);
+	
+	greet(&state.hb_con,server_con_times_pair,state.tcp_s_port);
+	pthread_cond_signal(&eng_cond);
+
+	while(acess_var_mtx(&hb_mtx,&state.server_is_on,0,V_LOOK)){
+
+
+
+		printf("hb_thread do streamer server: online\n");
+		usleep(1000);
+		
+
+
+
+	}
+	return args;
+
+
+}
+static void setup_server_tcp_stuff(char* addr,uint16_t tcp_s_port){
+
+
+	state.server_sock_tcp= socket(AF_INET,SOCK_STREAM,0);
+        if(state.server_sock_tcp==-1){
+                raise(SIGPIPE);
+
+        }
+	int ptr=1;
+        setsockopt(state.server_sock_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
+	init_addr(&state.server_tcp_addr,addr,tcp_s_port);
+	state.tcp_s_port=tcp_s_port;
+	if(bind(state.server_sock_tcp,(struct sockaddr*)(&state.server_tcp_addr),*socklenvar)){
+		raise(SIGPIPE);
+
+	}
+
+	listen(state.server_sock_tcp,MAX_CLIENTS_HARD_LIMIT);
+}
+
+void serverInit(char* addr,uint16_t tcp_s_port){
+
+
+	signal(SIGINT,sigint_handler);
+        signal(SIGPIPE,sigpipe_handler);
+	
+	char buff[PATHSIZE];
+	randStr(PATHSIZE,buff);
+	curr_port=tcp_s_port;
+	logging=1;
+	logstream=stderr;
+	memset(&state,0,sizeof(server_state));
+	state.name=buff;
+	setup_server_tcp_stuff(addr,tcp_s_port);
+	
+	state.server_is_on=1;
+	started=0;
+
+	pthread_create(&hb_tid,NULL,heart_beat_thread,NULL);
+	
+	con_accepting_loop();
+	
+	pthread_join(hb_tid,NULL);
+	printf("saimos do thread hb_tid\n");
+	
+	close_con(&state.hb_con);
+	
+}
+
