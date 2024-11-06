@@ -120,9 +120,7 @@ void* master_server_func(void* args){
 					break;
 				case LOG:
 		 	                printf("Log server requested!!!!\n");
-					memset(big_buff,0,PATHSIZE*3);
-					snprintf(big_buff,sizeof(big_buff)-1,"%s, %d, %s, '%s:%hu'",type_buff,sock,name_buff,ip_buff,htons(stored_port));
-					add_con(arg_o.cons,&con,big_buff);
+					add_con(arg_o.cons,&con,type_buff,sock,name_buff,ip_buff,stored_port);
 					curr_port+=3;
 					break;
 				default:

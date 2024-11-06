@@ -118,7 +118,7 @@ void* heart_beat_func(void* args){
                                         snprintf((char*)con.udp_data,DEF_DATASIZE-1,"Nao sou um master."
                                                                                      "Mas, se quiseres, Está aqui o meu master."
                                                                                      "Tenta falar com ele: %s:%hu\n",
-                                                                                                ip_buff,ntohs(arg_s.this_addr.sin_port));
+                                                                                                ip_buff,ntohs(arg_s.master_addr.sin_port));
                                         result=con_send_udp(&con,hb_data_times_pair);
                                         clear_con_data(&con);
                                         snprintf((char*)con.udp_data,DEF_DATASIZE-1,"done");
@@ -133,9 +133,7 @@ void* heart_beat_func(void* args){
                                         break;
                                 case LOG:
                                         printf("Log server requested!!!!\n");
-                                        memset(big_buff,0,PATHSIZE*3);
-                                        snprintf(big_buff,sizeof(big_buff)-1,"%s, %d, %s, '%s:%hu'",type_buff,sock,name_buff,ip_buff,htons(stored_port));
-                                        add_con(arg_o.cons,&con,big_buff);
+                                        add_con(arg_o.cons,&con,type_buff,sock,name_buff,ip_buff,stored_port);
                                         curr_port+=3;
                                         break;
                                 default:

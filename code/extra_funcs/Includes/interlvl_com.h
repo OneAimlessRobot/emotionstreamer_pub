@@ -57,7 +57,7 @@ typedef struct overseer_args{
 void* watch_dog_func(void* args);
 void init_con_set(con_set* set,con_t* con_buff,int* timeout_buff,int* fd_buff,int max_size,pthread_mutex_t* mtx,pthread_cond_t* cond);
 void close_all_fds(con_set* set);
-void add_con(con_set* set,con_t*con,char* buff);
+void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port);
 void* slave_thread(void* args);
 void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected);
 #endif

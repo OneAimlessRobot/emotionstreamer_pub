@@ -195,16 +195,18 @@ static void kill_con(con_set* set,int index){
 
 
 
-void add_con(con_set* set,con_t*con,char* buff){
+void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port){
 
-        int i=1;
         pthread_mutex_lock(set->set_mtx);
+	int i=1;
+        char big_buff[PATHSIZE*6]={0};
+	snprintf(big_buff,sizeof(big_buff)-1,"'%s', %d, %s, '%s:%hu'",type_buff,id,name_buff,ip_buff,htons(stored_port));
         FD_SET(con->sockfd_tcp,&set->rdfds);
         for(;set->fd_arr[i];i++);
         set->fd_arr[i]=con->sockfd_tcp;
         memcpy(&set->con_arr[i],con,sizeof(con_t));
         set->curr_size++;
-	insert_server(buff);
+	insert_server(big_buff);
         pthread_mutex_unlock(set->set_mtx);
 	pthread_cond_signal(set->start_cond);
 }
