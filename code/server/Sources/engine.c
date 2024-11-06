@@ -19,17 +19,24 @@ static server_state state;
 static uint16_t curr_port=0;
 static pthread_t hb_tid;
 static pthread_mutex_t hb_mtx=PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t con_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t eng_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t eng_cond=PTHREAD_COND_INITIALIZER;
 static int started=0;
 static void serverStop(int useless){
-	
 	perror("Sinal de parar server\n");
 	close(state.server_sock_tcp);
-	acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
+	if(acess_var_mtx(&hb_mtx,&state.server_is_on,0,V_LOOK)){
+		acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
+		pthread_mutex_lock(&con_mtx);
+		close_con(&state.hb_con);
+		pthread_mutex_unlock(&con_mtx);
+	}
+	else{
+		acess_var_mtx(&eng_mtx,&started,1,V_SET);
+	}
 	acess_var_mtx(&eng_mtx,&started,1,V_SET);
 	pthread_cond_signal(&eng_cond);
-
 }
 static void conStop(int useless){
 	
@@ -137,9 +144,11 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	arg_s.exit_signal=SIGTERM;
 	arg_s.ack_timeout_lim= server_ack_timeout_lim;
 	arg_s.sleep_us=10000;
+	arg_s.con_obj=&state.hb_con;
 	arg_s.start_trigger=&started;
 	arg_s.loop_var=&state.server_is_on;
 	arg_s.var_mtx=&hb_mtx;
+	arg_s.con_mtx=&con_mtx;
 	arg_s.trg_cond=&eng_cond;
 	arg_s.type=SERVER;
 	
