@@ -28,7 +28,7 @@ char* randStr(int size){
 	memset(result,0,size+1);
 	for(int i=0;i<=size;i++){
 
-		result[i]=(char)randInteger((int)0,(int)255);
+		result[i]=(char)randInteger((int)67,(int)96);
 	
 	}
 	write(1,result,size+1);
