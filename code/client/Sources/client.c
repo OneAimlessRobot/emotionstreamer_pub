@@ -29,7 +29,7 @@ static method play_way=PLAY_PA;
 static void sigint_handler(int signal){
 
 	close_con(&client_con_obj);
-	//endwin();
+	endwin();
 	fclose(logstream);
 	exit(signal);
 }

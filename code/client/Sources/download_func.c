@@ -5,12 +5,16 @@
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../Includes/configs.h"
 #include "../Includes/download_func.h"
+static int fd,sock;
 
 typedef struct download_bar{
 
         int curr,total,size;
 
 }download_bar;
+
+
+
 static download_bar bar={0};
 
 
@@ -47,25 +51,27 @@ static void* print_download_bar(void* mem,int len,int* timeout_num){
 }
 
 
-int downloadtofd(int sock,int fd,int down_size,int_pair times){
+int downloadtofd(int sock,int fd,int size,int_pair times){
         int32_t len=1;
         int32_t written=1;
+	int32_t total=0;
 	int32_t timeout_num=0;
         char buff[DEF_DATASIZE];
         bar.curr=0;
-        bar.total=down_size;
+        bar.total=size;
         bar.size=40;
         memset(buff,0,DEF_DATASIZE);
-        for(;(len>0||len==-2);){
-                len=readsome(sock,buff,DEF_DATASIZE,times);
+        for(;(len==-2||len>0)&&(total!=size);){
+		len=readsome(sock,buff,DEF_DATASIZE,times);
                 if(len==-2){
-			continue;
+			printw("Timeout no download!!!\n");
                 }
                 written=write(fd,buff,len);
-                bar.curr+=written;
+		total+= (written<0)? 0:written;
+                bar.curr+=(written<0)? 0:written;
 		print_download_bar((void*)&bar,len,&timeout_num);
-                
-	}
+                memset(buff,0,DEF_DATASIZE);
+        }
         if(!(bar.curr)){
                 if(logging){
                 fprintf(logstream,"readall bem sucedido!! A socket e %d\n",sock);
@@ -100,7 +106,7 @@ int downloadtofd(int sock,int fd,int down_size,int_pair times){
 
         }
         if(logging){
-                fprintf(logstream,"readalltofd bem sucedido. A socket e %d\nLemos %d de %d bytes\n",sock,bar.curr,down_size);
+                fprintf(logstream,"readalltofd bem sucedido. A socket e %d\nLemos %d de %d bytes\n",sock,bar.curr,size);
 
         }
         memset(buff,0,DEF_DATASIZE);

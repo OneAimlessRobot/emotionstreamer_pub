@@ -47,6 +47,7 @@ while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
 		if(logging){
 		fprintf(logstream,"Timeout no sending!!!!: %s\nsocket %d\n",strerror(errno),sock);
                 }
+		lseek(fd,-(numread-sent),SEEK_CUR);
 		continue;
 	}
 	if(sent<0){
@@ -192,23 +193,20 @@ int readall(int sock,char buff[],int size,int_pair times){
 
 }
 
-int readalltofd(int sock,int fd,int down_size,int_pair times){
+int readalltofd(int sock,int fd,int size,int_pair times){
         int32_t len=1;
 	int32_t written=1;
 	int32_t total=0;
 	char buff[DEF_DATASIZE];
 	memset(buff,0,DEF_DATASIZE);
-	for(;(len>0||len==-2);){
-		len=readsome(sock,buff,DEF_DATASIZE,times);
-		if(len==-2){
-			printf("Timeout no read!!!!\n");
-			continue;
-		}
-		written=write(fd,buff,len);
-		total+=written;
-		memset(buff,0,DEF_DATASIZE);
-	}
-	if(!(total-down_size)){
+	for(;(len==-2||len>0)&&(total!=size);){
+                len=readsome(sock,buff,DEF_DATASIZE,times);
+                written=write(fd,buff,len);
+                total+= (written<0)? 0:written;
+                memset(buff,0,DEF_DATASIZE);
+        }
+
+	if(!(total-size)){
 		if(logging){
 		fprintf(logstream,"readall bem sucedido!! A socket e %d\n",sock);
 
@@ -242,7 +240,7 @@ int readalltofd(int sock,int fd,int down_size,int_pair times){
 	
 	}
 	if(logging){
-		fprintf(logstream,"readalltofd bem sucedido. A socket e %d\nLemos %d de %d bytes\n",sock,total,down_size);
+		fprintf(logstream,"readalltofd bem sucedido. A socket e %d\nLemos %d de %d bytes\n",sock,total,size);
 
 	}
 	memset(buff,0,DEF_DATASIZE);

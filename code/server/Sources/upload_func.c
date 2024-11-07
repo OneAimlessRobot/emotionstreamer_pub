@@ -29,6 +29,7 @@ while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
                 if(logging){
                 fprintf(logstream,"Timeout no sending!!!!: %s\nsocket %d\nLido depois de timeout:%d\n",strerror(errno),sock,readjunior);
                 }
+		lseek(fd,-(numread-sent),SEEK_CUR);
                 continue;
         }
         if(sent<0){
