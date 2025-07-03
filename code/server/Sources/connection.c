@@ -78,12 +78,31 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				
 				clear_con_data(&server_con_obj);
 
-				con_read_tcp(&server_con_obj,server_data_times_pair);
+				con_read_udp(&server_con_obj,server_data_times_pair);
 				
-				sscanf((char*)server_con_obj.tcp_data,"%s %s",req_buff,file_name);
+				sscanf((char*)server_con_obj.udp_data,"%s %s",req_buff,file_name);
 				
-				printf("Buff recebido: %s\n",server_con_obj.tcp_data);
+				printf("Buff recebido: %s\n",server_con_obj.udp_data);
 				
+				clear_con_data(&server_con_obj);
+
+
+			        snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE-1,"Buff recebido: %s\n",server_con_obj.udp_data);
+
+				
+
+				con_send_udp(&server_con_obj,server_data_times_pair);
+
+				clear_con_data(&server_con_obj);
+
+				con_read_udp_ack(&server_con_obj,server_data_times_pair);
+
+				printf("Result from TEST UDP ACK: \"%s\"\n",server_con_obj.ack_udp_data);
+			        snprintf((char*)server_con_obj.ack_udp_data,DEF_DATASIZE-1,"Buff recebido (TEST UDP ACK): %s\n",server_con_obj.ack_udp_data);
+
+
+				con_send_udp_ack(&server_con_obj,server_data_times_pair);
+
 				req_type recvd_type= str_to_req_type(req_buff);
 				//(Quis ler o request e o filename em transferencias diferentes)
 

@@ -100,7 +100,7 @@ void* rx_thread_func(void* args){
 
 		while((acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK))){
 
-			read_chunk_udp(&stream_struct,client_data_times_pair);
+			read_chunk_tcp(&stream_struct,client_data_times_pair);
 			full=perform_queue_op(stream_struct.que,NULL,(q_op){Q_LOOK,Q_IS_FULL});
 			pthread_cond_signal(&cond2);
 			if(full){

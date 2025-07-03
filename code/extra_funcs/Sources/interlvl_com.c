@@ -397,7 +397,7 @@ void* acceptor_func(void* args){
                               uint16_t stored_port=0;
                               greet(&con,arg_a->con_times_pair,curr_port);
                               clear_con_data(&con);
-                              result=con_read_udp_ack(&con,arg_a->data_times_pair);
+                              result=con_read_udp_ack(&con,arg_a->con_times_pair);
                               sscanf((char*)con.ack_udp_data,"%s %s %s %s %hu ",req_buff,type_buff,name_buff,ip_buff,&stored_port);
                               if(result<=0){
                                         perror("Nao sabemos o que querem....\n");
@@ -415,7 +415,20 @@ void* acceptor_func(void* args){
                               switch(cmd){
 
 				case MASTER_SHOW:
-                                        if(!is_master){
+					printf("Waiting for UDP hole punching:\n");
+					con_read_udp(&con,arg_a->con_times_pair);
+				
+					printf("Resposta em UDP hole punching: \"%s\"\n",con.udp_data);
+					snprintf((char*)con.udp_data,DEF_DATASIZE-1,"Ok good job, soldier!\n I know that your response was \"%s\"\nProceed, now.\n",con.udp_data);
+
+					con_send_udp(&con,arg_a->con_times_pair);
+                                        clear_con_data(&con);
+					
+					printf("Anyways....\n....\n....\nShow master requested!!!!\n");
+                                        
+					if(!is_master){
+
+
 					snprint_addr_aux(ip_buff,PATHSIZE/4,&arg_a->arg_s->master_addr);
                                         
 					snprintf((char*)con.udp_data,DEF_DATASIZE-1,"Nao sou um master."
@@ -436,7 +449,16 @@ void* acceptor_func(void* args){
                                         break;
 
                                 case SHOW:
-                                        printf("Show servers requested!!!!\n");
+                                        printf("Waiting for UDP hole punching:\n");
+					con_read_udp(&con,arg_a->con_times_pair);
+				
+					printf("Resposta em UDP hole punching: \"%s\"\n",con.udp_data);
+					clear_con_data(&con);
+					snprintf((char*)con.udp_data,DEF_DATASIZE-1,"Ok good job, soldier!\n I know that your response was \"%s\"\nProceed, now.\n",con.udp_data);
+
+					con_send_udp(&con,arg_a->con_times_pair);
+                                        
+					printf("Anyways....\n....\n....\nShow servers requested!!!!\n");
                                         show_servers(&con,arg_a->data_times_pair);
                                         close_con(&con);
                                         break;

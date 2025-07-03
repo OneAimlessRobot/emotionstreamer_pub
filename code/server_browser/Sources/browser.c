@@ -155,7 +155,28 @@ void init_browser(char* hostname, char* req,uint16_t port){
                 raise(SIGINT);
 
         }
+	/*
+	read the damned ack, doofus
+	*/
 
+	clear_con_data(&con_obj);
+
+	con_read_udp_ack(&con_obj,browser_con_times_pair);
+
+	printf("Resposta do server: \"%s\"\n",con_obj.ack_udp_data);
+
+
+	clear_con_data(&con_obj);
+
+	snprintf((char*)con_obj.udp_data,DEF_DATASIZE-1,"ok got it, sir! Time for some holepunching!!\n");
+
+	con_send_udp(&con_obj,browser_con_times_pair);
+
+	clear_con_data(&con_obj);
+
+	con_read_udp(&con_obj,browser_con_times_pair);
+
+	printf("They got it! They really got it, man! They replied with: \"%s\"\n",con_obj.udp_data);
 	recv_servers();
 
 

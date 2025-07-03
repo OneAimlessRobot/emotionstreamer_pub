@@ -64,7 +64,7 @@ static int send_chunk_udp(server_stream_t* strm,int_pair pair){
 static int send_chunk_to_client(void){
 
 	int result=-2;
-	result=send_chunk_udp(&stream_struct,server_drop_chunks_times_pair);
+	result=send_chunk_tcp(&stream_struct,server_drop_chunks_times_pair);
 	while((acess_var_mtx(&mtx4,&stream_struct.initted,0,V_LOOK))&&(result!=-1)){
 		result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 			if(result==-2){

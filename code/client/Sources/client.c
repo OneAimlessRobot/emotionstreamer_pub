@@ -192,11 +192,36 @@ int clientStart(char* req_field,char* file_name,char* s_hostaddr){
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	greet(&client_con_obj,client_con_times_pair,client_con_obj.this_tcp_addr.sin_port);
 
-	snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE-1,"%s %s",req_buff,file_name);
+	snprintf((char*)client_con_obj.udp_data,DEF_DATASIZE-1,"%s %s",req_buff,file_name);
 
-	con_send_tcp(&client_con_obj,client_data_times_pair);
-
+	con_send_udp(&client_con_obj,client_data_times_pair);
 	
+	printf("Connection testing: UDP data\n");
+
+	con_read_udp(&client_con_obj,client_data_times_pair);
+	
+	char test_buff[DEF_DATASIZE]={0};
+	sscanf((char*)client_con_obj.udp_data,"%s",test_buff);
+	printf("server reply to our UDP test: \"%s\"\n",test_buff);
+
+	printf("Connection testing: UDP ack: sending\n");
+
+	memset(&test_buff,0,DEF_DATASIZE);
+	clear_con_data(&client_con_obj);
+	snprintf((char*)client_con_obj.ack_udp_data,DEF_DATASIZE-1,"ok, got it, sir! (lets see if they see it lol)\n");
+
+
+	printf("Connection testing: UDP ack: sending\n");
+
+	con_send_udp_ack(&client_con_obj,client_data_times_pair);
+	printf("Connection testing: UDP ack, receiving\n");
+
+	con_read_udp_ack(&client_con_obj,client_data_times_pair);
+	
+	memset(&test_buff,0,DEF_DATASIZE);
+	sscanf((char*)client_con_obj.ack_udp_data,"%s",test_buff);
+	printf("server reply to our UDP ack test: \"%s\"\n",test_buff);
+
 
 	switch(the_type){
 
