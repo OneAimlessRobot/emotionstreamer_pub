@@ -5,7 +5,6 @@
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../Includes/configs.h"
 #include "../Includes/download_func.h"
-static int fd,sock;
 
 typedef struct download_bar{
 

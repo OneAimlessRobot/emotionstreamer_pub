@@ -144,7 +144,7 @@ int delete_server(int server_id){
         return 1;
 
 }
-static int send_show_servers(void* arg1, int n_cols, char** cols, char ** cols_names){
+static int send_show_servers(void* arg1, int n_cols, char** cols,char** cols_names){
 
         servers_sender* sender= (servers_sender*)arg1;
         char buff[DEF_DATASIZE-1]={0};
@@ -181,8 +181,7 @@ static int send_show_servers(void* arg1, int n_cols, char** cols, char ** cols_n
 		}
 
         }
-
-        return 0;
+	return 0;
 
 }
 int show_servers(con_t* con_obj,int_pair pair){

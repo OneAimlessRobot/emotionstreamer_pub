@@ -7,6 +7,8 @@
 #include "../Includes/configs.h"
 #include <alsa/asoundlib.h>
 #include "../Includes/ripped_code.h"
+#include "../../minimp3/minimp3.h"
+#include "../Includes/mp3module.h"
 
 
 /*
@@ -18,6 +20,32 @@ static void print_chunk_helper_info(chunk_size_helper* helper){
 
 //https://discourse.libsdl.org/t/time-length-of-sdl-mixer-chunks/12852/2
 /* untested code follows… */
+
+void print_decoder_frame_result(mp3decoder_result_struct* result,int fd){
+
+	if(result){
+		dprintf(fd,"Estes sao os dados deste frame:\n"
+							"\nresult->chunk_id: %ld\n"
+							"\nresult->frame_bytes: %d\n"
+							"result->channels: %d"
+							"\nresult->hz: %d"
+							"\nresult->layer: %d"
+							"\nresult->bitrate_kbps: %d"
+							"\nresult->nsamples: %hd\n"
+							"\nresult->dec_input_chunk_ptr: %d\n"
+							"\nresult->dec_output_chunk_ptr: %d\n",
+							result->chunk_id,
+							result->frame_bytes,
+							result->channels,
+							result->hz,
+							result->layer,
+							result->bitrate_kbps,
+							result->nsamples,
+							result->dec_input_chunk_ptr,
+							result->dec_output_chunk_ptr);
+	}
+
+}
 
 uint32_t getChunkTimeMilliseconds(chunk_size_helper* helper)
 {
@@ -45,69 +73,29 @@ double frames = 0.0;
   The program uses the ALSA library.
   Use option -lasound on compile line.*/
  
-int play_from_sound_device_alsa(snd_pcm_t* handle,uint8_t* sound_buff_to_play,int size)
+int play_from_sound_device_alsa(snd_pcm_t* handle,uint8_t* sound_buff_to_play,mp3decoder_result_struct* result)
 {
   int err;
   snd_pcm_sframes_t frames;
-  int samples= size/SIZE;
-  frames = snd_pcm_writei(handle,sound_buff_to_play, samples/CHANNELS);
+  frames = snd_pcm_writei(handle,sound_buff_to_play, result->nsamples*SIZE*result->channels);
   if (frames < 0){
 	frames = snd_pcm_recover(handle, frames, 0);
   }
   if ((err=frames) < 0) {
-    	printf("snd_pcm_writei failed: %s\n", snd_strerror(err));
+    	fprintf(stderr, "snd_pcm_writei failed to play %ld bytes:\nsize=%ld\nnchannels=%d\nnsamples=%d\n",result->nsamples*result->channels*SIZE,SIZE,result->channels,result->nsamples);
+	
   }
   return 0;
 }
 
-int play_from_sound_device_pa(pa_simple* handle,uint8_t* sound_buff_to_play,int size)
+int play_from_sound_device_pa(pa_simple* handle,uint8_t* sound_buff_to_play,mp3decoder_result_struct* result)
 {
-    if (pa_simple_write(handle, sound_buff_to_play, size, NULL) < 0) {
-        fprintf(stderr, "pa_simple_write() failed: %s\n", pa_strerror(errno));
-        return 1;
+    //if (pa_simple_write(handle, sound_buff_to_play, result->nsamples*result->channels*SIZE, NULL) < 0) {
+    if (pa_simple_write(handle, sound_buff_to_play, 1152*2*SIZE, NULL) < 0) {
+        fprintf(stderr, "pa_simple_write() failed to play %ld bytes: \nsize=%ld\nnchannels=%d\nnsamples=%d\n%s",result->nsamples*result->channels*SIZE,SIZE,result->channels,result->nsamples,pa_strerror(errno));
+	//print_decoder_frame_result(result,1);
+	return 1;
     }
 
     return 0;
 }
-
-
-
-//https://digitalsoundandmusic.com/5-3-2-raw-audio-data-in-c/
-//This program runs under OSS
-//The program expects an 8-bit raw sound file.
-//You can alter it to read a 16-bit file into short ints
-
-/*
-static void writeToSoundDevice(TYPE* buf, int deviceID, int buffSize) {
-  int status;
-  status = write(deviceID, buf, buffSize);
-  if (status != buffSize)
-    perror("Wrote wrong number of bytes\n");
-  status = ioctl(deviceID, SOUND_PCM_SYNC, 0);
-  if (status == -1)
-    perror("SOUND_PCM_SYNC failed\n");
-}
-*/
-/* 
-static int play_from_sound_device(TYPE sound_buff_to_play[])
-{
-  int deviceID, arg, status, i;
-  deviceID = open("/dev/snd/pcmC0D2c", O_WRONLY, 0);
-  if (deviceID < 0)
-    perror("Opening /dev/snd/pcmC0D2c failed\n");
-  arg = SIZE * 8;
-  status = ioctl(deviceID, SOUND_PCM_WRITE_BITS, &arg);
-  if (status == -1)
-    perror("Unable to set sample size\n");
-  arg = CHANNELS;
-  status = ioctl(deviceID, SOUND_PCM_WRITE_CHANNELS, &arg);
-  if (status == -1)
-    perror("Unable to set number of channels\n");
-  status = ioctl(deviceID, SOUND_PCM_WRITE_RATE, &cfg_freq);
-  if (status == -1)
-    perror("Unable to set number of bits\n");
- 
-  writeToSoundDevice(sound_buff_to_play, deviceID, cfg_chunk_size);
-  close(deviceID);
-}
-*/

@@ -57,7 +57,7 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 				con_send_udp(&server_con_obj,server_data_times_pair);
 			}
 }
-
+//static get_filename_extension
 void con_go(int sockfd_tcp, uint16_t curr_port){
 
 		signal(SIGINT,cleanup);
@@ -71,7 +71,8 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				
 				char req_buff[PATHSIZE]={0};
 				struct stat file_info={0};
-
+				char hp_udp_ack_buff[2*DEF_DATASIZE]={0};
+				char hp_udp_buff[2*DEF_DATASIZE]={0};
 				init_con(&server_con_obj,sock_tcp,SERVER_C);
 
 				greet(&server_con_obj,server_con_times_pair,port);
@@ -87,7 +88,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				clear_con_data(&server_con_obj);
 
 
-			        snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE-1,"Buff recebido: %s\n",server_con_obj.udp_data);
+			        snprintf((char*)hp_udp_buff,2*DEF_DATASIZE-1,"Buff recebido: %s\n",(char*)server_con_obj.udp_data);
 
 				
 
@@ -97,9 +98,9 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 
 				con_read_udp_ack(&server_con_obj,server_data_times_pair);
 
-				printf("Result from TEST UDP ACK: \"%s\"\n",server_con_obj.ack_udp_data);
-			        snprintf((char*)server_con_obj.ack_udp_data,DEF_DATASIZE-1,"Buff recebido (TEST UDP ACK): %s\n",server_con_obj.ack_udp_data);
-
+				snprintf((char*)hp_udp_ack_buff,2*DEF_DATASIZE-1,"Buff recebido (TEST UDP ACK): %s\n",(char*)server_con_obj.ack_udp_data);
+				printf("Result from TEST UDP ACK: \"%s\"\n",hp_udp_ack_buff);
+			        
 
 				con_send_udp_ack(&server_con_obj,server_data_times_pair);
 
@@ -148,7 +149,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						uploadtofd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						break;
 					case PLAY:
-						read(fp,file_name,44);//GET RID OF WAV HEADER! IMPORTANT! 44 BYTES!
+						//read(fp,file_name,44);//GET RID OF WAV HEADER! IMPORTANT! 44 BYTES!
 						snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%hu",server_chunk_size);
 						if(con_send_udp(&server_con_obj,server_data_times_pair)<=0){
 

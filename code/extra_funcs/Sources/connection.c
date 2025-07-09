@@ -112,7 +112,7 @@ static void set_up_local_udp_socks(con_t* con_obj,uint16_t curr_port){
 	//setNonBlocking(con_obj->sockfd_udp);
 	//setNonBlocking(con_obj->ack_sockfd_udp);
 	getsockname(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->this_udp_addr),socklenvar);
-	con_obj->this_udp_addr.sin_port=htons(curr_port+1);
+	con_obj->this_udp_addr.sin_port=htons(curr_port+5001);
         int bind_result=bind(con_obj->sockfd_udp,(struct sockaddr*) &(con_obj->this_udp_addr),*socklenvar);
 	
 	if(bind_result){
@@ -123,7 +123,7 @@ static void set_up_local_udp_socks(con_t* con_obj,uint16_t curr_port){
 
 	}
 	getsockname(con_obj->sockfd_udp, (struct sockaddr*)&(con_obj->this_udp_ack_addr),socklenvar);
-	con_obj->this_udp_ack_addr.sin_port=htons(curr_port+2);
+	con_obj->this_udp_ack_addr.sin_port=htons(curr_port+5002);
         bind_result=bind(con_obj->ack_sockfd_udp,(struct sockaddr*) &(con_obj->this_udp_ack_addr),*socklenvar);
 	if(bind_result){
 
@@ -148,14 +148,14 @@ static void greet_server(con_t* con_obj, int_pair pair,uint16_t curr_port){
 
 	int result=strs_are_strictly_equal(CON_STRING,client_data);
 	uint16_t port=result ? 0: curr_port;
-	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%hu %hu %hu",(uint16_t)(port), (uint16_t)(port+1),(uint16_t)(port+2));
+	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%hu %hu %hu",(uint16_t)(port), (uint16_t)(port+5001),(uint16_t)(port+5002));
 	
 	if(!port){
 		close_con(con_obj);
 		exit(-1);
 
 	}
-	printf("Portas enviadas: %hu, %hu, %hu\n",(uint16_t)(port), (uint16_t)(port+1),(uint16_t)(port+2));
+	printf("Portas enviadas: %hu, %hu, %hu\n",(uint16_t)(port), (uint16_t)(port+5001),(uint16_t)(port+5002));
 
 	con_send_tcp(con_obj,pair);
 

@@ -359,7 +359,7 @@ void* acceptor_func(void* args){
         char name_buff[PATHSIZE/4]={0};
         char type_buff[PATHSIZE/4]={0};
         char big_buff[PATHSIZE*6]={0};
-	int curr_port=arg_a->accept_addr.sin_port;
+	int curr_port=htons(arg_a->accept_addr.sin_port);
         int result=0;
         int iResult,
                sock=-1;
@@ -389,9 +389,10 @@ void* acceptor_func(void* args){
                 iResult=select(arg_a->accept_sockfd+1,&arg_a->mainfds,(fd_set*)0,(fd_set*)0,&tv);
                 if(iResult>0){
                         con_t con={0};
+			char buff_udp_hp[2*DEF_DATASIZE]={0};
                         sock= accept(arg_a->accept_sockfd,NULL,NULL);
                         if(sock>=0){
-                              printf("Connection accepted!\n");
+                              printf("Connection accepted!\nA nossa port é: %d\n",curr_port);
                               setNonBlocking(sock);
                               init_con(&con,sock,SERVER_C);
                               uint16_t stored_port=0;
@@ -418,9 +419,9 @@ void* acceptor_func(void* args){
 					printf("Waiting for UDP hole punching:\n");
 					con_read_udp(&con,arg_a->con_times_pair);
 				
-					printf("Resposta em UDP hole punching: \"%s\"\n",con.udp_data);
-					snprintf((char*)con.udp_data,DEF_DATASIZE-1,"Ok good job, soldier!\n I know that your response was \"%s\"\nProceed, now.\n",con.udp_data);
-
+					printf("Resposta em UDP hole punching: \"%s\"\n",(char*)(con.udp_data));
+					snprintf((char*)buff_udp_hp,2*DEF_DATASIZE-1,"Ok good job, soldier!\n I know that your response was \"%s\"\nProceed, now.\n",(char*)(con.udp_data));
+					memcpy(con.udp_data,buff_udp_hp,DEF_DATASIZE);
 					con_send_udp(&con,arg_a->con_times_pair);
                                         clear_con_data(&con);
 					
@@ -452,12 +453,12 @@ void* acceptor_func(void* args){
                                         printf("Waiting for UDP hole punching:\n");
 					con_read_udp(&con,arg_a->con_times_pair);
 				
-					printf("Resposta em UDP hole punching: \"%s\"\n",con.udp_data);
-					clear_con_data(&con);
-					snprintf((char*)con.udp_data,DEF_DATASIZE-1,"Ok good job, soldier!\n I know that your response was \"%s\"\nProceed, now.\n",con.udp_data);
-
+					printf("Resposta em UDP hole punching: \"%s\"\n",(char*)(con.udp_data));
+					snprintf((char*)buff_udp_hp,2*DEF_DATASIZE-1,"Ok good job, soldier!\n I know that your response was \"%s\"\nProceed, now.\n",(char*)(con.udp_data));
+					memcpy(con.udp_data,buff_udp_hp,DEF_DATASIZE);
 					con_send_udp(&con,arg_a->con_times_pair);
-                                        
+                                        clear_con_data(&con);
+
 					printf("Anyways....\n....\n....\nShow servers requested!!!!\n");
                                         show_servers(&con,arg_a->data_times_pair);
                                         close_con(&con);

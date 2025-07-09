@@ -7,8 +7,11 @@ typedef struct client_stream_t{
           int innited;
 	  uint16_t curr_timeout;
           struct con_t* con_obj;
-	  chunk_queue* que;
+	  chunk_queue* decoder_que;
+	  chunk_queue* auxiliar_que;
+	  chunk_queue* player_que;
 	  chunk_player* player;
+	  mp3decoder* decoder;
 }client_stream_t;
 
 //BUFFS COME FROM THE OUTSIDE!

@@ -14,8 +14,13 @@
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/ripped_code.h"
+#include "../../minimp3/minimp3.h"
+#include "../Includes/mp3module.h"
+
 #include "../Includes/chunk_queue.h"
 #include "../Includes/chunk_player.h"
+
+
 #include "../Includes/streamer_client.h"
 #include "../Includes/client.h"
 #include "../Includes/download_func.h"
@@ -192,7 +197,7 @@ int clientStart(char* req_field,char* file_name,char* s_hostaddr){
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	greet(&client_con_obj,client_con_times_pair,client_con_obj.this_tcp_addr.sin_port);
 
-	snprintf((char*)client_con_obj.udp_data,DEF_DATASIZE-1,"%s %s",req_buff,file_name);
+	snprintf((char*)client_con_obj.udp_data,3*DEF_DATASIZE-1,"%s %s",req_buff,file_name);
 
 	con_send_udp(&client_con_obj,client_data_times_pair);
 	

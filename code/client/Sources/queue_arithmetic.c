@@ -37,7 +37,7 @@ void zero_chk_cache(chunk_queue* que){
 
 
 }
-
+ 
 uint32_t getQueueBufferedTime(chunk_queue* que){
 
 	chunk_size_helper helper=(chunk_size_helper){cfg_freq,CHANNELS,SIZE*8,que->n_occupied*que->chunk_size};
@@ -66,6 +66,13 @@ int que_is_empty(chunk_queue* que){
 
 
 }
+int que_is_very_empty(chunk_queue* que){
+
+	return !(que->n_occupied)&&!(que->sub_chunk_occupied);
+
+
+
+}
 int que_is_almost_empty(chunk_queue* que){
 
 	return pct_frac_of_nums(que->n_occupied,que->max_occupied)<=(cfg_cache_almost_empty_pct);
@@ -76,6 +83,13 @@ int que_is_almost_empty(chunk_queue* que){
 int que_is_full(chunk_queue* que){
 
 	return ((que->n_occupied)==(que->max_occupied));
+
+
+
+}
+int que_is_very_full(chunk_queue* que){
+
+	return ((que->n_occupied)==(que->max_occupied))&&((que->sub_chunk_occupied)==(que->chunk_size));
 
 
 

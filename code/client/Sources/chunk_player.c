@@ -6,10 +6,14 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../Includes/configs.h"
 #include "../Includes/ripped_code.h"
+#include "../../minimp3/minimp3.h"
+#include "../Includes/mp3module.h"
+
+
+
 #include "../Includes/chunk_player.h"
 
 static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
-
 
 static void cleanALSA(chunk_player* player){
 
@@ -76,25 +80,24 @@ static void initPA(chunk_player*player){
 }
 
 
-static void play_chunk_alsa(chunk_player* player
-){
+static void play_chunk_alsa(chunk_player* player,mp3decoder_result_struct* result){
 
-	play_from_sound_device_alsa(player->play_stream_alsa,player->p_chunk,(player->chunk_size));
+	play_from_sound_device_alsa(player->play_stream_alsa,player->p_chunk,result);
 }
-static void play_chunk_pa(chunk_player* player){
-	play_from_sound_device_pa(player->play_stream_pa,player->p_chunk,(player->chunk_size));
+static void play_chunk_pa(chunk_player* player,mp3decoder_result_struct* result){
+	play_from_sound_device_pa(player->play_stream_pa,player->p_chunk,result);
 }
 
-static void play_chunk(chunk_player* player,int dry){
+static void play_chunk(chunk_player* player,mp3decoder_result_struct* result,int dry){
 
 		if(!dry){
 		switch(player->which_mode){
 
 			case PLAY_ALSA:
-				play_chunk_alsa(player);
+				play_chunk_alsa(player,result);
 				break;
 			case PLAY_PA:
-				play_chunk_pa(player);
+				play_chunk_pa(player,result);
 				break;
 			default:
 				break;
@@ -103,39 +106,13 @@ static void play_chunk(chunk_player* player,int dry){
 	}
 }
 
-static void swap_buffs(chunk_player* player){
-	
-	pthread_mutex_lock(player->mtx);
-	uint8_t* tmp=player->p_chunk;
-	player->p_chunk=player->r_chunk;
-	player->r_chunk=tmp;
-	pthread_mutex_unlock(player->mtx);
-
-
-
-
-}
-
-//BUFF IS PLAYER->CHUNK_SIZE in SIZE!!!
-static void write_to_buff(chunk_player* player, uint8_t* buff){
-
-	memcpy(player->r_chunk,buff,player->chunk_size);
-
-}
-void perform_play_op(chunk_player* player,uint8_t* buff,play_op op){
-
+void perform_play_op(chunk_player* player,mp3decoder_result_struct* result,play_op op){
 	switch(op){
 		case P_REAL_PLAY:
-			play_chunk(player,0);
+			play_chunk(player,result,0);
 			break;
 		case P_DRY_PLAY:
-			play_chunk(player,1);
-			break;
-		case P_WRITE_TO_BUFF:
-			write_to_buff(player,buff);
-			break;
-		case P_SWAP:
-			swap_buffs(player);
+			play_chunk(player,result,1);
 			break;
 		case P_CLEAN:
 			clean_player(player);
@@ -146,11 +123,10 @@ void perform_play_op(chunk_player* player,uint8_t* buff,play_op op){
 			break;
 	}
 }
-int init_chunk_player(chunk_player* player,uint16_t chunk_size,uint8_t* p_buff,uint8_t* r_buff,method the_way){
+int init_chunk_player(chunk_player* player,uint16_t chunk_size,uint8_t* p_buff,method the_way){
 	player->mtx=&mtx;
 	player->chunk_size=chunk_size;
 	player->p_chunk=p_buff;
-	player->r_chunk=r_buff;
 	player->which_mode=the_way;
 	switch(player->which_mode){
 

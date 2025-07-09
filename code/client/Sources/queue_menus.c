@@ -12,18 +12,6 @@
 #include "../Includes/queue_menus.h"
 
 
-
-static int enqueue_chunk(chunk_queue* que,uint8_t* buff){
-
-	if(!que_is_full(que)){
-		memcpy(&que->chunk_buff[(que->recv_cursor)*que->chunk_size],buff,que->chunk_size);
-		que->recv_cursor=(que->recv_cursor+1)%que->max_occupied;
-		que->n_occupied++;
-	}
-	return que_is_full(que);
-
-
-}
 static int dequeue_chunk(chunk_queue* que,uint8_t* buff){
 
 	if(!que_is_empty(que)){
@@ -36,6 +24,17 @@ static int dequeue_chunk(chunk_queue* que,uint8_t* buff){
 
 }
 
+static int enqueue_chunk(chunk_queue* que,uint8_t* buff){
+
+	if(!que_is_full(que)){
+		memcpy(&que->chunk_buff[(que->recv_cursor)*que->chunk_size],buff,que->chunk_size);
+		que->recv_cursor=(que->recv_cursor+1)%que->max_occupied;
+		que->n_occupied++;
+	}
+	return que_is_full(que);
+
+
+}
 
 static void clean_queue(chunk_queue* que){
 
@@ -45,6 +44,50 @@ static void clean_queue(chunk_queue* que){
 }
 
 //ASSUMES INITSCREEN 
+
+
+static int look_op(chunk_queue* que,queue_look_op op){
+	int result=-1;
+	switch(op){
+		case Q_IS_FULL:
+			result=que_is_full(que);
+			break;
+		case Q_IS_EMPTY:
+			result=que_is_empty(que);
+			break;
+		case Q_IS_ALMOST_EMPTY:
+			result=que_is_almost_empty(que);
+			break;
+		case Q_IS_ALMOST_FULL:
+			result=que_is_almost_full(que);
+			break;
+		case Q_GET_PCT:
+			result=que_pct_full(que);
+			break;
+		case Q_LOOK_NA:
+			break;
+		default:
+			break;
+	}
+
+	return result;
+
+}
+static void write_queue_state(chunk_queue*que,q_state* state){
+
+	if(state&&que){
+
+		state->play_cursor=que->play_cursor;
+		state->recv_cursor=que->recv_cursor;
+		state->n_occupied=que->n_occupied;
+		state->sub_chunk_occupied=que->sub_chunk_occupied;
+
+
+	}
+
+
+
+}
 static void circular_q_visual_print(chunk_queue* que){
 
 	if(!que){
@@ -93,36 +136,7 @@ static void circular_q_visual_print(chunk_queue* que){
 	printw("O buff:\n%s\n",bar);
 	free(bar);
 }
-
-
-static int look_op(chunk_queue* que,queue_look_op op){
-	int result=-1;
-	switch(op){
-		case Q_IS_FULL:
-			result=que_is_full(que);
-			break;
-		case Q_IS_EMPTY:
-			result=que_is_empty(que);
-			break;
-		case Q_IS_ALMOST_EMPTY:
-			result=que_is_almost_empty(que);
-			break;
-		case Q_IS_ALMOST_FULL:
-			result=que_is_almost_full(que);
-			break;
-		case Q_GET_PCT:
-			result=que_pct_full(que);
-			break;
-		case Q_LOOK_NA:
-			break;
-		default:
-			break;
-	}
-
-	return result;
-
-}
-int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert,q_op op){
+int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert,int16_t ammount_if_partial,q_op op,q_state* state){
 	int result=0;
 	pthread_mutex_lock(que->queue_mtx);
 	switch(op.main){
@@ -148,6 +162,7 @@ int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert,q_op op){
 		case Q_NA:
 			break;
 	}
+	write_queue_state(que,state);
 	pthread_mutex_unlock(que->queue_mtx);
 	return result;
 

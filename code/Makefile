@@ -27,7 +27,7 @@ LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) $(LDLIBS_GRAPHICAL)
 LDLIBS_SERVER += $(LDLIBS_PTHREAD)
 
 
-INCLUDE= ./Includes .
+INCLUDE= ./Includes ./minimp3 .
 SOURCES= . ./Sources
 
 SERVERINCLUDE= ./server/Includes ./extra_funcs/Includes
