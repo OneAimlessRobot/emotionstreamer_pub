@@ -73,7 +73,7 @@ static int look_op(chunk_queue* que,queue_look_op op){
 	return result;
 
 }
-static void circular_q_visual_print(chunk_queue* que,mp3decoder_result_struct*result){
+static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*result){
 
 	if(!que){
 
@@ -121,7 +121,7 @@ static void circular_q_visual_print(chunk_queue* que,mp3decoder_result_struct*re
 	printw("O buff:\n%s\n",bar);
 	free(bar);
 }
-int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, mp3decoder_result_struct* frame_data_struct,q_op op){
+int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, decoder_result_struct* frame_data_struct,q_op op){
 	int result=0;
 	pthread_mutex_lock(que->queue_mtx);
 	switch(op.main){

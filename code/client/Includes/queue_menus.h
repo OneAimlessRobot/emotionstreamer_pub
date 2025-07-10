@@ -19,5 +19,5 @@ typedef struct q_state{
 	
 }q_state;
 
-int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, mp3decoder_result_struct* result,q_op op);
+int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, decoder_result_struct* result,q_op op);
 #endif

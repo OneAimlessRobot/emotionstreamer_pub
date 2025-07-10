@@ -42,7 +42,7 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 			clear_con_data(&server_con_obj);
 			if(fd>0){
 				stat(file_path,&file_info);
-				snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%ld %hd",file_info.st_size,server_transmission_protocol);
+				snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%ld %hd %s",file_info.st_size,server_transmission_protocol,server_working_extension);
 				con_send_udp(&server_con_obj,server_data_times_pair);
 				clear_con_data(&server_con_obj);
 				con_read_udp_ack(&server_con_obj,server_data_times_pair);
@@ -67,7 +67,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				unsigned char stream_cache_data[server_chunk_size];
 
 				char file_name[PATHSIZE]={0};
-				char file_path[PATHSIZE*2 +4]={0};
+				char file_path[PATHSIZE*3 +4]={0};
 				
 				char req_buff[PATHSIZE]={0};
 				struct stat file_info={0};
@@ -113,11 +113,11 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 					case PLAY:
 						
 						printf("Play pedido!\n");
-						snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,EXTENSION);
+						snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,server_working_extension);
 						break;
 					case DOWN:
 						printf("Download pedido!\n");
-						snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,EXTENSION);
+						snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,server_working_extension);
 						break;
 					case PEEK:
 						printf("Peek pedido!\n");
@@ -167,3 +167,4 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 					raise(SIGINT);
 				}
 }
+

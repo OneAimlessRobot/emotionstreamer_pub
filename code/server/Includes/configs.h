@@ -5,9 +5,10 @@
 #define MUSIC_SERVER_INPUT_PATH "/songs_in/raw_songs/"
 #define SERVER_ACK_TIMEOUT_LIM 8
 #define SERVER_CHUNK_SIZE 1024
-
+#define EXTENSION_SIZE 20
 
 extern char server_music_folder_path[PATHSIZE];
+extern char server_working_extension[EXTENSION_SIZE];
 
 extern uint16_t server_chunk_size;
 extern int16_t server_transmission_protocol;

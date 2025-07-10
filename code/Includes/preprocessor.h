@@ -28,10 +28,9 @@
 #define HB_REPLY_STRING "you never left. You never left."
 #define CON_STRING "hey"
 #define NACK_STRING "foff"
-#define EXTENSION ".mp3"
 #define CONFIG_READ_LINE_BUFF_SIZE 1025
 #define MAX_CLIENTS_HARD_LIMIT 1000
 #define DEF_DATASIZE 1024
 #define PATHSIZE 1024
-#define MAX_TRIES 2
+#define MAX_TRIES 3
 #endif

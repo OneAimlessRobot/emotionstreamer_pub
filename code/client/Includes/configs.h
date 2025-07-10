@@ -1,9 +1,11 @@
 #ifndef CONFIGS__CLIENT_H
 #define CONFIGS__CLIENT_H
-#define TYPE int16_t
+#define TYPE int32_t
 #define SIZE sizeof(TYPE)
 #define SAMPLE_MAX (pow(2,SIZE*8 - 1) - 1)
-#define CHANNELS 2
+
+#define CHANNELS 4
+#define SAMPLES 16384
 #define DEVICE "default"
 #define CONFIG_FILE_PATH_CLIENT "./configs/sizes.cfg"
 #define LOG_FILE_NAME_CLIENT "./logs.log"

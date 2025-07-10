@@ -7,20 +7,13 @@
 #include "../Includes/configs.h"
 #include <alsa/asoundlib.h>
 #include "../Includes/ripped_code.h"
-#include "../../minimp3/minimp3.h"
-#include "../Includes/mp3module.h"
 
+#include "../../miniflac/miniflac.h"
+#include "../Includes/ogg_module.h"
 
-/*
-static void print_chunk_helper_info(chunk_size_helper* helper){
-	printf("Info deste helper: Frequencia: %d\nChannels: %d\nFormato: %u\nAudio len %u\n",helper->freq,helper->chans,helper->fmt,helper->audio_len);
+static char flac_header_string[5]="fLaC";
 
-}
-*/
-
-//https://discourse.libsdl.org/t/time-length-of-sdl-mixer-chunks/12852/2
-/* untested code follows… */
-int should_switch(mp3decoder_result_struct* before_result,mp3decoder_result_struct* current_result){
+int should_switch(decoder_result_struct* before_result,decoder_result_struct* current_result){
 
 	if(!before_result||!current_result){
 
@@ -34,34 +27,47 @@ int should_switch(mp3decoder_result_struct* before_result,mp3decoder_result_stru
 
 
 }
-void print_decoder_frame_result(mp3decoder_result_struct* result,int fd){
+void print_decoder_frame_result(decoder_result_struct* result,int fd){
 
 	if(result){
+		if(result->stream_marker){
+
+			flac_header_string[result->stream_marker+1]=0;
+		}
 		dprintf(fd,"Estes sao os dados deste frame:\n"
-							"\nValor de MINIMP3_MAX_SAMPLES_PER_FRAME: %d"
-							"\nresult->chunk_id: %ld"
-							"\nresult->decoder_in_chunk_size: %d"
-							"\nresult->decoder_out_chunk_size: %d"
-							"\nresult->frame_bytes: %d"
-							"\nresult->channels: %d"
-							"\nresult->hz: %d"
-							"\nresult->layer: %d"
-							"\nresult->bitrate_kbps: %d"
-							"\nresult->nsamples: %hd"
-							"\nresult->dec_input_chunk_ptr: %d"
-							"\nresult->dec_output_chunk_ptr: %d\n",
-							MINIMP3_MAX_SAMPLES_PER_FRAME,
+							"\nValor de MAXIMUM_SIZE_OGG_OUTPUT_BUFFER: %lu"
+							"\nresult->stream_marker: %s"
+							"\nresult->metadata_block_type: %hu"
+							"\nresult->chunk_id: %lu"
+							"\nresult->decoder_state: %d"
+							"\nresult->metadata_length: %u"
+							"\nresult->channels: %hu"
+							"\nresult->hz: %u"
+							"\nresult->bitrate_kbps: %u"
+							"\nresult->total_samples: %u"
+							"\nresult->is_last_metadata: %u"
+							"\nresult->frame_bytes: %u"
+							"\nresult->dec_input_chunk_ptr: %lu"
+							"\nresult->dec_output_chunk_ptr: %lu"
+							"\nresult->decoder_in_chunk_size: %lu"
+							"\nresult->decoder_out_chunk_size: %lu\n",
+							MAXIMUM_SIZE_OGG_OUTPUT_BUFFER,
+							flac_header_string,
+							result->metadata_block_type,
 							result->chunk_id,
-							result->decoder_in_chunk_size,
-							result->decoder_out_chunk_size,
-							result->frame_bytes,
+							result->decoder_state,
+							result->metadata_length,
 							result->channels,
 							result->hz,
-							result->layer,
 							result->bitrate_kbps,
-							result->nsamples,
+							result->total_samples,
+							result->is_last_metadata,
+							result->frame_bytes,
 							result->dec_input_chunk_ptr,
-							result->dec_output_chunk_ptr);
+							result->dec_output_chunk_ptr,
+							result->decoder_in_chunk_size,
+							result->decoder_out_chunk_size
+							);
 	}
 
 }
@@ -92,7 +98,7 @@ double frames = 0.0;
   The program uses the ALSA library.
   Use option -lasound on compile line.*/
  
-int play_from_sound_device_alsa(snd_pcm_t* handle,uint8_t* sound_buff_to_play,mp3decoder_result_struct* result)
+int play_from_sound_device_alsa(snd_pcm_t* handle,uint8_t* sound_buff_to_play,decoder_result_struct* result)
 {
   int err;
   snd_pcm_sframes_t frames;
@@ -101,17 +107,17 @@ int play_from_sound_device_alsa(snd_pcm_t* handle,uint8_t* sound_buff_to_play,mp
 	frames = snd_pcm_recover(handle, frames, 0);
   }
   if ((err=frames) < 0) {
-    	fprintf(stderr, "snd_pcm_writei failed to play %ld bytes:\nsize=%ld\nnchannels=%d\nnsamples=%d\n",result->nsamples*result->channels*SIZE,SIZE,result->channels,result->nsamples);
+    	fprintf(stderr, "snd_pcm_writei failed to play %ld bytes:\nsize=%lu\nnchannels=%hu\nnsamples=%u\n",result->nsamples*result->channels*SIZE,SIZE,result->channels,result->nsamples);
 	
   }
   return 0;
 }
 
-int play_from_sound_device_pa(pa_simple* handle,uint8_t* sound_buff_to_play,mp3decoder_result_struct* result)
+int play_from_sound_device_pa(pa_simple* handle,uint8_t* sound_buff_to_play,decoder_result_struct* result)
 {
     //if (pa_simple_write(handle, sound_buff_to_play, result->nsamples*result->channels*SIZE, NULL) < 0) {
     if (pa_simple_write(handle, sound_buff_to_play, result->nsamples*SIZE*result->channels, NULL) < 0) {
-        fprintf(stderr, "pa_simple_write() failed to play %ld bytes: \nsize=%ld\nnchannels=%d\nnsamples=%d\n%s",result->nsamples*result->channels*SIZE,SIZE,result->channels,result->nsamples,pa_strerror(errno));
+        fprintf(stderr, "pa_simple_write() failed to play %ld bytes: \nsize=%lu\nnchannels=%hu\nnsamples=%u\n%s",result->nsamples*result->channels*SIZE,SIZE,result->channels,result->nsamples,pa_strerror(errno));
 	//print_decoder_frame_result(result,1);
 	return 1;
     }

@@ -29,7 +29,7 @@ void zero_chk_cache(chunk_queue* que){
 
 }
  
-uint32_t getQueueBufferedTime(chunk_queue* que,mp3decoder_result_struct*result){
+uint32_t getQueueBufferedTime(chunk_queue* que,decoder_result_struct*result){
 
 	chunk_size_helper helper=(chunk_size_helper){result->hz,result->channels,SIZE*8,que->n_occupied*que->chunk_size};
 	return getChunkTimeMilliseconds(&helper);

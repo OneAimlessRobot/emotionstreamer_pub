@@ -6,11 +6,8 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../Includes/configs.h"
 #include "../Includes/ripped_code.h"
-#include "../../minimp3/minimp3.h"
-#include "../Includes/mp3module.h"
-
-
-
+#include "../../miniflac/miniflac.h"
+#include "../Includes/ogg_module.h"
 #include "../Includes/chunk_player.h"
 
 static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
@@ -96,15 +93,15 @@ static void init_player_lib(chunk_player* player){
 	}
 
 }
-static void play_chunk_alsa(chunk_player* player,mp3decoder_result_struct* result){
+static void play_chunk_alsa(chunk_player* player,decoder_result_struct* result){
 	play_from_sound_device_alsa(player->play_stream_alsa,player->p_chunk,result);
 
 }
-static void play_chunk_pa(chunk_player* player,mp3decoder_result_struct* result){
+static void play_chunk_pa(chunk_player* player,decoder_result_struct* result){
 	play_from_sound_device_pa(player->play_stream_pa,player->p_chunk,result);
 }
 
-static void play_chunk(chunk_player* player,mp3decoder_result_struct* result,int dry){
+static void play_chunk(chunk_player* player,decoder_result_struct* result,int dry){
 
 		if(!dry){
 		switch(player->which_mode){
@@ -122,19 +119,19 @@ static void play_chunk(chunk_player* player,mp3decoder_result_struct* result,int
 	}
 }
 
-static void write_player_result(chunk_player* player,mp3decoder_result_struct* result,int in){
+static void write_player_result(chunk_player* player,decoder_result_struct* result,int in){
 
 	if(result){
 		if(!in){
-			memcpy(&player->current_result,result,sizeof(mp3decoder_result_struct));
+			memcpy(&player->current_result,result,sizeof(decoder_result_struct));
 		}
 		else {
-			memcpy(result,&player->current_result,sizeof(mp3decoder_result_struct));
+			memcpy(result,&player->current_result,sizeof(decoder_result_struct));
 		}
 		
 	}
 }
-static void safe_play_wrapper(chunk_player* player,mp3decoder_result_struct* result,int dry){
+static void safe_play_wrapper(chunk_player* player,decoder_result_struct* result,int dry){
 
 	int can_play=-2;
 	if((can_play=should_switch(&player->current_result,result))>=0){
@@ -148,7 +145,7 @@ static void safe_play_wrapper(chunk_player* player,mp3decoder_result_struct* res
 
 }
 
-void perform_play_op(chunk_player* player,mp3decoder_result_struct* result,play_op op){
+void perform_play_op(chunk_player* player,decoder_result_struct* result,play_op op){
 	switch(op){
 		case P_REAL_PLAY:
 			safe_play_wrapper(player,result,0);
@@ -158,6 +155,9 @@ void perform_play_op(chunk_player* player,mp3decoder_result_struct* result,play_
 			break;
 		case P_GET_FRAME_DATA:
 			write_player_result(player,result,1);
+			break;
+		case P_INSERT_FRAME_DATA:
+			write_player_result(player,result,0);
 			break;
 		case P_CLEAN:
 			clean_player(player);
@@ -169,12 +169,12 @@ void perform_play_op(chunk_player* player,mp3decoder_result_struct* result,play_
 	}
 }
 
-int init_chunk_player(chunk_player* player,uint16_t chunk_size,uint8_t* p_buff,method the_way){
+int init_chunk_player(chunk_player* player,uint64_t chunk_size,uint8_t* p_buff,method the_way){
 	player->mtx=&mtx;
 	player->chunk_size=chunk_size;
 	player->p_chunk=p_buff;
 	player->which_mode=the_way;
-	memset(&player->current_result,0,sizeof(mp3decoder_result_struct));
+	memset(&player->current_result,0,sizeof(decoder_result_struct));
 	return 0;
 
 }

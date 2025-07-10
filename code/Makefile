@@ -14,7 +14,7 @@ GLDIR= ./player
 
 LDLIBS :=  -lm
 
-LDLIBS_SOUND := -lasound -lpulse -lpulse-simple
+LDLIBS_SOUND := -lasound -lpulse -lpulse-simple -lvorbisfile
 
 LDLIBS_PTHREAD= -lpthread
 
@@ -27,7 +27,7 @@ LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) $(LDLIBS_GRAPHICAL)
 LDLIBS_SERVER += $(LDLIBS_PTHREAD)
 
 
-INCLUDE= ./Includes ./minimp3 .
+INCLUDE= ./Includes ./miniflac .
 SOURCES= . ./Sources
 
 SERVERINCLUDE= ./server/Includes ./extra_funcs/Includes

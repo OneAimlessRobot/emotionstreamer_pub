@@ -14,8 +14,8 @@
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/ripped_code.h"
-#include "../../minimp3/minimp3.h"
-#include "../Includes/mp3module.h"
+#include "../../miniflac/miniflac.h"
+#include "../Includes/ogg_module.h"
 
 #include "../Includes/chunk_queue.h"
 #include "../Includes/chunk_player.h"
@@ -27,6 +27,7 @@
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/ip_cache_file_ops.h"
 
+static char extension_from_server[PATHSIZE]={0};
 static struct sockaddr_in server_ip_address;
 ip_cache_t cache=(ip_cache_t){NULL,0};
 static con_t client_con_obj;
@@ -88,7 +89,7 @@ static void down_func(char* file_name){
 		int down_size=down_file_size(0);
 		int fp=-1;
 		char file_path[PATHSIZE*3-1]={0};
-		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,EXTENSION);
+		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,extension_from_server);
 		if((fp=creat(file_path,0777))<0){
 				perror("Nao foi possivel transferir ficheiro!!!!\n");
                                 raise(SIGINT);
