@@ -42,7 +42,7 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 			clear_con_data(&server_con_obj);
 			if(fd>0){
 				stat(file_path,&file_info);
-				snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%ld",file_info.st_size);
+				snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%ld %hd",file_info.st_size,server_transmission_protocol);
 				con_send_udp(&server_con_obj,server_data_times_pair);
 				clear_con_data(&server_con_obj);
 				con_read_udp_ack(&server_con_obj,server_data_times_pair);

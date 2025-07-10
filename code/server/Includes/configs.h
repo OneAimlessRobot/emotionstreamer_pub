@@ -10,6 +10,7 @@
 extern char server_music_folder_path[PATHSIZE];
 
 extern uint16_t server_chunk_size;
+extern int16_t server_transmission_protocol;
 
 extern int_pair server_data_times_pair,
 	server_con_times_pair,

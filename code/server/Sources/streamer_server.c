@@ -64,8 +64,9 @@ static int send_chunk_udp(server_stream_t* strm,int_pair pair){
 static int send_chunk_to_client(void){
 
 	int result=-2;
-	result=send_chunk_tcp(&stream_struct,server_drop_chunks_times_pair);
+	result=(server_transmission_protocol<=0)?send_chunk_tcp(&stream_struct,server_drop_chunks_times_pair):send_chunk_udp(&stream_struct,server_drop_chunks_times_pair);
 	while((acess_var_mtx(&mtx4,&stream_struct.initted,0,V_LOOK))&&(result!=-1)){
+		//result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_times_pair):con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 		result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 			if(result==-2){
 				printf("Esperando ser respondido na stream do server\n");
@@ -173,7 +174,6 @@ void begin_stream(con_t*con_obj,int fd, uint16_t chunk_size,unsigned char* strea
 
 	init_server_stream(fd,con_obj, chunk_size,stream_buff);
 
+
+
 }
-
-
-

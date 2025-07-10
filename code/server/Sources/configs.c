@@ -18,7 +18,7 @@ int_pair server_drop_chunks_times_pair=(int_pair){SERVER_DROP_CHUNK_TIMEOUT_SEC,
 uint16_t server_ack_timeout_lim=SERVER_ACK_TIMEOUT_LIM;
 
 uint16_t server_chunk_size=SERVER_CHUNK_SIZE;
-
+int16_t server_transmission_protocol=0;
 static void clean_buff(void){
 
 	memset(&curr_line_buff,0,CONFIG_READ_LINE_BUFF_SIZE);
@@ -40,6 +40,12 @@ void read_values_cfg_server(void){
 		raise(SIGINT);
 	}
 	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"server_transmission_protocol: %hd",&server_transmission_protocol);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		fclose(cfg_fp);
@@ -105,6 +111,8 @@ void produce_config_file(void){
 }
 
 void print_values_cfg_server(int fd){
+
+	dprintf(fd,"server_transmission_protocol: %s (value in configs is %s)\n",(server_transmission_protocol<=0)?"TCP":"UDP",(server_transmission_protocol<=0)?"<= 0":"> 0");
 
 	dprintf(fd,"server_chunk_size: %hu\n",server_chunk_size);
 

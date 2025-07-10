@@ -20,21 +20,40 @@ static void print_chunk_helper_info(chunk_size_helper* helper){
 
 //https://discourse.libsdl.org/t/time-length-of-sdl-mixer-chunks/12852/2
 /* untested code follows… */
+int should_switch(mp3decoder_result_struct* before_result,mp3decoder_result_struct* current_result){
 
+	if(!before_result||!current_result){
+
+		return -1;
+
+
+	}
+	return (before_result->channels!=current_result->channels)||(before_result->hz!=current_result->hz);
+
+
+
+
+}
 void print_decoder_frame_result(mp3decoder_result_struct* result,int fd){
 
 	if(result){
 		dprintf(fd,"Estes sao os dados deste frame:\n"
-							"\nresult->chunk_id: %ld\n"
-							"\nresult->frame_bytes: %d\n"
-							"result->channels: %d"
+							"\nValor de MINIMP3_MAX_SAMPLES_PER_FRAME: %d"
+							"\nresult->chunk_id: %ld"
+							"\nresult->decoder_in_chunk_size: %d"
+							"\nresult->decoder_out_chunk_size: %d"
+							"\nresult->frame_bytes: %d"
+							"\nresult->channels: %d"
 							"\nresult->hz: %d"
 							"\nresult->layer: %d"
 							"\nresult->bitrate_kbps: %d"
-							"\nresult->nsamples: %hd\n"
-							"\nresult->dec_input_chunk_ptr: %d\n"
+							"\nresult->nsamples: %hd"
+							"\nresult->dec_input_chunk_ptr: %d"
 							"\nresult->dec_output_chunk_ptr: %d\n",
+							MINIMP3_MAX_SAMPLES_PER_FRAME,
 							result->chunk_id,
+							result->decoder_in_chunk_size,
+							result->decoder_out_chunk_size,
 							result->frame_bytes,
 							result->channels,
 							result->hz,
@@ -91,7 +110,7 @@ int play_from_sound_device_alsa(snd_pcm_t* handle,uint8_t* sound_buff_to_play,mp
 int play_from_sound_device_pa(pa_simple* handle,uint8_t* sound_buff_to_play,mp3decoder_result_struct* result)
 {
     //if (pa_simple_write(handle, sound_buff_to_play, result->nsamples*result->channels*SIZE, NULL) < 0) {
-    if (pa_simple_write(handle, sound_buff_to_play, 1152*2*SIZE, NULL) < 0) {
+    if (pa_simple_write(handle, sound_buff_to_play, result->nsamples*SIZE*result->channels, NULL) < 0) {
         fprintf(stderr, "pa_simple_write() failed to play %ld bytes: \nsize=%ld\nnchannels=%d\nnsamples=%d\n%s",result->nsamples*result->channels*SIZE,SIZE,result->channels,result->nsamples,pa_strerror(errno));
 	//print_decoder_frame_result(result,1);
 	return 1;

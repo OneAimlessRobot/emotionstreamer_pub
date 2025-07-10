@@ -10,12 +10,17 @@ char client_music_folder_path[PATHSIZE]={0};
 
 //EM BYTES E HZ!
 u_int64_t cfg_latency_ms=DEF_LATENCY_MS,
-	cfg_stream_cache_size_chunks=STREAM_CACHE_SIZE_CHUNKS,
-        cfg_freq=FREQ;
+	cfg_stream_decoder_cache_size_chunks=STREAM_DECODE_CACHE_SIZE_CHUNKS,
+	cfg_stream_player_cache_size_chunks=STREAM_PLAYER_CACHE_SIZE_CHUNKS;
 
 uint16_t cfg_cache_almost_full_pct=CACHE_ALMOST_FULL_PCT,
 	cfg_cache_almost_empty_pct=CACHE_ALMOST_EMPTY_PCT,
 	cfg_client_ack_timeout_lim=CLIENT_ACK_TIMEOUT_LIM;
+
+int16_t streaming_protocol=0;
+uint16_t stream_enable_ncurses=0;
+uint16_t stream_show_stats=1;
+uint16_t stream_show_frames=0;
 
 int_pair client_data_times_pair=(int_pair){CLIENT_TIMEOUT_DATA_SEC,CLIENT_TIMEOUT_DATA_USEC};
 int_pair client_con_times_pair=(int_pair){CLIENT_TIMEOUT_CON_SEC,CLIENT_TIMEOUT_CON_USEC};
@@ -48,6 +53,27 @@ void read_values_cfg_client(void){
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
+	sscanf(curr_line_buff,"stream_enable_ncurses: %hu",&stream_enable_ncurses);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"stream_show_stats: %hu",&stream_show_stats);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"stream_show_frames: %hu",&stream_show_frames);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
 	sscanf(curr_line_buff,"latency_ms: %lu",&cfg_latency_ms);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -55,7 +81,14 @@ void read_values_cfg_client(void){
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
-	sscanf(curr_line_buff,"cache_num_chunks: %lu",&cfg_stream_cache_size_chunks);
+	sscanf(curr_line_buff,"decoder_cache_num_chunks: %lu",&cfg_stream_decoder_cache_size_chunks);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"player_cache_num_chunks: %lu",&cfg_stream_player_cache_size_chunks);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -70,13 +103,6 @@ void read_values_cfg_client(void){
 		raise(SIGINT);
 	}
 	sscanf(curr_line_buff,"cache_almost_empty_pct: %hu",&cfg_cache_almost_empty_pct);
-	clean_buff();
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		fclose(cfg_fp);
-		raise(SIGINT);
-	}
-	sscanf(curr_line_buff,"freq: %lu",&cfg_freq);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -125,13 +151,17 @@ void read_values_cfg_client(void){
 void print_values_cfg_client(int fd){
 
 	
+	dprintf(fd,"stream_enable_ncurses: %s\n",stream_enable_ncurses?"Yes":"No");
+
+	dprintf(fd,"stream_show_stats: %s\n",stream_show_stats?"Yes":"No");
+
+	dprintf(fd,"stream_show_frames: %s\n",stream_show_frames?"Yes":"No");
+
 	dprintf(fd,"latency_ms: %lu\n",cfg_latency_ms);
 
 	dprintf(fd,"cache_almost_full_pct: %hu\n",cfg_cache_almost_full_pct);
 
 	dprintf(fd,"cache_almost_empty_pct: %hu\n",cfg_cache_almost_empty_pct);
-
-	dprintf(fd,"freq: %lu\n",cfg_freq);
 
 	dprintf(fd,"client_timeouts_data: %lus %lu us\n",client_data_times_pair[0],client_data_times_pair[1]);
 
@@ -139,9 +169,11 @@ void print_values_cfg_client(int fd){
 
 	dprintf(fd,"client_timeouts_data: %lus %lu us\n",client_data_times_pair[0],client_data_times_pair[1]);
 
-	dprintf(fd,"client_ack_timeout_lim: %hu",cfg_client_ack_timeout_lim);
+	dprintf(fd,"client_ack_timeout_lim: %hu\n",cfg_client_ack_timeout_lim);
 
-	dprintf(fd,"stream_chunk_num: %lu chunks\n",cfg_stream_cache_size_chunks);
+	dprintf(fd,"decoder_cache_num_chunks: %lu\n",cfg_stream_decoder_cache_size_chunks);
+
+	dprintf(fd,"player_cache_num_chunks: %lu\n",cfg_stream_player_cache_size_chunks);
 
 	dprintf(fd,"client_music_folder_path: %s\n",client_music_folder_path);
 

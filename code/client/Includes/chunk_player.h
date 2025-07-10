@@ -2,7 +2,7 @@
 #define CHUNK_PLAYER_H
 typedef enum method{PLAY_PA,PLAY_ALSA}method;
 
-typedef enum play_op{P_REAL_PLAY,P_DRY_PLAY,P_PLAY_NA,P_CLEAN}play_op;
+typedef enum play_op{P_REAL_PLAY,P_DRY_PLAY,P_PLAY_NA,P_GET_FRAME_DATA,P_CLEAN}play_op;
 
 
 typedef struct chunk_player{
@@ -12,7 +12,7 @@ typedef struct chunk_player{
 	method which_mode;
 	uint8_t* p_chunk;
 	uint32_t chunk_size;
-
+	mp3decoder_result_struct current_result;
 }chunk_player;
 
 

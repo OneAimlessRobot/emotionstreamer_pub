@@ -12,15 +12,6 @@
 
 
 
-static uint32_t pct_of_num(uint32_t pct,uint32_t num){
-
-	double dnum= (double)num;
-	double dpct= (double)pct;
-
-	return round((dnum*dpct)/100.0);
-
-
-}
 static uint32_t pct_frac_of_nums(uint32_t num1,uint32_t num2){
 
 	double dnum1= (double)num1;
@@ -38,9 +29,9 @@ void zero_chk_cache(chunk_queue* que){
 
 }
  
-uint32_t getQueueBufferedTime(chunk_queue* que){
+uint32_t getQueueBufferedTime(chunk_queue* que,mp3decoder_result_struct*result){
 
-	chunk_size_helper helper=(chunk_size_helper){cfg_freq,CHANNELS,SIZE*8,que->n_occupied*que->chunk_size};
+	chunk_size_helper helper=(chunk_size_helper){result->hz,result->channels,SIZE*8,que->n_occupied*que->chunk_size};
 	return getChunkTimeMilliseconds(&helper);
 
 
@@ -66,13 +57,6 @@ int que_is_empty(chunk_queue* que){
 
 
 }
-int que_is_very_empty(chunk_queue* que){
-
-	return !(que->n_occupied)&&!(que->sub_chunk_occupied);
-
-
-
-}
 int que_is_almost_empty(chunk_queue* que){
 
 	return pct_frac_of_nums(que->n_occupied,que->max_occupied)<=(cfg_cache_almost_empty_pct);
@@ -83,13 +67,6 @@ int que_is_almost_empty(chunk_queue* que){
 int que_is_full(chunk_queue* que){
 
 	return ((que->n_occupied)==(que->max_occupied));
-
-
-
-}
-int que_is_very_full(chunk_queue* que){
-
-	return ((que->n_occupied)==(que->max_occupied))&&((que->sub_chunk_occupied)==(que->chunk_size));
 
 
 

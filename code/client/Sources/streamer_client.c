@@ -22,8 +22,6 @@
 
 #include "../Includes/streamer_client.h"
 
-static int ncurses=1;
-static int stats=1;
 static int play=1;
 static int decode=1;
 static int rx_enabled=1;
@@ -96,7 +94,7 @@ static int read_chunk_tcp(client_stream_t* strm,int_pair pair){
 		return result;
 	}
 	acess_var_mtx(&mtx4,&lost_packet,0,V_SET);
-	perform_queue_op(strm->decoder_que,strm->decoder->r_chunk,0,(q_op){Q_READ_FROM,Q_LOOK_NA},NULL);
+	perform_queue_op(strm->decoder_que,strm->decoder->r_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 	return result;
 }
 static int read_chunk_udp(client_stream_t* strm,int_pair pair){
@@ -106,28 +104,34 @@ static int read_chunk_udp(client_stream_t* strm,int_pair pair){
 		return result;
 	}
 	acess_var_mtx(&mtx4,&lost_packet,0,V_SET);
-	perform_queue_op(strm->decoder_que,strm->decoder->r_chunk,0,(q_op){Q_READ_FROM,Q_LOOK_NA},NULL);
+	perform_queue_op(strm->decoder_que,strm->decoder->r_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 	return result;
 }
 
 
 void* rx_thread_func(void* args){
 	int full=0;
+	if(!stream_enable_ncurses){
+
+		printf("Thread de reading alcançado!\n");
+	}
 	while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
 
 		while((acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK))){
-
-			read_chunk_tcp(&stream_struct,client_data_times_pair);
-			full=perform_queue_op(stream_struct.decoder_que,NULL,0,(q_op){Q_LOOK,Q_IS_FULL},NULL);
+			(streaming_protocol<=0)?read_chunk_tcp(&stream_struct,client_data_times_pair):read_chunk_udp(&stream_struct,client_data_times_pair);
+			full=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL});
 			acess_var_mtx(&mtx4,&reading,1,V_SET);
 			if(full){
 				pthread_cond_signal(&cond4);
+				usleep(1);
+				pthread_cond_signal(&cond4);
 				break;
 			}
+			//(streaming_protocol<=0)?con_send_tcp(stream_struct.con_obj,client_data_times_pair):con_send_udp(stream_struct.con_obj,client_data_times_pair);
 			con_send_udp(stream_struct.con_obj,client_data_times_pair);
 		}
 		pthread_mutex_lock(&mtx1);
-		while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)&&perform_queue_op(stream_struct.decoder_que,NULL,0,(q_op){Q_LOOK,Q_IS_FULL},NULL)){
+		while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)&&perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_ALMOST_FULL})){
 
 			acess_var_mtx(&mtx4,&reading,0,V_SET);
 			pthread_cond_wait(&cond1,&mtx1);
@@ -148,58 +152,58 @@ void* dec_thread_func(void* args){
 		pthread_cond_wait(&cond4,&mtx5);
 	}
 	pthread_mutex_unlock(&mtx5);
-	if(!ncurses){
+	if(!stream_enable_ncurses){
 		printf("Thread de decoding alcançado!\n");
 	}
-	usleep(1000*cfg_latency_ms);
-	pthread_cond_signal(&cond2);
 	while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
 		while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
-				
-			while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
-				perform_queue_op(stream_struct.decoder_que,stream_struct.decoder->d_chunk,0,(q_op){Q_READ_TO,Q_LOOK_NA},NULL);
+				perform_queue_op(stream_struct.decoder_que,stream_struct.decoder->d_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
 				while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
 					perform_dec_op(stream_struct.decoder,&result,D_DECODE_CHUNK_SIMPLE);
-					if(perform_dec_op(stream_struct.decoder,NULL,D_IS_D_BUFFER_EMPTY)||result.frame_bytes){
-						
+					
+					if(result.frame_bytes){
 						if(result.nsamples){
-							perform_queue_op(stream_struct.player_que,stream_struct.decoder->p_chunk,0,(q_op){Q_READ_FROM,Q_LOOK_NA},NULL);
-							//perform_queue_op(stream_struct.auxiliar_que,(uint8_t*)&result,0,(q_op){Q_READ_FROM,Q_LOOK_NA},NULL);
-							//print_decoder_frame_result(&result,1);
+							perform_queue_op(stream_struct.player_que,stream_struct.decoder->p_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
+							perform_queue_op(stream_struct.auxiliar_que,(uint8_t*)&result,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
+						
+							if(stream_show_frames){
+								print_decoder_frame_result(&result,1);
+							}
 						}
-						else{
-
-							
-							perform_dec_op(stream_struct.decoder,NULL,D_RESET_MP3_PTR);
-							break;
-
-						}
+					
 					}
+					else{
+						break;
+					}
+					
 				}
-				if(perform_dec_op(stream_struct.decoder,NULL,D_IS_P_BUFFER_FULL)){
-					perform_dec_op(stream_struct.decoder,NULL,D_RESET_PCM_PTR);
-					break;
-
-				}
-
-			}
-			full=perform_queue_op(stream_struct.player_que,NULL,0,(q_op){Q_LOOK,Q_IS_FULL},NULL);
+			perform_dec_op(stream_struct.decoder,NULL,D_RESET_PCM_PTR);
+			perform_dec_op(stream_struct.decoder,NULL,D_RESET_MP3_PTR);
+			full=perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_ALMOST_FULL});
+			empty=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY});
 			acess_var_mtx(&mtx4,&decoding,1,V_SET);
-			pthread_cond_signal(&cond1);
-			pthread_cond_signal(&cond2);
 			if(full){
-
+				pthread_cond_signal(&cond2);
+				usleep(1);
+				pthread_cond_signal(&cond2);
+			}
+			if(empty){
+				pthread_cond_signal(&cond1);
+				usleep(1);
+				pthread_cond_signal(&cond1);
 				break;
+
 			}
 	}
 	pthread_mutex_lock(&mtx5);
-	while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
+	while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)&&(perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_ALMOST_FULL})||perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY}))){
 
 		acess_var_mtx(&mtx4,&decoding,0,V_SET);
 		pthread_cond_wait(&cond4,&mtx5);
 	}
 	pthread_mutex_unlock(&mtx5);
 	}
+
 	return  args;
 }
 
@@ -213,25 +217,26 @@ void* play_thread_func(void* args){
 		pthread_cond_wait(&cond2,&mtx2);
 	}
 	pthread_mutex_unlock(&mtx2);
-	if(!ncurses){
+	if(!stream_enable_ncurses){
 
 		printf("Thread de play alcançado!\n");
 	}
+	//usleep(1000*cfg_latency_ms);
 	while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
 		while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
 		
 			acess_var_mtx(&mtx4,&playing,1,V_SET);
-			perform_queue_op(stream_struct.player_que,stream_struct.player->p_chunk,0,(q_op){Q_READ_TO,Q_LOOK_NA},NULL);
-			//perform_queue_op(stream_struct.auxiliar_que,(uint8_t*)&result,0,(q_op){Q_READ_TO,Q_LOOK_NA},NULL);
+			perform_queue_op(stream_struct.player_que,stream_struct.player->p_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
+			perform_queue_op(stream_struct.auxiliar_que,(uint8_t*)&result,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
 			perform_play_op(stream_struct.player,&result,P_REAL_PLAY);
-			empty=perform_queue_op(stream_struct.player_que,NULL,0,(q_op){Q_LOOK,Q_IS_EMPTY},NULL);
+			empty=perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY});
 			if(empty){
 				pthread_cond_signal(&cond4);
 				break;
 			}
 	}
 	pthread_mutex_lock(&mtx2);
-	while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)&&perform_queue_op(stream_struct.player_que,NULL,0,(q_op){Q_LOOK,Q_IS_EMPTY},NULL)){
+	while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)&&acess_var_mtx(&mtx4,&decoding,0,V_LOOK)&&perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY})){
 		acess_var_mtx(&mtx4,&playing,0,V_SET);
 		pthread_cond_wait(&cond2,&mtx2);
 	}
@@ -275,16 +280,19 @@ static void* ack_exchange_thread(void* args){
 
 void* show_stats(void* args){
 
-	if(ncurses){
+	if(stream_enable_ncurses){
         initscr();
 	}
 	//nodelay(stdscr,1);
 	while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
-		int time_ms=perform_queue_op(stream_struct.player_que,NULL,0,(q_op){Q_GET_TIME,Q_LOOK_NA},NULL);
-		int pct_full_playing=perform_queue_op(stream_struct.player_que,NULL,0,(q_op){Q_LOOK,Q_GET_PCT},NULL);
-		int pct_full_decoding=perform_queue_op(stream_struct.decoder_que,NULL,0,(q_op){Q_LOOK,Q_GET_PCT},NULL);
 		usleep(10000);
-		if(ncurses){
+		mp3decoder_result_struct result={0};
+		
+		perform_play_op(stream_struct.player,&result,P_GET_FRAME_DATA);
+		int time_ms=perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_GET_TIME,Q_LOOK_NA});
+		int pct_full_playing=perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
+		int pct_full_decoding=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
+		if(stream_enable_ncurses){
 			erase();
 			printw("Tempo restante no buffer, atualmente: %d ms\nPercentagem de preenchimento em playing: %d\nPercentagem de preenchimento em decoding: %d\nReading?: %s Decoding?: %s Playing?: %s\n",
 						time_ms,
@@ -294,8 +302,8 @@ void* show_stats(void* args){
 						acess_var_mtx(&mtx4,&decoding,1,V_LOOK) ? "DECODING": "    ",
 						acess_var_mtx(&mtx4,&playing,1,V_LOOK) ? "PLAY": "    ");
 
-			perform_queue_op(stream_struct.decoder_que,NULL,0,(q_op){Q_PRINT,Q_LOOK_NA},NULL);
-			perform_queue_op(stream_struct.player_que,NULL,0,(q_op){Q_PRINT,Q_LOOK_NA},NULL);
+			perform_queue_op(stream_struct.decoder_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
+			perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
 			refresh();
 		}
 		else{
@@ -311,7 +319,7 @@ void* show_stats(void* args){
 
 		}
 	}
-	if(ncurses){
+	if(stream_enable_ncurses){
 		endwin();
 	}
 	return args;
@@ -326,21 +334,21 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	memset(r_chunk_buff,0,chunk_size);
 	uint8_t d_chunk_buff[chunk_size];
 	memset(d_chunk_buff,0,chunk_size);
-	uint8_t pd_chunk_buff[MINIMP3_MAX_SAMPLES_PER_FRAME*SIZE];
-	memset(pd_chunk_buff,0,MINIMP3_MAX_SAMPLES_PER_FRAME*SIZE);
-	uint8_t pp_chunk_buff[MINIMP3_MAX_SAMPLES_PER_FRAME*SIZE];
-	memset(pp_chunk_buff,0,MINIMP3_MAX_SAMPLES_PER_FRAME*SIZE);
+	uint8_t pd_chunk_buff[MINIMP3_MAX_SAMPLES_PER_FRAME*4];
+	memset(pd_chunk_buff,0,MINIMP3_MAX_SAMPLES_PER_FRAME*4);
+	uint8_t pp_chunk_buff[MINIMP3_MAX_SAMPLES_PER_FRAME*4];
+	memset(pp_chunk_buff,0,MINIMP3_MAX_SAMPLES_PER_FRAME*4);
 	chunk_queue player_que={0};
 	chunk_queue decoder_que={0};
 	chunk_queue auxiliar_que={0};
 	chunk_player player={0};
 	mp3decoder decoder={0};
-	init_queue(&player_que,MINIMP3_MAX_SAMPLES_PER_FRAME*SIZE);
-	init_queue(&decoder_que,chunk_size);
-	init_queue(&auxiliar_que,sizeof(mp3decoder_result_struct));
+	init_queue(&player_que,MINIMP3_MAX_SAMPLES_PER_FRAME*2 ,cfg_stream_player_cache_size_chunks);
+	init_queue(&decoder_que,chunk_size,cfg_stream_decoder_cache_size_chunks);
+	init_queue(&auxiliar_que,sizeof(mp3decoder_result_struct),cfg_stream_player_cache_size_chunks);
 
-	init_mp3_decoder(&decoder,chunk_size,MINIMP3_MAX_SAMPLES_PER_FRAME,r_chunk_buff,d_chunk_buff,pd_chunk_buff);
-	init_chunk_player(&player,MINIMP3_MAX_SAMPLES_PER_FRAME*SIZE,pp_chunk_buff,which_mode);
+	init_mp3_decoder(&decoder,chunk_size,MINIMP3_MAX_SAMPLES_PER_FRAME/2,r_chunk_buff,d_chunk_buff,pd_chunk_buff);
+	init_chunk_player(&player,MINIMP3_MAX_SAMPLES_PER_FRAME/2,pp_chunk_buff,which_mode);
 	stream_struct.decoder_que=&decoder_que;
 	stream_struct.player_que=&player_que;
 	stream_struct.auxiliar_que=&auxiliar_que;
@@ -360,7 +368,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	if(play){
 		pthread_create(&tid_play,NULL,play_thread_func,NULL);
 	}
-	if(stats){
+	if(stream_show_stats){
 		pthread_create(&tid_stats,NULL,show_stats,NULL);
 	}
 	
@@ -370,7 +378,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		pthread_cond_wait(&cond3,&mtx3);
 	}
 	pthread_mutex_unlock(&mtx3);
-	if(stats){
+	if(stream_show_stats){
 		pthread_join(tid_stats,NULL);
 		printf("Saimos do thread stats!!!!!!\n");
 	}
@@ -390,9 +398,9 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	pthread_join(tid_ack,NULL);
 	printf("Saimos do thread ack!!!!!\n");
 	
-	perform_queue_op(stream_struct.player_que,NULL,0,(q_op){Q_CLEAN,Q_LOOK_NA},NULL);
-	perform_queue_op(stream_struct.decoder_que,NULL,0,(q_op){Q_CLEAN,Q_LOOK_NA},NULL);
-	perform_queue_op(stream_struct.auxiliar_que,NULL,0,(q_op){Q_CLEAN,Q_LOOK_NA},NULL);
+	perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
+	perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
+	perform_queue_op(stream_struct.auxiliar_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
 	perform_play_op(stream_struct.player,NULL,P_CLEAN);
 	perform_dec_op(stream_struct.decoder,NULL,D_CLEAN);
 	close_con(stream_struct.con_obj);

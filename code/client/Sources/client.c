@@ -43,13 +43,18 @@ static void sigpipe_handler(int signal){
 	sigint_handler(signal);
 
 }
-static int down_file_size(void){
+static int down_file_size(int is_streaming){
 
 		int down_size=-1;
 		clear_con_data(&client_con_obj);
 		printf("Recebendo tamanho!!!\n");
 		con_read_udp(&client_con_obj,client_data_times_pair);
-		sscanf((char*)client_con_obj.udp_data,"%d",&down_size);
+		if(is_streaming){
+			sscanf((char*)client_con_obj.udp_data,"%d %hd",&down_size,&streaming_protocol);
+		}
+		else{
+			sscanf((char*)client_con_obj.udp_data,"%d",&down_size);
+		}
 		if(down_size<=0){
 
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
@@ -59,22 +64,28 @@ static int down_file_size(void){
 		clear_con_data(&client_con_obj);
 		snprintf((char*)client_con_obj.ack_udp_data,DEF_DATASIZE,"%s",CON_STRING);
 		con_send_udp_ack(&client_con_obj,client_data_times_pair);
-		printf(CONTENT_DOWNLOAD_INCOMMING,down_size);
+		if(!is_streaming){
+			printf(CONTENT_DOWNLOAD_INCOMMING,down_size);
+		}
+		else{
+
+			printf(STREAM_INCOMMING,down_size,(streaming_protocol<=0)?"TCP":"UDP");
+		
+		}
 		clear_con_data(&client_con_obj);
 		return down_size;
 
 }
 static void play_func(void){
-		int down_size=down_file_size();
+		down_file_size(1);
 		uint16_t chunk_size=0;
-		printf(STREAM_INCOMMING,down_size);
 		con_read_udp(&client_con_obj,client_data_times_pair);
 		sscanf((char*)client_con_obj.udp_data,"%hu",&chunk_size);
 		player_init_stream(&client_con_obj,chunk_size,play_way);
 }
 static void down_func(char* file_name){
 
-		int down_size=down_file_size();
+		int down_size=down_file_size(0);
 		int fp=-1;
 		char file_path[PATHSIZE*3-1]={0};
 		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,EXTENSION);
@@ -93,7 +104,7 @@ static void down_func(char* file_name){
 static void peek_func(void){
 
 		
-		int down_size=down_file_size();
+		int down_size=down_file_size(0);
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
 		raise(SIGINT);
@@ -102,7 +113,7 @@ static void peek_func(void){
 }
 static void conf_func(void){
 
-		int down_size=down_file_size();
+		int down_size=down_file_size(0);
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
 		raise(SIGINT);

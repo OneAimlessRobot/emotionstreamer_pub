@@ -1,7 +1,7 @@
 #ifndef QUEUE_MENUS_H
 #define QUEUE_MENUS_H
 
-typedef enum queue_op{Q_READ_FROM,Q_READ_FROM_PARTIAL,Q_LOOK,Q_GET_TIME,Q_READ_TO,Q_READ_TO_PARTIAL,Q_CLEAN,Q_PRINT,Q_NA}queue_op;
+typedef enum queue_op{Q_READ_FROM,Q_LOOK,Q_GET_TIME,Q_READ_TO,Q_CLEAN,Q_PRINT,Q_NA}queue_op;
 typedef enum queue_look_op{Q_IS_FULL,Q_IS_EMPTY,Q_IS_ALMOST_FULL,Q_IS_ALMOST_EMPTY,Q_GET_PCT,Q_LOOK_NA}queue_look_op;
 
 typedef struct q_op{
@@ -19,5 +19,5 @@ typedef struct q_state{
 	
 }q_state;
 
-int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert,int16_t ammount_if_partial,q_op op,q_state* state);
+int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, mp3decoder_result_struct* result,q_op op);
 #endif

@@ -11,6 +11,9 @@
 
 #include "../../minimp3/minimp3.h"
 #include "../Includes/mp3module.h"
+
+
+
 static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
 static uint64_t curr_chunk_id=0;
 /*
@@ -30,7 +33,7 @@ static int is_decoder_buffer_empty(mp3decoder* decoder){
 static int is_play_buffer_full(mp3decoder* decoder){
 
 
-	return decoder->p_buffer_pos_cursor>=(decoder->p_chunk_size/2);
+	return decoder->p_buffer_pos_cursor>=(decoder->p_chunk_size);
 
 
 }
@@ -39,6 +42,8 @@ static void decode_chunk(mp3decoder*decoder,mp3decoder_result_struct* result,int
 	mp3dec_frame_info_t info={0};
 	int16_t nsamples=mp3dec_decode_frame(&decoder->dec, decoder->d_chunk+decoder->d_buffer_pos_cursor, decoder->d_chunk_size-decoder->d_buffer_pos_cursor, (int16_t*)(decoder->p_chunk+(decoder->p_buffer_pos_cursor)), &info);
 	result->chunk_id=curr_chunk_id;
+	result->decoder_in_chunk_size=decoder->d_chunk_size;
+	result->decoder_out_chunk_size=decoder->p_chunk_size;
 	result->frame_bytes=info.frame_bytes;
 	result->channels=info.channels;
 	result->hz=info.hz;
@@ -49,7 +54,7 @@ static void decode_chunk(mp3decoder*decoder,mp3decoder_result_struct* result,int
 		print_decoder_frame_result(result,1);
 	}
 	decoder->d_buffer_pos_cursor=min((decoder->d_buffer_pos_cursor+result->frame_bytes),decoder->d_chunk_size);
-	decoder->p_buffer_pos_cursor=min((decoder->p_buffer_pos_cursor+result->nsamples),decoder->p_chunk_size/2);
+	decoder->p_buffer_pos_cursor=min((decoder->p_buffer_pos_cursor+(result->nsamples*result->channels*SIZE)),decoder->p_chunk_size/2);
 	result->dec_input_chunk_ptr=decoder->d_buffer_pos_cursor;
 	result->dec_output_chunk_ptr=decoder->p_buffer_pos_cursor;
 	curr_chunk_id++;

@@ -57,7 +57,7 @@ if ((err=snd_pcm_open(&player->play_stream_alsa, DEVICE, SND_PCM_STREAM_PLAYBACK
      exit(-1);
 }
 
-if ((err =snd_pcm_set_params(player->play_stream_alsa,SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED,CHANNELS,cfg_freq, 1, cfg_latency_ms*1000) ) < 0 ){
+if ((err =snd_pcm_set_params(player->play_stream_alsa,SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED,player->current_result.channels,player->current_result.hz, 1, cfg_latency_ms*1000) ) < 0 ){
 	        printf("Playback open error: %s\n", snd_strerror(err));
  		raise(SIGINT);
 	}
@@ -68,8 +68,8 @@ if ((err =snd_pcm_set_params(player->play_stream_alsa,SND_PCM_FORMAT_S16_LE, SND
 static void initPA(chunk_player*player){
      pa_sample_spec ss = {
          .format = PA_SAMPLE_S16LE,
-         .rate = cfg_freq,
-         .channels = CHANNELS
+         .rate = player->current_result.hz,
+         .channels = player->current_result.channels
      };
 
      if (!(player->play_stream_pa = pa_simple_new(NULL, "client.exe", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &errno))) {
@@ -79,10 +79,26 @@ static void initPA(chunk_player*player){
 
 }
 
+static void init_player_lib(chunk_player* player){
 
+
+	switch(player->which_mode){
+
+		case PLAY_ALSA:
+			initALSA(player);
+			break;
+		case PLAY_PA:
+			initPA(player);
+			break;
+		default:
+			break;
+
+	}
+
+}
 static void play_chunk_alsa(chunk_player* player,mp3decoder_result_struct* result){
-
 	play_from_sound_device_alsa(player->play_stream_alsa,player->p_chunk,result);
+
 }
 static void play_chunk_pa(chunk_player* player,mp3decoder_result_struct* result){
 	play_from_sound_device_pa(player->play_stream_pa,player->p_chunk,result);
@@ -106,13 +122,42 @@ static void play_chunk(chunk_player* player,mp3decoder_result_struct* result,int
 	}
 }
 
+static void write_player_result(chunk_player* player,mp3decoder_result_struct* result,int in){
+
+	if(result){
+		if(!in){
+			memcpy(&player->current_result,result,sizeof(mp3decoder_result_struct));
+		}
+		else {
+			memcpy(result,&player->current_result,sizeof(mp3decoder_result_struct));
+		}
+		
+	}
+}
+static void safe_play_wrapper(chunk_player* player,mp3decoder_result_struct* result,int dry){
+
+	int can_play=-2;
+	if((can_play=should_switch(&player->current_result,result))>=0){
+		if(can_play>0){
+			clean_player(player);
+			write_player_result(player,result,0);
+			init_player_lib(player);
+		}
+		play_chunk(player,result,dry);
+	}
+
+}
+
 void perform_play_op(chunk_player* player,mp3decoder_result_struct* result,play_op op){
 	switch(op){
 		case P_REAL_PLAY:
-			play_chunk(player,result,0);
+			safe_play_wrapper(player,result,0);
 			break;
 		case P_DRY_PLAY:
-			play_chunk(player,result,1);
+			safe_play_wrapper(player,result,1);
+			break;
+		case P_GET_FRAME_DATA:
+			write_player_result(player,result,1);
 			break;
 		case P_CLEAN:
 			clean_player(player);
@@ -123,23 +168,13 @@ void perform_play_op(chunk_player* player,mp3decoder_result_struct* result,play_
 			break;
 	}
 }
+
 int init_chunk_player(chunk_player* player,uint16_t chunk_size,uint8_t* p_buff,method the_way){
 	player->mtx=&mtx;
 	player->chunk_size=chunk_size;
 	player->p_chunk=p_buff;
 	player->which_mode=the_way;
-	switch(player->which_mode){
-
-		case PLAY_ALSA:
-			initALSA(player);
-			break;
-		case PLAY_PA:
-			initPA(player);
-			break;
-		default:
-			break;
-
-	}
+	memset(&player->current_result,0,sizeof(mp3decoder_result_struct));
 	return 0;
 
 }

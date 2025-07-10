@@ -16,14 +16,19 @@
 extern u_int64_t
 	cfg_latency_ms,
 	cfg_freq,
-	cfg_stream_cache_size_chunks;
+	cfg_stream_decoder_cache_size_chunks,
+	cfg_stream_player_cache_size_chunks;
 
 extern uint16_t
+	stream_enable_ncurses,
+	stream_show_stats,
+	stream_show_frames,
 	cfg_cache_almost_full_pct,
 	cfg_cache_almost_empty_pct,
 	cfg_client_ack_timeout_lim,
 	cfg_cache_almost_empty_pct;
 
+extern int16_t streaming_protocol;
 
 extern char client_music_folder_path[PATHSIZE];
 extern char client_logs_file_name[PATHSIZE];

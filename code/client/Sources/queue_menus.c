@@ -73,22 +73,7 @@ static int look_op(chunk_queue* que,queue_look_op op){
 	return result;
 
 }
-static void write_queue_state(chunk_queue*que,q_state* state){
-
-	if(state&&que){
-
-		state->play_cursor=que->play_cursor;
-		state->recv_cursor=que->recv_cursor;
-		state->n_occupied=que->n_occupied;
-		state->sub_chunk_occupied=que->sub_chunk_occupied;
-
-
-	}
-
-
-
-}
-static void circular_q_visual_print(chunk_queue* que){
+static void circular_q_visual_print(chunk_queue* que,mp3decoder_result_struct*result){
 
 	if(!que){
 
@@ -121,7 +106,7 @@ static void circular_q_visual_print(chunk_queue* que){
 	bar[play_cursor_bar_pos]='P';
 	bar[recv_cursor_bar_pos]='R';
 	
-	int buff_ms=getQueueBufferedTime(que);
+	int buff_ms=getQueueBufferedTime(que,result);
 	for(int i=circular_int_inc(PRINT_SIZE+1,play_cursor_bar_pos);(play_cursor_bar_pos!=recv_cursor_bar_pos)&&(i!=recv_cursor_bar_pos);i=circular_int_inc(PRINT_SIZE+1,i)){
 
 		bar[i]='=';
@@ -136,7 +121,7 @@ static void circular_q_visual_print(chunk_queue* que){
 	printw("O buff:\n%s\n",bar);
 	free(bar);
 }
-int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert,int16_t ammount_if_partial,q_op op,q_state* state){
+int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, mp3decoder_result_struct* frame_data_struct,q_op op){
 	int result=0;
 	pthread_mutex_lock(que->queue_mtx);
 	switch(op.main){
@@ -145,10 +130,10 @@ int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert,int16_t ammount_if
 			result=look_op(que,op.look);
 			break;
 		case Q_GET_TIME:
-			result=(int)getQueueBufferedTime(que);
+			result=(int)getQueueBufferedTime(que,frame_data_struct);
 			break;
 		case Q_PRINT:
-			circular_q_visual_print(que);
+			circular_q_visual_print(que,frame_data_struct);
 			break;
 		case Q_READ_TO:
 			result=dequeue_chunk(que,buff_if_insert);
@@ -162,7 +147,6 @@ int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert,int16_t ammount_if
 		case Q_NA:
 			break;
 	}
-	write_queue_state(que,state);
 	pthread_mutex_unlock(que->queue_mtx);
 	return result;
 
