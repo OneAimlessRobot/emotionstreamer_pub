@@ -133,8 +133,6 @@ double frames = 0.0;
  
 int play_from_sound_device_alsa(snd_pcm_t* handle,uint8_t* sound_buff_to_play,decoder_result_struct* result)
 {
-  print_decoder_frame_result(result,1);
-
   int err;
   snd_pcm_sframes_t frames;
   frames = snd_pcm_writei(handle,sound_buff_to_play, result->total_bytes_in_chunk/result->sample_size/result->channels);

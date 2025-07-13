@@ -16,12 +16,11 @@ static int wav_header_received=0;
 static void parse_wav_header_into_player_result(chunk_player* player){
 
 
-	WAVFile file=WAV_ParseFileData(player->p_chunk);
+	WAVFile file=WAV_ParseFileData(player->h_chunk);
 	player->current_result.channels=file.header.number_of_channels;
 	player->current_result.hz=file.header.sample_rate;
 	player->current_result.bps=file.header.bits_per_sample;
 	player->current_result.sample_size=(((int)ceil((((float)player->current_result.bps)/8.0f))));
-	memmove(player->r_chunk,player->r_chunk+WAV_HEADER_SIZE,player->chunk_size-WAV_HEADER_SIZE);
 	player->current_result.total_bytes_in_chunk=player->chunk_size;
 	print_decoder_frame_result(&player->current_result,1);
 }
@@ -71,6 +70,7 @@ if ((err=snd_pcm_open(&player->play_stream_alsa, DEVICE, SND_PCM_STREAM_PLAYBACK
 if ((err =snd_pcm_set_params(player->play_stream_alsa,SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED,player->current_result.channels,player->current_result.hz, 1, cfg_latency_ms*1000) ) < 0 ){
 	        printf("Playback open error: %s\n", snd_strerror(err));
  		raise(SIGINT);
+		abort();
 	}
 	else{
 		printf("ALSA initialized successfully!!!!\n");
@@ -88,6 +88,7 @@ static void initPA(chunk_player*player){
      if (!(player->play_stream_pa = pa_simple_new(NULL, "client.exe", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &errno))) {
          fprintf(stderr, "pa_simple_new() failed: %s\n", pa_strerror(errno));
          raise(SIGINT);
+	 abort();
 	}
 	else{
 
@@ -218,11 +219,12 @@ void perform_play_op(chunk_player* player,decoder_result_struct* result,play_op 
 	}
 }
 
-int init_chunk_player(chunk_player* player,uint64_t chunk_size,uint8_t* r_buff,uint8_t* p_buff,method the_way){
+int init_chunk_player(chunk_player* player,uint64_t chunk_size,uint8_t* h_buff,uint8_t* r_buff,uint8_t* p_buff,method the_way){
 	player->mtx=&mtx;
 	player->chunk_size=chunk_size;
 	player->p_chunk=p_buff;
 	player->r_chunk=r_buff;
+	player->h_chunk=h_buff;
 	player->which_mode=the_way;
 	memset(&player->current_result,0,sizeof(decoder_result_struct));
 	return 0;
