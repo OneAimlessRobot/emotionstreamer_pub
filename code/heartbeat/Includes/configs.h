@@ -7,6 +7,7 @@
 
 
 extern int_pair hb_data_times_pair,
+	hb_holepunching_times_pair,
         hb_con_times_pair;
 
 

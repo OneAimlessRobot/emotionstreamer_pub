@@ -137,9 +137,13 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	memcpy(&arg_s.data_times_pair,&hb_data_times_pair,sizeof(int_pair));
 
 	memcpy(&arg_a.con_times_pair,&hb_con_times_pair,sizeof(int_pair));
+	memcpy(&arg_a.holepunching_times_pair,&hb_holepunching_times_pair,sizeof(int_pair));
+
 	memcpy(&arg_a.data_times_pair,&hb_data_times_pair,sizeof(int_pair));
 
+
 	memcpy(&arg_o.data_times_pair,&hb_data_times_pair,sizeof(int_pair));
+	memcpy(&arg_o.holepunching_times_pair,&hb_holepunching_times_pair,sizeof(int_pair));
 
 	openDB(DB_FILE);
 

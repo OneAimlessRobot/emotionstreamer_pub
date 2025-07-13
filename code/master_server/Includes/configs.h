@@ -7,6 +7,7 @@
 
 
 extern int_pair master_data_times_pair,
+	master_holepunching_times_pair,
         master_con_times_pair;
 
 

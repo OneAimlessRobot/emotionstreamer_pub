@@ -37,8 +37,8 @@
 #define MASTER_TIMEOUT_CON_USEC 1
 
 
-#define HOLE_PUNCHING_TIMEOUT_SEC 3
-#define HOLE_PUNCHING_TIMEOUT_USEC 3
+#define HOLE_PUNCHING_TIMEOUT_SEC 0
+#define HOLE_PUNCHING_TIMEOUT_USEC 1000000
 
 
 typedef long unsigned int int_pair[2];

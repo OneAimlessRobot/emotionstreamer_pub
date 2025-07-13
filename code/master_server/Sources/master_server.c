@@ -102,6 +102,7 @@ void start_master(char* hostname, uint16_t port){
 
         memcpy(&arg_a.con_times_pair,&master_con_times_pair,sizeof(int_pair));
         memcpy(&arg_a.data_times_pair,&master_data_times_pair,sizeof(int_pair));
+        memcpy(&arg_a.holepunching_times_pair,&master_holepunching_times_pair,sizeof(int_pair));
 
         memcpy(&arg_o.data_times_pair,&master_data_times_pair,sizeof(int_pair));
 

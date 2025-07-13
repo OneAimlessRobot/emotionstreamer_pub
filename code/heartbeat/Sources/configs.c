@@ -17,6 +17,7 @@ static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
 int_pair hb_data_times_pair=(int_pair){HB_TIMEOUT_DATA_SEC,HB_TIMEOUT_DATA_USEC};
 int_pair hb_con_times_pair=(int_pair){HB_TIMEOUT_CON_SEC,HB_TIMEOUT_CON_USEC};
+int_pair hb_holepunching_times_pair=(int_pair){HOLE_PUNCHING_TIMEOUT_SEC,HOLE_PUNCHING_TIMEOUT_USEC};
 
 uint16_t hb_ack_timeout_lim=HB_ACK_TIMEOUT_LIM;
 
@@ -60,6 +61,13 @@ void read_values_cfg_hb(void){
                 fclose(cfg_fp);
                 raise(SIGINT);
         }
+        sscanf(curr_line_buff,"hb_timeouts_holepunching: %lu %lu",&hb_holepunching_times_pair[0],&hb_holepunching_times_pair[1]);
+        clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
         sscanf(curr_line_buff,"hb_ack_timeout_lim: %hu",&hb_ack_timeout_lim);
         clean_buff();
 
@@ -76,6 +84,8 @@ void print_values_cfg_hb(int fd){
         dprintf(fd,"hb_timeouts_con: %lus %lu us\n",hb_con_times_pair[0],hb_con_times_pair[1]);
 
         dprintf(fd,"hb_timeouts_data: %lus %lu us\n",hb_data_times_pair[0],hb_data_times_pair[1]);
+
+        dprintf(fd,"hb_timeouts_holepunching: %lus %lu us\n",hb_holepunching_times_pair[0],hb_holepunching_times_pair[1]);
 
         dprintf(fd,"hb_ack_timeout_lim: %hu\n",hb_ack_timeout_lim);
 

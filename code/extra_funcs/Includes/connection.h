@@ -52,5 +52,5 @@ void clear_con_data(con_t* con_obj);
 
 void drop_peer_con(con_t* con_obj);
 
-void greet(con_t*con_obj,int_pair times_pair, uint16_t curr_port);
+void greet(con_t*con_obj,int_pair times_pair, int_pair holepunching_times_pair,uint16_t curr_port);
 #endif

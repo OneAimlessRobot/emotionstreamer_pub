@@ -78,7 +78,7 @@ void* slave_thread(void* args){
 
         getsockname(arg_struct->con_obj->sockfd_tcp,(struct sockaddr*)&arg_struct->con_obj->this_tcp_addr,socklenvar);
 
-        greet(arg_struct->con_obj,arg_struct->con_times_pair,arg_struct->con_obj->this_tcp_addr.sin_port);
+        greet(arg_struct->con_obj,arg_struct->con_times_pair,arg_struct->holepunching_times_pair,arg_struct->con_obj->this_tcp_addr.sin_port);
 
 	snprint_addr_aux(ent_addr,PATHSIZE/8,&arg_struct->this_addr);
 
@@ -397,7 +397,7 @@ void* acceptor_func(void* args){
                               setNonBlocking(sock);
                               init_con(&con,sock,SERVER_C);
                               uint16_t stored_port=0;
-                              greet(&con,arg_a->con_times_pair,curr_port);
+                              greet(&con,arg_a->con_times_pair,arg_a->holepunching_times_pair,curr_port);
                               clear_con_data(&con);
                               result=con_read_udp_ack(&con,arg_a->con_times_pair);
                               sscanf((char*)con.ack_udp_data,"%s %s %s %s %hu %s",req_buff,type_buff,name_buff,ip_buff,&stored_port, extension_buff);

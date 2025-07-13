@@ -17,6 +17,7 @@ extern int16_t is_wav_mode;
 
 extern int_pair server_data_times_pair,
 	server_con_times_pair,
+	server_holepunching_times_pair,
 	server_drop_chunks_times_pair;
 
 extern uint64_t server_ack_timeout_lim;

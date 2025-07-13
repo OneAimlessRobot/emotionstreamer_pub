@@ -37,7 +37,7 @@ extern char client_music_folder_path[PATHSIZE];
 extern char client_logs_file_name[PATHSIZE];
 extern int_pair client_data_times_pair;
 extern int_pair client_con_times_pair;
-
+extern int_pair client_holepunching_times_pair;
 
 void read_values_cfg_client(void);
 void print_values_cfg_client(int fd);

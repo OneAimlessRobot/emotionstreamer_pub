@@ -76,7 +76,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				char hp_udp_buff[2*DEF_DATASIZE]={0};
 				init_con(&server_con_obj,sock_tcp,SERVER_C);
 
-				greet(&server_con_obj,server_con_times_pair,port);
+				greet(&server_con_obj,server_con_times_pair,server_holepunching_times_pair,port);
 				
 				clear_con_data(&server_con_obj);
 

@@ -7,7 +7,6 @@
 #include "../Includes/sockio_tcp.h"
 #include "../Includes/connection.h"
 
-static int_pair hole_punching_timeouts={HOLE_PUNCHING_TIMEOUT_SEC,HOLE_PUNCHING_TIMEOUT_USEC};
 
 void clear_con_data(con_t* con_obj){
 
@@ -135,7 +134,7 @@ static void set_up_local_udp_socks(con_t* con_obj,uint16_t curr_port){
 	}
 }
 
-static void greet_server(con_t* con_obj, int_pair pair,uint16_t curr_port){
+static void greet_server(con_t* con_obj, int_pair pair,int_pair holepunching_times_pair,uint16_t curr_port){
 
  	char client_data[DEF_DATASIZE+1];
 	memset(client_data,0,DEF_DATASIZE+1);
@@ -168,38 +167,35 @@ static void greet_server(con_t* con_obj, int_pair pair,uint16_t curr_port){
 	printf("Server greet sucesfull; Portas recebidas: %hu, %hu\nWaiting for client to initiate hole punching routines!\n",(uint16_t)(port_udp), (uint16_t)(ack_port_udp));
 	printf("A receber UDP primeiro pela pipeline de dados!\n");
 	clear_con_data(con_obj);
-	if(con_read_udp(con_obj,hole_punching_timeouts)>0){
+	snprintf((char*)con_obj->udp_data,DEF_DATASIZE,"Hole punching 1: reply");
+	con_send_udp(con_obj,holepunching_times_pair);
+	printf("Ok....\nOK rápido, rápido!!\nA receber UDP, mas agora pela pipeline de acknowledgments!\n");
+	snprintf((char*)con_obj->ack_udp_data,DEF_DATASIZE,"Hole punching 2: reply");
+	con_send_udp_ack(con_obj,holepunching_times_pair);
+	printf("Tudo Enviado! Esperando resposta!\n");
+	clear_con_data(con_obj);
+	if(con_read_udp(con_obj,holepunching_times_pair)>0){
 		printf("A resposta foi '%s'\nUDP holepunching recebido!\nEnviando resposta!\n",con_obj->udp_data);
 	
 	}
 	else{
-		printf("Não recebido! Terminando!\n");
-		raise(SIGINT);
+		printf("OOofff... reply de holepunching não recebida!!\n");
 	
 
 	}
-	clear_con_data(con_obj);
-	snprintf((char*)con_obj->udp_data,DEF_DATASIZE,"Hole punching 1: reply");
-	con_send_udp(con_obj,hole_punching_timeouts);
-	clear_con_data(con_obj);
-	printf("Ok....\nA receber UDP, mas agora pela pipeline de acknowledgments!\n");
-	if(con_read_udp_ack(con_obj,hole_punching_timeouts)>0){
+	if(con_read_udp_ack(con_obj,holepunching_times_pair)>0){
 		printf("A resposta foi '%s'\nUDP holepunching recebido na pipeline de acknowledgements!\nEnviando resposta!\n",con_obj->ack_udp_data);
 	
 	}
 	else{
-		printf("Não recebido! Terminando!\n");
-		raise(SIGINT);
+		printf("OOofff... reply de holepunching nos acks não recebida!!\n");
 	
 
 	}
-	clear_con_data(con_obj);
-	snprintf((char*)con_obj->ack_udp_data,DEF_DATASIZE,"Hole punching 2: reply");
-	con_send_udp_ack(con_obj,hole_punching_timeouts);
-
+	
 }
 
-static void greet_client(con_t* con_obj,int_pair pair,uint16_t curr_port){
+static void greet_client(con_t* con_obj,int_pair pair,int_pair holepunching_times_pair,uint16_t curr_port){
 	
 	
 	uint16_t port_tcp,port_udp,ack_port_udp;
@@ -221,7 +217,6 @@ static void greet_client(con_t* con_obj,int_pair pair,uint16_t curr_port){
 
 	if(port_udp==0){
 
-		
 		printf("Server rejeitou!\n");
 		close_con(con_obj);
 		exit(-1);
@@ -235,45 +230,37 @@ static void greet_client(con_t* con_obj,int_pair pair,uint16_t curr_port){
 	printf("A enviar UDP primeiro pela pipeline de dados!\n");
 	clear_con_data(con_obj);
 	snprintf((char*)con_obj->udp_data,DEF_DATASIZE,"Hole punching 1");
-	con_send_udp(con_obj,hole_punching_timeouts);
-	printf("Enviado! Esperando resposta!\n");
+	con_send_udp(con_obj,holepunching_times_pair);
+	printf("Alright!\nrápido, rápido!!\nA enviar o furo pela pipeline UDP de acknowledgements!\n");
+	snprintf((char*)con_obj->ack_udp_data,DEF_DATASIZE,"Hole punching 2");
+	con_send_udp_ack(con_obj,holepunching_times_pair);
+	printf("Tudo Enviado! Esperando resposta!\n");
 	clear_con_data(con_obj);
-	if(con_read_udp(con_obj,hole_punching_timeouts)>0){
+	if(con_read_udp(con_obj,holepunching_times_pair)>0){
 		printf("O que recebemos foi: '%s'\nRecebido!\nOkay! Agora vamos furar na pipeline de acknowledgements!\n",con_obj->udp_data);
-	
 	}
 	else{
-		printf("Não recebido! Terminando!\n");
-		raise(SIGINT);
-	
+		printf("OOofff... reply de holepunching nos acks não recebida!!\n");
 
 	}
-	clear_con_data(con_obj);
-	printf("Alright!\nA enviar o furo pela pipeline UDP de acknowledgements!\n");
-	snprintf((char*)con_obj->ack_udp_data,DEF_DATASIZE,"Hole punching 2");
-	con_send_udp_ack(con_obj,hole_punching_timeouts);
-	printf("Enviado! Esperando resposta!\n");
-	if(con_read_udp_ack(con_obj,hole_punching_timeouts)>0){
+	if(con_read_udp_ack(con_obj,holepunching_times_pair)>0){
 		printf("O que recebemos foi: '%s'\nRecebido!\nOkay! Agora vamos furar na pipeline de acknowledgements!\n",con_obj->ack_udp_data);
-	
 	}
 	else{
-		printf("Não recebido! Terminando!\n");
-		raise(SIGINT);
-	
+		printf("OOofff... reply de holepunching nos acks não recebida!!\n");
 
 	}
 }
 
 
-void greet(con_t*con_obj,int_pair times_pair,uint16_t curr_port){
+void greet(con_t*con_obj,int_pair times_pair,int_pair holepunching_times_pair,uint16_t curr_port){
 
 	switch(con_obj->type){
 		case SERVER_C:
-			greet_server(con_obj,times_pair,curr_port);
+			greet_server(con_obj,times_pair,holepunching_times_pair,curr_port);
 			break;
 		case CLIENT_C:
-			greet_client(con_obj,times_pair,curr_port);
+			greet_client(con_obj,times_pair,holepunching_times_pair,curr_port);
 			break;
 		default:
 			break;

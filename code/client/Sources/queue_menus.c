@@ -113,8 +113,8 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 		bar[i]='=';
 	}
 	
-	printw("Queue visual:\nplay cursor: %u\nrecv cursor: %u\nCurr occupied: %u\nMax occupied: %u\n",que->play_cursor,que->recv_cursor,que->n_occupied,que->max_occupied);
-	printw("Queue esta quase vazia? %s\nQueue esta quase cheia? %s\nQueue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %u\nTemos %u ms de audio no buffer!\n",
+	printw("Queue visual:\nplay cursor: %lu\nrecv cursor: %lu\nCurr occupied: %lu\nMax occupied: %lu\n",que->play_cursor,que->recv_cursor,que->n_occupied,que->max_occupied);
+	printw("Queue esta quase vazia? %s\nQueue esta quase cheia? %s\nQueue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %lu\nTemos %lu ms de audio no buffer!\n",
 					que_is_almost_empty(que) ? "SIM":"NAO",
 					que_is_almost_full(que)? "SIM":"NAO",
 					que_is_empty(que) ? "SIM":"NAO",

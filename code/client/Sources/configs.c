@@ -24,7 +24,7 @@ uint16_t stream_show_frames=0;
 int16_t is_wav_mode=0;
 int_pair client_data_times_pair=(int_pair){CLIENT_TIMEOUT_DATA_SEC,CLIENT_TIMEOUT_DATA_USEC};
 int_pair client_con_times_pair=(int_pair){CLIENT_TIMEOUT_CON_SEC,CLIENT_TIMEOUT_CON_USEC};
-
+int_pair client_holepunching_times_pair=(int_pair){HOLE_PUNCHING_TIMEOUT_SEC,HOLE_PUNCHING_TIMEOUT_USEC};
 
 static void clean_buff(void){
 
@@ -124,6 +124,14 @@ void read_values_cfg_client(void){
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
+	sscanf(curr_line_buff,"client_timeouts_holepunching: %lu %lu",&client_holepunching_times_pair[0],&client_holepunching_times_pair[1]);
+
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
 	sscanf(curr_line_buff,"client_ack_timeout_lim: %lu",&cfg_client_ack_timeout_lim);
 
 	clean_buff();
@@ -168,6 +176,8 @@ void print_values_cfg_client(int fd){
 	dprintf(fd,"client_timeouts_con: %lus %lu us\n",client_con_times_pair[0],client_con_times_pair[1]);
 
 	dprintf(fd,"client_timeouts_data: %lus %lu us\n",client_data_times_pair[0],client_data_times_pair[1]);
+
+	dprintf(fd,"client_timeouts_holepunching: %lu %lu\n",client_holepunching_times_pair[0],client_holepunching_times_pair[1]);
 
 	dprintf(fd,"client_ack_timeout_lim: %lu\n",cfg_client_ack_timeout_lim);
 
