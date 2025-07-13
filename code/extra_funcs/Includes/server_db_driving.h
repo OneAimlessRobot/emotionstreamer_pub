@@ -7,7 +7,7 @@
 
 #define SHOW_SERVERS_TMPL "SELECT * from Servers;"
 
-#define SPAWN_SERVER_TABLE "CREATE TABLE Servers(server_type Varchar(256), server_id int unique not null,server_name Varchar(256) unique not null, server_ip Varchar(256), primary key(server_id))"
+#define SPAWN_SERVER_TABLE "CREATE TABLE Servers(server_type Varchar(256), server_id int unique not null,server_name Varchar(256) unique not null, server_ip Varchar(256), server_extension Varchar(256),primary key(server_id))"
 
 #define REMOVE_SERVER_TABLE "DROP TABLE Servers"
 

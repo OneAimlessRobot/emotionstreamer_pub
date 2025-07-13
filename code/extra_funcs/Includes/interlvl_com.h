@@ -28,8 +28,8 @@ typedef struct slave_args{
 	struct sockaddr_in this_addr,
 		master_addr;
 	uint16_t exit_signal;
-	uint16_t ack_timeout_lim;
-	uint32_t sleep_us;
+	uint64_t ack_timeout_lim;
+	uint64_t sleep_us;
 	int* start_trigger;
 	con_t* con_obj;
 	int* loop_var;
@@ -39,7 +39,7 @@ typedef struct slave_args{
 	pthread_mutex_t* con_mtx;
 	pthread_cond_t* trg_cond;
 	module_type type;
-	
+	char* extension_buff;
 }slave_args;
 
 
@@ -51,7 +51,7 @@ typedef struct overseer_args{
 	pthread_mutex_t* var_mtx;
 	struct con_set* cons;
 	int_pair data_times_pair;
-	uint16_t ack_timeout_lim;
+	uint64_t ack_timeout_lim;
 
 
 
@@ -77,7 +77,7 @@ typedef struct acceptor_args{
 
 void init_con_set(con_set* set,con_t* con_buff,int* timeout_buff,int* fd_buff,int max_size,pthread_mutex_t* mtx,pthread_cond_t* cond);
 void close_all_fds(con_set* set);
-void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port);
+void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff);
 void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected);
 
 

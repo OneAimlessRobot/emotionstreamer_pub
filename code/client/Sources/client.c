@@ -44,18 +44,13 @@ static void sigpipe_handler(int signal){
 	sigint_handler(signal);
 
 }
-static int down_file_size(int is_streaming){
+static int64_t down_file_size(int is_streaming){
 
-		int down_size=-1;
+		int64_t down_size=-1;
 		clear_con_data(&client_con_obj);
 		printf("Recebendo tamanho!!!\n");
 		con_read_udp(&client_con_obj,client_data_times_pair);
-		if(is_streaming){
-			sscanf((char*)client_con_obj.udp_data,"%d %hd",&down_size,&streaming_protocol);
-		}
-		else{
-			sscanf((char*)client_con_obj.udp_data,"%d",&down_size);
-		}
+		sscanf((char*)client_con_obj.udp_data,"%ld %hd %s %hd",&down_size,&streaming_protocol,extension_from_server,&is_wav_mode);
 		if(down_size<=0){
 
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
@@ -66,11 +61,11 @@ static int down_file_size(int is_streaming){
 		snprintf((char*)client_con_obj.ack_udp_data,DEF_DATASIZE,"%s",CON_STRING);
 		con_send_udp_ack(&client_con_obj,client_data_times_pair);
 		if(!is_streaming){
-			printf(CONTENT_DOWNLOAD_INCOMMING,down_size);
+			printf(CONTENT_DOWNLOAD_INCOMMING,down_size,extension_from_server);
 		}
 		else{
 
-			printf(STREAM_INCOMMING,down_size,(streaming_protocol<=0)?"TCP":"UDP");
+			printf(STREAM_INCOMMING,down_size,(streaming_protocol<=0)?"TCP":"UDP",extension_from_server,is_wav_mode? "Yes!":"No...");
 		
 		}
 		clear_con_data(&client_con_obj);
@@ -79,14 +74,14 @@ static int down_file_size(int is_streaming){
 }
 static void play_func(void){
 		down_file_size(1);
-		uint16_t chunk_size=0;
+		uint64_t chunk_size=0;
 		con_read_udp(&client_con_obj,client_data_times_pair);
-		sscanf((char*)client_con_obj.udp_data,"%hu",&chunk_size);
+		sscanf((char*)client_con_obj.udp_data,"%lu",&chunk_size);
 		player_init_stream(&client_con_obj,chunk_size,play_way);
 }
 static void down_func(char* file_name){
 
-		int down_size=down_file_size(0);
+		int64_t down_size=down_file_size(0);
 		int fp=-1;
 		char file_path[PATHSIZE*3-1]={0};
 		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,extension_from_server);

@@ -30,14 +30,14 @@ void zero_chk_cache(chunk_queue* que){
 
 }
  
-uint32_t getQueueBufferedTime(chunk_queue* que,decoder_result_struct*result){
+uint64_t getQueueBufferedTime(chunk_queue* que,decoder_result_struct*result){
 
 	chunk_size_helper helper=(chunk_size_helper){result->hz,result->channels,result->sample_size*8,que->n_occupied*que->chunk_size};
 	return getChunkTimeMilliseconds(&helper);
 
 
 }
-uint32_t circular_int_inc(uint32_t size,uint32_t a){
+uint64_t circular_int_inc(uint64_t size,uint64_t a){
 
 
 	return ((a+1)%size);
@@ -45,7 +45,7 @@ uint32_t circular_int_inc(uint32_t size,uint32_t a){
 
 }
 
-uint32_t circular_int_dec(uint32_t size,uint32_t a){
+uint64_t circular_int_dec(uint64_t size,uint64_t a){
 
 	return (a>0) ? a-1:size-1;
 

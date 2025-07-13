@@ -37,6 +37,10 @@
 #define MASTER_TIMEOUT_CON_USEC 1
 
 
+#define HOLE_PUNCHING_TIMEOUT_SEC 3
+#define HOLE_PUNCHING_TIMEOUT_USEC 3
+
+
 typedef long unsigned int int_pair[2];
 typedef unsigned char* buff_triple[3];
 

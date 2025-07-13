@@ -5,7 +5,7 @@ typedef enum con_type{SERVER_C,CLIENT_C} con_type;
 
 
 #define CONNECTION_ESTABLISHED_MSG "Conectado a %s!!!!!!\n"
-
+#define PORT_ADVANCE_CONSTANT 5000
 
 typedef struct con_t{
 

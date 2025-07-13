@@ -87,23 +87,23 @@ static void sigpipe_handler(int useless){
 
 static int read_chunk_tcp(client_stream_t* strm,int_pair pair){
 
-	int result= readsome(strm->con_obj->sockfd_tcp,(char*)(strm->decoder->r_chunk),strm->decoder->d_chunk_size,pair);
+	int result= readsome(strm->con_obj->sockfd_tcp,(char*)((is_wav_mode||!decode)?strm->player->r_chunk:strm->decoder->r_chunk),(is_wav_mode||!decode)?strm->player->chunk_size:strm->decoder->d_chunk_size,pair);
 	if(result<0){
 		acess_var_mtx(&mtx4,&lost_packet,1,V_SET);
 		return result;
 	}
 	acess_var_mtx(&mtx4,&lost_packet,0,V_SET);
-	perform_queue_op(strm->decoder_que,strm->decoder->r_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
+	perform_queue_op((is_wav_mode||!decode)?strm->player_que:strm->decoder_que,(is_wav_mode||!decode)?strm->player->r_chunk:strm->decoder->r_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 	return result;
 }
 static int read_chunk_udp(client_stream_t* strm,int_pair pair){
-        int result= readsome_udp(strm->con_obj->sockfd_udp,(char*)(strm->decoder->r_chunk),strm->decoder->d_chunk_size,pair,&strm->con_obj->peer_udp_addr);
+        int result= readsome_udp(strm->con_obj->sockfd_udp,(char*)((is_wav_mode||!decode)?strm->player->r_chunk:strm->decoder->r_chunk),(is_wav_mode||!decode)?strm->player->chunk_size:strm->decoder->d_chunk_size,pair,&strm->con_obj->peer_udp_addr);
 	if(result<0){
 		acess_var_mtx(&mtx4,&lost_packet,1,V_SET);
 		return result;
 	}
 	acess_var_mtx(&mtx4,&lost_packet,0,V_SET);
-	perform_queue_op(strm->decoder_que,strm->decoder->r_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
+	perform_queue_op((is_wav_mode||!decode)?strm->player_que:strm->decoder_que,(is_wav_mode||!decode)?strm->player->r_chunk:strm->decoder->r_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 	return result;
 }
 
@@ -115,9 +115,13 @@ void* rx_thread_func(void* args){
 		acess_var_mtx(&mtx4,&reading,1,V_SET);
 		while((acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK))){
 			(streaming_protocol<=0)?read_chunk_tcp(&stream_struct,client_data_times_pair):read_chunk_udp(&stream_struct,client_data_times_pair);
-			
-			pthread_cond_signal(&cond4);
-			full=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL});
+			if(!is_wav_mode){
+				pthread_cond_signal(&cond4);
+			}
+			else{
+				pthread_cond_signal(&cond2);
+			}
+			full=perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_ALMOST_FULL});
 			if(full){
 				break;
 			}
@@ -126,7 +130,7 @@ void* rx_thread_func(void* args){
 		}
 		
 		pthread_mutex_lock(&mtx1);
-		while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)&&perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL})){
+		while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)&&perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,(is_wav_mode||!decode)?Q_IS_ALMOST_FULL:Q_IS_FULL})){
 
 			print_string("Adormecemos o thread rx!!!\n");
 			acess_var_mtx(&mtx4,&reading,0,V_SET);
@@ -210,7 +214,7 @@ void* play_thread_func(void* args){
 	int empty=0;
 	decoder_result_struct result={0};
 	pthread_mutex_lock(&mtx2);
-	while(!acess_var_mtx(&mtx4,&decoding,0,V_LOOK)&&acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
+	while((decode&&!is_wav_mode)?!acess_var_mtx(&mtx4,&decoding,0,V_LOOK):!acess_var_mtx(&mtx4,&reading,0,V_LOOK)&&acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
 
 		pthread_cond_wait(&cond2,&mtx2);
 	}
@@ -221,10 +225,22 @@ void* play_thread_func(void* args){
 		while(acess_var_mtx(&mtx4,&stream_struct.innited,0,V_LOOK)){
 		
 			perform_queue_op(stream_struct.player_que,stream_struct.player->p_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
-			perform_queue_op(stream_struct.auxiliar_que,(uint8_t*)&result,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
+			if(decode&&!is_wav_mode){
+				perform_queue_op(stream_struct.auxiliar_que,(uint8_t*)&result,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
+			}
+			else{
+
+				perform_play_op(stream_struct.player,NULL,P_INIT_LIBS);
+			}
 			perform_play_op(stream_struct.player,&result,P_REAL_PLAY);
 			empty=perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY});
-			pthread_cond_signal(&cond4);
+			if(!is_wav_mode){
+				pthread_cond_signal(&cond4);
+			}
+			else{
+
+				pthread_cond_signal(&cond1);
+			}
 			if(empty){
 				break;
 			}
@@ -250,7 +266,7 @@ static void* ack_exchange_thread(void* args){
         if(result<=0){
 		if(result==-2){
                         stream_struct.curr_timeout++;
-                        snprintf(buff,1023,"Timeout no client!!!!  timeout %hu de %hu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
+                        snprintf(buff,1023,"Timeout no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
                         print_string(buff);
 			if(stream_struct.curr_timeout==cfg_client_ack_timeout_lim){
                                 break;
@@ -263,7 +279,7 @@ static void* ack_exchange_thread(void* args){
         if(result<=0){
                 if(result==-2){
                         stream_struct.curr_timeout++;
-                        snprintf(buff,1023,"Timeout no client!!!!  timeout %hu de %hu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
+                        snprintf(buff,1023,"Timeout no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
                         print_string(buff);
 			if(stream_struct.curr_timeout==cfg_client_ack_timeout_lim){
                                 break;
@@ -289,9 +305,12 @@ void* show_stats(void* args){
 		decoder_result_struct result={0};
 		
 		perform_play_op(stream_struct.player,&result,P_GET_FRAME_DATA);
+		int pct_full_decoding=0;
 		int time_ms=perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_GET_TIME,Q_LOOK_NA});
 		int pct_full_playing=perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
-		int pct_full_decoding=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
+		if(decode&&!is_wav_mode){
+			pct_full_decoding=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
+		}
 		if(stream_enable_ncurses){
 			erase();
 		}
@@ -308,7 +327,9 @@ void* show_stats(void* args){
 					acess_var_mtx(&mtx4,&playing,1,V_LOOK) ? "PLAYING ": "    ");
 		print_string(buff);
 		if(stream_enable_ncurses){
-			perform_queue_op(stream_struct.decoder_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
+			if(decode&&!is_wav_mode){
+				perform_queue_op(stream_struct.decoder_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
+			}
 			perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
 			refresh();
 		}
@@ -325,30 +346,30 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	signal(SIGPIPE,sigpipe_handler);
 	
 	uint8_t r_chunk_buff[chunk_size];
-	memset(r_chunk_buff,0,chunk_size);
-	uint8_t d_chunk_buff[chunk_size];
-	memset(d_chunk_buff,0,chunk_size);
-	uint8_t pd_chunk_buff[chunk_size*CHANNELS*SIZE+1];
-	memset(pd_chunk_buff,0,chunk_size*CHANNELS*SIZE+1);
-	uint8_t pp_chunk_buff[chunk_size*CHANNELS*SIZE+1];
-	memset(pp_chunk_buff,0,chunk_size*CHANNELS*SIZE+1);
+	memset(r_chunk_buff,0,sizeof(r_chunk_buff));
+	uint8_t d_chunk_buff[(!decode||is_wav_mode)?1:chunk_size];
+	memset(d_chunk_buff,0,sizeof(d_chunk_buff));
+	uint8_t pd_chunk_buff[(!decode||is_wav_mode)?1:chunk_size*CHANNELS*SIZE+1];
+	memset(pd_chunk_buff,0,sizeof(pd_chunk_buff));
+	uint8_t pp_chunk_buff[(!decode||is_wav_mode)?chunk_size:chunk_size*CHANNELS*SIZE+1];
+	memset(pp_chunk_buff,0,sizeof(pd_chunk_buff));
 	chunk_queue player_que={0};
 	chunk_queue decoder_que={0};
 	chunk_queue auxiliar_que={0};
 	chunk_player player={0};
 	decoder decoder={0};
-	init_queue(&player_que,chunk_size*CHANNELS*SIZE ,cfg_stream_player_cache_size_chunks);
-	init_queue(&decoder_que,chunk_size,cfg_stream_decoder_cache_size_chunks);
-	init_queue(&auxiliar_que,sizeof(decoder_result_struct),cfg_stream_player_cache_size_chunks);
-	
-	init_decoder(&decoder,chunk_size,chunk_size*CHANNELS*SIZE,r_chunk_buff,d_chunk_buff,pd_chunk_buff);
-	init_chunk_player(&player,chunk_size*CHANNELS*SIZE,pp_chunk_buff,which_mode);
-	stream_struct.decoder_que=&decoder_que;
+	init_queue(&player_que,(!decode||is_wav_mode)?chunk_size:chunk_size*CHANNELS*SIZE ,cfg_stream_player_cache_size_chunks);
+	init_chunk_player(&player,(!decode||is_wav_mode)?chunk_size:chunk_size*CHANNELS*SIZE,r_chunk_buff,pp_chunk_buff,which_mode);
 	stream_struct.player_que=&player_que;
-	stream_struct.auxiliar_que=&auxiliar_que;
 	stream_struct.player=&player;
-	stream_struct.decoder=&decoder;
-	
+	if(decode&&!is_wav_mode){
+		init_queue(&decoder_que,chunk_size,cfg_stream_decoder_cache_size_chunks);
+		init_queue(&auxiliar_que,sizeof(decoder_result_struct),cfg_stream_player_cache_size_chunks);
+		init_decoder(&decoder,chunk_size,chunk_size*CHANNELS*SIZE,r_chunk_buff,d_chunk_buff,pd_chunk_buff);
+		stream_struct.decoder=&decoder;
+		stream_struct.auxiliar_que=&auxiliar_que;
+		stream_struct.decoder_que=&decoder_que;
+	}
 	stream_struct.con_obj=con_obj;
 	stream_struct.innited=1;
 	
@@ -356,7 +377,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	if(rx_enabled){
 		pthread_create(&tid_rx,NULL,rx_thread_func,NULL);
 	}
-	if(decode){
+	if(decode&&!is_wav_mode){
 		pthread_create(&tid_dec,NULL,dec_thread_func,NULL);
 	}
 	if(play){
@@ -380,7 +401,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		pthread_join(tid_play,NULL);
 		printf("Saimos do thread play!!!!!!\n");
 	}
-	if(decode){
+	if(decode&&!is_wav_mode){
 	
 		pthread_join(tid_dec,NULL);
 		printf("Saimos do thread decoder!!!!!\n");
@@ -393,10 +414,12 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	printf("Saimos do thread ack!!!!!\n");
 	
 	perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
-	perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
-	perform_queue_op(stream_struct.auxiliar_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
+	if(decode&&!is_wav_mode){
+		perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
+		perform_queue_op(stream_struct.auxiliar_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
+		perform_dec_op(stream_struct.decoder,NULL,D_CLEAN,0);
+	}
 	perform_play_op(stream_struct.player,NULL,P_CLEAN);
-	perform_dec_op(stream_struct.decoder,NULL,D_CLEAN,0);
 	close_con(stream_struct.con_obj);
 	printf("SAIMOS DO CLIENT!\nTimeouts excedidos? %s\nVamos ver errno:%s\n",(stream_struct.curr_timeout==cfg_client_ack_timeout_lim) ? "SIM": "NAO",strerror(errno));
 	return 0;

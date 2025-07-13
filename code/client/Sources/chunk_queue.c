@@ -14,7 +14,7 @@
 static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
 
 
-int init_queue(chunk_queue* que,uint64_t chunk_size,uint32_t max_occupied){
+int init_queue(chunk_queue* que,uint64_t chunk_size,uint64_t max_occupied){
 
 	que->queue_mtx=&mtx;
 	que->play_cursor=0;

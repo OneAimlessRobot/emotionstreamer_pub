@@ -85,6 +85,8 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	signal(SIGPIPE,sigpipe_handler);
 	char buff[HB_SERVER_NAME_SIZE]={0};
         randStr(HB_SERVER_NAME_SIZE-1,buff);
+	char extension_buff[EXTENSION_SIZE+1]={0};
+	strncpy(extension_buff,"N/A",EXTENSION_SIZE);
 	con_set set={0};
 
 	init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port);
@@ -113,6 +115,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	arg_s.con_mtx=&con_mtx;
 	arg_s.trg_cond=&master_cond;
 	arg_s.type=HB_SERVER;
+	arg_s.extension_buff=extension_buff;
 
         arg_o.is_on=arg_a.is_on;
         arg_o.exit_signal=SIGINT;

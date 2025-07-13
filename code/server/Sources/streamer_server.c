@@ -109,7 +109,7 @@ static void* ack_exchange_thread(void* args){
 
                 if(result==-2){
 			stream_struct.curr_timeout++;
-			printf("Timeout na stream do server!!!!  timeout %hu de %hu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
+			printf("Timeout na stream do server!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
 			if(stream_struct.curr_timeout==server_ack_timeout_lim){
 				break;
 			}
@@ -122,7 +122,7 @@ static void* ack_exchange_thread(void* args){
 
                 if(result==-2){
 			stream_struct.curr_timeout++;
-			printf("Timeout na stream do server!!!!  timeout %hu de %hu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
+			printf("Timeout na stream do server!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
 			if(stream_struct.curr_timeout==server_ack_timeout_lim){
 				break;
 			}
@@ -137,7 +137,7 @@ static void* ack_exchange_thread(void* args){
 
 }
 
-static int init_server_stream(int fd,con_t* con_obj,uint16_t chunk_size,unsigned char* stream_buff){
+static int init_server_stream(int fd,con_t* con_obj,uint64_t chunk_size,unsigned char* stream_buff){
 	
 	signal(SIGINT,cleanup);
 	stream_struct.initted=1;
@@ -170,7 +170,7 @@ void close_stream(void){
 	raise(SIGINT);
 }
 
-void begin_stream(con_t*con_obj,int fd, uint16_t chunk_size,unsigned char* stream_buff){
+void begin_stream(con_t*con_obj,int fd, uint64_t chunk_size,unsigned char* stream_buff){
 
 	init_server_stream(fd,con_obj, chunk_size,stream_buff);
 

@@ -11,16 +11,19 @@ char server_music_folder_path[PATHSIZE]={0};
 
 char server_working_extension[EXTENSION_SIZE]={0};
 
+
+
 //EM BYTES E HZ!
 
 int_pair server_data_times_pair=(int_pair){SERVER_TIMEOUT_DATA_SEC,SERVER_TIMEOUT_DATA_USEC};
 int_pair server_con_times_pair=(int_pair){SERVER_TIMEOUT_CON_SEC,SERVER_TIMEOUT_CON_USEC};
 int_pair server_drop_chunks_times_pair=(int_pair){SERVER_DROP_CHUNK_TIMEOUT_SEC,SERVER_DROP_CHUNK_TIMEOUT_USEC};
 
-uint16_t server_ack_timeout_lim=SERVER_ACK_TIMEOUT_LIM;
+uint64_t server_ack_timeout_lim=SERVER_ACK_TIMEOUT_LIM;
 
-uint16_t server_chunk_size=SERVER_CHUNK_SIZE;
+uint64_t server_chunk_size=SERVER_CHUNK_SIZE;
 int16_t server_transmission_protocol=0;
+int16_t is_wav_mode=0;
 static void clean_buff(void){
 
 	memset(&curr_line_buff,0,CONFIG_READ_LINE_BUFF_SIZE);
@@ -53,7 +56,7 @@ void read_values_cfg_server(void){
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
-	sscanf(curr_line_buff,"server_chunk_size: %hu",&server_chunk_size);
+	sscanf(curr_line_buff,"server_chunk_size: %lu",&server_chunk_size);
 
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -83,7 +86,7 @@ void read_values_cfg_server(void){
                 fclose(cfg_fp);
                 raise(SIGINT);
         }
-        sscanf(curr_line_buff,"server_ack_timeout_lim: %hu",&server_ack_timeout_lim);
+        sscanf(curr_line_buff,"server_ack_timeout_lim: %lu",&server_ack_timeout_lim);
         clean_buff();
 
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -124,7 +127,7 @@ void print_values_cfg_server(int fd){
 
 	dprintf(fd,"server_transmission_protocol: %s (value in configs is %s)\n",(server_transmission_protocol<=0)?"TCP":"UDP",(server_transmission_protocol<=0)?"<= 0":"> 0");
 
-	dprintf(fd,"server_chunk_size: %hu\n",server_chunk_size);
+	dprintf(fd,"server_chunk_size: %lu\n",server_chunk_size);
 
 	dprintf(fd,"server_timeouts_data: %lus %lu us\n",server_data_times_pair[0],server_data_times_pair[1]);
 
@@ -132,7 +135,7 @@ void print_values_cfg_server(int fd){
 
 	dprintf(fd,"server_timeouts_drop_chunks: %lus %lu us\n",server_drop_chunks_times_pair[0],server_drop_chunks_times_pair[1]);
 
-	dprintf(fd,"server_ack_timeout_lim: %hu\n",server_ack_timeout_lim);
+	dprintf(fd,"server_ack_timeout_lim: %lu\n",server_ack_timeout_lim);
 
 	dprintf(fd,"server_music_folder_path: %s\n",server_music_folder_path);
 

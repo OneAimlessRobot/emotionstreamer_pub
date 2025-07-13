@@ -23,6 +23,7 @@ static pthread_mutex_t con_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t eng_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t eng_cond=PTHREAD_COND_INITIALIZER;
 static int started=0;
+
 static void serverStop(int useless){
 	perror("Sinal de parar server\n");
 	close(state.server_sock_tcp);
@@ -129,7 +130,14 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	signal(SIGINT,serverStop);
 	signal(SIGPIPE,serverStop);
 	char buff[SERVER_NAME_SIZE]={0};
+	char extension_buff[EXTENSION_SIZE+1]={0};
+	strncpy(extension_buff,server_working_extension,EXTENSION_SIZE+1);
 	randStr(SERVER_NAME_SIZE-1,buff);
+	is_wav_mode=(!strs_are_strictly_equal(extension_buff,WAV_MODE_EXTENSION));
+	if(is_wav_mode){
+		printf("Launched in '.wav' mode!!!\n");
+	}
+
 	curr_port=ent_this->port;
 	logging=1;
 	logstream=stderr;
@@ -151,6 +159,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	arg_s.con_mtx=&con_mtx;
 	arg_s.trg_cond=&eng_cond;
 	arg_s.type=SERVER;
+	arg_s.extension_buff=extension_buff;
 	
 	init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port);
 	init_addr(&arg_s.this_addr,ent_this->hostname,ent_this->port);

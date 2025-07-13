@@ -8,7 +8,7 @@
 
 typedef struct download_bar{
 
-        int curr,total,size;
+        int64_t curr,total,size;
 
 }download_bar;
 
@@ -17,7 +17,7 @@ typedef struct download_bar{
 static download_bar bar={0};
 
 
-static void* print_download_bar(void* mem,int len,int* timeout_num){
+static void* print_download_bar(void* mem,int64_t len,int64_t* timeout_num){
 
         download_bar* bar_inside= (void*)mem;
 
@@ -36,7 +36,7 @@ static void* print_download_bar(void* mem,int len,int* timeout_num){
 
         }
         erase();
-        printw("Progresso atual de download: %d de %d kbytes transferidos!\n\n%s\n",bar_inside->curr/1000,bar_inside->total/1000,bar);
+        printw("Progresso atual de download: %ld de %ld kbytes transferidos!\n\n%s\n",bar_inside->curr/1000,bar_inside->total/1000,bar);
         if(len==-2){
 		(*timeout_num)++;
 		printw("Timeout no read!!!! Timeout no. %d\n",*timeout_num);
@@ -50,11 +50,11 @@ static void* print_download_bar(void* mem,int len,int* timeout_num){
 }
 
 
-int downloadtofd(int sock,int fd,int size,int_pair times){
-        int32_t len=1;
-        int32_t written=1;
-	int32_t total=0;
-	int32_t timeout_num=0;
+int downloadtofd(int sock,int fd,int64_t size,int_pair times){
+        int64_t len=1;
+        int64_t written=1;
+	int64_t total=0;
+	int64_t timeout_num=0;
         char buff[DEF_DATASIZE];
         bar.curr=0;
         bar.total=size;
@@ -105,7 +105,7 @@ int downloadtofd(int sock,int fd,int size,int_pair times){
 
         }
         if(logging){
-                fprintf(logstream,"readalltofd bem sucedido. A socket e %d\nLemos %d de %d bytes\n",sock,bar.curr,size);
+                fprintf(logstream,"readalltofd bem sucedido. A socket e %d\nLemos %ld de %ld bytes\n",sock,bar.curr,size);
 
         }
         memset(buff,0,DEF_DATASIZE);

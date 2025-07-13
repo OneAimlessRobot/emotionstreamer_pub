@@ -28,7 +28,7 @@ LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) $(LDLIBS_GRAPHICAL)
 LDLIBS_SERVER += $(LDLIBS_PTHREAD)
 
 
-INCLUDE= ./Includes ./mpg123-1.32.10/src/include ./sqlite-src-3500200/bld/ .
+INCLUDE= ./Includes ./mpg123-1.32.10/src/include ./sqlite-src-3500200/bld ./wav_stuff_i_stole_because_i_am_lazy .
 SOURCES= . ./Sources
 
 SERVERINCLUDE= ./server/Includes ./extra_funcs/Includes
@@ -36,7 +36,7 @@ SERVERSOURCES= ./server/Sources ./server ./extra_funcs/Sources
 SERVERRESOURCES= ./server/resources
 
 CLIENTINCLUDE= ./client/Includes ./extra_funcs/Includes
-CLIENTSOURCES= ./client/Sources ./client ./extra_funcs/Sources
+CLIENTSOURCES= ./client/Sources ./client ./extra_funcs/Sources ./wav_stuff_i_stole_because_i_am_lazy
 CLIENTRESOURCES= ./client/resources
 
 BROWSERINCLUDE= ./server_browser/Includes ./extra_funcs/Includes

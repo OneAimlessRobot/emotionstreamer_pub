@@ -20,6 +20,7 @@ static con_t server_con_obj;
 static int sock_tcp;
 static uint16_t port;
 int fp=-1;
+
 static void cleanup(int useless){
 	close(fp + (0*useless));
 	close(sock_tcp);
@@ -42,7 +43,7 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 			clear_con_data(&server_con_obj);
 			if(fd>0){
 				stat(file_path,&file_info);
-				snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%ld %hd %s",file_info.st_size,server_transmission_protocol,server_working_extension);
+				snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%ld %hd %s %hd",file_info.st_size,server_transmission_protocol,server_working_extension,is_wav_mode);
 				con_send_udp(&server_con_obj,server_data_times_pair);
 				clear_con_data(&server_con_obj);
 				con_read_udp_ack(&server_con_obj,server_data_times_pair);
@@ -149,8 +150,8 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						uploadtofd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						break;
 					case PLAY:
-						//read(fp,file_name,44);//GET RID OF WAV HEADER! IMPORTANT! 44 BYTES!
-						snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%hu",server_chunk_size);
+						printf("We are in wav mode! getting read of header at the start!\n");
+						snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%lu",server_chunk_size);
 						if(con_send_udp(&server_con_obj,server_data_times_pair)<=0){
 
 							raise(SIGINT);

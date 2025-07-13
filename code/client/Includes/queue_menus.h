@@ -12,10 +12,10 @@ typedef struct q_op{
 }q_op;
 typedef struct q_state{
 
-	uint32_t play_cursor;
-	uint32_t recv_cursor;
-	uint32_t n_occupied;
-	uint32_t sub_chunk_occupied;
+	uint64_t play_cursor;
+	uint64_t recv_cursor;
+	uint64_t n_occupied;
+	uint64_t sub_chunk_occupied;
 	
 }q_state;
 

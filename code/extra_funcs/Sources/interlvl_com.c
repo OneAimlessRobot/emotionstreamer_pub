@@ -85,7 +85,7 @@ void* slave_thread(void* args){
         clear_con_data(arg_struct->con_obj);
 	module_type_to_string(arg_struct->type,mod_type);
 
-        snprintf((char*)arg_struct->con_obj->ack_udp_data,DEF_DATASIZE-1,"%s %s '%s'  %s %hu ",LOG_STRING,mod_type,arg_struct->lower_name,ent_addr,arg_struct->this_addr.sin_port);
+        snprintf((char*)arg_struct->con_obj->ack_udp_data,DEF_DATASIZE-1,"%s %s '%s'  %s %hu %s",LOG_STRING,mod_type,arg_struct->lower_name,ent_addr,arg_struct->this_addr.sin_port,arg_struct->extension_buff);
 
 
         int result=con_send_udp_ack(arg_struct->con_obj,arg_struct->con_times_pair);
@@ -110,7 +110,7 @@ void* slave_thread(void* args){
 
 
         printf("hb_thread do streamer server: online\n");
-        uint16_t curr_timeout=0;
+        uint64_t curr_timeout=0;
         result=0;
         while(acess_var_mtx(arg_struct->var_mtx,arg_struct->loop_var,0,V_LOOK)){
 	int result[2]={0};
@@ -119,7 +119,7 @@ void* slave_thread(void* args){
 
                 if(result[0]==-2){
                         curr_timeout++;
-                        printf("Timeout no nivel de baixo!!!!  timeout %hu de %hu\n",curr_timeout,arg_struct->ack_timeout_lim);
+                        printf("Timeout no nivel de baixo!!!!  timeout %lu de %lu\n",curr_timeout,arg_struct->ack_timeout_lim);
                         if(curr_timeout==arg_struct->ack_timeout_lim){
                                 break;
                         }
@@ -132,7 +132,7 @@ void* slave_thread(void* args){
 
                 if(result[0]==-2){
                         curr_timeout++;
-                        printf("Timeout no nivel de baixo!!!!  timeout %hu de %hu\n",curr_timeout,arg_struct->ack_timeout_lim);
+                        printf("Timeout no nivel de baixo!!!!  timeout %lu de %lu\n",curr_timeout,arg_struct->ack_timeout_lim);
                         if(curr_timeout==arg_struct->ack_timeout_lim){
                                 break;
                         }
@@ -209,12 +209,12 @@ static void kill_con(con_set* set,int index){
 
 
 
-void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port){
+void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff){
 
         pthread_mutex_lock(set->set_mtx);
 	int i=1;
         char big_buff[PATHSIZE*6]={0};
-	snprintf(big_buff,sizeof(big_buff)-1,"'%s', %d, %s, '%s:%hu'",type_buff,id,name_buff,ip_buff,htons(stored_port));
+	snprintf(big_buff,sizeof(big_buff)-1,"'%s', %d, %s, '%s:%hu', '%s'",type_buff,id,name_buff,ip_buff,htons(stored_port),extension_buff);
         FD_SET(con->sockfd_tcp,&set->rdfds);
         for(;set->fd_arr[i];i++);
         set->fd_arr[i]=con->sockfd_tcp;
@@ -261,9 +261,9 @@ void* watch_dog_func(void* args){
 			if(result[1]||(result[0]<=0)){
 		
                 if(result[0]==-2){
-                        uint16_t times=acess_var_mtx(arg_s->cons->set_mtx,&arg_s->cons->timeout_arr[i],0,V_LOOK);
+                        uint64_t times=acess_var_mtx(arg_s->cons->set_mtx,&arg_s->cons->timeout_arr[i],0,V_LOOK);
                         times++;
-                        printf("Timeout no heartbeat server!!!!  timeout %hu de %hu\n",times,arg_s->ack_timeout_lim);
+                        printf("Timeout no heartbeat server!!!!  timeout %lu de %lu\n",times,arg_s->ack_timeout_lim);
                         if(times==arg_s->ack_timeout_lim){
                                 kill_con(arg_s->cons,i);
                                 break;
@@ -279,9 +279,9 @@ void* watch_dog_func(void* args){
 		if(result[0]<=0){
 
                 if(result[0]==-2){
-                        uint16_t times=acess_var_mtx(arg_s->cons->set_mtx,&arg_s->cons->timeout_arr[i],0,V_LOOK);
+                        uint64_t times=acess_var_mtx(arg_s->cons->set_mtx,&arg_s->cons->timeout_arr[i],0,V_LOOK);
                         times++;
-                        printf("Timeout no heartbeat server!!!!  timeout %hu de %hu\n",times,arg_s->ack_timeout_lim);
+                        printf("Timeout no heartbeat server!!!!  timeout %lu de %lu\n",times,arg_s->ack_timeout_lim);
                         if(times==arg_s->ack_timeout_lim){
                                 kill_con(arg_s->cons,i);
                                 break;
@@ -354,7 +354,8 @@ void module_type_to_string(module_type type,char* buff){
 void* acceptor_func(void* args){
 	
 	acceptor_args* arg_a = (acceptor_args*)args;
-        char req_buff[PATHSIZE/4]={0};
+        char extension_buff[EXTENSION_SIZE+1]={0};
+	char req_buff[PATHSIZE/4]={0};
         char ip_buff[PATHSIZE/4]={0};
         char name_buff[PATHSIZE/4]={0};
         char type_buff[PATHSIZE/4]={0};
@@ -399,7 +400,7 @@ void* acceptor_func(void* args){
                               greet(&con,arg_a->con_times_pair,curr_port);
                               clear_con_data(&con);
                               result=con_read_udp_ack(&con,arg_a->con_times_pair);
-                              sscanf((char*)con.ack_udp_data,"%s %s %s %s %hu ",req_buff,type_buff,name_buff,ip_buff,&stored_port);
+                              sscanf((char*)con.ack_udp_data,"%s %s %s %s %hu %s",req_buff,type_buff,name_buff,ip_buff,&stored_port, extension_buff);
                               if(result<=0){
                                         perror("Nao sabemos o que querem....\n");
                                         close_con(&con);
@@ -465,7 +466,7 @@ void* acceptor_func(void* args){
                                         break;
                                 case LOG:
                                         printf("Log server requested!!!!\n");
-                                        add_con(arg_a->arg_o->cons,&con,type_buff,sock,name_buff,ip_buff,stored_port);
+                                        add_con(arg_a->arg_o->cons,&con,type_buff,sock,name_buff,ip_buff,stored_port,extension_buff);
                                         curr_port+=3;
                                         break;
                                 default:
