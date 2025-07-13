@@ -1,5 +1,6 @@
 #include "../Includes/preprocessor.h"
 #include "Includes/client.h"
+#include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include "../extra_funcs/Includes/fileshit.h"
 #include "../extra_funcs/Includes/sockio.h"
 #include "../extra_funcs/Includes/connection.h"

@@ -1,5 +1,6 @@
 #include "../../Includes/preprocessor.h"
 #include <alsa/asoundlib.h>
+#include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <pulse/error.h>
 #include <pulse/simple.h>
 #include "../../extra_funcs/Includes/sockio.h"
@@ -31,7 +32,7 @@ void zero_chk_cache(chunk_queue* que){
  
 uint32_t getQueueBufferedTime(chunk_queue* que,decoder_result_struct*result){
 
-	chunk_size_helper helper=(chunk_size_helper){result->hz,result->channels,SIZE*8,que->n_occupied*que->chunk_size};
+	chunk_size_helper helper=(chunk_size_helper){result->hz,result->channels,result->sample_size*8,que->n_occupied*que->chunk_size};
 	return getChunkTimeMilliseconds(&helper);
 
 

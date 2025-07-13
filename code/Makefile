@@ -14,7 +14,8 @@ GLDIR= ./player
 
 LDLIBS :=  -lm
 
-LDLIBS_SOUND := -lasound -lpulse -lpulse-simple -lvorbisfile
+LDLIBS_SOUND := -lasound -lpulse -lpulse-simple -lmpg123
+
 
 LDLIBS_PTHREAD= -lpthread
 
@@ -27,7 +28,7 @@ LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) $(LDLIBS_GRAPHICAL)
 LDLIBS_SERVER += $(LDLIBS_PTHREAD)
 
 
-INCLUDE= ./Includes ./miniflac .
+INCLUDE= ./Includes ./mpg123-1.32.10/src/include ./sqlite-src-3500200/bld/ .
 SOURCES= . ./Sources
 
 SERVERINCLUDE= ./server/Includes ./extra_funcs/Includes
@@ -49,7 +50,6 @@ HEARTBEATRESOURCES= ./heartbeat/resources
 MASTERINCLUDE= ./master_server/Includes ./extra_funcs/Includes
 MASTERSOURCES= ./master_server/Sources ./master_server ./extra_funcs/Sources
 MASTERRESOURCES= ./master_server/resources
-
 
 RESDIR= ./resources
 

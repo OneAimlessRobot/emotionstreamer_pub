@@ -1,0 +1,5 @@
+src/genre.o: src/genre.c /usr/include/stdc-predef.h src/config.h
+
+/usr/include/stdc-predef.h:
+
+src/config.h:

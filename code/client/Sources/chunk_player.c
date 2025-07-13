@@ -1,12 +1,12 @@
 #include "../../Includes/preprocessor.h"
 #include <alsa/asoundlib.h>
+#include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <pulse/error.h>
 #include <pulse/simple.h>
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../Includes/configs.h"
 #include "../Includes/ripped_code.h"
-#include "../../miniflac/miniflac.h"
 #include "../Includes/ogg_module.h"
 #include "../Includes/chunk_player.h"
 
@@ -58,6 +58,7 @@ if ((err =snd_pcm_set_params(player->play_stream_alsa,SND_PCM_FORMAT_S16_LE, SND
 	        printf("Playback open error: %s\n", snd_strerror(err));
  		raise(SIGINT);
 	}
+	printf("ALSA initialized successfully!!!!\n");
 
 
 }
@@ -71,8 +72,9 @@ static void initPA(chunk_player*player){
 
      if (!(player->play_stream_pa = pa_simple_new(NULL, "client.exe", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &errno))) {
          fprintf(stderr, "pa_simple_new() failed: %s\n", pa_strerror(errno));
-         return;
+         raise(SIGINT);
 	}
+	printf("pulseaudio initialized successfully!!!!\n");
 
 }
 
@@ -93,24 +95,24 @@ static void init_player_lib(chunk_player* player){
 	}
 
 }
-static void play_chunk_alsa(chunk_player* player,decoder_result_struct* result){
-	play_from_sound_device_alsa(player->play_stream_alsa,player->p_chunk,result);
+static void play_chunk_alsa(chunk_player* player){
+	play_from_sound_device_alsa(player->play_stream_alsa,player->p_chunk,&player->current_result);
 
 }
-static void play_chunk_pa(chunk_player* player,decoder_result_struct* result){
-	play_from_sound_device_pa(player->play_stream_pa,player->p_chunk,result);
+static void play_chunk_pa(chunk_player* player){
+	play_from_sound_device_pa(player->play_stream_pa,player->p_chunk,&player->current_result);
 }
 
-static void play_chunk(chunk_player* player,decoder_result_struct* result,int dry){
+static void play_chunk(chunk_player* player,int dry){
 
 		if(!dry){
 		switch(player->which_mode){
 
 			case PLAY_ALSA:
-				play_chunk_alsa(player,result);
+				play_chunk_alsa(player);
 				break;
 			case PLAY_PA:
-				play_chunk_pa(player,result);
+				play_chunk_pa(player);
 				break;
 			default:
 				break;
@@ -122,7 +124,7 @@ static void play_chunk(chunk_player* player,decoder_result_struct* result,int dr
 static void write_player_result(chunk_player* player,decoder_result_struct* result,int in){
 
 	if(result){
-		if(!in){
+		if(in){
 			memcpy(&player->current_result,result,sizeof(decoder_result_struct));
 		}
 		else {
@@ -131,18 +133,20 @@ static void write_player_result(chunk_player* player,decoder_result_struct* resu
 		
 	}
 }
+static void print_player_result(chunk_player* player){
+	print_decoder_frame_result(&player->current_result,1);
+}
 static void safe_play_wrapper(chunk_player* player,decoder_result_struct* result,int dry){
-
-	int can_play=-2;
-	if((can_play=should_switch(&player->current_result,result))>=0){
-		if(can_play>0){
+	
+	if(result&&result->total_bytes_in_chunk){
+		if((should_switch(result,&player->current_result)!=0)){
 			clean_player(player);
-			write_player_result(player,result,0);
+			write_player_result(player,result,1);
 			init_player_lib(player);
 		}
-		play_chunk(player,result,dry);
-	}
+		play_chunk(player,dry);
 
+	}
 }
 
 void perform_play_op(chunk_player* player,decoder_result_struct* result,play_op op){
@@ -154,13 +158,19 @@ void perform_play_op(chunk_player* player,decoder_result_struct* result,play_op 
 			safe_play_wrapper(player,result,1);
 			break;
 		case P_GET_FRAME_DATA:
-			write_player_result(player,result,1);
+			write_player_result(player,result,0);
 			break;
 		case P_INSERT_FRAME_DATA:
-			write_player_result(player,result,0);
+			write_player_result(player,result,1);
+			break;
+		case P_PRINT_FRAME_DATA:
+			print_player_result(player);
 			break;
 		case P_CLEAN:
 			clean_player(player);
+			break;
+		case P_INIT_LIBS:
+			init_player_lib(player);
 			break;
 		case P_PLAY_NA:
 			break;

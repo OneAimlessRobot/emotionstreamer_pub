@@ -4,7 +4,7 @@
 #define SIZE sizeof(TYPE)
 #define SAMPLE_MAX (pow(2,SIZE*8 - 1) - 1)
 
-#define CHANNELS 4
+#define CHANNELS 2
 #define SAMPLES 16384
 #define DEVICE "default"
 #define CONFIG_FILE_PATH_CLIENT "./configs/sizes.cfg"

@@ -1,5 +1,6 @@
 #include "../../Includes/preprocessor.h"
 #include <ncurses.h>
+#include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <alsa/asoundlib.h>
 #include <pulse/error.h>
 #include <pulse/simple.h>

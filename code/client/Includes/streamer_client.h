@@ -9,6 +9,7 @@ typedef struct client_stream_t{
           struct con_t* con_obj;
 	  chunk_queue* decoder_que;
 	  chunk_queue* player_que;
+	  chunk_queue* auxiliar_que;
 	  chunk_player* player;
 	  decoder* decoder;
 }client_stream_t;

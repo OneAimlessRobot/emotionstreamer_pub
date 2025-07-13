@@ -1,5 +1,6 @@
 #include "../Includes/preprocessor.h"
 #include <ncurses.h>
+#include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <alsa/asoundlib.h>
 #include <pulse/error.h>
 #include <pulse/simple.h>
@@ -14,7 +15,6 @@
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/ripped_code.h"
-#include "../../miniflac/miniflac.h"
 #include "../Includes/ogg_module.h"
 
 #include "../Includes/chunk_queue.h"

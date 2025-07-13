@@ -1,7 +1,7 @@
 #ifndef OGG_MODULE_H
 #define OGG_MODULE_H
 typedef enum dec_op{D_DECODE_CHUNK,D_SWAP,D_CLEAN,D_IS_D_BUFFER_EMPTY,D_IS_P_BUFFER_FULL,D_RESET_MP3_PTR,D_RESET_PCM_PTR,D_RESET_BOTH}dec_op;
-typedef enum decoding_option{DO_SYNC,DO_STREAMINFO,DO_DECODE}decoding_option;
+typedef enum decoding_option{DO_FEED,DO_DECODE,DO_READ}decoding_option;
 
 #define DECODER_BUFFER_SIZE_IN_CHUNKS 100
 
@@ -9,7 +9,7 @@ typedef enum decoding_option{DO_SYNC,DO_STREAMINFO,DO_DECODE}decoding_option;
 typedef struct decoder{
 
 	pthread_mutex_t* mtx;
-	miniflac_t dec;
+	mpg123_handle *dec;
 	uint8_t* r_chunk;
 	uint8_t* d_chunk;
 	uint8_t* p_chunk;

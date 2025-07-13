@@ -1,21 +1,16 @@
 #include "../../Includes/preprocessor.h"
 #include <alsa/asoundlib.h>
+#define MPG123_ENUM_API
+#include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <pulse/error.h>
 #include <pulse/simple.h>
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../Includes/configs.h"
 #include "../Includes/ripped_code.h"
-
-#define MINIFLAC_IMPLEMENTATION
-#define MINIFLAC_API
-#define MINIFLAC_PRIVATE static inline
-
-#include "../../miniflac/miniflac.h"
 #include "../Includes/ogg_module.h"
-static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
 
-static uint64_t curr_chunk_id=0;
+static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
 
 static int is_decoder_buffer_empty(decoder* decoder){
 
@@ -31,79 +26,7 @@ static int is_play_buffer_full(decoder* decoder){
 
 
 }
-static int decode_chunk(decoder*decoder,decoder_result_struct* result,decoding_option what_we_want){
 
-
-	int32_t multi_channel[CHANNELS][SAMPLES];
-	int32_t* arr_of_ptrs[CHANNELS]={0};
-	uint32_t current_sub_advance=0;
-	MINIFLAC_RESULT return_val=0;
-	switch(what_we_want){
-		case DO_DECODE:
-			for(uint32_t i=0;i<CHANNELS;i++){
-				
-				arr_of_ptrs[i]=(int32_t*)(&(multi_channel[i]));
-			}
-			return_val=miniflac_decode(&decoder->dec, decoder->d_chunk+decoder->d_buffer_pos_cursor,decoder->d_chunk_size-decoder->d_buffer_pos_cursor, &(current_sub_advance),(int32_t**)&arr_of_ptrs);
-			result->decoder_state=decoder->dec.state;
-			result->hz=decoder->dec.frame.header.sample_rate;
-			result->bitrate_kbps=decoder->dec.frame.header.bps;
-			result->chunk_id=curr_chunk_id;
-			result->channels=decoder->dec.frame.header.channels;
-			result->frame_bytes=current_sub_advance;
-			result->decoder_in_chunk_size=decoder->d_chunk_size;
-			result->decoder_out_chunk_size=decoder->p_chunk_size;
-			if(result->frame_bytes){
-				result->nsamples=decoder->dec.frame.size/(SIZE*result->channels);
-				for (uint32_t i = 0; i < result->nsamples; i++) {
-					for(uint32_t j=0;(j<result->channels)&&(j<CHANNELS);j++){
-						decoder->p_chunk[(j+i*result->channels)] = multi_channel[j][i];
-					}
-				}
-			}
-			break;
-		case DO_SYNC:
-			return_val=miniflac_sync(&decoder->dec, decoder->d_chunk+result->frame_bytes,4, &(current_sub_advance));
-			result->frame_bytes+=current_sub_advance;
-			result->metadata_block_type=decoder->dec.metadata.header.type;
-			result->metadata_length=decoder->dec.metadata.header.length;
-			result->metadata_length=decoder->dec.metadata.header.is_last_metadata;
-			return_val=miniflac_sync(&decoder->dec, decoder->d_chunk+result->frame_bytes,4, &(current_sub_advance));
-			result->frame_bytes+=current_sub_advance;
-			result->metadata_length=decoder->dec.metadata.header.length;
-			return_val=miniflac_sync(&decoder->dec, decoder->d_chunk+result->frame_bytes,26, &(current_sub_advance));
-			result->frame_bytes+=current_sub_advance;
-
-			result->decoder_state=decoder->dec.state;
-			break;
-		case DO_STREAMINFO:
-			return_val=miniflac_sync(&decoder->dec, decoder->d_chunk,4, &(current_sub_advance));
-			result->frame_bytes+=current_sub_advance;
-			result->stream_marker=decoder->dec.streammarker.state;
-			return_val=miniflac_sync(&decoder->dec, decoder->d_chunk+result->frame_bytes,4, &(current_sub_advance));
-			result->frame_bytes+=current_sub_advance;
-			result->metadata_length=decoder->dec.metadata.header.length;
-			result->metadata_length=decoder->dec.metadata.header.is_last_metadata;
-			return_val=miniflac_sync(&decoder->dec, decoder->d_chunk+result->frame_bytes,26, &(current_sub_advance));
-			result->frame_bytes+=current_sub_advance;
-
-			result->decoder_state=decoder->dec.state;
-			result->hz=decoder->dec.metadata.streaminfo.sample_rate;
-			result->bitrate_kbps=decoder->dec.metadata.streaminfo.bps;
-			result->chunk_id=curr_chunk_id;
-			result->channels=decoder->dec.metadata.streaminfo.bps;
-			result->decoder_in_chunk_size=decoder->d_chunk_size;
-			result->decoder_out_chunk_size=decoder->p_chunk_size;
-			break;
-
-	}
-	decoder->d_buffer_pos_cursor=min((decoder->d_buffer_pos_cursor+result->frame_bytes),decoder->d_chunk_size);
-	decoder->p_buffer_pos_cursor=min((decoder->p_buffer_pos_cursor+(result->nsamples*SIZE*result->channels)),decoder->p_chunk_size);
-	result->dec_input_chunk_ptr=decoder->d_buffer_pos_cursor;
-	result->dec_output_chunk_ptr=decoder->p_buffer_pos_cursor;
-	curr_chunk_id++;
-	return return_val;
-}
 static void reset_decoder_state(decoder* decoder,dec_op op){
 	if(decoder){
 		switch(op){
@@ -131,6 +54,58 @@ static void reset_decoder_state(decoder* decoder,dec_op op){
 			break;
 		}
 	}
+}
+static int decode_chunk(decoder*decoder,decoder_result_struct* result,decoding_option what_we_want){
+	int ret_val=MPG123_NEED_MORE;
+	
+	switch(what_we_want){
+
+	case DO_FEED:
+		ret_val=mpg123_feed(decoder->dec,decoder->d_chunk,decoder->d_chunk_size);
+		break;
+	case DO_DECODE:
+		ret_val= mpg123_decode(decoder->dec,decoder->d_chunk,decoder->d_chunk_size,decoder->p_chunk,decoder->p_chunk_size,&result->total_bytes_in_chunk);
+	   	if (ret_val == MPG123_OK || ret_val == MPG123_NEW_FORMAT) {
+	        // Now you can safely query format info
+	        	mpg123_getformat(decoder->dec, &result->hz, &result->channels, &result->encoding);
+			result->sample_size=mpg123_encsize(result->encoding);
+		}
+		if(result->total_bytes_in_chunk){
+			result->nsamples=(result->total_bytes_in_chunk)/(result->sample_size*result->channels);
+	   	}
+
+		result->decoder_state=(result->total_bytes_in_chunk>0);
+		break;
+	case DO_READ:
+
+		ret_val= mpg123_read(decoder->dec,decoder->p_chunk,decoder->p_chunk_size,&result->total_bytes_in_chunk);
+	   	if (ret_val == MPG123_OK || ret_val == MPG123_NEW_FORMAT) {
+	        // Now you can safely query format info
+	        	mpg123_getformat(decoder->dec, &result->hz, &result->channels, &result->encoding);
+			result->sample_size=mpg123_encsize(result->encoding);
+		}
+		if(result->total_bytes_in_chunk){
+			result->nsamples=(result->total_bytes_in_chunk)/(result->sample_size*result->channels);
+	   	}
+		
+		result->decoder_state=(result->total_bytes_in_chunk>0);
+
+		break;
+	default:
+		break;
+	}
+	return ret_val;
+
+}
+static void decoder_clean(decoder* decoder){
+
+	if(decoder->dec){
+		mpg123_close(decoder->dec);
+		mpg123_delete(decoder->dec);
+		mpg123_exit();
+	}
+
+
 }
 static void swap_read_decode_buffs(decoder* decoder){
 	
@@ -173,6 +148,7 @@ int perform_dec_op(decoder* decoder,decoder_result_struct* result,dec_op op,deco
 			res=0;
 			break;
 		case D_CLEAN:
+			decoder_clean(decoder);
 			res=0;
 			break;
 		default:
@@ -191,7 +167,11 @@ int init_decoder(decoder* decoder,uint64_t d_chunk_size,uint64_t p_chunk_size,ui
 	decoder->p_chunk_size=p_chunk_size;
 	decoder->d_buffer_pos_cursor=0;
 	decoder->p_buffer_pos_cursor=0;
-	miniflac_init(&decoder->dec,0);
+	mpg123_init();
+	decoder->dec=mpg123_new(NULL,NULL);
+	//mpg123_param(decoder->dec, MPG123_ADD_FLAGS, MPG123_QUIET,0.0);
+	mpg123_param(decoder->dec, MPG123_RESYNC_LIMIT, 4096,0.0);
+	mpg123_open_feed(decoder->dec);
 	return 0;
 
 }
