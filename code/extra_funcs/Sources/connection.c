@@ -6,6 +6,8 @@
 #include "../Includes/sockio_udp.h"
 #include "../Includes/sockio_tcp.h"
 #include "../Includes/connection.h"
+#include "../Includes/ip_cache_file.h"
+#include "../Includes/generalized_config.h"
 
 
 void clear_con_data(con_t* con_obj){

@@ -6,6 +6,7 @@
 #include <sys/ioctl.h> //for ioctl()
 #include <linux/soundcard.h> //SOUND_PCM*
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
 #include <alsa/asoundlib.h>
 #include "../Includes/ripped_code.h"

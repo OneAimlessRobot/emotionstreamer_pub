@@ -1,0 +1,1425 @@
+server_transmission_protocol: UDP (value in configs is > 0)
+server_chunk_size: 1024
+server_timeouts_data: 3s 5 us
+server_timeouts_con: 3s 3 us
+server_timeouts_drop_chunks: 3s 3 us
+server_timeouts_holepunching: 0s 10000 us
+server_ack_timeout_lim: 3
+server_music_folder_path: /../../../raw_songs/
+server_working_extension: .wav
+Curr dir: /mnt/FASTstorage/FASTprogs/emotionstreamer/code/server/../../../raw_songs/
+Launched in '.wav' mode!!!
+Listening e bindado!!!
+O endereço desta socket é:
+
+Endereço: 
+192.168.1.2 Porta: 10003
+Chegamos ao loop de conexoes!
+Esperando sinal do hearbeat thread!!!
+Addr atual do server de heartbeat:
+Endereço: 
+192.168.1.2 Porta: 10000
+Tentando conectar a:
+Endereço: 
+192.168.1.2 Porta: 10000
+(Tentativa 1)
+Conexao de:
+Endereço: 
+192.168.1.2 Porta: 10000
+Addr atual do server:
+Endereço: 
+192.168.1.2 Porta: 10003
+String enviada hey 64193 64194
+String recebida 10013 15014 15015
+Portas agora: 10013 15014 15015
+Client greet sucessful: Portas recebidas: 10013 15014 15015
+Beginning exaustive hole Punching routines!
+A enviar UDP primeiro pela pipeline de dados!
+Alright!
+rápido, rápido!!
+A enviar o furo pela pipeline UDP de acknowledgements!
+Tudo Enviado! Esperando resposta!
+OOofff... reply de holepunching nos acks não recebida!!
+OOofff... reply de holepunching nos acks não recebida!!
+Addresss tcp do peer:
+Endereço: 
+0.0.0.0 Porta: 10000
+Addresss tcp de nos:
+Endereço: 
+192.168.1.2 Porta: 49402
+Addresss udp de dados do peer:
+Endereço: 
+192.168.1.2 Porta: 15014
+Addresss udp de dados de nos:
+Endereço: 
+192.168.1.2 Porta: 3657
+Addresss udp de ack do peer:
+Endereço: 
+192.168.1.2 Porta: 15015
+Addresss udp de ack de nos:
+Endereço: 
+192.168.1.2 Porta: 3658
+hb_thread do streamer server: online
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Connection accepted!
+Fechamos conexão!!!!
+Triplo recebido: (string, port, port) = (hey, 57572, 57573)
+Portas enviadas: 10003, 15004, 15005
+Server greet sucesfull; Portas recebidas: 57572, 57573
+Waiting for client to initiate hole punching routines!
+A receber UDP primeiro pela pipeline de dados!
+Ok....
+OK rápido, rápido!!
+A receber UDP, mas agora pela pipeline de acknowledgments!
+Tudo Enviado! Esperando resposta!
+OOofff... reply de holepunching não recebida!!
+OOofff... reply de holepunching nos acks não recebida!!
+Addresss tcp do peer:
+Endereço: 
+87.196.75.227 Porta: 10592
+Addresss tcp de nos:
+Endereço: 
+192.168.1.2 Porta: 10003
+Addresss udp de dados do peer:
+Endereço: 
+87.196.75.227 Porta: 57572
+Addresss udp de dados de nos:
+Endereço: 
+192.168.1.2 Porta: 15004
+Addresss udp de ack do peer:
+Endereço: 
+87.196.75.227 Porta: 57573
+Addresss udp de ack de nos:
+Endereço: 
+192.168.1.2 Porta: 15005
+Buff recebido: 
+Result from TEST UDP ACK: "Buff recebido (TEST UDP ACK): 
+"
+Request desconhecido: Requests válidos são:
+peek- Ver musicas no server.
+play- tocar um ficheiro do server.
+down- transferir um ficheiro do server
+Fechamos conexão!!!!
+Accepted connection from 87.196.75.227, mas ficheiro  e invalido. Conexao sera largada...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Connection accepted!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Connection accepted!
+Fechamos conexão!!!!
+Triplo recebido: (string, port, port) = (hey, 14033, 14034)
+Portas enviadas: 10007, 15008, 15009
+Fechamos conexão!!!!
+ 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Connection accepted!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Connection accepted!
+Fechamos conexão!!!!
+Triplo recebido: (string, port, port) = (hey, 55972, 55973)
+Portas enviadas: 10011, 15012, 15013
+Server greet sucesfull; Portas recebidas: 55972, 55973
+Waiting for client to initiate hole punching routines!
+A receber UDP primeiro pela pipeline de dados!
+Ok....
+OK rápido, rápido!!
+A receber UDP, mas agora pela pipeline de acknowledgments!
+Tudo Enviado! Esperando resposta!
+OOofff... reply de holepunching não recebida!!
+OOofff... reply de holepunching nos acks não recebida!!
+Addresss tcp do peer:
+Endereço: 
+87.196.75.227 Porta: 10586
+Addresss tcp de nos:
+Endereço: 
+192.168.1.2 Porta: 10003
+Addresss udp de dados do peer:
+Endereço: 
+87.196.75.227 Porta: 55972
+Addresss udp de dados de nos:
+Endereço: 
+192.168.1.2 Porta: 15012
+Addresss udp de ack do peer:
+Endereço: 
+87.196.75.227 Porta: 55973
+Addresss udp de ack de nos:
+Endereço: 
+192.168.1.2 Porta: 15013
+Buff recebido: Hole punching 1
+Result from TEST UDP ACK: "Buff recebido (TEST UDP ACK): 
+"
+Request desconhecido: Requests válidos são:
+peek- Ver musicas no server.
+play- tocar um ficheiro do server.
+down- transferir um ficheiro do server
+Fechamos conexão!!!!
+Accepted connection from 87.196.75.227, mas ficheiro  e invalido. Conexao sera largada...
+ 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Connection accepted!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Connection accepted!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Connection accepted!
+Fechamos conexão!!!!
+Triplo recebido: (string, port, port) = (hey, 46293, 46294)
+Portas enviadas: 10015, 15016, 15017
+Server greet sucesfull; Portas recebidas: 46293, 46294
+Waiting for client to initiate hole punching routines!
+A receber UDP primeiro pela pipeline de dados!
+Ok....
+OK rápido, rápido!!
+A receber UDP, mas agora pela pipeline de acknowledgments!
+Tudo Enviado! Esperando resposta!
+OOofff... reply de holepunching não recebida!!
+OOofff... reply de holepunching nos acks não recebida!!
+Addresss tcp do peer:
+Endereço: 
+87.196.75.227 Porta: 10612
+Addresss tcp de nos:
+Endereço: 
+192.168.1.2 Porta: 10003
+Addresss udp de dados do peer:
+Endereço: 
+87.196.75.227 Porta: 46293
+Addresss udp de dados de nos:
+Endereço: 
+192.168.1.2 Porta: 15016
+Addresss udp de ack do peer:
+Endereço: 
+87.196.75.227 Porta: 46294
+Addresss udp de ack de nos:
+Endereço: 
+192.168.1.2 Porta: 15017
+Buff recebido: 
+Result from TEST UDP ACK: "Buff recebido (TEST UDP ACK): 
+"
+Request desconhecido: Requests válidos são:
+peek- Ver musicas no server.
+play- tocar um ficheiro do server.
+down- transferir um ficheiro do server
+Fechamos conexão!!!!
+Accepted connection from 87.196.75.227, mas ficheiro  e invalido. Conexao sera largada...
+Porta: 10003
+Connection accepted!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Connection accepted!
+Fechamos conexão!!!!
+Triplo recebido: (string, port, port) = (hey, 9962, 9963)
+Portas enviadas: 10019, 15020, 15021
+Server greet sucesfull; Portas recebidas: 9962, 9963
+Waiting for client to initiate hole punching routines!
+A receber UDP primeiro pela pipeline de dados!
+Ok....
+OK rápido, rápido!!
+A receber UDP, mas agora pela pipeline de acknowledgments!
+Tudo Enviado! Esperando resposta!
+OOofff... reply de holepunching não recebida!!
+OOofff... reply de holepunching nos acks não recebida!!
+Addresss tcp do peer:
+Endereço: 
+87.196.75.227 Porta: 10598
+Addresss tcp de nos:
+Endereço: 
+192.168.1.2 Porta: 10003
+Addresss udp de dados do peer:
+Endereço: 
+87.196.75.227 Porta: 9962
+Addresss udp de dados de nos:
+Endereço: 
+192.168.1.2 Porta: 15020
+Addresss udp de ack do peer:
+Endereço: 
+87.196.75.227 Porta: 9963
+Addresss udp de ack de nos:
+Endereço: 
+192.168.1.2 Porta: 15021
+Buff recebido: 
+Result from TEST UDP ACK: "Buff recebido (TEST UDP ACK): 
+"
+Request desconhecido: Requests válidos são:
+peek- Ver musicas no server.
+play- tocar um ficheiro do server.
+down- transferir um ficheiro do server
+Fechamos conexão!!!!
+Accepted connection from 87.196.75.227, mas ficheiro  e invalido. Conexao sera largada...
+Porta: 10003
+Connection accepted!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Connection accepted!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: OVKEXCLUYEJREIYDLE[
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10003
+Timeout no nivel de baixo!!!!  timeout 1 de 3
+Fechamos conexão!!!!
+Saimos do lower thread
+Juntamos o thread hb_tid
+Saimos do server!!!!!!
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereçde server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: Qço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endeço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atuadereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+dereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: QJK[SCTREKRSL[JCTFC
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10002
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server Y
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timeout no nivel de baixo!!!!  timeout 1 de 3
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: EEZCECLFKCRKMFYHZMY
+Endereço de server atual:
+Endereço: 
+192.168.1.2 Porta: 10001
+Timeout no nivel de baixo!!!!  timeout 2 de 3
+Fechamos conexão!!!!
+Saimos do lower thread
+Juntamos o thread hb_tid
+Saimos do server!!!!!!

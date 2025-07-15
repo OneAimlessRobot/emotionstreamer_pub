@@ -1,12 +1,17 @@
 #include "../../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
+#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
 
 static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 char client_logs_file_name[PATHSIZE]={0};
 char client_music_folder_path[PATHSIZE]={0};
+
+ip_cache_entry server_ip_cache_entry={{0},0};
+
+char server_ip_address_buff[PATHSIZE+1]={0};
 
 //EM BYTES E HZ!
 u_int64_t cfg_latency_ms=DEF_LATENCY_MS,
@@ -29,6 +34,11 @@ int_pair client_holepunching_times_pair=(int_pair){HOLE_PUNCHING_TIMEOUT_SEC,HOL
 static void clean_buff(void){
 
 	memset(&curr_line_buff,0,CONFIG_READ_LINE_BUFF_SIZE);
+
+}
+static void process_ip_cache_entries(void){
+
+	parse_ip_cache_entry(server_ip_address_buff,&server_ip_cache_entry);
 
 }
 
@@ -149,10 +159,16 @@ void read_values_cfg_client(void){
 	}
 	sscanf(curr_line_buff,"log_file_name: %s",client_logs_file_name);
 	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"server_ip_address: %s", server_ip_address_buff);
+	clean_buff();
 	fclose(cfg_fp);
 
-
+	process_ip_cache_entries();
 
 }
 
@@ -189,5 +205,6 @@ void print_values_cfg_client(int fd){
 
 	dprintf(fd,"logs_file_name: %s\n",client_logs_file_name);
 
+	print_ip_cache_entry(stdout,&server_ip_cache_entry);
 
 }

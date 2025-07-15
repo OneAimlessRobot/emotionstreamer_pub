@@ -55,8 +55,8 @@ RESDIR= ./resources
 
 CURRDIR=echo `pwd`
 
-CC= cc
-#CC=clang
+#CC= cc
+CC=clang
 DEPFLAGS= -MP -MD
 
 #CFLAGS += -fsanitize=thread -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)

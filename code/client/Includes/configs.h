@@ -14,6 +14,7 @@
 #define CACHE_ALMOST_FULL_PCT 60
 #define CLIENT_ACK_TIMEOUT_LIM 8
 
+extern ip_cache_entry server_ip_cache_entry;
 
 extern u_int64_t
 	cfg_latency_ms,
@@ -33,6 +34,7 @@ extern uint16_t
 extern int16_t streaming_protocol;
 extern int16_t is_wav_mode;
 
+extern char server_ip_address_buff[PATHSIZE+1];
 extern char client_music_folder_path[PATHSIZE];
 extern char client_logs_file_name[PATHSIZE];
 extern int_pair client_data_times_pair;

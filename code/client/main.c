@@ -3,6 +3,7 @@
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include "../extra_funcs/Includes/fileshit.h"
 #include "../extra_funcs/Includes/sockio.h"
+#include "../extra_funcs/Includes/ip_cache_file.h"
 #include "../extra_funcs/Includes/connection.h"
 #include "Includes/configs.h"
 
@@ -26,7 +27,7 @@ int main(int argc, char ** argv){
 
 	}
 	logstream=fdopen(fd,"w");
-	if(argc!=4){
+	if(argc!=3){
 
 		printf("Utilizacao correta:\narg1: tipo de pedido (play ou peek. Tocar uma musica ou consultar musicas. Com Peek, Sai logo e a musica fornecida é ignorada).\narg2: Nome da musica a tocar\n arg3: <ip>:<port> do server\n");
 		exit(-1);
@@ -34,7 +35,8 @@ int main(int argc, char ** argv){
 
 	memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
-        result= strnlen(client_music_folder_path,PATHSIZE-1);
+
+	result= strnlen(client_music_folder_path,PATHSIZE-1);
         if(!result){
 
                 snprintf(curr_dir+strlen(curr_dir),PATHSIZE,"%s",MUSIC_CLIENT_INPUT_PATH);
@@ -44,7 +46,7 @@ int main(int argc, char ** argv){
 	}
 	
 	printf("Curr dir: %s\n", curr_dir);
-	clientStart(argv[1],argv[2],argv[3]);
+	clientStart(argv[1],argv[2]);
 
 
 	return 0;

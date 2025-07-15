@@ -15,5 +15,5 @@
 
 
 //Strings todas 0 ended
-int clientStart(char* req_field,char* file_name,char* s_hostaddr);
+int clientStart(char* req_field,char* file_name);
 #endif

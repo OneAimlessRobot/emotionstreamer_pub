@@ -6,6 +6,7 @@
 #include <pulse/simple.h>
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
@@ -24,7 +25,6 @@
 #include "../Includes/streamer_client.h"
 #include "../Includes/client.h"
 #include "../Includes/download_func.h"
-#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/ip_cache_file_ops.h"
 
 static char extension_from_server[PATHSIZE]={0};
@@ -118,7 +118,7 @@ static void conf_func(void){
 
 
 //Strings todas 0 ended
-int clientStart(char* req_field,char* file_name,char* s_hostaddr){
+int clientStart(char* req_field,char* file_name){
 
 	char method_buff[PATHSIZE]={0};
 	char req_buff[PATHSIZE/4]={0};
@@ -155,16 +155,14 @@ int clientStart(char* req_field,char* file_name,char* s_hostaddr){
 	signal(SIGPIPE,sigpipe_handler);
 
 	ip_cache_entry buff[PREV_ADDR_CACHE_MAX]={0};
-	ip_cache_entry ent=(ip_cache_entry){{0},0};
-	parse_ip_cache_entry(s_hostaddr,&ent);
 
 
 	init_ip_addr_cache(&cache,buff);
-	int cache_asked= !strs_are_strictly_equal(s_hostaddr,PREV_ADDR_STRING);
+	int cache_asked= !strs_are_strictly_equal(server_ip_address_buff,PREV_ADDR_STRING);
 	int is_new=-1;
 	if(!cache_asked)
 	{
-		is_new=find_ip_addr_entry(&ent,&cache);
+		is_new=find_ip_addr_entry(&server_ip_cache_entry,&cache);
 		if(is_new<0){
 
 			printf("Novo endereço inserido!!!!!\n");
@@ -178,7 +176,7 @@ int clientStart(char* req_field,char* file_name,char* s_hostaddr){
 
 		raise(SIGINT);
 	}
-	init_addr(&server_ip_address,ent.hostname,ent.port);
+	init_addr(&server_ip_address,server_ip_cache_entry.hostname,server_ip_cache_entry.port);
 
 	if(!tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address)){
 
@@ -187,7 +185,7 @@ int clientStart(char* req_field,char* file_name,char* s_hostaddr){
 	
 	if(is_new<0){
 
-		insert_ip_addr_entry(&ent,&cache);
+		insert_ip_addr_entry(&server_ip_cache_entry,&cache);
 		save_ip_addr_entry_cache(&cache);
 	}
 	}

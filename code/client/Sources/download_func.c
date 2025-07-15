@@ -3,6 +3,7 @@
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
+#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
 #include "../Includes/download_func.h"
 
@@ -39,7 +40,7 @@ static void* print_download_bar(void* mem,int64_t len,int64_t* timeout_num){
         printw("Progresso atual de download: %ld de %ld kbytes transferidos!\n\n%s\n",bar_inside->curr/1000,bar_inside->total/1000,bar);
         if(len==-2){
 		(*timeout_num)++;
-		printw("Timeout no read!!!! Timeout no. %d\n",*timeout_num);
+		printw("Timeout no read!!!! Timeout no. %ld\n",*timeout_num);
         }
 	else{
 		(*timeout_num)=0;

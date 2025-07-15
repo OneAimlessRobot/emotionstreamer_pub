@@ -6,6 +6,7 @@
 #include <pulse/simple.h>
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
+#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
 #include "../Includes/ripped_code.h"
 #include "../Includes/ogg_module.h"

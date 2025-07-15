@@ -1,6 +1,7 @@
 #include "../../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../Includes/load_html.h"

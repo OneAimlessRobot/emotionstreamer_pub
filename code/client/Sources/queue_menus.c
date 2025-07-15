@@ -6,6 +6,7 @@
 #include <pulse/simple.h>
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
+#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
 #include "../Includes/ripped_code.h"
 #include "../Includes/chunk_queue.h"
@@ -89,9 +90,9 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 	if(!(que->total_size)){
 
 		
-		printw("Queue com sizes null!\nSize total da queue: %u bytes\n"
-							"Size de chunk da queue: %u bytes\n"
-							"Numero de chunks totais da queue: %u bytes\n",
+		printw("Queue com sizes null!\nSize total da queue: %lu bytes\n"
+							"Size de chunk da queue: %lu bytes\n"
+							"Numero de chunks totais da queue: %lu bytes\n",
 							que->total_size,
 							que->chunk_size,
 							que->max_occupied);
@@ -114,7 +115,7 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 	}
 	
 	printw("Queue visual:\nplay cursor: %lu\nrecv cursor: %lu\nCurr occupied: %lu\nMax occupied: %lu\n",que->play_cursor,que->recv_cursor,que->n_occupied,que->max_occupied);
-	printw("Queue esta quase vazia? %s\nQueue esta quase cheia? %s\nQueue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %lu\nTemos %lu ms de audio no buffer!\n",
+	printw("Queue esta quase vazia? %s\nQueue esta quase cheia? %s\nQueue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %lu\nTemos %u ms de audio no buffer!\n",
 					que_is_almost_empty(que) ? "SIM":"NAO",
 					que_is_almost_full(que)? "SIM":"NAO",
 					que_is_empty(que) ? "SIM":"NAO",

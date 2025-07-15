@@ -13,6 +13,15 @@
 static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
+static char heartbeat_ip_address_buff[PATHSIZE+1]={0};
+static char upper_ip_address_buff[PATHSIZE+1]={0};
+
+char generalized_config_filepath_buff[PATHSIZE+1]={0};
+
+
+ip_cache_entry heartbeat_ip_cache_entry={{0},0};
+ip_cache_entry upper_ip_cache_entry={{0},0};
+
 //EM BYTES E HZ!
 
 int_pair hb_data_times_pair=(int_pair){HB_TIMEOUT_DATA_SEC,HB_TIMEOUT_DATA_USEC};
@@ -20,6 +29,13 @@ int_pair hb_con_times_pair=(int_pair){HB_TIMEOUT_CON_SEC,HB_TIMEOUT_CON_USEC};
 int_pair hb_holepunching_times_pair=(int_pair){HOLE_PUNCHING_TIMEOUT_SEC,HOLE_PUNCHING_TIMEOUT_USEC};
 
 uint16_t hb_ack_timeout_lim=HB_ACK_TIMEOUT_LIM;
+
+static void process_ip_cache_entries(void){
+
+	parse_ip_cache_entry(heartbeat_ip_address_buff,&heartbeat_ip_cache_entry);
+	parse_ip_cache_entry(upper_ip_address_buff,&upper_ip_cache_entry);
+
+}
 
 static void sigint_handler(int useless){
 
@@ -70,13 +86,32 @@ void read_values_cfg_hb(void){
         }
         sscanf(curr_line_buff,"hb_ack_timeout_lim: %hu",&hb_ack_timeout_lim);
         clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
+        sscanf(curr_line_buff,"heartbeat_ip_address: %s",heartbeat_ip_address_buff);
+        clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
+        sscanf(curr_line_buff,"upper_server_ip_address: %s",upper_ip_address_buff);
+        clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
+        sscanf(curr_line_buff,"generalized_config_filepath: %s",generalized_config_filepath_buff);
+        clean_buff();
         fclose(cfg_fp);
 
-
+	process_ip_cache_entries();
 
 }
-
 
 void print_values_cfg_hb(int fd){
 
@@ -89,7 +124,11 @@ void print_values_cfg_hb(int fd){
 
         dprintf(fd,"hb_ack_timeout_lim: %hu\n",hb_ack_timeout_lim);
 
+        dprintf(fd,"generalized_config_filepath: %s\n",generalized_config_filepath_buff);
 
+	print_ip_cache_entry(stdout,&heartbeat_ip_cache_entry);
 
+	print_ip_cache_entry(stdout,&upper_ip_cache_entry);
 
+	
 }

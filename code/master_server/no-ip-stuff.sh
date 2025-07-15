@@ -1,4 +1,5 @@
 #!/bin/bash
-
-noip-duc --check-interval 5m --username addysmagic --password Th3widowmaker --ip-method static:85.138.81.160 -g 85.138.81.160 --daemon-group group-thrashbrat
+#hostname = all.ddnskey.com
+#url: http://addysmagic.freedynamicdns.net:PORT_GOES_HERE
+noip-duc --check-interval 5m --username ardtpep --password CQqDvJkWjMnX --ip-method static:85.138.81.160 -g addysmagic.freedynamicdns.net --daemon-group group-thrashbrat
 

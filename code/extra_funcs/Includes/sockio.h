@@ -40,6 +40,11 @@
 #define HOLE_PUNCHING_TIMEOUT_SEC 0
 #define HOLE_PUNCHING_TIMEOUT_USEC 1000000
 
+#define REMAPPER_TIMEOUT_CON_SEC 2
+#define REMAPPER_TIMEOUT_CON_USEC 3
+
+#define REMAPPER_TIMEOUT_DATA_SEC 2
+#define REMAPPER_TIMEOUT_DATA_USEC 3
 
 typedef long unsigned int int_pair[2];
 typedef unsigned char* buff_triple[3];
