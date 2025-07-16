@@ -10,7 +10,7 @@ static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
 static char server_ip_address_buff[PATHSIZE+1]={0};
 static char upper_ip_address_buff[PATHSIZE+1]={0};
-char generalized_config_filepath_buff[PATHSIZE+1];
+char generalized_config_filepath_buff[PATHSIZE+1]={0};
 ip_cache_entry server_ip_cache_entry={{0},0};
 ip_cache_entry upper_ip_cache_entry={{0},0};
 

@@ -11,11 +11,11 @@
 void setNonBlocking(int socket) {
      int flags = fcntl(socket, F_GETFL, 0);
      if (flags == -1) {
-         fprintf(logstream,"erro a atribuir flags a uma socket de cliente: %s\n",strerror(errno));
+         fprintf(stderr,"erro a atribuir flags a uma socket de cliente: %s\n",strerror(errno));
          return;
  }
      if (fcntl(socket, F_SETFL, flags | O_NONBLOCK) == -1) {
-         fprintf(logstream,"erro a atribuir flags a uma socket de cliente: %s\n",strerror(errno)); 
+         fprintf(stderr,"erro a atribuir flags a uma socket de cliente: %s\n",strerror(errno)); 
     }
 }
 

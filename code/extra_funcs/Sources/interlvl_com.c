@@ -70,7 +70,7 @@ void* slave_thread(void* args){
         }
         print_addr_aux("Addr atual do server:",&arg_struct->this_addr);
 
-        init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C);
+        init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,arg_struct->con_obj->this_tcp_addr.sin_port);
 
 	char ent_addr[PATHSIZE/8]={0};
 
@@ -78,7 +78,7 @@ void* slave_thread(void* args){
 
         getsockname(arg_struct->con_obj->sockfd_tcp,(struct sockaddr*)&arg_struct->con_obj->this_tcp_addr,socklenvar);
 
-        greet(arg_struct->con_obj,arg_struct->con_times_pair,arg_struct->holepunching_times_pair,arg_struct->con_obj->this_tcp_addr.sin_port);
+        greet(arg_struct->con_obj,arg_struct->con_times_pair,arg_struct->holepunching_times_pair);
 
 	snprint_addr_aux(ent_addr,PATHSIZE/8,&arg_struct->this_addr);
 
@@ -374,7 +374,6 @@ void* acceptor_func(void* args){
         }
         pthread_mutex_unlock(arg_a->master_mtx);
         }
-	curr_port++;
 
 
         while(acess_var_mtx(arg_a->var_mtx,arg_a->is_on,0,V_LOOK)){
@@ -395,9 +394,9 @@ void* acceptor_func(void* args){
                         if(sock>=0){
                               printf("Connection accepted!\nA nossa port é: %d\n",curr_port);
                               setNonBlocking(sock);
-                              init_con(&con,sock,SERVER_C);
+                              init_con(&con,sock,SERVER_C,curr_port);
                               uint16_t stored_port=0;
-                              greet(&con,arg_a->con_times_pair,arg_a->holepunching_times_pair,curr_port);
+                              greet(&con,arg_a->con_times_pair,arg_a->holepunching_times_pair);
                               clear_con_data(&con);
                               result=con_read_udp_ack(&con,arg_a->con_times_pair);
                               sscanf((char*)con.ack_udp_data,"%s %s %s %s %hu %s",req_buff,type_buff,name_buff,ip_buff,&stored_port, extension_buff);
@@ -467,7 +466,6 @@ void* acceptor_func(void* args){
                                 case LOG:
                                         printf("Log server requested!!!!\n");
                                         add_con(arg_a->arg_o->cons,&con,type_buff,sock,name_buff,ip_buff,stored_port,extension_buff);
-                                        curr_port+=3;
                                         break;
                                 default:
                                         printf("Request desconhecido %s!!!!\n",req_buff);

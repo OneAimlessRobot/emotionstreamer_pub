@@ -119,12 +119,12 @@ void init_browser(char* hostname, char* req,uint16_t port){
                 raise(SIGINT);
         }
 
-        init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C);
+        init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port);
 
 
         getsockname(tcp_sock,(struct sockaddr*)&our_addr,socklenvar);
 
-        greet(&con_obj,browser_con_times_pair,browser_holepunching_times_pair,our_addr.sin_port);
+        greet(&con_obj,browser_con_times_pair,browser_holepunching_times_pair);
 
         clear_con_data(&con_obj);
 	char string_to_send[PATHSIZE/2]={0};

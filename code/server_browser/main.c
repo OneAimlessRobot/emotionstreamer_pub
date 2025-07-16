@@ -3,6 +3,7 @@
 #include "../extra_funcs/Includes/sockio.h"
 #include "../extra_funcs/Includes/connection.h"
 #include "../extra_funcs/Includes/ip_cache_file.h"
+#include "../extra_funcs/Includes/generalized_config.h"
 #include "Includes/configs.h"
 #include "Includes/browser.h"
 
@@ -17,6 +18,10 @@ int main(int argc, char ** argv){
         }
         memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
+        printf("Generalized cfg:\n");
+        parse_generalized_cfg(generalized_config_filepath_buff);
+        print_values_generalized_cfg(1);
+
         
 
         printf("Curr dir: %s\n", curr_dir);

@@ -4,6 +4,7 @@
 #include "../extra_funcs/Includes/fileshit.h"
 #include "../extra_funcs/Includes/sockio.h"
 #include "../extra_funcs/Includes/ip_cache_file.h"
+#include "../extra_funcs/Includes/generalized_config.h"
 #include "../extra_funcs/Includes/connection.h"
 #include "Includes/configs.h"
 
@@ -12,6 +13,12 @@ int main(int argc, char ** argv){
 
 	read_values_cfg_client();
 	print_values_cfg_client(1);
+        memset(curr_dir,0,PATHSIZE);
+        getcwd(curr_dir,PATHSIZE-1);
+        printf("Generalized cfg:\n");
+        parse_generalized_cfg(generalized_config_filepath_buff);
+        print_values_generalized_cfg(1);
+
 	logging=0;
 	int fd=-1;
 	int result= strnlen(client_music_folder_path,PATHSIZE-1);
@@ -33,8 +40,6 @@ int main(int argc, char ** argv){
 		exit(-1);
 	}
 
-	memset(curr_dir,0,PATHSIZE);
-        getcwd(curr_dir,PATHSIZE-1);
 
 	result= strnlen(client_music_folder_path,PATHSIZE-1);
         if(!result){

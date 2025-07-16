@@ -13,10 +13,10 @@
 
 
 
-static pthread_cond_t cond1=PTHREAD_COND_INITIALIZER;
+static pthread_cond_t running_cond=PTHREAD_COND_INITIALIZER;
 
-static pthread_mutex_t mtx1=PTHREAD_MUTEX_INITIALIZER,
-                 mtx4=PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t running_mtx=PTHREAD_MUTEX_INITIALIZER,
+                 variable_acess_mtx=PTHREAD_MUTEX_INITIALIZER;
 
 static pthread_t tid_stream,
 		tid_ack;
@@ -34,11 +34,11 @@ static server_stream_t stream_struct={
 
 static void stop_server_stream(server_stream_t* strm){
 
-	if(acess_var_mtx(&mtx4,&strm->initted,0,V_LOOK)){
-        	acess_var_mtx(&mtx4,&strm->initted,0,V_SET);
+	if(acess_var_mtx(&variable_acess_mtx,&strm->initted,0,V_LOOK)){
+        	acess_var_mtx(&variable_acess_mtx,&strm->initted,0,V_SET);
 		close(strm->local_fd);
 		close_con(strm->con_obj);
-		pthread_cond_signal(&cond1);
+		pthread_cond_signal(&running_cond);
 	}
 	
 }
@@ -66,7 +66,7 @@ static int send_chunk_to_client(void){
 
 	int result=-2;
 	result=(server_transmission_protocol<=0)?send_chunk_tcp(&stream_struct,server_drop_chunks_times_pair):send_chunk_udp(&stream_struct,server_drop_chunks_times_pair);
-	while((acess_var_mtx(&mtx4,&stream_struct.initted,0,V_LOOK))&&(result!=-1)){
+	while((acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK))&&(result!=-1)){
 		//result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_times_pair):con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 		result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 			if(result==-2){
@@ -89,7 +89,7 @@ static int send_chunk_to_client(void){
 
 static void* server_stream(void* args){
 
-        while(acess_var_mtx(&mtx4,&stream_struct.initted,0,V_LOOK)
+        while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)
 		&&
 		(read(stream_struct.local_fd,stream_struct.chunk_data_cache,stream_struct.chunk_size)>0)
 		&&
@@ -104,7 +104,7 @@ static void* server_stream(void* args){
 static void* ack_exchange_thread(void* args){
 
 	int result=0;
-	while(acess_var_mtx(&mtx4,&stream_struct.initted,0,V_LOOK)){
+	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)){
         result=con_read_udp_ack(stream_struct.con_obj,server_data_times_pair);
 	if(result<=0){
 
@@ -150,13 +150,13 @@ static int init_server_stream(int fd,con_t* con_obj,uint64_t chunk_size,unsigned
         pthread_create(&tid_ack,NULL,ack_exchange_thread,NULL);
         pthread_create(&tid_stream,NULL,server_stream,NULL);
 	
-	pthread_mutex_lock(&mtx1);
-	while(acess_var_mtx(&mtx4,&stream_struct.initted,0,V_LOOK)){
+	pthread_mutex_lock(&running_mtx);
+	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)){
 
-		pthread_cond_wait(&cond1,&mtx1);
+		pthread_cond_wait(&running_cond,&running_mtx);
 
 	}
-	pthread_mutex_unlock(&mtx1);
+	pthread_mutex_unlock(&running_mtx);
 	
 	pthread_join(tid_stream,NULL);
 	printf("Saimos do thread de stream!!!\n");

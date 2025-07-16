@@ -5,6 +5,10 @@
 
 extern char port_remapper_ip_address[PATHSIZE];
 extern ip_cache_entry port_mapper_entry;
+
+extern int_pair port_mapper_times_pair;
+
+
 //NULL terminated
 void parse_generalized_cfg(char* dir_path);
 

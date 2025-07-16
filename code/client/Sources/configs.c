@@ -8,7 +8,7 @@ static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 char client_logs_file_name[PATHSIZE]={0};
 char client_music_folder_path[PATHSIZE]={0};
-
+char generalized_config_filepath_buff[PATHSIZE+1]={0};
 ip_cache_entry server_ip_cache_entry={{0},0};
 
 char server_ip_address_buff[PATHSIZE+1]={0};
@@ -166,6 +166,13 @@ void read_values_cfg_client(void){
 	}
 	sscanf(curr_line_buff,"server_ip_address: %s", server_ip_address_buff);
 	clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
+        sscanf(curr_line_buff,"generalized_config_filepath: %s",generalized_config_filepath_buff);
+        clean_buff();
 	fclose(cfg_fp);
 
 	process_ip_cache_entries();
@@ -204,6 +211,8 @@ void print_values_cfg_client(int fd){
 	dprintf(fd,"client_music_folder_path: %s\n",client_music_folder_path);
 
 	dprintf(fd,"logs_file_name: %s\n",client_logs_file_name);
+
+        dprintf(fd,"generalized_config_filepath: %s\n",generalized_config_filepath_buff);
 
 	print_ip_cache_entry(stdout,&server_ip_cache_entry);
 

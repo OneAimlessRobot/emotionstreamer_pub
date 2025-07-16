@@ -18,7 +18,6 @@
 
 static con_t server_con_obj;
 static int sock_tcp;
-static uint16_t port;
 int fp=-1;
 
 static void cleanup(int useless){
@@ -64,7 +63,6 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 		signal(SIGINT,cleanup);
 			
 			sock_tcp=sockfd_tcp;
-			port=curr_port;
 				unsigned char stream_cache_data[server_chunk_size];
 
 				char file_name[PATHSIZE]={0};
@@ -74,9 +72,9 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				struct stat file_info={0};
 				char hp_udp_ack_buff[2*DEF_DATASIZE]={0};
 				char hp_udp_buff[2*DEF_DATASIZE]={0};
-				init_con(&server_con_obj,sock_tcp,SERVER_C);
+				init_con(&server_con_obj,sock_tcp,SERVER_C,curr_port);
 
-				greet(&server_con_obj,server_con_times_pair,server_holepunching_times_pair,port);
+				greet(&server_con_obj,server_con_times_pair,server_holepunching_times_pair);
 				
 				clear_con_data(&server_con_obj);
 

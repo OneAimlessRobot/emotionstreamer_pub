@@ -197,10 +197,10 @@ int clientStart(char* req_field,char* file_name){
 		}
 	}
 	print_sock_addr(client_con_obj.sockfd_tcp);
-	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C);
+	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port);
 	
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
-	greet(&client_con_obj,client_con_times_pair,client_holepunching_times_pair,client_con_obj.this_tcp_addr.sin_port);
+	greet(&client_con_obj,client_con_times_pair,client_holepunching_times_pair);
 
 	snprintf((char*)client_con_obj.udp_data,3*DEF_DATASIZE-1,"%s %s",req_buff,file_name);
 

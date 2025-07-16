@@ -33,7 +33,7 @@ extern uint16_t
 
 extern int16_t streaming_protocol;
 extern int16_t is_wav_mode;
-
+extern char generalized_config_filepath_buff[PATHSIZE+1];
 extern char server_ip_address_buff[PATHSIZE+1];
 extern char client_music_folder_path[PATHSIZE];
 extern char client_logs_file_name[PATHSIZE];

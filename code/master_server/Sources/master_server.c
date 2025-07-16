@@ -32,11 +32,12 @@ static void close_all_fds_here(void){
 }
 
 static void sigint_handler(int useless){
-
+	struct sockaddr_in addr={0};
 	closeDB();
-        close(arg_a.accept_sockfd);
+	close(arg_a.accept_sockfd);
 	if(acess_var_mtx(&master_mtx,&is_on,0,V_LOOK)){
-                acess_var_mtx(&master_mtx,&is_on,0*useless,V_SET);
+                unreserve_local_listening_port(&addr,master_ip_cache_entry.port);
+        	acess_var_mtx(&master_mtx,&is_on,0*useless,V_SET);
                 close_all_fds_here();
                 perror("Saindo do heart beat server!!!!\n");
         }

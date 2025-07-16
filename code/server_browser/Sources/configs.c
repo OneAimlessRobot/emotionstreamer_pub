@@ -15,6 +15,8 @@ int_pair browser_data_times_pair=(int_pair){BROWSER_TIMEOUT_DATA_SEC,BROWSER_TIM
 int_pair browser_con_times_pair=(int_pair){BROWSER_TIMEOUT_CON_SEC,BROWSER_TIMEOUT_CON_USEC};
 int_pair browser_holepunching_times_pair=(int_pair){HOLE_PUNCHING_TIMEOUT_SEC,HOLE_PUNCHING_TIMEOUT_USEC};
 
+char generalized_config_filepath_buff[PATHSIZE+1]={0};
+
 static void sigint_handler(int useless){
 
         printf("Saimos no leitor de cfg. do heartbeat server Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_BROWSER);
@@ -57,7 +59,13 @@ void read_values_cfg_browser(void){
         }
         sscanf(curr_line_buff,"browser_timeouts_holepunching: %lu %lu",&browser_holepunching_times_pair[0],&browser_holepunching_times_pair[1]);
         clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
+        sscanf(curr_line_buff,"generalized_config_path: %s",generalized_config_filepath_buff);
+        clean_buff();
         fclose(cfg_fp);
 
 
@@ -73,6 +81,8 @@ void print_values_cfg_browser(int fd){
         dprintf(fd,"browser_timeouts_data: %lus %lu us\n",browser_data_times_pair[0],browser_data_times_pair[1]);
 
         dprintf(fd,"browser_timeouts_holepunching: %lus %lu us\n",browser_holepunching_times_pair[0],browser_holepunching_times_pair[1]);
+
+        dprintf(fd,"generalized_config_path: %s\n",generalized_config_filepath_buff);
 
 
 

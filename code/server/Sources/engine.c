@@ -26,8 +26,10 @@ static int started=0;
 
 static void serverStop(int useless){
 	perror("Sinal de parar server\n");
+	struct sockaddr_in addr={0};
 	close(state.server_sock_tcp);
 	if(acess_var_mtx(&hb_mtx,&state.server_is_on,0,V_LOOK)){
+		unreserve_local_listening_port(&addr,server_ip_cache_entry.port);
 		acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
 		pthread_mutex_lock(&con_mtx);
 		close_con(&state.hb_con);
@@ -79,7 +81,6 @@ static int con_accepting_loop(void){
 				if(sock>=0){
 					
 					printf("Connection accepted!\n");
-					curr_port+=4;
 					pid=1;
 					pid=fork();
 					switch(pid){
@@ -90,7 +91,7 @@ static int con_accepting_loop(void){
 							signal(SIGPIPE,conStop);
 							raise(SIGINT);
 							close_con(&state.hb_con);
-							con_go(sock,curr_port-4);
+							con_go(sock,curr_port);
 							return 0;
 						case -1:
 							raise(SIGTERM);
