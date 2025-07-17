@@ -64,6 +64,8 @@ void* slave_thread(void* args){
         print_addr_aux("Addr atual do server de heartbeat:",&arg_struct->master_addr);
 
 
+        int ptr=1;
+        setsockopt(arg_struct->con_obj->sockfd_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
 
         if(bind(arg_struct->con_obj->sockfd_tcp,(struct sockaddr *)&arg_struct->this_con_addr,*socklenvar)){
 

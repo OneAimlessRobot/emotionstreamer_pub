@@ -176,11 +176,12 @@ int clientStart(char* req_field,char* file_name){
 
 	if(!cache_asked){
 	client_con_obj.sockfd_tcp= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-
 	if(client_con_obj.sockfd_tcp<0){
 
 		raise(SIGINT);
 	}
+    int ptr=1;
+	setsockopt(client_con_obj.sockfd_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
 	init_addr(&server_ip_address,server_ip_cache_entry.hostname,server_ip_cache_entry.port);
 
 	init_addr(&client_ip_address,client_ip_cache_entry.hostname,client_ip_cache_entry.port);

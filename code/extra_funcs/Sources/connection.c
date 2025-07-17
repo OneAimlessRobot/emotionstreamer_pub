@@ -83,7 +83,7 @@ static void send_ports_back(con_t* obj){
 void close_con(con_t* con_obj){
 	
 	if(con_obj->is_on){
-		//send_ports_back(con_obj);
+		send_ports_back(con_obj);
 		close(con_obj->sockfd_tcp);
 		close(con_obj->sockfd_udp);
 		close(con_obj->ack_sockfd_udp);
@@ -354,14 +354,19 @@ static void set_up_local_udp_socks(con_t* con_obj){
 
 
 	con_obj->sockfd_udp= socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
+	
+    int ptr=1;
         if(con_obj->sockfd_udp==-1){
                 raise(SIGINT);
         }
+	
+	setsockopt(con_obj->sockfd_udp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
 	con_obj->ack_sockfd_udp= socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
         if(con_obj->sockfd_udp==-1){
                 raise(SIGINT);
         }
 	
+	setsockopt(con_obj->ack_sockfd_udp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
 	//setNonBlocking(con_obj->sockfd_udp);
 	//setNonBlocking(con_obj->ack_sockfd_udp);
 	getsockname(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->this_udp_addr),socklenvar);
