@@ -25,7 +25,7 @@ int sendsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockadd
 		else{
 		if(logging){
 
-		fprintf(logstream, "SELECT ERROR (UDP)!!!!! SEND\n");
+		fprintf(logstream, "SELECT ERROR (UDP)!!!!! SEND:\n%s\n",strerror(errno));
 		}
 		return -1;
 		}
@@ -119,7 +119,7 @@ int readsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockadd
 		else{
 		if(logging){
 
-		fprintf(logstream, "SELECT ERROR (UDP)!!!!! READ\n");
+		fprintf(logstream, "SELECT ERROR (UDP)!!!!! READ\n%s\n",strerror(errno));
 		}
 		return -1;
 		}

@@ -25,11 +25,11 @@ static pthread_cond_t eng_cond=PTHREAD_COND_INITIALIZER;
 static int started=0;
 
 static void serverStop(int useless){
+	struct sockaddr_in addr_buff={0};
 	perror("Sinal de parar server\n");
-	struct sockaddr_in addr={0};
 	close(state.server_sock_tcp);
 	if(acess_var_mtx(&hb_mtx,&state.server_is_on,0,V_LOOK)){
-		unreserve_local_listening_port(&addr,server_ip_cache_entry.port);
+		unreserve_local_listening_port(&addr_buff,curr_port);
 		acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
 		pthread_mutex_lock(&con_mtx);
 		close_con(&state.hb_con);
@@ -144,7 +144,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	logstream=stderr;
 	memset(&state,0,sizeof(server_state));
 	state.name=buff;
-	init_module_tcp_stuff(&state.server_sock_tcp,ent_this->hostname,ent_this->port,&state.server_tcp_addr,SIGTERM,MAX_CLIENTS_HARD_LIMIT);
+	init_module_tcp_stuff(&state.server_sock_tcp,ent_this->hostname,ent_this->port,&state.server_tcp_addr,SIGTERM,MAX_CLIENTS_HARD_LIMIT,0);
 	
 	slave_args arg_s={0};
 	
@@ -164,6 +164,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	
 	init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port);
 	init_addr(&arg_s.this_addr,ent_this->hostname,ent_this->port);
+	init_addr(&arg_s.this_con_addr,ent_this->hostname,ent_this->port+1);
 	memcpy(&arg_s.con_times_pair,&server_con_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.data_times_pair,&server_data_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.holepunching_times_pair,&server_holepunching_times_pair,sizeof(int_pair));

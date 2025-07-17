@@ -63,11 +63,29 @@ void* slave_thread(void* args){
 
         print_addr_aux("Addr atual do server de heartbeat:",&arg_struct->master_addr);
 
+
+
+        if(bind(arg_struct->con_obj->sockfd_tcp,(struct sockaddr *)&arg_struct->this_con_addr,*socklenvar)){
+
+                perror("Não conseguimos dar bind na socket do client!!!\n");
+                print_addr_aux("Este é o address:",&arg_struct->this_con_addr);
+                raise(SIGINT);
+
+        }
+	else{
+
+	     	print_addr_aux("Bind com sucesso!!!:",&arg_struct->this_con_addr);
+	}
+
         if(!tryConnect(&arg_struct->con_obj->sockfd_tcp,arg_struct->con_times_pair,&arg_struct->master_addr)){
 
                 perror("Nao deu para contactar server de heartbeats!!!!\n");
                 raise(arg_struct->exit_signal);
         }
+	
+        struct sockaddr_in addr_struct={0};
+        reserve_local_listening_port(&addr_struct,ntohs(arg_struct->this_con_addr.sin_port));
+
         print_addr_aux("Addr atual do server:",&arg_struct->this_addr);
 
         init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,arg_struct->con_obj->this_tcp_addr.sin_port);
@@ -142,6 +160,7 @@ void* slave_thread(void* args){
                 usleep(arg_struct->sleep_us);
 
         }
+        unreserve_local_listening_port(&addr_struct,ntohs(arg_struct->this_con_addr.sin_port));
 	pthread_mutex_lock(arg_struct->con_mtx);
 	close_con(arg_struct->con_obj);
 	pthread_mutex_unlock(arg_struct->con_mtx);
@@ -151,7 +170,7 @@ void* slave_thread(void* args){
 
 
 }
-void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected){
+void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper){
 
 
         (*sockptr)= socket(AF_INET,SOCK_STREAM,0);
@@ -166,7 +185,10 @@ void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct so
                 raise(exit_signal);
                 exit(-1);
         }
-
+	if(!is_port_mapper){
+		struct sockaddr_in addr_struct={0};
+	        reserve_local_listening_port(&addr_struct,tcp_s_port);
+	}
         listen(*sockptr,max_connected);
         printf("Listening e bindado!!!\n");
         print_sock_addr(*sockptr);
@@ -374,8 +396,7 @@ void* acceptor_func(void* args){
         }
         pthread_mutex_unlock(arg_a->master_mtx);
         }
-
-
+	
         while(acess_var_mtx(arg_a->var_mtx,arg_a->is_on,0,V_LOOK)){
 
 
@@ -489,6 +510,8 @@ void* acceptor_func(void* args){
 
 
         }
+	struct sockaddr_in addr={0};
+        unreserve_local_listening_port(&addr,curr_port);
         printf("Saimos do thread de heart_beat_master!!!!\n");
 
 

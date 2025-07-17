@@ -1,4 +1,5 @@
 #include "../../Includes/preprocessor.h"
+#include <ncurses.h>
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
@@ -37,16 +38,25 @@ static port_mapper mapper={
 
 
 
-static void sigint_handler(int useless){
+static void sigterm_handler(int useless){
 
 	
 	close(mapper.socket);
 	acess_var_mtx(&running_mtx,&mapper.running,0*useless,V_SET);
-	pthread_cond_signal(&input_cond);
 	pthread_cond_signal(&running_cond);
-	
+	pthread_cond_signal(&input_cond);
+}
+static void sigint_handler(int useless){
+
+	sigterm_handler(useless);
 }
 
+static int port_in_range(int port){
+
+	return (port>=cfg_init_port)&&(port<=(cfg_init_port+cfg_num_ports));
+
+
+}
 static int is_no_more_room(void){
 
 	
@@ -103,31 +113,32 @@ static int fetch_ports_to_give(int arr[NUM_PORTS_TO_GIVE+1],int actually_change)
 
 
 }
-
 static int reserve_port(int port){
 
+	if(port_in_range(port)){
+		if(!is_no_more_room()){
+			if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_LOOK)!=PORT_ALLOCATED){
+				acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),PORT_RESERVED,V_SET);
+				acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)+1,V_SET);
+				return 1;
+			}
 
-	if(!is_no_more_room()){
-		if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_LOOK)!=PORT_ALLOCATED){
-			acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),PORT_RESERVED,V_SET);
-			acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)+1,V_SET);
-			return 1;
 		}
-
 	}
 	return 0;
 
 }
 static int unreserve_port(int port){
 
+	if(port_in_range(port)){
+		if(!is_empty()){
+			if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_LOOK)<0){
+				acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),PORT_FREE,V_SET);
+				acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)-1,V_SET);
+				return 1;
+			}
 
-	if(!is_empty()){
-		if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_LOOK)==PORT_RESERVED){
-			acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),-1,V_SET);
-			acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)-1,V_SET);
-			return 1;
 		}
-
 	}
 	return 0;
 
@@ -207,6 +218,17 @@ static void send_ports_to_client(int sock,int port_arr[NUM_PORTS_TO_GIVE+1]){
 
 
 	}
+	memset(buff_with_the_ports,0,4096);
+         result=readsome(sock,buff_with_the_ports,DEF_DATASIZE,port_mapper_times_pair);
+	if(result<=0){
+                 fprintf(stdout,"Não conseguimos receber portas do port mapper!!!!!!\nString que recebemos: \"%s\"\n",buff_with_the_ports);
+                 close(sock);
+                 raise(SIGTERM);
+
+        }
+	else{
+	        fprintf(stderr,"Não conseguimos receber portas do port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",buff_with_the_ports,strerror(errno));
+	}
 
 
 
@@ -243,7 +265,7 @@ static void check_port_func(uint16_t port_to_check){
 
 	if((port_to_check<cfg_init_port) || (port_to_check>(cfg_init_port+cfg_num_ports))){
 
-		printf("Port out of range!\nRange is between %d and %d",cfg_init_port,cfg_init_port+cfg_num_ports);
+		printf("Port out of range!\nRange is between %d and %d\n",cfg_init_port,cfg_init_port+cfg_num_ports);
 	}
 	else{
 		int port_state=acess_var_mtx(&variable_mtx,&(mapper.port_arr[port_to_check-cfg_init_port]),0,V_LOOK);
@@ -272,6 +294,7 @@ static void reserve_client_port(int sock,char* ports_and_info_buff){
 	}
 	int reserved_port=0;
 	sscanf(ports_and_info_buff,"%d",&reserved_port);
+	printf("Eles querem reservar a porta %d\n",reserved_port);
 	memset(ports_and_info_buff,0,4096);
 	int result_of_reserve=reserve_port(reserved_port);
 	snprintf(ports_and_info_buff,DEF_DATASIZE,"%d",result_of_reserve);
@@ -279,8 +302,11 @@ static void reserve_client_port(int sock,char* ports_and_info_buff){
 	if(result<=0){
 		printf("Cliente não apanhou o nosso aviso!!!\n");
 	}
-	if(!result_of_reserve){
+	else if(!result_of_reserve){
 		printf("Não foi possivel reservar porta!\n");
+	}
+	else{
+		printf("Reserva feita!\n");
 	}
 	close(sock);
 
@@ -302,6 +328,7 @@ static void unreserve_client_port(int sock,char* ports_and_info_buff){
 	}
 	int reserved_port=0;
 	sscanf(ports_and_info_buff,"%d",&reserved_port);
+	printf("Eles querem desreservar a porta %d\n",reserved_port);
 	memset(ports_and_info_buff,0,4096);
 	int result_of_reserve=unreserve_port(reserved_port);
 	snprintf(ports_and_info_buff,DEF_DATASIZE,"%d",result_of_reserve);
@@ -309,8 +336,11 @@ static void unreserve_client_port(int sock,char* ports_and_info_buff){
 	if(result<=0){
 		printf("Cliente não apanhou o nosso aviso!!!\n");
 	}
-	if(!result_of_reserve){
-		printf("Não foi possivel reservar porta!\n");
+	else if(!result_of_reserve){
+		printf("Não foi possivel desreservar porta!\n");
+	}
+	else{
+		printf("Desreserva feita!\n");
 	}
 	close(sock);
 
@@ -327,11 +357,13 @@ void* port_mapper_input_loop(void* args){
 	printf("Thread de input do port mapper acordou!\n");
 	
 	while(acess_var_mtx(&running_mtx,&mapper.running,0,V_LOOK)){
-  		char c=0;
+  		
+		char string[128]={0};
 		uint16_t port_to_check=0;
-		scanf("%c",&c);
+		scanf("%s",string);
 		fflush(stdin);
-		switch((command_char) c){
+		command_char c = (command_char) string[0];
+		switch(c){
 			case CHECK_PORT:
 				scanf("%hu",&port_to_check);
 				fflush(stdin);
@@ -342,6 +374,7 @@ void* port_mapper_input_loop(void* args){
 				break;
 			case STOP_MAPPER:
 				acess_var_mtx(&variable_mtx,&mapper.running,0,V_SET);
+				raise(SIGTERM);
 				break;
 			case PRINT_HELP:
 				print_help();
@@ -411,13 +444,14 @@ void* port_mapper_main_loop(void* args){
 		 	 sock= accept(mapper.socket,NULL,NULL);
                          if(sock>=0){
 				printf("Connection accepted!\n");
-                        	/*pthread_t tid_con=-1;
+                        	int arg[1]={0};
+				arg[0]=sock;
+				/*pthread_t tid_con=-1;
 				pthread_create(&tid_con,NULL,accepted_connection_thread,(void*)arg);
 				pthread_detach(tid_con);
 				*/
-				int arg[1]={0};
-				arg[0]=sock;
 				accepted_connection_thread((void*)arg);
+				
 			}
 		}
 		else if(!iResult)
@@ -428,7 +462,7 @@ void* port_mapper_main_loop(void* args){
 		else{
 
 		       perror("Select error no port mapper!!!!\n");
-		       raise(SIGINT);
+		       raise(SIGTERM);
 		}
 		pthread_cond_signal(&input_cond);
 	}
@@ -444,7 +478,7 @@ void* port_mapper_main_loop(void* args){
 void port_mapper_init(ip_cache_entry* ent){
 
 	signal(SIGINT,sigint_handler);
-	signal(SIGTERM,sigint_handler);
+	signal(SIGTERM,sigterm_handler);
 	int32_t port_arr[cfg_num_ports];
 	memset(port_arr,0,sizeof(int32_t)*cfg_num_ports);
 	mapper.port_arr=port_arr;
@@ -452,7 +486,7 @@ void port_mapper_init(ip_cache_entry* ent){
 
 
 	init_addr(&mapper.addr_struct, ent->hostname,ent->port);
-	init_module_tcp_stuff(&mapper.socket,ent->hostname,ent->port,&mapper.addr_struct,SIGTERM,cfg_num_ports);
+	init_module_tcp_stuff(&mapper.socket,ent->hostname,ent->port,&mapper.addr_struct,SIGTERM,cfg_num_ports,1);
 	mapper.running=1;
 	input_enabled=1;
         pthread_create(&input_tid,NULL,port_mapper_input_loop,NULL);
@@ -471,7 +505,6 @@ void port_mapper_init(ip_cache_entry* ent){
 	pthread_join(main_tid ,NULL);
 	printf("Saimos do main thread!\n");
 
-	raise(SIGINT);
-	
+	exit(0);
 
 }

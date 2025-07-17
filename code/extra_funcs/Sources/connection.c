@@ -33,19 +33,26 @@ static void send_ports_back(con_t* obj){
 	if(tmp_socket<0){
 		perror("Conexão ao port mapper mal sucedida! Abortando\n");
 		close(tmp_socket);
+		close_con(obj);
 		raise(SIGINT);
 	}
 
 	init_addr(&obj->port_mapper_addr, port_mapper_entry.hostname,port_mapper_entry.port);
 	int result=-1;
 	char buff_for_ports[DEF_DATASIZE+1]={0};
-	tryConnect(&tmp_socket,port_mapper_times_pair,&obj->port_mapper_addr);
+
+	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&obj->port_mapper_addr)){
+		
+		close_con(obj);
+		raise(SIGINT);
+	}
 
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_LEAVE_STRING);
 	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
 		perror("O port mapper nâo recebeu o nosso request!!!\n");
 		close(tmp_socket);
+		close_con(obj);
 		raise(SIGINT);
 
 	}
@@ -54,6 +61,7 @@ static void send_ports_back(con_t* obj){
 	if(result<=0){
 		perror("Não conseguimos enviar o request de fecho de portas ao port mapper!!!!!!\n");
 		close(tmp_socket);
+		close_con(obj);
 		raise(SIGINT);
 
 	}
@@ -63,16 +71,19 @@ static void send_ports_back(con_t* obj){
 	if(result<=0){
 		perror("Não conseguimos enviar as portas para fechar portas ao port mapper!!!!!!\n");
 		close(tmp_socket);
+		close_con(obj);
 		raise(SIGINT);
 
 	}
-	close(tmp_socket);
+	else{
+		close(tmp_socket);
+	}
 
 }
 void close_con(con_t* con_obj){
 	
 	if(con_obj->is_on){
-		send_ports_back(con_obj);
+		//send_ports_back(con_obj);
 		close(con_obj->sockfd_tcp);
 		close(con_obj->sockfd_udp);
 		close(con_obj->ack_sockfd_udp);
@@ -103,7 +114,7 @@ void init_con(con_t* con_obj,int sockfd_tcp,con_type type,uint16_t listen_port){
 				con_obj->udp_data_peer_port=0;
 				con_obj->udp_ack_peer_port=0;
 
-				con_obj->listen_port=listen_port;
+				con_obj->tcp_data_local_port=con_obj->listen_port=listen_port;
 				memset(con_obj->tcp_data,0,DEF_DATASIZE+1);
 				memset(con_obj->udp_data,0,DEF_DATASIZE+1);
 				memset(con_obj->ack_udp_data,0,DEF_DATASIZE+1);
@@ -144,18 +155,23 @@ static void ask_for_ports(con_t* obj){
         if(tmp_socket<0){
 		perror("Conexão ao port mapper mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
 		close(tmp_socket);
+		close_con(obj);
 		raise(SIGINT);
 	}
 	init_addr(&obj->port_mapper_addr, port_mapper_entry.hostname,port_mapper_entry.port);
 	int result=-1;
 	char buff_for_ports[DEF_DATASIZE+1]={0};
-	tryConnect(&tmp_socket,port_mapper_times_pair,&obj->port_mapper_addr);
-	
+	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&obj->port_mapper_addr)){
+		close_con(obj);
+		raise(SIGINT);
+	}
+
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_JOIN_STRING);
 	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
 		perror("O port mapper nâo recebeu o nosso request!!!\n");
 		close(tmp_socket);
+		close_con(obj);
 		raise(SIGINT);
 
 	}
@@ -164,6 +180,7 @@ static void ask_for_ports(con_t* obj){
 	if(result<=0){
 		perror("Não conseguimos receber portas do port mapper!!!!!!\n");
 		close(tmp_socket);
+		close_con(obj);
 		raise(SIGINT);
 
 	}
@@ -173,7 +190,23 @@ static void ask_for_ports(con_t* obj){
 						"Porta de acks udp: %hu\n",
 						obj->udp_data_local_port,
 						obj->udp_ack_local_port);
-	close(tmp_socket);
+
+	memset(buff_for_ports,0,DEF_DATASIZE+1);
+        snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_JOIN_GOT_IT_STRING);
+        result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+        if(result<=0){
+
+                printf("Aviso de que já temos as portas não enviado!!!\nMensagem que devia ter sido enviada:\n%s\n",buff_for_ports);
+		close(tmp_socket);
+		close_con(obj);
+		raise(SIGINT);
+        }
+        else{
+
+                printf("Aviso de que já temos as portas enviado!!!\nMensagem que foi enviada:\n%s\n",buff_for_ports);
+		close(tmp_socket);
+
+	  }
 }
 
 void reserve_local_listening_port(struct sockaddr_in* sockaddr,uint16_t port_to_allocate){
@@ -188,7 +221,10 @@ void reserve_local_listening_port(struct sockaddr_in* sockaddr,uint16_t port_to_
 	init_addr(sockaddr, port_mapper_entry.hostname,port_mapper_entry.port);
 	int result=-1;
 	char buff_for_ports[DEF_DATASIZE+1]={0};
-	tryConnect(&tmp_socket,port_mapper_times_pair,sockaddr);
+	if(!tryConnect(&tmp_socket,port_mapper_times_pair,sockaddr)){
+
+		raise(SIGINT);
+	}
 	
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_RESERVE_STRING);
 	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
@@ -250,8 +286,11 @@ void unreserve_local_listening_port(struct sockaddr_in* sockaddr,uint16_t port_t
 	init_addr(sockaddr, port_mapper_entry.hostname,port_mapper_entry.port);
 	int result=-1;
 	char buff_for_ports[DEF_DATASIZE+1]={0};
-	tryConnect(&tmp_socket,port_mapper_times_pair,sockaddr);
 	
+	if(!tryConnect(&tmp_socket,port_mapper_times_pair,sockaddr)){
+
+		raise(SIGINT);
+	}
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_UNRESERVE_STRING);
 	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
@@ -295,9 +334,10 @@ void unreserve_local_listening_port(struct sockaddr_in* sockaddr,uint16_t port_t
 
 
 	}
-	printf("Desreserva feita!!!\n");
-	close(tmp_socket);
-
+	else{
+		printf("Desreserva feita!!!\n");
+		close(tmp_socket);
+	}
 
 }
 static void set_up_peer_udp_socks(con_t* con_obj){
@@ -331,8 +371,7 @@ static void set_up_local_udp_socks(con_t* con_obj){
 	if(bind_result){
 		perror("Erro no em bind da socket udp de dados no modulo de conexão!\n");
 		print_addr_aux("",&con_obj->this_udp_addr);
-		close_con(con_obj);
-		exit(-1);
+		raise(SIGINT);
 
 	}
 	getsockname(con_obj->sockfd_udp, (struct sockaddr*)&(con_obj->this_udp_ack_addr),socklenvar);
@@ -342,25 +381,22 @@ static void set_up_local_udp_socks(con_t* con_obj){
 
 		perror("Erro no em bind da socket udp de acknowledgements modulo de conexão!\n");
 		print_addr_aux("",&con_obj->this_udp_ack_addr);
-		close_con(con_obj);
-		exit(-1);
+		raise(SIGINT);
 
 	}
 }
 
 static void greet_server(con_t* con_obj, int_pair pair,int_pair holepunching_times_pair){
 
-	ask_for_ports(con_obj);
-	reserve_local_listening_port(&con_obj->port_mapper_addr,con_obj->listen_port);
- 	char client_data[DEF_DATASIZE+1];
+	char client_data[DEF_DATASIZE+1];
 	memset(client_data,0,DEF_DATASIZE+1);
 	con_read_tcp(con_obj,pair);
 
-	sscanf((char*)con_obj->tcp_data,"%s %hu %hu",(char*)client_data,&con_obj->udp_data_peer_port,&con_obj->udp_ack_peer_port);
+	sscanf((char*)con_obj->tcp_data,"%s %hu %hu %hu",(char*)client_data,&con_obj->tcp_data_peer_port,&con_obj->udp_data_peer_port,&con_obj->udp_ack_peer_port);
 
-	printf("Triplo recebido: (string, port, port) = (%s, %hu, %hu)\n",client_data,con_obj->udp_data_peer_port,con_obj->udp_ack_peer_port);
+	printf("Quatruplo recebido: (string, port, port, port) = (%s, %hu, %hu, %hu)\n",client_data,con_obj->tcp_data_peer_port,con_obj->udp_data_peer_port,con_obj->udp_ack_peer_port);
 	clear_con_data(con_obj);
-
+	
 	int result=strs_are_strictly_equal(CON_STRING,client_data);
 	
 	if(result){
@@ -368,7 +404,10 @@ static void greet_server(con_t* con_obj, int_pair pair,int_pair holepunching_tim
 		printf("String de conexão errada recebida! Recebemos \"%s\" do cliente!",client_data);
 		raise(SIGINT);
 	}
-	
+	set_up_peer_udp_socks(con_obj);
+
+	ask_for_ports(con_obj);
+
 	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%hu %hu %hu",(uint16_t)(con_obj->tcp_data_local_port),(uint16_t)(con_obj->udp_data_local_port),(uint16_t)(con_obj->udp_ack_local_port));
 
 	printf("Portas enviadas: %s\n",(char*)con_obj->tcp_data);
@@ -378,8 +417,7 @@ static void greet_server(con_t* con_obj, int_pair pair,int_pair holepunching_tim
 	clear_con_data(con_obj);
 
 	set_up_local_udp_socks(con_obj);
-	set_up_peer_udp_socks(con_obj);
-
+	
 	printf("Server greet sucesfull so far!\nWaiting for client to initiate hole punching routines!\n");
 	printf("A receber UDP primeiro pela pipeline de dados!\n");
 	clear_con_data(con_obj);
@@ -414,12 +452,11 @@ static void greet_server(con_t* con_obj, int_pair pair,int_pair holepunching_tim
 static void greet_client(con_t* con_obj,int_pair pair,int_pair holepunching_times_pair){
 	
 	
-	//reserve_local_listening_port(&con_obj->port_mapper_addr,con_obj->listen_port);
  	
 	ask_for_ports(con_obj);
 	set_up_local_udp_socks(con_obj);
 
-	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%s %hu %hu",CON_STRING,(uint16_t)(con_obj->udp_data_local_port),(uint16_t)(con_obj->udp_ack_local_port));
+	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%s %hu %hu %hu",CON_STRING,(uint16_t)(con_obj->tcp_data_local_port),(uint16_t)(con_obj->udp_data_local_port),(uint16_t)(con_obj->udp_ack_local_port));
 
 	printf("String enviada %s\n",(char*)con_obj->tcp_data);
 

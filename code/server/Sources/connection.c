@@ -82,12 +82,12 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				
 				sscanf((char*)server_con_obj.udp_data,"%s %s",req_buff,file_name);
 				
-				printf("Buff recebido: %s\n",server_con_obj.udp_data);
+				printf("Buff recebido:\n\"%s\"\n",server_con_obj.udp_data);
 				
 				clear_con_data(&server_con_obj);
 
 
-			        snprintf((char*)hp_udp_buff,2*DEF_DATASIZE-1,"Buff recebido: %s\n",(char*)server_con_obj.udp_data);
+			        snprintf((char*)hp_udp_buff,2*DEF_DATASIZE-1,"Buff recebido:\n\"%s\"\n",(char*)server_con_obj.udp_data);
 
 				
 
@@ -97,8 +97,8 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 
 				con_read_udp_ack(&server_con_obj,server_data_times_pair);
 
-				snprintf((char*)hp_udp_ack_buff,2*DEF_DATASIZE-1,"Buff recebido (TEST UDP ACK): %s\n",(char*)server_con_obj.ack_udp_data);
-				printf("Result from TEST UDP ACK: \"%s\"\n",hp_udp_ack_buff);
+				snprintf((char*)hp_udp_ack_buff,2*DEF_DATASIZE-1,"Buff recebido (TEST UDP ACK):\n\"%s\"\n",(char*)server_con_obj.ack_udp_data);
+				printf("Result from TEST UDP ACK:\n\"%s\"\n",hp_udp_ack_buff);
 			        
 
 				con_send_udp_ack(&server_con_obj,server_data_times_pair);
@@ -129,7 +129,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						snprintf(file_path,sizeof(file_path)-1,"%s",TMP_CONFIG_FILE_PATH);
 						break;
 					default:
-						printf(UNKNOWN_REQ);
+						printf(UNKNOWN_REQ,req_buff);
 						raise(SIGINT);
 				}
 				clear_con_data(&server_con_obj);

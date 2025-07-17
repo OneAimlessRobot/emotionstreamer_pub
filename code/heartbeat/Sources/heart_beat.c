@@ -41,11 +41,11 @@ static void close_all_fds_here(void){
 }
 
 static void sigint_handler(int useless){
-	struct sockaddr_in addr={0};
+	struct sockaddr_in addr_buff={0};
 	closeDB();
 	close(arg_a.accept_sockfd);
 	if(acess_var_mtx(&hb_mtx,&is_on,0,V_LOOK)){
-		unreserve_local_listening_port(&addr,heartbeat_ip_cache_entry.port);
+		unreserve_local_listening_port(&addr_buff,heartbeat_ip_cache_entry.port);
 		acess_var_mtx(&hb_mtx,&is_on,0*useless,V_SET);
 		close_all_fds_here();
 		perror("Saindo do heart beat server!!!!\n");
@@ -92,9 +92,10 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
 	init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port);
 	init_addr(&arg_s.this_addr,ent_this->hostname,ent_this->port);
+	init_addr(&arg_s.this_con_addr,ent_this->hostname,ent_this->port+1);
 
 
-	init_module_tcp_stuff(&arg_a.accept_sockfd,ent_this->hostname,ent_this->port,&arg_a.accept_addr,SIGPIPE,MAX_SERVERS);
+	init_module_tcp_stuff(&arg_a.accept_sockfd,ent_this->hostname,ent_this->port,&arg_a.accept_addr,SIGPIPE,MAX_SERVERS,0);
 
 	memcpy(&arg_s.this_addr,&arg_a.accept_addr,sizeof(struct sockaddr_in));
 

@@ -26,6 +26,7 @@ typedef struct slave_args{
 	char* conf_str,
 		*lower_name;
 	struct sockaddr_in this_addr,
+		this_con_addr,
 		master_addr;
 	uint16_t exit_signal;
 	uint64_t ack_timeout_lim;
@@ -81,7 +82,7 @@ typedef struct acceptor_args{
 void init_con_set(con_set* set,con_t* con_buff,int* timeout_buff,int* fd_buff,int max_size,pthread_mutex_t* mtx,pthread_cond_t* cond);
 void close_all_fds(con_set* set);
 void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff);
-void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected);
+void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper);
 
 
 void* slave_thread(void* args);

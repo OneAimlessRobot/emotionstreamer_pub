@@ -20,7 +20,7 @@ stream_cmd str_to_stream_cmd(char* str);
 void stream_cmd_to_str(stream_cmd type,char buff[]);
 
 
-#define UNKNOWN_REQ "Request desconhecido: Requests válidos são:\npeek- Ver musicas no server.\nplay- tocar um ficheiro do server.\ndown- transferir um ficheiro do server\n"
+#define UNKNOWN_REQ "Request desconhecido: \"%s\"\nRequests válidos são:\npeek- Ver musicas no server.\nplay- tocar um ficheiro do server.\ndown- transferir um ficheiro do server\n"
 
 
 

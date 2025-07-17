@@ -37,17 +37,19 @@ static void stop_server_stream(server_stream_t* strm){
 	if(acess_var_mtx(&variable_acess_mtx,&strm->initted,0,V_LOOK)){
         	acess_var_mtx(&variable_acess_mtx,&strm->initted,0,V_SET);
 		close(strm->local_fd);
-		close_con(strm->con_obj);
 		pthread_cond_signal(&running_cond);
 	}
 	
 }
 
 static void cleanup(int useless){
-	
+
+	struct sockaddr_in addr_buff={0};
 	stop_server_stream(&stream_struct + (0*useless));
-
-
+	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
+		unreserve_local_listening_port(&addr_buff,server_ip_cache_entry.port+1);
+		close_con(stream_struct.con_obj);
+	}
 }
 static int send_chunk_tcp(server_stream_t* strm,int_pair pair){
 

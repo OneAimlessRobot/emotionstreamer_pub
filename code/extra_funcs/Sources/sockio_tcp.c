@@ -24,7 +24,7 @@ int sendsome(int sd,char buff[],u_int64_t size,int_pair times){
 		else{
 		if(logging){
 
-		fprintf(logstream, "SELECT ERROR!!!!! SEND\n");
+		fprintf(logstream, "SELECT ERROR!!!!! SEND\n%s\n",strerror(errno));
 		}
 		return -1;
 		}
@@ -110,7 +110,7 @@ int readsome(int sd,char buff[],u_int64_t size,int_pair times){
 		else{
 		if(logging){
 
-		fprintf(logstream, "SELECT ERROR!!!!! READ\n");
+		fprintf(logstream, "SELECT ERROR!!!!! READ\n%s\n",strerror(errno));
 		}
 		return -1;
 		}
