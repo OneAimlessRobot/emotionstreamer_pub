@@ -83,7 +83,7 @@ static void send_ports_back(con_t* obj){
 void close_con(con_t* con_obj){
 	
 	if(con_obj->is_on){
-		send_ports_back(con_obj);
+		//send_ports_back(con_obj);
 		close(con_obj->sockfd_tcp);
 		close(con_obj->sockfd_udp);
 		close(con_obj->ack_sockfd_udp);
