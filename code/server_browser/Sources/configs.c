@@ -72,20 +72,19 @@ void read_values_cfg_browser(void){
         }
         sscanf(curr_line_buff,"browser_timeouts_holepunching: %lu %lu",&browser_holepunching_times_pair[0],&browser_holepunching_times_pair[1]);
         clean_buff();
-
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 fclose(cfg_fp);
                 raise(SIGINT);
         }
-        sscanf(curr_line_buff,"server_browser_ip_address: %s",server_browser_ip_buff);
+        sscanf(curr_line_buff,"server_browser_port_mapper_ip_address: %s",server_browser_port_mapper_ip_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 fclose(cfg_fp);
                 raise(SIGINT);
         }
-        sscanf(curr_line_buff,"server_browser_port_mapper_ip_address: %s",server_browser_port_mapper_ip_buff);
+        sscanf(curr_line_buff,"server_browser_ip_address: %s",server_browser_ip_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 

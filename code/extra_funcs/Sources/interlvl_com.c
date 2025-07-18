@@ -486,6 +486,7 @@ void* acceptor_func(void* args){
                                         clear_con_data(&con);
                                         snprintf((char*)con.udp_data,DEF_DATASIZE-1,"done");
                                         result=con_send_udp(&con,arg_a->data_times_pair);
+                                        send_ports_back(&con);
                                         close_con(&con);
                                         break;
 
@@ -501,6 +502,7 @@ void* acceptor_func(void* args){
 
 					printf("Anyways....\n....\n....\nShow servers requested!!!!\n");
                                         show_servers(&con,arg_a->data_times_pair);
+                                        send_ports_back(&con);
                                         close_con(&con);
                                         break;
                                 case LOG:

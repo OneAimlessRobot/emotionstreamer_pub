@@ -18,6 +18,8 @@ static con_t con_obj={0};
 static void sigint_handler(int useless){
 
 	perror("Saimos do server browser!!!!\n");
+	send_ports_back(&con_obj);
+	send_port_back(htons(our_addr.sin_port),&server_browser_port_mapper_ip_cache_entry);
 	close_con(&con_obj);
 	exit(useless);
 	
