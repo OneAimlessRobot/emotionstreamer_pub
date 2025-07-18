@@ -7,4 +7,4 @@ u_int64_t logging=0;
 
 char curr_dir[PATHSIZE]={0};
 
-socklen_t socklenvar[1]= {sizeof(struct sockaddr)};
+socklen_t socklenvar[2]= {sizeof(struct sockaddr),sizeof(struct sockaddr_in)};

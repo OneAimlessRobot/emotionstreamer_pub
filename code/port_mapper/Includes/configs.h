@@ -6,7 +6,6 @@
 extern uint16_t cfg_num_ports,
 		cfg_init_port;
 
-extern int_pair port_mapper_times_pair;
 
 extern ip_cache_entry port_mapper_ip_cache_entry;
 

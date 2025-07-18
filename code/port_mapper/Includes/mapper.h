@@ -1,6 +1,8 @@
 #ifndef MAPPER_H
 #define MAPPER_H
 
+#define PORT_MAPPER_AWKWARD_JOIN_STRING "c-can_i_j-...j--_erm--"
+#define PORT_MAPPER_AWKWARD_LEAVE_STRING "ok--_okay,_bye!"
 #define PORT_MAPPER_JOIN_STRING "hey!_lemme_in!!!!"
 #define PORT_MAPPER_JOIN_DID_YOU_GET_IT_STRING "Broooooooooo!!!!_be_welcooome!!!"
 #define PORT_MAPPER_JOIN_GOT_IT_STRING "\"thx_FRIENNND!!!!!!!\""

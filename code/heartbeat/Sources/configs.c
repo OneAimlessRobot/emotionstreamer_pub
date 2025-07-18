@@ -1,7 +1,7 @@
 #include "../../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/sockio.h"
-#include "../../extra_funcs/Includes/connection.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/configs.h"
 #include "../Includes/heart_beat.h"
 
@@ -14,6 +14,7 @@ static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
 static char heartbeat_ip_address_buff[PATHSIZE+1]={0};
+static char heartbeat_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 static char upper_ip_address_buff[PATHSIZE+1]={0};
 
 char generalized_config_filepath_buff[PATHSIZE+1]={0};
@@ -21,6 +22,7 @@ char generalized_config_filepath_buff[PATHSIZE+1]={0};
 
 ip_cache_entry heartbeat_ip_cache_entry={{0},0};
 ip_cache_entry upper_ip_cache_entry={{0},0};
+ip_cache_entry heartbeat_port_mapper_ip_entry={{0},0};
 
 //EM BYTES E HZ!
 
@@ -34,6 +36,7 @@ static void process_ip_cache_entries(void){
 
 	parse_ip_cache_entry(heartbeat_ip_address_buff,&heartbeat_ip_cache_entry);
 	parse_ip_cache_entry(upper_ip_address_buff,&upper_ip_cache_entry);
+	parse_ip_cache_entry(heartbeat_port_mapper_ip_address_buff,&heartbeat_port_mapper_ip_entry);
 
 }
 
@@ -98,7 +101,16 @@ void read_values_cfg_hb(void){
                 fclose(cfg_fp);
                 raise(SIGINT);
         }
+//heartbeat_port_mapper_ip_address_buff
         sscanf(curr_line_buff,"upper_server_ip_address: %s",upper_ip_address_buff);
+        clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
+//
+        sscanf(curr_line_buff,"heartbeat_port_mapper_ip_address: %s",heartbeat_port_mapper_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -129,6 +141,8 @@ void print_values_cfg_hb(int fd){
 	print_ip_cache_entry(stdout,&heartbeat_ip_cache_entry);
 
 	print_ip_cache_entry(stdout,&upper_ip_cache_entry);
+
+	print_ip_cache_entry(stdout,&heartbeat_port_mapper_ip_entry);
 
 	
 }

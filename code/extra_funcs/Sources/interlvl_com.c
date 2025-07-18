@@ -66,8 +66,11 @@ void* slave_thread(void* args){
 
         int ptr=1;
         setsockopt(arg_struct->con_obj->sockfd_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
+        uint16_t port=0;
+        ask_for_port(&port,&arg_struct->slave_port_mapper_ip_cache_entry);
+	init_addr(&arg_struct->this_con_addr,arg_struct->slave_ip_cache_entry.hostname,port);
 
-        if(bind(arg_struct->con_obj->sockfd_tcp,(struct sockaddr *)&arg_struct->this_con_addr,*socklenvar)){
+        if(bind(arg_struct->con_obj->sockfd_tcp,(struct sockaddr *)&arg_struct->this_con_addr,socklenvar[1])){
 
                 perror("Não conseguimos dar bind na socket do client!!!\n");
                 print_addr_aux("Este é o address:",&arg_struct->this_con_addr);
@@ -85,12 +88,10 @@ void* slave_thread(void* args){
                 raise(arg_struct->exit_signal);
         }
 	
-        struct sockaddr_in addr_struct={0};
-        reserve_local_listening_port(&addr_struct,ntohs(arg_struct->this_con_addr.sin_port));
 
         print_addr_aux("Addr atual do server:",&arg_struct->this_addr);
 
-        init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,arg_struct->con_obj->this_tcp_addr.sin_port);
+        init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,arg_struct->this_con_addr.sin_port,&arg_struct->slave_port_mapper_ip_cache_entry);
 
 	char ent_addr[PATHSIZE/8]={0};
 
@@ -162,7 +163,7 @@ void* slave_thread(void* args){
                 usleep(arg_struct->sleep_us);
 
         }
-        unreserve_local_listening_port(&addr_struct,ntohs(arg_struct->this_con_addr.sin_port));
+        send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
 	pthread_mutex_lock(arg_struct->con_mtx);
 	close_con(arg_struct->con_obj);
 	pthread_mutex_unlock(arg_struct->con_mtx);
@@ -172,26 +173,40 @@ void* slave_thread(void* args){
 
 
 }
-void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper){
+void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper,ip_cache_entry* port_mapper_cache_entry){
 
 
-        (*sockptr)= socket(AF_INET,SOCK_STREAM,0);
+        (*sockptr)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
         if((*sockptr)==-1){
+		perror("Erro a criar socket em socket listening!!!\n");
                 raise(exit_signal);
+		exit(-1);
 
         }
         int ptr=1;
-        setsockopt((*sockptr),SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
-        init_addr(sockaddr_buff,addr,tcp_s_port);
-        if(bind(*sockptr,(struct sockaddr*)(sockaddr_buff),*socklenvar)){
-                raise(exit_signal);
-                exit(-1);
+	setsockopt((*sockptr),SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
+	uint16_t port=tcp_s_port;
+	struct sockaddr_in sockaddr_buff_local={0};
+        if(!is_port_mapper){
+ 		ask_for_port(&port,port_mapper_cache_entry);
+        	init_addr(&sockaddr_buff_local,addr,port);
+	}
+	else{
+
+        	init_addr(&sockaddr_buff_local,addr,port);
+	}
+	
+	if(bind(*sockptr,(struct sockaddr*)(&sockaddr_buff_local),socklenvar[1])){
+                perror("Erro a dar bind em socket de listening!!!\n");
+		print_addr_aux("Address em questão:",&sockaddr_buff_local);
+		raise(exit_signal);
+		exit(-1);
         }
-	if(!is_port_mapper){
-		struct sockaddr_in addr_struct={0};
-	        reserve_local_listening_port(&addr_struct,tcp_s_port);
+	else{
+		print_addr_aux("Sucesso a dar bind!\nAddress em questão:",&sockaddr_buff_local);
 	}
         listen(*sockptr,max_connected);
+	memcpy(sockaddr_buff,&sockaddr_buff_local,sizeof(struct sockaddr_in));
         printf("Listening e bindado!!!\n");
         print_sock_addr(*sockptr);
 
@@ -417,7 +432,7 @@ void* acceptor_func(void* args){
                         if(sock>=0){
                               printf("Connection accepted!\nA nossa port é: %d\n",curr_port);
                               setNonBlocking(sock);
-                              init_con(&con,sock,SERVER_C,curr_port);
+                              init_con(&con,sock,SERVER_C,curr_port,&arg_a->acceptor_port_mapper_ip_cache_entry);
                               uint16_t stored_port=0;
                               greet(&con,arg_a->con_times_pair,arg_a->holepunching_times_pair);
                               clear_con_data(&con);
@@ -512,8 +527,7 @@ void* acceptor_func(void* args){
 
 
         }
-	struct sockaddr_in addr={0};
-        unreserve_local_listening_port(&addr,curr_port);
+        send_port_back(curr_port,&arg_a->acceptor_port_mapper_ip_cache_entry);
         printf("Saimos do thread de heart_beat_master!!!!\n");
 
 

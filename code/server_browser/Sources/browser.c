@@ -3,8 +3,8 @@
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
-#include "../../extra_funcs/Includes/connection.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/interlvl_proto.h"
 #include "../Includes/browser.h"
@@ -111,7 +111,23 @@ void init_browser(char* hostname, char* req,uint16_t port){
 
         init_addr(&hb_server_addr,hostname,port);
 
-        print_addr_aux("Addr atual do server de heartbeat:",&hb_server_addr);
+	uint16_t port_for_us=0;
+	ask_for_port(&port_for_us,&server_browser_port_mapper_ip_cache_entry);
+	init_addr(&our_addr,server_browser_port_mapper_ip_cache_entry.hostname,port_for_us);
+
+	if(bind(con_obj.sockfd_tcp,(struct sockaddr *)&our_addr,socklenvar[1])){
+
+	    perror("Não conseguimos dar bind na socket do client!!!\n");
+	    print_addr_aux("Este é o address:",&our_addr);
+	    raise(SIGINT);
+
+	}
+	else{
+
+	    print_addr_aux("Bind com sucesso!!!:",&our_addr);
+	}
+
+	print_addr_aux("Addr atual do server de heartbeat:",&hb_server_addr);
 
         if(!tryConnect(&tcp_sock,browser_con_times_pair,&hb_server_addr)){
 
@@ -119,7 +135,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
                 raise(SIGINT);
         }
 
-        init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port);
+        init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry);
 
 
         getsockname(tcp_sock,(struct sockaddr*)&our_addr,socklenvar);

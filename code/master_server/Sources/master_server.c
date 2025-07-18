@@ -3,9 +3,9 @@
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
+#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../../extra_funcs/Includes/interlvl_com.h"
-#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/server_db_driving.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/interlvl_proto.h"
@@ -32,13 +32,12 @@ static void close_all_fds_here(void){
 }
 
 static void sigint_handler(int useless){
-	struct sockaddr_in addr_buff={0};
 	closeDB();
 	close(arg_a.accept_sockfd);
 	if(acess_var_mtx(&master_mtx,&is_on,0,V_LOOK)){
-		unreserve_local_listening_port(&addr_buff,master_ip_cache_entry.port);
-        	acess_var_mtx(&master_mtx,&is_on,0*useless,V_SET);
-                close_all_fds_here();
+		acess_var_mtx(&master_mtx,&is_on,0*useless,V_SET);
+                send_port_back(htons(arg_a.accept_addr.sin_port),&master_server_port_mapper_ip_cache_entry);
+		close_all_fds_here();
                 perror("Saindo do heart beat server!!!!\n");
         }
         else{
@@ -74,10 +73,11 @@ void start_master(char* hostname, uint16_t port){
 
         con_set set={0};
 
-        init_addr(&arg_a.accept_addr,hostname,port);
 
 
-        init_module_tcp_stuff(&arg_a.accept_sockfd,hostname,port,&arg_a.accept_addr,SIGPIPE,MAX_HB_SERVERS,0);
+	memcpy(&arg_a.acceptor_port_mapper_ip_cache_entry,&master_server_port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
+
+        init_module_tcp_stuff(&arg_a.accept_sockfd,hostname,port,&arg_a.accept_addr,SIGPIPE,MAX_HB_SERVERS,0,&arg_a.acceptor_port_mapper_ip_cache_entry);
 
         is_on=1;
         arg_a.is_on=&is_on;

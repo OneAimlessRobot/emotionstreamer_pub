@@ -42,6 +42,9 @@ typedef struct slave_args{
 	pthread_cond_t* trg_cond;
 	module_type type;
 	char* extension_buff;
+	ip_cache_entry slave_port_mapper_ip_cache_entry;
+	ip_cache_entry slave_ip_cache_entry;
+
 }slave_args;
 
 
@@ -76,13 +79,14 @@ typedef struct acceptor_args{
 	pthread_mutex_t * var_mtx;
 	struct overseer_args* arg_o;
 	struct slave_args* arg_s;
+	ip_cache_entry acceptor_port_mapper_ip_cache_entry;
 
 }acceptor_args;
 
 void init_con_set(con_set* set,con_t* con_buff,int* timeout_buff,int* fd_buff,int max_size,pthread_mutex_t* mtx,pthread_cond_t* cond);
 void close_all_fds(con_set* set);
 void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff);
-void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper);
+void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper,ip_cache_entry* port_mapper_cache_entry);
 
 
 void* slave_thread(void* args);

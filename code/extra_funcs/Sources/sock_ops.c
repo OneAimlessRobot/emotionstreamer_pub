@@ -1,5 +1,6 @@
 #include "../../Includes/preprocessor.h"
 #include "../Includes/sockio.h"
+#include "../Includes/ip_cache_file.h"
 #include "../Includes/connection.h"
 #include "../Includes/sock_ops.h"
 #include "../Includes/fileshit.h"
@@ -31,13 +32,11 @@ void print_sock_addr(int socket){
 void init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 
          addr->sin_family=AF_INET;
+
          addr->sin_port= htons(port);
+	 getnameinfo((struct sockaddr*)addr,socklenvar[1],hostname_str,DEF_DATASIZE,NULL,0,0);
 
-         struct hostent* hp= gethostbyname(hostname_str);
-
-         memcpy(&(addr->sin_addr),hp->h_addr,hp->h_length);
-
-
+	print_addr_aux("ip address: ",addr);
 }
 
 int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){

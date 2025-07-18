@@ -11,10 +11,11 @@ char client_music_folder_path[PATHSIZE]={0};
 char generalized_config_filepath_buff[PATHSIZE+1]={0};
 ip_cache_entry server_ip_cache_entry={{0},0};
 ip_cache_entry client_ip_cache_entry={{0},0};
-
+ip_cache_entry client_port_mapper_ip_cache_entry={{0},0};//
 
 char server_ip_address_buff[PATHSIZE+1]={0};
 char client_ip_address_buff[PATHSIZE+1]={0};
+char client_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 
 
 //EM BYTES E HZ!
@@ -44,6 +45,7 @@ static void process_ip_cache_entries(void){
 
 	parse_ip_cache_entry(server_ip_address_buff,&server_ip_cache_entry);
 	parse_ip_cache_entry(client_ip_address_buff,&client_ip_cache_entry);
+	parse_ip_cache_entry(client_port_mapper_ip_address_buff,&client_port_mapper_ip_cache_entry);
 
 }
 
@@ -176,7 +178,16 @@ void read_values_cfg_client(void){
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
+//client_port_mapper_ip_address:
 	sscanf(curr_line_buff,"client_ip_address: %s", client_ip_address_buff);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+//
+	sscanf(curr_line_buff,"client_port_mapper_ip_address: %s", client_port_mapper_ip_address_buff);
 	clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -229,5 +240,7 @@ void print_values_cfg_client(int fd){
 	print_ip_cache_entry(stdout,&server_ip_cache_entry);
 
 	print_ip_cache_entry(stdout,&client_ip_cache_entry);
+
+	print_ip_cache_entry(stdout,&client_port_mapper_ip_cache_entry);
 
 }

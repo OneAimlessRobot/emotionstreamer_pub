@@ -35,9 +35,8 @@ static con_t client_con_obj;
 static method play_way=PLAY_PA;
 static void sigint_handler(int signal){
 
-	struct sockaddr_in addr_buff={0};
 	if(client_con_obj.is_on){
-		unreserve_local_listening_port(&addr_buff,client_ip_cache_entry.port);
+		send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
 		close_con(&client_con_obj);
 	}
 	endwin();
@@ -180,13 +179,15 @@ int clientStart(char* req_field,char* file_name){
 
 		raise(SIGINT);
 	}
-    int ptr=1;
+    	int ptr=1;
 	setsockopt(client_con_obj.sockfd_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
 	init_addr(&server_ip_address,server_ip_cache_entry.hostname,server_ip_cache_entry.port);
 
-	init_addr(&client_ip_address,client_ip_cache_entry.hostname,client_ip_cache_entry.port);
+	uint16_t port=0;
+        ask_for_port(&port,&client_port_mapper_ip_cache_entry);
+	init_addr(&client_ip_address,client_ip_cache_entry.hostname,port);
 
-	if(bind(client_con_obj.sockfd_tcp,(struct sockaddr *)&client_ip_address,*socklenvar)){
+	if(bind(client_con_obj.sockfd_tcp,(struct sockaddr *)&client_ip_address,socklenvar[1])){
 	
 		perror("Não conseguimos dar bind na socket do client!!!\n");
 		print_addr_aux("Este é o address:",&client_ip_address);
@@ -217,10 +218,8 @@ int clientStart(char* req_field,char* file_name){
 			raise(SIGINT);
 		}
 	}
-	struct sockaddr_in addr={0};
-	reserve_local_listening_port(&addr,ntohs(client_ip_address.sin_port));
 	print_sock_addr(client_con_obj.sockfd_tcp);
-	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port);
+	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry);
 	
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	greet(&client_con_obj,client_con_times_pair,client_holepunching_times_pair);

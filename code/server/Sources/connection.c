@@ -72,7 +72,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				struct stat file_info={0};
 				char hp_udp_ack_buff[2*DEF_DATASIZE]={0};
 				char hp_udp_buff[2*DEF_DATASIZE]={0};
-				init_con(&server_con_obj,sock_tcp,SERVER_C,curr_port);
+				init_con(&server_con_obj,sock_tcp,SERVER_C,curr_port,&server_port_mapper_ip_cache_entry);
 
 				greet(&server_con_obj,server_con_times_pair,server_holepunching_times_pair);
 				

@@ -10,9 +10,11 @@ static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
 static char server_ip_address_buff[PATHSIZE+1]={0};
 static char upper_ip_address_buff[PATHSIZE+1]={0};
+static char server_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 char generalized_config_filepath_buff[PATHSIZE+1]={0};
 ip_cache_entry server_ip_cache_entry={{0},0};
 ip_cache_entry upper_ip_cache_entry={{0},0};
+ip_cache_entry server_port_mapper_ip_cache_entry={{0},0};
 
 char server_music_folder_path[PATHSIZE]={0};
 
@@ -41,6 +43,7 @@ static void process_ip_cache_entries(void){
 
         parse_ip_cache_entry(server_ip_address_buff,&server_ip_cache_entry);
         parse_ip_cache_entry(upper_ip_address_buff,&upper_ip_cache_entry);
+        parse_ip_cache_entry(server_port_mapper_ip_address_buff,&server_port_mapper_ip_cache_entry);
 
 }
 
@@ -144,6 +147,13 @@ void read_values_cfg_server(void){
                 fclose(cfg_fp);
                 raise(SIGINT);
         }
+        sscanf(curr_line_buff,"server_port_mapper_ip_address: %s",server_port_mapper_ip_address_buff);
+        clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
         sscanf(curr_line_buff,"generalized_config_filepath: %s",generalized_config_filepath_buff);
         clean_buff();
         fclose(cfg_fp);
@@ -192,6 +202,8 @@ void print_values_cfg_server(int fd){
 	print_ip_cache_entry(stdout,&server_ip_cache_entry);
 
 	print_ip_cache_entry(stdout,&upper_ip_cache_entry);
+
+	print_ip_cache_entry(stdout,&server_port_mapper_ip_cache_entry);
 
 
 

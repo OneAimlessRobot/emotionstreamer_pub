@@ -7,13 +7,9 @@
 static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
-static char cfg_full_file_path[PATHSIZE*3+1]={0};
-
-char port_remapper_ip_address[PATHSIZE]={0};
-
-ip_cache_entry port_mapper_entry={{0},0};
-
 int_pair port_mapper_times_pair={REMAPPER_TIMEOUT_CON_SEC,REMAPPER_TIMEOUT_CON_USEC};
+
+static char cfg_full_file_path[PATHSIZE*3+1]={0};
 
 static void clean_buff(void){
 
@@ -21,11 +17,6 @@ static void clean_buff(void){
 
 }
 
-static void process_ip_cache_entries(void){
-
-        parse_ip_cache_entry(port_remapper_ip_address,&port_mapper_entry);
-
-}
 
 
 static void sigint_handler(int useless){
@@ -48,19 +39,9 @@ void parse_generalized_cfg(char* dir_path){
                 fclose(cfg_fp);
                 raise(SIGINT);
         }
-        sscanf(curr_line_buff,"port_remapper_ip_address: %s",port_remapper_ip_address);
- 	clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                fclose(cfg_fp);
-                raise(SIGINT);
-        }
         sscanf(curr_line_buff,"port_mapper_timeouts_con: %lu %lu",&port_mapper_times_pair[0],&port_mapper_times_pair[1]);
         clean_buff();
-
         fclose(cfg_fp);
-	
-        process_ip_cache_entries();
 
 
 }
@@ -68,7 +49,5 @@ void parse_generalized_cfg(char* dir_path){
 void print_values_generalized_cfg(int fd){
 
 	dprintf(fd,"port_mapper_timeouts_con: %lus %lu us\n",port_mapper_times_pair[0],port_mapper_times_pair[1]);
-
-        print_ip_cache_entry(stdout,&port_mapper_entry);
 
 }

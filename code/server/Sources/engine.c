@@ -25,12 +25,11 @@ static pthread_cond_t eng_cond=PTHREAD_COND_INITIALIZER;
 static int started=0;
 
 static void serverStop(int useless){
-	struct sockaddr_in addr_buff={0};
 	perror("Sinal de parar server\n");
 	close(state.server_sock_tcp);
 	if(acess_var_mtx(&hb_mtx,&state.server_is_on,0,V_LOOK)){
-		unreserve_local_listening_port(&addr_buff,curr_port);
 		acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
+		send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
 		pthread_mutex_lock(&con_mtx);
 		close_con(&state.hb_con);
 		pthread_mutex_unlock(&con_mtx);
@@ -90,7 +89,6 @@ static int con_accepting_loop(void){
 							signal(SIGINT,conStop);
 							signal(SIGPIPE,conStop);
 							raise(SIGINT);
-							close_con(&state.hb_con);
 							con_go(sock,curr_port);
 							return 0;
 						case -1:
@@ -139,15 +137,16 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 		printf("Launched in '.wav' mode!!!\n");
 	}
 
+	slave_args arg_s={0};
 	curr_port=ent_this->port;
 	logging=1;
 	logstream=stderr;
 	memset(&state,0,sizeof(server_state));
 	state.name=buff;
-	init_module_tcp_stuff(&state.server_sock_tcp,ent_this->hostname,ent_this->port,&state.server_tcp_addr,SIGTERM,MAX_CLIENTS_HARD_LIMIT,0);
-	
-	slave_args arg_s={0};
-	
+	memcpy(&arg_s.slave_port_mapper_ip_cache_entry,&server_port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
+	memcpy(&arg_s.slave_ip_cache_entry,ent_this,sizeof(ip_cache_entry));
+	init_module_tcp_stuff(&state.server_sock_tcp,ent_this->hostname,ent_this->port,&state.server_tcp_addr,SIGTERM,MAX_CLIENTS_HARD_LIMIT,0,&arg_s.slave_port_mapper_ip_cache_entry);
+
 
 	arg_s.lower_name=buff;
 	arg_s.exit_signal=SIGTERM;
@@ -164,11 +163,10 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	
 	init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port);
 	init_addr(&arg_s.this_addr,ent_this->hostname,ent_this->port);
-	init_addr(&arg_s.this_con_addr,ent_this->hostname,ent_this->port+1);
 	memcpy(&arg_s.con_times_pair,&server_con_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.data_times_pair,&server_data_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.holepunching_times_pair,&server_holepunching_times_pair,sizeof(int_pair));
-
+	
 
 	state.server_is_on=1;
 	started=0;

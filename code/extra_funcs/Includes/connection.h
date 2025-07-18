@@ -31,6 +31,7 @@ typedef struct con_t{
 		tcp_data_peer_port,
 		udp_ack_peer_port;
 	 uint16_t listen_port; //if launched within a server of some variety;
+	 ip_cache_entry port_mapper_entry;
 	 con_type type;
 	 
 }con_t;
@@ -40,7 +41,7 @@ typedef struct con_t{
 
 //DOES NOT FREE OR INITIALIZE THE BUFFS YOU GIVE IT!
 
-void init_con(con_t* con_obj, int sockfd_tcp,con_type type,uint16_t listen_port);
+void init_con(con_t* con_obj, int sockfd_tcp,con_type type,uint16_t listen_port,ip_cache_entry* ent);
 
 void close_con(con_t* con_obj);
 
@@ -61,9 +62,13 @@ void clear_con_data(con_t* con_obj);
 
 void drop_peer_con(con_t* con_obj);
 
-void reserve_local_listening_port(struct sockaddr_in* sockaddr,uint16_t port_to_allocate);
+void ask_for_port(uint16_t* port,ip_cache_entry* ent);
 
-void unreserve_local_listening_port(struct sockaddr_in* sockaddr,uint16_t port_to_allocate);
+void send_port_back(uint16_t port,ip_cache_entry* ent);
+
+void reserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry *ent);
+
+void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry*ent);
 
 void greet(con_t*con_obj,int_pair times_pair, int_pair holepunching_times_pair);
 #endif

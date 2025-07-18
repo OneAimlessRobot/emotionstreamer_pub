@@ -15,6 +15,7 @@
 #define CLIENT_ACK_TIMEOUT_LIM 8
 
 extern ip_cache_entry server_ip_cache_entry,
+		client_port_mapper_ip_cache_entry,
 		client_ip_cache_entry;
 
 extern u_int64_t

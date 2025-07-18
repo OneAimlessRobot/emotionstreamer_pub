@@ -1,5 +1,6 @@
 #include "../../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../../sqlite-src-3500200/sqlite3.h"
 #include "../Includes/server_db_driving.h"

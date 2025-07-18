@@ -5,9 +5,9 @@
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
+#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../../extra_funcs/Includes/interlvl_com.h"
-#include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/mapper.h"
 #include "../Includes/configs.h"
@@ -86,6 +86,19 @@ static void close_ports(int arr[NUM_PORTS_TO_GIVE+1]){
 
 
 }
+static int close_single_port(int port){
+
+	if(!is_empty()){
+		if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_LOOK)==PORT_ALLOCATED){
+			acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_SET);
+			acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)-1,V_SET);
+			return 1;
+		}
+	}
+	return 0;
+
+
+}
 static int fetch_ports_to_give(int arr[NUM_PORTS_TO_GIVE+1],int actually_change){
 
 	int init=cfg_init_port;
@@ -111,6 +124,26 @@ static int fetch_ports_to_give(int arr[NUM_PORTS_TO_GIVE+1],int actually_change)
 	}
 	return (arr[0]!=NUM_PORTS_TO_GIVE);
 
+
+}
+static int fetch_single_port_to_give(int* port,int actually_change){
+
+	int init=cfg_init_port;
+	int curr=cfg_init_port;
+	int final=cfg_init_port+cfg_num_ports;
+	if(!is_no_more_room()){
+		for(curr=init;(curr<final);curr++){
+			if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[curr-init]),0,V_LOOK)==PORT_FREE){
+				port[0]=(uint16_t)curr;
+				acess_var_mtx(&variable_mtx,&(mapper.port_arr[curr-init]),1*actually_change,actually_change?V_SET:V_LOOK);
+				acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)+(1*actually_change),actually_change?V_SET:V_LOOK);
+				return 1;
+			}
+
+		}
+	}
+	
+	return 0;
 
 }
 static int reserve_port(int port){
@@ -150,8 +183,7 @@ static void port_mapper_print(int fd){
 
 	char buff[4096+cfg_num_ports+4096];
 	memset(buff,0,4096+cfg_num_ports+4096);
-	char* ptr=buff,*prev_ptr;
-	prev_ptr=ptr;
+	char* ptr=buff;
 	ptr+=snprintf(ptr,sizeof(buff),"Aqui está o estado atual do port mapper!\nPortas a fornecer: de %d a %d\n\n\n",cfg_init_port,cfg_init_port+cfg_num_ports);
 	ptr+=snprintf(ptr,sizeof(buff),"%sReservadas: 'r'\nAllocadas: 't'\nLivres: '-'\n[",ptr);
 	for(int i=0;i<cfg_num_ports;i++){
@@ -219,17 +251,17 @@ static void send_ports_to_client(int sock,int port_arr[NUM_PORTS_TO_GIVE+1]){
 
 	}
 	memset(buff_with_the_ports,0,4096);
-         result=readsome(sock,buff_with_the_ports,DEF_DATASIZE,port_mapper_times_pair);
+        result=readsome(sock,buff_with_the_ports,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
-                 fprintf(stdout,"Não conseguimos receber portas do port mapper!!!!!!\nString que recebemos: \"%s\"\n",buff_with_the_ports);
-                 close(sock);
+                 fprintf(stderr,"Não conseguimos receber portas do port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",buff_with_the_ports,strerror(errno));
+		 close(sock);
                  raise(SIGTERM);
 
         }
 	else{
-	        fprintf(stderr,"Não conseguimos receber portas do port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",buff_with_the_ports,strerror(errno));
-	}
-
+	         fprintf(stdout,"Não conseguimos receber portas do port mapper!!!!!!\nString que recebemos: \"%s\"\n",buff_with_the_ports);
+        }
+	close(sock);
 
 
 }
@@ -255,8 +287,7 @@ static void close_ports_from_client(int sock,char* ports_and_info_buff,int port_
 	sscanf(ports_and_info_buff,"%d %d",&port_arr[1],&port_arr[2]);
 	printf("Recebemos estas portas para fechar!!!\n%d e %d\n",port_arr[1],port_arr[2]);
 	close_ports(port_arr);
-
-
+	close(sock);
 
 }
 
@@ -308,6 +339,62 @@ static void reserve_client_port(int sock,char* ports_and_info_buff){
 	else{
 		printf("Reserva feita!\n");
 	}
+	close(sock);
+
+}
+static void send_single_client_port(int sock,int* port){
+	
+	char buff_with_the_ports[4096]={0};
+
+	snprintf(buff_with_the_ports,sizeof(buff_with_the_ports)-1,"%d",port[0]);
+
+	int result=sendsome(sock,buff_with_the_ports,DEF_DATASIZE,port_mapper_times_pair);
+	if(result<=0){
+
+		printf("Portas não enviadas!!! %s\n",buff_with_the_ports);
+		
+
+	}
+	else{
+
+		printf("Porta enviada!!! %s\n",buff_with_the_ports);
+
+
+	}
+	memset(buff_with_the_ports,0,4096);
+        result=readsome(sock,buff_with_the_ports,DEF_DATASIZE,port_mapper_times_pair);
+	if(result<=0){
+                 fprintf(stderr,"Não conseguimos receber porta do port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",buff_with_the_ports,strerror(errno));
+		 close(sock);
+                 raise(SIGTERM);
+
+        }
+	else{
+		fprintf(stdout,"conseguimos receber porta do port mapper!!!!!!\nString que recebemos: \"%s\"\n",buff_with_the_ports);
+                 
+	}
+
+}
+static void close_single_port_from_client(int sock,char* ports_and_info_buff,int* port){
+
+	int result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
+	if(result<=0){
+
+		printf("timeout no port mapper");
+		close(sock);
+		return;
+	}
+	memset(ports_and_info_buff,0,4096);
+	result=readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
+	if(result<=0){
+
+		printf("timeout no port mapper");
+		close(sock);
+		return;
+	}
+	sscanf(ports_and_info_buff,"%d",port);
+	printf("Recebemos esta porta para fechar!!!\n%d\n",port[0]);
+	close_single_port(port[0]);
 	close(sock);
 
 }
@@ -399,6 +486,7 @@ static void* accepted_connection_thread(void* args){
 	char request_buff[4096]={0};
 	char ports_and_info_buff[4096]={0};
 	int ports_to_work_with[NUM_PORTS_TO_GIVE+1]={0};
+	int port_to_work_with[1]={0};
 	readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
 	sscanf(ports_and_info_buff,"%s",request_buff);
 	fflush(stdout);
@@ -409,12 +497,22 @@ static void* accepted_connection_thread(void* args){
 		send_ports_to_client(sock,ports_to_work_with);
 		close(sock);
 	}
+	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_AWKWARD_JOIN_STRING)){
+
+		fetch_single_port_to_give(port_to_work_with,1);
+		send_single_client_port(sock,port_to_work_with);
+		close(sock);
+	}
 	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_RESERVE_STRING)){
 		reserve_client_port(sock,ports_and_info_buff);
 		close(sock);
 	}
 	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_LEAVE_STRING)){
 		close_ports_from_client(sock,ports_and_info_buff,ports_to_work_with);
+		close(sock);
+	}
+	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_AWKWARD_LEAVE_STRING)){
+		close_single_port_from_client(sock,ports_and_info_buff,port_to_work_with);
 		close(sock);
 	}
 	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_UNRESERVE_STRING)){
@@ -486,7 +584,7 @@ void port_mapper_init(ip_cache_entry* ent){
 
 
 	init_addr(&mapper.addr_struct, ent->hostname,ent->port);
-	init_module_tcp_stuff(&mapper.socket,ent->hostname,ent->port,&mapper.addr_struct,SIGTERM,cfg_num_ports,1);
+	init_module_tcp_stuff(&mapper.socket,ent->hostname,ent->port,&mapper.addr_struct,SIGTERM,cfg_num_ports,1,NULL);
 	mapper.running=1;
 	input_enabled=1;
         pthread_create(&input_tid,NULL,port_mapper_input_loop,NULL);

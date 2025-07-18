@@ -75,11 +75,10 @@ static void stop_client_stream(int useless){
 }
 static void sigint_handler(int useless){
 
-	struct sockaddr_in addr_buff={0};
 	printf("SIGINT! ");
 	stop_client_stream((0*useless));
         if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
-		unreserve_local_listening_port(&addr_buff,client_ip_cache_entry.port);
+		send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
 		close_con(stream_struct.con_obj);
 	}
 }
