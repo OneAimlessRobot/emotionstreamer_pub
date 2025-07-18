@@ -37,6 +37,7 @@ static void sigint_handler(int signal){
 
 	if(client_con_obj.is_on){
 		send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
+		send_ports_back(&client_con_obj);
 		close_con(&client_con_obj);
 	}
 	endwin();
@@ -146,6 +147,7 @@ int clientStart(char* req_field,char* file_name){
 	}
 	else{
 		fprintf(logstream,"Unknown media library!\n");
+		fclose(logstream);
 		exit(-1);
 	}
 	}
@@ -153,6 +155,7 @@ int clientStart(char* req_field,char* file_name){
 
 	if(the_type==NA){
 		printf(UNKNOWN_REQ,req_buff);
+		fclose(logstream);
 		exit(-1);
 	}
 	signal(SIGINT,sigint_handler);

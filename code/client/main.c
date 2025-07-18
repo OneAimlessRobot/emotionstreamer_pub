@@ -37,6 +37,7 @@ int main(int argc, char ** argv){
 	if(argc!=3){
 
 		printf("Utilizacao correta:\narg1: tipo de pedido (play ou peek. Tocar uma musica ou consultar musicas. Com Peek, Sai logo e a musica fornecida é ignorada).\narg2: Nome da musica a tocar\n arg3: <ip>:<port> do server\n");
+		fclose(logstream);
 		exit(-1);
 	}
 

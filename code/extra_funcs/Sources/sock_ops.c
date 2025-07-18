@@ -48,9 +48,9 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
                 print_addr_aux("Tentando conectar a:",dst_addr);
 		printf("(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
                 success=connect(*socket,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
-                int sockerr;
-                getsockopt(*socket,SOL_SOCKET,SO_ERROR,(char*)&sockerr,socklenvar);
-                fprintf(stderr,"Erro normal:%s\n Erro Socket%s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*socket);
+                int sockerr=0;
+                getsockopt(*socket,SOL_SOCKET,SO_ERROR,(char*)&sockerr,&socklenvar[0]);
+                fprintf(stderr,"Erro normal:%s\n Erro Socket: %s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*socket);
 		numOfTries--;
 		fd_set wfds;
                 FD_ZERO(&wfds);

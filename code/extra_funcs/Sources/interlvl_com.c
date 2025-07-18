@@ -220,7 +220,8 @@ void close_all_fds(con_set* set){
 
                         FD_CLR(set->fd_arr[i],&set->rdfds);
                         FD_ZERO(&set->rdfds);
-                        close_con(&set->con_arr[i]);
+                        send_ports_back(&set->con_arr[i]);
+			close_con(&set->con_arr[i]);
                         close(set->fd_arr[i]);
                         set->curr_size--;
                         set->fd_arr[i]=0;
@@ -235,7 +236,8 @@ void close_all_fds(con_set* set){
 static void kill_con(con_set* set,int index){
 
         pthread_mutex_lock(set->set_mtx);
-        close_con(&set->con_arr[index]);
+        send_ports_back(&set->con_arr[index]);
+	close_con(&set->con_arr[index]);
         delete_server(set->fd_arr[index]);
 	memset(&set->con_arr[index],0,sizeof(con_t));
         FD_CLR(set->fd_arr[index],&set->rdfds);

@@ -32,8 +32,7 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
 	if(tmp_socket<0){
-		perror("Conexão ao port mapper mal sucedida! Abortando\n");
-		close(tmp_socket);
+		perror("Criação de socket para conectar ao port mapper para devolver porta unica mal sucedida. Abortando\n");
 		raise(SIGINT);
 	}
 
@@ -42,10 +41,13 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 	char buff_for_ports[DEF_DATASIZE+1]={0};
 
 	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&addr)){
-		
+		perror("Conexão ao port mapper para devolver porta unica mal sucedida! Abortando\n");
+		close(tmp_socket);
 		raise(SIGINT);
+		//return;
 	}
 
+	
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_AWKWARD_LEAVE_STRING);
 	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
@@ -76,12 +78,11 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 	}
 
 }
-static void send_ports_back(con_t* obj){
+void send_ports_back(con_t* obj){
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
 	if(tmp_socket<0){
-		perror("Conexão ao port mapper mal sucedida! Abortando\n");
-		close(tmp_socket);
+		perror("Criação de socket para conectar ao port mapper para devolver multiplas portas mal sucedida. Abortando\n");
 		close_con(obj);
 		raise(SIGINT);
 	}
@@ -91,9 +92,11 @@ static void send_ports_back(con_t* obj){
 	char buff_for_ports[DEF_DATASIZE+1]={0};
 
 	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&obj->port_mapper_addr)){
-		
+		perror("Conexão ao port mapper para devolver multiplas portas mal sucedida! Abortando\n");
+		close(tmp_socket);
 		close_con(obj);
 		raise(SIGINT);
+		//return;
 	}
 
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_LEAVE_STRING);
@@ -132,7 +135,6 @@ static void send_ports_back(con_t* obj){
 void close_con(con_t* con_obj){
 	
 	if(con_obj->is_on){
-		send_ports_back(con_obj);
 		close(con_obj->sockfd_tcp);
 		close(con_obj->sockfd_udp);
 		close(con_obj->ack_sockfd_udp);
@@ -200,12 +202,12 @@ int con_send_udp_ack(con_t* con_obj,int_pair pair){
 
 	return sendsome_udp(con_obj->ack_sockfd_udp,(char*)con_obj->ack_udp_data,DEF_DATASIZE,pair,&con_obj->peer_udp_ack_addr);
 }
-static void ask_for_ports(con_t* obj){
+
+void ask_for_ports(con_t* obj){
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
         if(tmp_socket<0){
-		perror("Conexão ao port mapper mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
-		close(tmp_socket);
+		perror("Conexão ao port mapper para pedir multiplas portas mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
 		close_con(obj);
 		raise(SIGINT);
 	}
@@ -214,7 +216,10 @@ static void ask_for_ports(con_t* obj){
 	int result=-1;
 	char buff_for_ports[DEF_DATASIZE+1]={0};
 	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&obj->port_mapper_addr)){
+		perror("Conexão ao port mapper para pedir multiplas portas mal sucedida! Abortando\n");
+		close(tmp_socket);
 		raise(SIGINT);
+		//return;
 	}
 
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_JOIN_STRING);
@@ -261,14 +266,15 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
         if(tmp_socket<0){
-		perror("Conexão ao port mapper mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
-		close(tmp_socket);
+		perror("Conexão ao port mapper para pedir unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
 		raise(SIGINT);
 	}
 	init_addr(&addr, ent->hostname,ent->port);
 	int result=-1;
 	char buff_for_ports[DEF_DATASIZE+1]={0};
 	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&addr)){
+		perror("Conexão ao port mapper para pedir unica porta mal sucedida! Abortando\n");
+		close(tmp_socket);
 		raise(SIGINT);
 	}
 
@@ -315,8 +321,7 @@ void reserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* ent)
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
         if(tmp_socket<0){
-		perror("Conexão ao port mapper mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
-		close(tmp_socket);
+		perror("Conexão ao port mapper para reservar unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
 		raise(SIGINT);
 	}
 
@@ -324,8 +329,10 @@ void reserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* ent)
 	int result=-1;
 	char buff_for_ports[DEF_DATASIZE+1]={0};
 	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&addr)){
+		perror("Conexão ao port mapper para reservar unica porta mal sucedida! Abortando\n");
+		close(tmp_socket);
+		return;
 
-		raise(SIGINT);
 	}
 	
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_RESERVE_STRING);
@@ -381,8 +388,7 @@ void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* en
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
         if(tmp_socket<0){
-		perror("Conexão ao port mapper mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
-		close(tmp_socket);
+		perror("Conexão ao port mapper para desreservar unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
 		raise(SIGINT);
 	}
 
@@ -391,8 +397,9 @@ void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* en
 	char buff_for_ports[DEF_DATASIZE+1]={0};
 	
 	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&addr)){
-
-		raise(SIGINT);
+		perror("Conexão ao port mapper para desreservar unica porta mal sucedida! Abortando\n");
+		close(tmp_socket);
+		return;
 	}
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_UNRESERVE_STRING);
 	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);

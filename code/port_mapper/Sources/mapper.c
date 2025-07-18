@@ -19,22 +19,14 @@ static pthread_mutex_t running_mtx=PTHREAD_MUTEX_INITIALIZER,
 
 
 static pthread_cond_t running_cond=PTHREAD_COND_INITIALIZER,
-			input_cond=PTHREAD_COND_INITIALIZER,
-			print_cond=PTHREAD_COND_INITIALIZER;
+			input_cond=PTHREAD_COND_INITIALIZER;
 
 static pthread_t input_tid=0,
 		main_tid=0;
 
 static int input_enabled=0;
 
-static port_mapper mapper={
-				NULL,
-				0,
-				0,
-				-1,
-				{0},
-				{0}
-			};
+static port_mapper mapper={NULL,0,0,-1,{0},{0}};
 
 
 
@@ -183,30 +175,29 @@ static void port_mapper_print(int fd){
 
 	char buff[4096+cfg_num_ports+4096];
 	memset(buff,0,4096+cfg_num_ports+4096);
-	char* ptr=buff;
-	ptr+=snprintf(ptr,sizeof(buff),"Aqui está o estado atual do port mapper!\nPortas a fornecer: de %d a %d\n\n\n",cfg_init_port,cfg_init_port+cfg_num_ports);
-	ptr+=snprintf(ptr,sizeof(buff),"%sReservadas: 'r'\nAllocadas: 't'\nLivres: '-'\n[",ptr);
+	char* ptr=buff,*prev_ptr;
+	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"Aqui está o estado atual do port mapper!\nPortas a fornecer: de %d a %d\n\n\n",cfg_init_port,cfg_init_port+cfg_num_ports);
+	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%sReservadas: 'r'\nAllocadas: 't'\nLivres: '-'\n[",prev_ptr);
 	for(int i=0;i<cfg_num_ports;i++){
 		int port_state=acess_var_mtx(&variable_mtx,&(mapper.port_arr[i]),0,V_LOOK);
 		ptr[i]=(port_state?((port_state>0)?'t':'r'):'-');
 
 	}
-	ptr+=cfg_num_ports;
+	prev_ptr=ptr+=cfg_num_ports;
 	int arr[NUM_PORTS_TO_GIVE+1]={0};
 	fetch_ports_to_give(arr,0);
-	ptr+=snprintf(ptr,sizeof(buff),"%s]\n\nAqui estão as portas que seriam entregadas a seguir:\nSeriam entregues %d portas!\n",ptr,arr[0]);
+	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%s]\n\nAqui estão as portas que seriam entregadas a seguir:\nSeriam entregues %d portas!\n",prev_ptr,arr[0]);
 
 	for(int i=1;i<=NUM_PORTS_TO_GIVE;i++){
-
-		ptr+=snprintf(ptr,sizeof(buff),"%s-%d\n",ptr,arr[i]);
+	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%s-%d\n",prev_ptr,arr[i]);
 
 	}
-	ptr+=snprintf(ptr,sizeof(buff),"%s\n\n"
+	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%s\n\n"
 						"\nPort mapper está a correr? %s"
 						"\nEstamos cheios? %s"
 						"\nEstamos vazios? %s"
 						"\nNumero atual de portas:%d\n\n",
-						ptr,
+						prev_ptr,
 						acess_var_mtx(&running_mtx,&mapper.running,0,V_LOOK)?"Yes!":"No...",
 						is_no_more_room()?"Yes!":"No....",
 						is_empty()?"Yes!":"No....",
@@ -228,12 +219,13 @@ static void print_help(void){
 static void send_ports_to_client(int sock,int port_arr[NUM_PORTS_TO_GIVE+1]){
 
 	char buff_with_the_ports[4096]={0};
-	char* ptr= buff_with_the_ports;
+	char* ptr= buff_with_the_ports,*prev_ptr;
+	prev_ptr=ptr;
 
 	for(int i=1;i<NUM_PORTS_TO_GIVE+1;i++){
 	
 
-		ptr+=snprintf(ptr,sizeof(buff_with_the_ports)-1,"%s %d",ptr,port_arr[i]);
+		prev_ptr=ptr+=snprintf(ptr,sizeof(buff_with_the_ports)-1,"%s %d",prev_ptr,port_arr[i]);
 
 
 	}

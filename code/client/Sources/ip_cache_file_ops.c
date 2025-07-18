@@ -55,15 +55,14 @@ static int open_ip_cache_file(void){
 
 
         }
-        close(ip_addr_cache_fd);
         if((ip_addr_cache_fd=open(PREV_ADDR_FILE_NAME_CLIENT,O_CREAT|O_RDONLY,0777))<0){
                 result=2;
                 perror("Ficheiro de cache de ips nao existe. Tentamos criar e n deu!!!!!!!!!\n");
 
         }
         if(result){
-
-                raise(SIGINT);
+                close(ip_addr_cache_fd);
+        	raise(SIGINT);
         }
 
         open_ip_addr_cache_fp("r");

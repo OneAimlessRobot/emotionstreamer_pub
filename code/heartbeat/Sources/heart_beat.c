@@ -22,6 +22,10 @@ pthread_mutex_t	master_mtx=PTHREAD_MUTEX_INITIALIZER,
 		con_mtx=PTHREAD_MUTEX_INITIALIZER,
 		hb_mtx=PTHREAD_MUTEX_INITIALIZER;
 
+pthread_mutex_t master_running_mtx=PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t master_running_cond=PTHREAD_COND_INITIALIZER;
+
+
 static int is_on=0;
 
 static con_t con_obj={0};
@@ -33,6 +37,7 @@ static void close_all_fds_here(void){
 
 	close_all_fds(arg_o.cons);
 	pthread_mutex_lock(&con_mtx);
+	send_ports_back(arg_s.con_obj);
 	close_con(arg_s.con_obj);
 	pthread_mutex_unlock(&con_mtx);
 	pthread_cond_signal(arg_o.cons->start_cond);
@@ -48,23 +53,17 @@ static void sigint_handler(int useless){
 		send_port_back(htons(arg_a.accept_addr.sin_port),&heartbeat_port_mapper_ip_entry);
 		close_all_fds_here();
 		perror("Saindo do heart beat server!!!!\n");
-		return;
+		pthread_cond_signal(&master_running_cond);
 	}
 	else{
-		exit(useless);
+		acess_var_mtx(&hb_mtx,&is_on,0*useless,V_SET);
+		pthread_cond_signal(&master_running_cond);
 	}
 }
 
 static void sigpipe_handler(int useless){
 
-	close(arg_a.accept_sockfd);
-	if(acess_var_mtx(&hb_mtx,&is_on,0,V_LOOK)){
-		sigint_handler(useless);
-		return;
-	}
-	else{
-		exit(useless);
-	}
+	sigint_handler(useless);
 }
 
 void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
@@ -152,13 +151,18 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	pthread_create(&hb_tid_master,NULL,acceptor_func,(void*)&arg_a);
 	pthread_create(&hb_tid_watchdog,NULL,watch_dog_func,(void*)&arg_o);
 
+        pthread_mutex_lock(&master_running_mtx);
+        while(acess_var_mtx(&hb_mtx,&is_on,0,V_LOOK)){
+                pthread_cond_wait(&master_running_cond,&master_running_mtx);
+        }
+        pthread_mutex_unlock(&master_running_mtx);
+
 	pthread_join(master_tid,NULL);
 	printf("Saimos do thread de replies ao master to server de heartbeat!!!!!\n");
 	pthread_join(hb_tid_master,NULL);
 	printf("Saimos do thread master do server de heartbeat!!!!!\n");
 	pthread_join(hb_tid_watchdog,NULL);
 	printf("Saimos do thread watchdog do server de heartbeat!!!!!\n");
-	closeDB();
 
 }
 

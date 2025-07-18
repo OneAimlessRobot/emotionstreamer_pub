@@ -47,6 +47,7 @@ static void cleanup(int useless){
 	stop_server_stream(&stream_struct + (0*useless));
 	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
 		send_port_back(htons(stream_struct.con_obj->tcp_data_local_port),&server_port_mapper_ip_cache_entry);
+		send_ports_back(stream_struct.con_obj);
 		close_con(stream_struct.con_obj);
 	}
 }

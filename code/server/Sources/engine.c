@@ -29,10 +29,11 @@ static void serverStop(int useless){
 	close(state.server_sock_tcp);
 	if(acess_var_mtx(&hb_mtx,&state.server_is_on,0,V_LOOK)){
 		acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
-		send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
 		pthread_mutex_lock(&con_mtx);
 		close_con(&state.hb_con);
 		pthread_mutex_unlock(&con_mtx);
+		send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
+		send_ports_back(&state.hb_con);
 	}
 	else{
 		acess_var_mtx(&eng_mtx,&started,1,V_SET);

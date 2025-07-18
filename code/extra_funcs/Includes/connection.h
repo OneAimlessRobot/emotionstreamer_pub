@@ -64,6 +64,10 @@ void drop_peer_con(con_t* con_obj);
 
 void ask_for_port(uint16_t* port,ip_cache_entry* ent);
 
+void send_ports_back(con_t* obj);
+
+void ask_for_ports(con_t* obj);
+
 void send_port_back(uint16_t port,ip_cache_entry* ent);
 
 void reserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry *ent);

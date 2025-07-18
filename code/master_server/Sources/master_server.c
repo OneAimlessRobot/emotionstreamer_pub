@@ -18,6 +18,8 @@ static acceptor_args arg_a={0};
 static overseer_args arg_o={0};
 
 pthread_mutex_t master_mtx=PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t master_running_mtx=PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t master_running_cond=PTHREAD_COND_INITIALIZER;
 
 static int is_on=0;
 
@@ -28,7 +30,7 @@ static void close_all_fds_here(void){
 
 
         close_all_fds(arg_o.cons);
-        pthread_cond_signal(arg_o.cons->start_cond);
+        pthread_cond_broadcast(arg_o.cons->start_cond);
 }
 
 static void sigint_handler(int useless){
@@ -36,24 +38,20 @@ static void sigint_handler(int useless){
 	close(arg_a.accept_sockfd);
 	if(acess_var_mtx(&master_mtx,&is_on,0,V_LOOK)){
 		acess_var_mtx(&master_mtx,&is_on,0*useless,V_SET);
+                close_all_fds_here();
                 send_port_back(htons(arg_a.accept_addr.sin_port),&master_server_port_mapper_ip_cache_entry);
-		close_all_fds_here();
-                perror("Saindo do heart beat server!!!!\n");
+		pthread_cond_signal(&master_running_cond);
+		perror("Saindo do heart beat server!!!!\n");
         }
         else{
-                exit(useless);
+		acess_var_mtx(&master_mtx,&is_on,0*useless,V_SET);
+                pthread_cond_signal(&master_running_cond);
         }
 }
 
 static void sigpipe_handler(int useless){
 
-        close(arg_a.accept_sockfd);
-	if(acess_var_mtx(&master_mtx,&is_on,0,V_LOOK)){
-                sigint_handler(useless);
-        }
-        else{
-                exit(useless);
-        }
+	sigint_handler(useless);
 }
 
 void start_master(char* hostname, uint16_t port){
@@ -115,13 +113,17 @@ void start_master(char* hostname, uint16_t port){
 
 	pthread_create(&master_tid_watchdog,NULL,watch_dog_func,(void*)&arg_o);
 
+	pthread_mutex_lock(&master_running_mtx);
+	while(acess_var_mtx(&master_mtx,&is_on,0,V_LOOK)){
+		pthread_cond_wait(&master_running_cond,&master_running_mtx);
+	}
+	pthread_mutex_unlock(&master_running_mtx);
 
 	pthread_join(master_tid_master,NULL);
 	printf("Saimos do thread principal do master server!!!!\n");
 	pthread_join(master_tid_watchdog,NULL);
 	printf("Saimos do thread watchdog do master server!!!!\n");
 
-	closeDB();
 }
 
 

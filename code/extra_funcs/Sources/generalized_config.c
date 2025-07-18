@@ -28,7 +28,7 @@ static void sigint_handler(int useless){
 void parse_generalized_cfg(char* dir_path){
 
         signal(SIGINT,sigint_handler);
-	snprintf(cfg_full_file_path,PATHSIZE+2,"%s%s%s",curr_dir,dir_path,CONFIG_FILENAME);
+	snprintf(cfg_full_file_path,PATHSIZE*3,"%s%s%s",curr_dir,dir_path,CONFIG_FILENAME);
         if(!(cfg_fp=fopen(cfg_full_file_path,"r"))){
 
                 raise(SIGINT);
