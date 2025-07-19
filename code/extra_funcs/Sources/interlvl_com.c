@@ -70,7 +70,7 @@ void* slave_thread(void* args){
         ask_for_port(&port,&arg_struct->slave_port_mapper_ip_cache_entry);
 	init_addr(&arg_struct->this_con_addr,arg_struct->slave_ip_cache_entry.hostname,port);
 
-        if(bind(arg_struct->con_obj->sockfd_tcp,(struct sockaddr *)&arg_struct->this_con_addr,socklenvar[1])){
+        if(bind(arg_struct->con_obj->sockfd_tcp,(struct sockaddr *)&arg_struct->this_con_addr,socklenvar[0])){
 
                 perror("Não conseguimos dar bind na socket do client!!!\n");
                 print_addr_aux("Este é o address:",&arg_struct->this_con_addr);
@@ -97,7 +97,10 @@ void* slave_thread(void* args){
 
 	char mod_type[PATHSIZE/8]={0};
 
-        getsockname(arg_struct->con_obj->sockfd_tcp,(struct sockaddr*)&arg_struct->con_obj->this_tcp_addr,socklenvar);
+	socklen_t socklen_in=sizeof(struct sockaddr_in),
+			socklen=sizeof(struct sockaddr);
+
+        getsockname(arg_struct->con_obj->sockfd_tcp,(struct sockaddr*)&arg_struct->con_obj->this_tcp_addr,&socklen);
 
         greet(arg_struct->con_obj,arg_struct->con_times_pair,arg_struct->holepunching_times_pair);
 
@@ -113,7 +116,7 @@ void* slave_thread(void* args){
         if(result<0){
 
 
-                perror("Nao deu para contactar server acima!!!! Nao recebeu pedido de login\n");
+                perror("Nao deu para contactar server acima!!!!\nNao recebeu o que mandamos!!!\nNao recebeu pedido de login\n");
                 raise(arg_struct->exit_signal);
 
         }
@@ -121,7 +124,7 @@ void* slave_thread(void* args){
         if(result<0){
 
 
-                perror("Nao deu para contactar server acima!!!! Nao recebeu pedido de login\n");
+                perror("Nao deu para contactar server acima!!!!\nNao recebemos deles!!!\nNao recebeu pedido de login\n");
                 raise(arg_struct->exit_signal);
 
         }
@@ -432,8 +435,18 @@ void* acceptor_func(void* args){
 			char buff_udp_hp[2*DEF_DATASIZE]={0};
                         sock= accept(arg_a->accept_sockfd,NULL,NULL);
                         if(sock>=0){
-                              printf("Connection accepted!\nA nossa port é: %d\n",curr_port);
-                              setNonBlocking(sock);
+
+			      struct sockaddr_in tmp_addr={0};
+			      socklen_t socklen_in=sizeof(struct sockaddr_in),
+					socklen=sizeof(struct sockaddr);
+
+			      getsockname(sock,(struct sockaddr*)&tmp_addr,&socklen_in);
+
+                              printf("Connection accepted!\nA nossa port de accept é: %d\n",curr_port);
+
+                              print_addr_aux("O address que nos calhou nesta socket que nos calhou é:",&tmp_addr);
+
+			      setNonBlocking(sock);
                               init_con(&con,sock,SERVER_C,curr_port,&arg_a->acceptor_port_mapper_ip_cache_entry);
                               uint16_t stored_port=0;
                               greet(&con,arg_a->con_times_pair,arg_a->holepunching_times_pair);

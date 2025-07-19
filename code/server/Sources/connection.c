@@ -23,6 +23,7 @@ int fp=-1;
 static void cleanup(int useless){
 	close(fp + (0*useless));
 	close(sock_tcp);
+	send_ports_back(&server_con_obj);
 	close_con(&server_con_obj);
 	raise(SIGTERM);
 

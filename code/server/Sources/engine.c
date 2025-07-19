@@ -163,7 +163,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	arg_s.extension_buff=extension_buff;
 	
 	init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port);
-	init_addr(&arg_s.this_addr,ent_this->hostname,ent_this->port);
+	init_addr(&arg_s.this_addr,ent_this->hostname, ntohs(state.server_tcp_addr.sin_port));
 	memcpy(&arg_s.con_times_pair,&server_con_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.data_times_pair,&server_data_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.holepunching_times_pair,&server_holepunching_times_pair,sizeof(int_pair));

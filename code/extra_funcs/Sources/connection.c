@@ -156,8 +156,16 @@ void init_con(con_t* con_obj,int sockfd_tcp,con_type type,uint16_t listen_port,i
 				con_obj->is_on=1;
 				con_obj->type=type;
                                 con_obj->sockfd_tcp=sockfd_tcp;
-                                getpeername(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->peer_tcp_addr),socklenvar);
-				getsockname(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->this_tcp_addr),socklenvar);
+
+				socklen_t socklen_in=sizeof(struct sockaddr_in),
+						socklen=sizeof(struct sockaddr);
+
+				getpeername(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->peer_tcp_addr),&socklen_in);
+
+				socklen_in=sizeof(struct sockaddr_in);
+			        socklen=sizeof(struct sockaddr);
+
+                                getsockname(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->this_tcp_addr),&socklen_in);
 
 				memcpy(&con_obj->port_mapper_entry,ent,sizeof(ip_cache_entry));
 				init_addr(&con_obj->port_mapper_addr, con_obj->port_mapper_entry.hostname,con_obj->port_mapper_entry.port);
@@ -388,7 +396,7 @@ void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* en
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
         if(tmp_socket<0){
-		perror("Conexão ao port mapper para desreservar unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
+		perror("Conexão ao port mapper para desreservar unica porta mal sucedida!\nSocket	 não pôde ser criada!\nAbortando\n");
 		raise(SIGINT);
 	}
 
@@ -451,10 +459,17 @@ void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* en
 
 }
 static void set_up_peer_udp_socks(con_t* con_obj){
+	
+	socklen_t socklen_in=sizeof(struct sockaddr_in),
+			socklen=sizeof(struct sockaddr);
 
-	getpeername(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->peer_udp_addr),socklenvar);
+	getpeername(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->peer_udp_addr),&socklen_in);
 	con_obj->peer_udp_addr.sin_port=htons(con_obj->udp_data_peer_port);
-	getpeername(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->peer_udp_ack_addr),socklenvar);
+
+	socklen_in=sizeof(struct sockaddr_in);
+	socklen=sizeof(struct sockaddr);
+
+	getpeername(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->peer_udp_ack_addr),&socklen_in);
 	con_obj->peer_udp_ack_addr.sin_port=htons(con_obj->udp_ack_peer_port);
 
 
@@ -472,32 +487,51 @@ static void set_up_local_udp_socks(con_t* con_obj){
 	
 	setsockopt(con_obj->sockfd_udp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
 	con_obj->ack_sockfd_udp= socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
-        if(con_obj->sockfd_udp==-1){
+        if(con_obj->ack_sockfd_udp==-1){
                 raise(SIGINT);
         }
 	
 	setsockopt(con_obj->ack_sockfd_udp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
 	//setNonBlocking(con_obj->sockfd_udp);
 	//setNonBlocking(con_obj->ack_sockfd_udp);
-	getsockname(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->this_udp_addr),socklenvar);
-	con_obj->this_udp_addr.sin_port=htons(con_obj->udp_data_local_port);
-        int bind_result=bind(con_obj->sockfd_udp,(struct sockaddr*) &(con_obj->this_udp_addr),socklenvar[1]);
+
 	
+	socklen_t socklen_in=sizeof(struct sockaddr_in),
+			socklen=sizeof(struct sockaddr);
+
+	getsockname(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->this_udp_addr),&socklen_in);
+	con_obj->this_udp_addr.sin_port=htons(con_obj->udp_data_local_port);
+
+        int bind_result=bind(con_obj->sockfd_udp,(struct sockaddr*) &(con_obj->this_udp_addr),socklenvar[0]);
+
 	if(bind_result){
 		perror("Erro no em bind da socket udp de dados no modulo de conexão!\n");
 		print_addr_aux("",&con_obj->this_udp_addr);
 		raise(SIGINT);
 
 	}
-	getsockname(con_obj->sockfd_udp, (struct sockaddr*)&(con_obj->this_udp_ack_addr),socklenvar);
+	else{
+		print_addr_aux("Demos bind em socket local de data UDP!!!!\nO address e:",&con_obj->this_udp_addr);
+	}
+
+	socklen_in=sizeof(struct sockaddr_in);
+	socklen=sizeof(struct sockaddr);
+
+	getsockname(con_obj->sockfd_udp, (struct sockaddr*)&(con_obj->this_udp_ack_addr),&socklen_in);
+
 	con_obj->this_udp_ack_addr.sin_port=htons(con_obj->udp_ack_local_port);
         bind_result=bind(con_obj->ack_sockfd_udp,(struct sockaddr*) &(con_obj->this_udp_ack_addr),socklenvar[1]);
+
 	if(bind_result){
 
 		perror("Erro no em bind da socket udp de acknowledgements modulo de conexão!\n");
 		print_addr_aux("",&con_obj->this_udp_ack_addr);
 		raise(SIGINT);
 
+	}
+	else{
+
+		print_addr_aux("Demos bind em socket local de acks UDP!!!\nO address e:",&con_obj->this_udp_ack_addr);
 	}
 }
 

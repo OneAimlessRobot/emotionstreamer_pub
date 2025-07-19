@@ -188,6 +188,7 @@ static void safe_play_wrapper(chunk_player* player,decoder_result_struct* result
 	}
 }
 void perform_play_op(chunk_player* player,decoder_result_struct* result,play_op op){
+	pthread_mutex_lock(&mtx);
 	switch(op){
 		case P_REAL_PLAY:
 			safe_play_wrapper(player,result,0);
@@ -218,6 +219,7 @@ void perform_play_op(chunk_player* player,decoder_result_struct* result,play_op 
 		default:
 			break;
 	}
+	pthread_mutex_unlock(&mtx);
 }
 
 int init_chunk_player(chunk_player* player,uint64_t chunk_size,uint8_t* h_buff,uint8_t* r_buff,uint8_t* p_buff,method the_way){

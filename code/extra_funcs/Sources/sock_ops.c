@@ -32,11 +32,24 @@ void print_sock_addr(int socket){
 void init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 
          addr->sin_family=AF_INET;
+	struct addrinfo *addr_info_struct=NULL;
+	int error=0;
+         if((error=getaddrinfo(hostname_str, NULL, NULL, &addr_info_struct))){
+		printf("Erro a obter address a partir de hostname!!\nErro: %s\n",gai_strerror(error));
+		if(addr_info_struct){
+			freeaddrinfo(addr_info_struct);
+		}
+	}
+	
+	memcpy(addr,(struct sockaddr_in*)addr_info_struct->ai_addr,sizeof(struct sockaddr_in));
 
-         addr->sin_port= htons(port);
-	 getnameinfo((struct sockaddr*)addr,socklenvar[1],hostname_str,DEF_DATASIZE,NULL,0,0);
+	addr->sin_port= htons(port);
 
 	print_addr_aux("ip address: ",addr);
+
+	if(addr_info_struct){
+		freeaddrinfo(addr_info_struct);
+	}
 }
 
 int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
@@ -49,7 +62,8 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 		printf("(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
                 success=connect(*socket,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
                 int sockerr=0;
-                getsockopt(*socket,SOL_SOCKET,SO_ERROR,(char*)&sockerr,&socklenvar[0]);
+		socklen_t socklen_here =sizeof(sockerr);
+                getsockopt(*socket,SOL_SOCKET,SO_ERROR,(char*)&sockerr,&socklen_here);
                 fprintf(stderr,"Erro normal:%s\n Erro Socket: %s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*socket);
 		numOfTries--;
 		fd_set wfds;
