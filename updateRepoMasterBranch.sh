@@ -1,2 +1,2 @@
 #!/bin/bash
-git add . && git commit -m $(.randStringGenerator/randStringGenerator/randStringGenerator 10) && git push origin graph
+git add . && git commit -m "bhjgbhkjhkjhk" && git push origin port_rerouter
