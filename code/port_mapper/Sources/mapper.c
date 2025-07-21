@@ -26,7 +26,7 @@ static pthread_t input_tid=0,
 
 static int input_enabled=0;
 
-static port_mapper mapper={NULL,0,0,-1,{0},{0}};
+static port_mapper mapper={NULL,0,0,-1,{0},{{0}}};
 
 
 

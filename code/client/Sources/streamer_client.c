@@ -39,7 +39,9 @@ static pthread_mutex_t reading_mtx=PTHREAD_MUTEX_INITIALIZER,
 		running_mtx=PTHREAD_MUTEX_INITIALIZER,
 		variable_acess_mtx=PTHREAD_MUTEX_INITIALIZER,
 		input_mtx=PTHREAD_MUTEX_INITIALIZER,
+		ncurses_mtx=PTHREAD_MUTEX_INITIALIZER,
 		decoder_mtx=PTHREAD_MUTEX_INITIALIZER;
+
 
 static pthread_t tid_rx,
 	  tid_play,
@@ -67,6 +69,17 @@ static client_stream_t stream_struct={
                                         NULL
                                         };
 
+static void endwin_wrapper(void){
+
+	pthread_mutex_lock(&ncurses_mtx);
+	if(stream_enable_ncurses&&!isendwin()){
+
+		print_string("Chamamos endwin!!!!\n");
+		endwin();
+	}
+	pthread_mutex_unlock(&ncurses_mtx);
+
+}
 
 static void stop_client_stream(int useless){
 
@@ -77,12 +90,13 @@ static void stop_client_stream(int useless){
 		pthread_cond_signal(&decoder_cond);
 		pthread_cond_signal(&reading_cond);
 		pthread_cond_signal(&input_cond);
+		endwin_wrapper();
 	}
 
 }
 static void sigint_handler(int useless){
 
-	printf("SIGINT! ");
+	print_string("SIGINT! ");
 	stop_client_stream((0*useless));
         if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
 		send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
@@ -93,7 +107,7 @@ static void sigint_handler(int useless){
 
 static void sigpipe_handler(int useless){
 
-	printf("SIGPIPE! ");
+	print_string("SIGPIPE! ");
 	sigint_handler(useless);
 
 }
@@ -387,9 +401,7 @@ static void* show_stats(void* args){
 			refresh();
 		}
 	}
-	if(stream_enable_ncurses){
-		endwin();
-	}
+	endwin_wrapper();
 	return args;
 }
 
@@ -431,6 +443,7 @@ static void* input_thread_func(void* args){
 
 
 	}
+	endwin_wrapper();
 	return args;
 
 }
@@ -495,10 +508,12 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	if(input_enabled){
 		pthread_join(tid_input,NULL);
 		printf("Saimos do thread input!!!!!!\n");
+		endwin_wrapper();
 	}
 	if(stream_show_stats){
 		pthread_join(tid_stats,NULL);
 		printf("Saimos do thread de stats!!!!!!\n");
+		endwin_wrapper();
 	}
 	if(play){
 		pthread_join(tid_play,NULL);

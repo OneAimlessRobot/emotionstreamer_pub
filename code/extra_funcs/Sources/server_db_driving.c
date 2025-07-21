@@ -149,7 +149,7 @@ static int send_show_servers(void* arg1, int n_cols, char** cols,char** cols_nam
 
         servers_sender* sender= (servers_sender*)arg1;
         char buff[DEF_DATASIZE-1]={0};
-        char* ptr=buff;
+        char* ptr=buff+(uint64_t)((uint64_t)NULL*((uint64_t)(*cols_names)));
         int curr_col=0;
 
         while(curr_col!=n_cols){
