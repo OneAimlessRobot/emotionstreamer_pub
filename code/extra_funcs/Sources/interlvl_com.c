@@ -97,8 +97,8 @@ void* slave_thread(void* args){
 
 	char mod_type[PATHSIZE/8]={0};
 
-	socklen_t socklen_in=sizeof(struct sockaddr_in),
-			socklen=sizeof(struct sockaddr);
+	//socklen_t socklen_in=sizeof(struct sockaddr_in);
+	socklen_t socklen=sizeof(struct sockaddr);
 
         getsockname(arg_struct->con_obj->sockfd_tcp,(struct sockaddr*)&arg_struct->con_obj->this_tcp_addr,&socklen);
 
@@ -437,8 +437,8 @@ void* acceptor_func(void* args){
                         if(sock>=0){
 
 			      struct sockaddr_in tmp_addr={0};
-			      socklen_t socklen_in=sizeof(struct sockaddr_in),
-					socklen=sizeof(struct sockaddr);
+			      socklen_t socklen_in=sizeof(struct sockaddr_in);
+			      //socklen_t socklen=sizeof(struct sockaddr);
 
 			      getsockname(sock,(struct sockaddr*)&tmp_addr,&socklen_in);
 

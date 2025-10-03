@@ -1,0 +1,55 @@
+[package]
+name = "noip-duc"
+version = "3.3.0"
+authors = ["No-IP Team <support@noip.com>"]
+description = "No-IP Dynamic Update Client (https://www.noip.com)"
+license = "Apache-2.0"
+homepage = "https://www.noip.com"
+edition = "2021"
+
+[[bin]]
+name = "noip-duc"
+path = "src/bin/main.rs"
+
+[lib]
+name = "noip_duc"
+path = "src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "^1"
+base64 = "^0.22"
+byteorder = "^1.4"
+# Cannot go beyond clap 3.2.21 due to IpMethods needing to be Clone + Send + Sync.
+# https://github.com/clap-rs/clap/issues/4347
+# It is absolutely not necessary for this program to require these constraints.
+# These constraints may be relaxed in v5 or we may need to find a cli args
+# parser that is more suited to command line utilities.
+clap = { version = "3.2.21", features = ["cargo", "derive", "env"] }
+env_logger = "^0.11"
+form_urlencoded = "^1"
+humantime = "^2"
+log = "^0.4"
+minreq = { version = "^2.6", features = ["https-rustls"] }
+percent-encoding = "^2"
+thiserror = "1.0"
+trust-dns-resolver = "^0.23"
+url = "^2.2"
+
+[target.'cfg(unix)'.dependencies]
+daemonize = "^0.5"
+
+[profile.release]
+codegen-units = 1
+incremental = false
+lto = true
+opt-level = 'z'
+panic = 'abort'
+
+[package.metadata.deb]
+section = "net"
+maintainer-scripts = "debian/"
+systemd-units = { enable = false }
+depends = ""
+revision = ""

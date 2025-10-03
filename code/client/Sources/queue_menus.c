@@ -125,6 +125,7 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 }
 int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, decoder_result_struct* frame_data_struct,q_op op){
 	int result=0;
+	//printf("ptr para mutex: %p\n",que->queue_mtx);
 	pthread_mutex_lock(que->queue_mtx);
 	switch(op.main){
 

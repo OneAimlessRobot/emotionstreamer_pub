@@ -157,13 +157,13 @@ void init_con(con_t* con_obj,int sockfd_tcp,con_type type,uint16_t listen_port,i
 				con_obj->type=type;
                                 con_obj->sockfd_tcp=sockfd_tcp;
 
-				socklen_t socklen_in=sizeof(struct sockaddr_in),
-						socklen=sizeof(struct sockaddr);
+				socklen_t socklen_in=sizeof(struct sockaddr_in);
+				//socklen_t socklen=sizeof(struct sockaddr);
 
 				getpeername(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->peer_tcp_addr),&socklen_in);
 
 				socklen_in=sizeof(struct sockaddr_in);
-			        socklen=sizeof(struct sockaddr);
+			        //socklen=sizeof(struct sockaddr);
 
                                 getsockname(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->this_tcp_addr),&socklen_in);
 
@@ -460,14 +460,14 @@ void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* en
 }
 static void set_up_peer_udp_socks(con_t* con_obj){
 	
-	socklen_t socklen_in=sizeof(struct sockaddr_in),
-			socklen=sizeof(struct sockaddr);
+	socklen_t socklen_in=sizeof(struct sockaddr_in);
+	//socklen_t socklen=sizeof(struct sockaddr);
 
 	getpeername(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->peer_udp_addr),&socklen_in);
 	con_obj->peer_udp_addr.sin_port=htons(con_obj->udp_data_peer_port);
 
 	socklen_in=sizeof(struct sockaddr_in);
-	socklen=sizeof(struct sockaddr);
+	//socklen=sizeof(struct sockaddr);
 
 	getpeername(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->peer_udp_ack_addr),&socklen_in);
 	con_obj->peer_udp_ack_addr.sin_port=htons(con_obj->udp_ack_peer_port);
@@ -496,8 +496,8 @@ static void set_up_local_udp_socks(con_t* con_obj){
 	//setNonBlocking(con_obj->ack_sockfd_udp);
 
 	
-	socklen_t socklen_in=sizeof(struct sockaddr_in),
-			socklen=sizeof(struct sockaddr);
+	socklen_t socklen_in=sizeof(struct sockaddr_in);
+	//socklen_t socklen;=sizeof(struct sockaddr);
 
 	getsockname(con_obj->sockfd_tcp, (struct sockaddr*)&(con_obj->this_udp_addr),&socklen_in);
 	con_obj->this_udp_addr.sin_port=htons(con_obj->udp_data_local_port);
@@ -515,7 +515,7 @@ static void set_up_local_udp_socks(con_t* con_obj){
 	}
 
 	socklen_in=sizeof(struct sockaddr_in);
-	socklen=sizeof(struct sockaddr);
+	/*socklen=sizeof(struct sockaddr);*/
 
 	getsockname(con_obj->sockfd_udp, (struct sockaddr*)&(con_obj->this_udp_ack_addr),&socklen_in);
 

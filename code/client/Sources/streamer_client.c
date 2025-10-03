@@ -72,7 +72,7 @@ static client_stream_t stream_struct={
 static void endwin_wrapper(void){
 
 	pthread_mutex_lock(&ncurses_mtx);
-	if(stream_enable_ncurses&&!isendwin()){
+	if(!isendwin()){
 
 		print_string("Chamamos endwin!!!!\n");
 		endwin();
@@ -139,10 +139,10 @@ static int read_chunk_tcp(client_stream_t* strm,int_pair pair){
 static int read_chunk_udp(client_stream_t* strm,int_pair pair){
         int result=-1;
 	if(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK)){
-		result= readsome(strm->con_obj->sockfd_udp,(char*)(strm->player->h_chunk),strm->player->chunk_size,pair);
+		result= readsome_udp(strm->con_obj->sockfd_udp,(char*)(strm->player->h_chunk),strm->player->chunk_size,pair,&strm->con_obj->peer_udp_addr);
 	}
 	else{
-		result= readsome(strm->con_obj->sockfd_udp,(char*)((is_wav_mode||!decode)?strm->player->r_chunk:strm->decoder->r_chunk),(is_wav_mode||!decode)?strm->player->chunk_size:strm->decoder->d_chunk_size,pair);
+		result= readsome_udp(strm->con_obj->sockfd_udp,(char*)((is_wav_mode||!decode)?strm->player->r_chunk:strm->decoder->r_chunk),(is_wav_mode||!decode)?strm->player->chunk_size:strm->decoder->d_chunk_size,pair,&strm->con_obj->peer_udp_addr);
 	}
 	if(result<0){
 		acess_var_mtx(&variable_acess_mtx,&lost_packet,1,V_SET);
@@ -224,7 +224,7 @@ static void* dec_thread_func(void* args){
 		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
 			perform_queue_op(stream_struct.decoder_que,stream_struct.decoder->d_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
 			pthread_cond_signal(&reading_cond);
-			ret_val=perform_dec_op(stream_struct.decoder,&result,D_DECODE_CHUNK,DO_DECODE);
+			ret_val=perform_dec_op(stream_struct.decoder,&result,D_DECODE_CHUNK,DO_FEED);
 
 			if(result.decoder_state){
 				perform_queue_op(stream_struct.player_que,stream_struct.decoder->p_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
@@ -471,6 +471,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	stream_struct.player_que=&player_que;
 	stream_struct.player=&player;
 	if(decode&&!is_wav_mode){
+		printf("Decoder will be initialized\n");
 		init_queue(&decoder_que,chunk_size,cfg_stream_decoder_cache_size_chunks);
 		init_queue(&auxiliar_que,sizeof(decoder_result_struct),cfg_stream_player_cache_size_chunks);
 		init_decoder(&decoder,chunk_size,chunk_size*CHANNELS*SIZE,r_chunk_buff,d_chunk_buff,pd_chunk_buff);
