@@ -89,7 +89,6 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 	}
 	if(!(que->total_size)){
 
-		
 		printw("Queue com sizes null!\nSize total da queue: %lu bytes\n"
 							"Size de chunk da queue: %lu bytes\n"
 							"Numero de chunks totais da queue: %lu bytes\n",
@@ -103,19 +102,19 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 	bar[0]='[';
 	memset(bar+1,' ',PRINT_SIZE);
 	bar[PRINT_SIZE+1]=']';
-	int play_cursor_bar_pos=1+(que->play_cursor*PRINT_SIZE)/que->max_occupied;
-	int recv_cursor_bar_pos=1+(que->recv_cursor*PRINT_SIZE)/que->max_occupied;
+	uint64_t play_cursor_bar_pos=1+(que->play_cursor*PRINT_SIZE)/que->max_occupied;
+	uint64_t recv_cursor_bar_pos=1+(que->recv_cursor*PRINT_SIZE)/que->max_occupied;
 	bar[play_cursor_bar_pos]='P';
 	bar[recv_cursor_bar_pos]='R';
 	
-	int buff_ms=getQueueBufferedTime(que,result);
-	for(int i=circular_int_inc(PRINT_SIZE+1,play_cursor_bar_pos);(play_cursor_bar_pos!=recv_cursor_bar_pos)&&(i!=recv_cursor_bar_pos);i=circular_int_inc(PRINT_SIZE+1,i)){
+	uint64_t buff_ms=getQueueBufferedTime(que,result);
+	for(uint64_t i=circular_int_inc(PRINT_SIZE+1,play_cursor_bar_pos);(play_cursor_bar_pos!=recv_cursor_bar_pos)&&(i!=recv_cursor_bar_pos);i=circular_int_inc(PRINT_SIZE+1,i)){
 
 		bar[i]='=';
 	}
 	
 	printw("Queue visual:\nplay cursor: %lu\nrecv cursor: %lu\nCurr occupied: %lu\nMax occupied: %lu\n",que->play_cursor,que->recv_cursor,que->n_occupied,que->max_occupied);
-	printw("Queue esta quase vazia? %s\nQueue esta quase cheia? %s\nQueue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %lu\nTemos %u ms de audio no buffer!\n",
+	printw("Queue esta quase vazia? %s\nQueue esta quase cheia? %s\nQueue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %lu\nTemos %lu ms de audio no buffer!\n",
 					que_is_almost_empty(que) ? "SIM":"NAO",
 					que_is_almost_full(que)? "SIM":"NAO",
 					que_is_empty(que) ? "SIM":"NAO",
