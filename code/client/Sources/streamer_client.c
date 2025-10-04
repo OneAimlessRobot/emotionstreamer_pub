@@ -224,9 +224,11 @@ static void* dec_thread_func(void* args){
 		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
 			perform_queue_op(stream_struct.decoder_que,stream_struct.decoder->d_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
 			pthread_cond_signal(&reading_cond);
-			ret_val=perform_dec_op(stream_struct.decoder,&result,D_DECODE_CHUNK,DO_FEED);
+			ret_val=perform_dec_op(stream_struct.decoder,&result,D_DECODE_CHUNK,DO_DECODE);
 
 			if(result.decoder_state){
+
+				print_decoder_frame_result(&result,1);
 				perform_queue_op(stream_struct.player_que,stream_struct.decoder->p_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 				perform_queue_op(stream_struct.auxiliar_que,(uint8_t*)&result,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 				pthread_cond_signal(&player_cond);
@@ -478,6 +480,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		stream_struct.decoder=&decoder;
 		stream_struct.auxiliar_que=&auxiliar_que;
 		stream_struct.decoder_que=&decoder_que;
+		is_first_player_chunk=0;
 	}
 	
 	stream_struct.con_obj=con_obj;

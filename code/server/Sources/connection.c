@@ -13,13 +13,14 @@
 #include "../Includes/engine.h"
 #include "../Includes/connection.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
+#include "../../converter_tool/Includes/converter.h"
 #include "../Includes/streamer_server.h"
 #include "../Includes/upload_func.h"
 
 static con_t server_con_obj;
 static int sock_tcp;
 int fp=-1;
-
+int fp_boundary=-1;
 static void cleanup(int useless){
 	close(fp + (0*useless));
 	close(sock_tcp);
@@ -138,6 +139,22 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 					raise(SIGINT);
 				}
 				else{
+					if(!is_wav_mode){
+				 		printf("We are NOT in WAV mode bruuuhhhhh\n");
+						if(!strs_are_strictly_equal(server_working_extension,".mp3")){
+						char fp_boundary_path[PATHSIZE*10]={0};
+						snprintf(fp_boundary_path,sizeof(fp_boundary_path)-1,"%s%s",file_path,BOUNDARY_FILE_EXT);
+							if((fp_boundary=open_file(fp_boundary_path))<0){
+								perror("Could not open boundary file!!!\n");
+								raise(SIGINT);
+							}
+							printf("sucessfully opened boundary file at %s\n",fp_boundary_path);
+						}
+					}
+					else{
+
+						printf("We are in wav mode! getting read of header at the start!\n");
+					}
 					printf("A file path é: %s\n",file_path);
 					send_download_sizes(fp,file_path,file_info);
 					switch(recvd_type){
@@ -149,13 +166,12 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						uploadtofd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						break;
 					case PLAY:
-						printf("We are in wav mode! getting read of header at the start!\n");
 						snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%lu",server_chunk_size);
 						if(con_send_udp(&server_con_obj,server_data_times_pair)<=0){
 
 							raise(SIGINT);
 						}
-						begin_stream(&server_con_obj,fp,server_chunk_size,stream_cache_data);
+						begin_stream(&server_con_obj,fp,fp_boundary,server_chunk_size,stream_cache_data);
 						break;
 					case CONF:
 						sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);

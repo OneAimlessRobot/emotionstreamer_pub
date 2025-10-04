@@ -8,6 +8,7 @@ typedef struct server_stream_t{
           uint64_t curr_timeout;
 	  struct con_t* con_obj;
           int local_fd;
+          int local_fd_boundary;
           //unsigned char chunk_data_cache[CHUNK_SIZE*STREAM_CACHE_SIZE_CHUNKS];
           unsigned char* chunk_data_cache;
 	  uint64_t chunk_size;
@@ -19,7 +20,7 @@ typedef struct server_stream_t{
 //BUFF COMES FROM THE OUTSIDE!
 //fds are valid
 //DOES NOT FREE BUFFS OR INITIALIZE BUFFS
-void begin_stream(con_t* con_obj,int fd,  uint64_t chunk_size,unsigned char* stream_buff);
+void begin_stream(con_t* con_obj,int fd, int fd_boundary,uint64_t chunk_size,unsigned char* stream_buff);
 
 void close_stream(void);
 #endif

@@ -52,12 +52,6 @@ void read_values_cfg_converter(void){
         }
         sscanf(curr_line_buff,"output_dir: %s",converter_out_dir);
         clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                fclose(cfg_fp);
-                raise(SIGINT);
-        }
-        clean_buff();
  	fclose(cfg_fp);
 }
 

@@ -1,4 +1,5 @@
 #include "../../Includes/preprocessor.h"
+#include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/protocol.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
@@ -27,6 +28,7 @@ static server_stream_t stream_struct={
 					0,
 					NULL,
 					-1,
+					-1,
 					NULL,
 					0
 					};
@@ -37,6 +39,7 @@ static void stop_server_stream(server_stream_t* strm){
 	if(acess_var_mtx(&variable_acess_mtx,&strm->initted,0,V_LOOK)){
         	acess_var_mtx(&variable_acess_mtx,&strm->initted,0,V_SET);
 		close(strm->local_fd);
+		close(strm->local_fd_boundary);
 		pthread_cond_signal(&running_cond);
 	}
 	
@@ -90,14 +93,42 @@ static int send_chunk_to_client(void){
 }
 
 static void* server_stream(void* args){
+	if(is_wav_mode){
+	        while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)
+			&&
+			(read(stream_struct.local_fd,stream_struct.chunk_data_cache,stream_struct.chunk_size)>0)
+			&&
+			(send_chunk_to_client()>0)){
 
-        while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)
-		&&
-		(read(stream_struct.local_fd,stream_struct.chunk_data_cache,stream_struct.chunk_size)>0)
-		&&
-		(send_chunk_to_client()>0)){
 
+		}
+	}
+	else{
+		printf("We are NOT in wav mode!!!\n");
+		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)){
+			frame_info_t frame_stuff={0};
+			if(read(stream_struct.local_fd_boundary,&frame_stuff,sizeof(frame_stuff))<=0){
+				fprintf(stderr,"We could not read a frame info thing!\nThe start is: %d\nThe size is: %d\n",frame_stuff.start,frame_stuff.size);
+				break;
+			}
+			else{
+				memset(stream_struct.chunk_data_cache,0,server_chunk_size);
+			}
+			printf("We read a frame info thing!\nThe start is: %d\nThe size is: %d\n",frame_stuff.start,frame_stuff.size);
+			lseek(stream_struct.local_fd,frame_stuff.start+frame_stuff.size,SEEK_SET);
+			if(read(stream_struct.local_fd,stream_struct.chunk_data_cache,frame_stuff.size)<=0){
+				fprintf(stderr,"We could not read a frame using frame info thing!\n");
+				break;
+			}
+			printf("We read a frame using a frame_info_thing!\n");
+			if(send_chunk_to_client()<=0){
+				fprintf(stderr,"send a frame obtained using a frame_info_thing!\n");
+				break;
 
+			}
+			printf("We sent a frame obtained using a frame_info_thing!\n");
+
+		}
 	}
 	return args;
 
@@ -140,12 +171,13 @@ static void* ack_exchange_thread(void* args){
 
 }
 
-static int init_server_stream(int fd,con_t* con_obj,uint64_t chunk_size,unsigned char* stream_buff){
+static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chunk_size,unsigned char* stream_buff){
 	
 	signal(SIGINT,cleanup);
 	stream_struct.initted=1;
         stream_struct.con_obj=con_obj;
         stream_struct.local_fd=fd;
+        stream_struct.local_fd_boundary=fd_boundary;
 	stream_struct.chunk_size=chunk_size;
 	stream_struct.chunk_data_cache=stream_buff;
 	memset(stream_struct.chunk_data_cache,0,stream_struct.chunk_size);
@@ -173,9 +205,9 @@ void close_stream(void){
 	raise(SIGINT);
 }
 
-void begin_stream(con_t*con_obj,int fd, uint64_t chunk_size,unsigned char* stream_buff){
+void begin_stream(con_t*con_obj,int fd, int fd_boundary,uint64_t chunk_size,unsigned char* stream_buff){
 
-	init_server_stream(fd,con_obj, chunk_size,stream_buff);
+	init_server_stream(fd,fd_boundary,con_obj, chunk_size,stream_buff);
 
 
 
