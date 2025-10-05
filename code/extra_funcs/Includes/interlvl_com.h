@@ -2,6 +2,8 @@
 #define INTERLVL_COM_H
 
 typedef enum{SERVER,HB_SERVER,M_SERVER,TYPE_NA}module_type;
+typedef typeof(void (int))  *quit_func;
+
 //NULL TERMI8ed
 module_type string_to_module_type(char*str);
 
@@ -29,6 +31,7 @@ typedef struct slave_args{
 		this_con_addr,
 		master_addr;
 	uint16_t exit_signal;
+	quit_func sig_func;
 	uint64_t ack_timeout_lim;
 	uint64_t sleep_us;
 	int* start_trigger;
@@ -52,6 +55,7 @@ typedef struct overseer_args{
 
 	int*is_on;
 	int exit_signal;
+	quit_func sig_func;
 	pthread_mutex_t* start_cond_mtx;
 	pthread_mutex_t* var_mtx;
 	struct con_set* cons;
@@ -68,6 +72,7 @@ typedef struct acceptor_args{
 	int*is_on;
 	int*started;
 	int exit_signal;
+	quit_func sig_func;
 	int_pair data_times_pair;
 	int_pair con_times_pair;
 	int_pair holepunching_times_pair;
@@ -77,6 +82,7 @@ typedef struct acceptor_args{
         struct sockaddr_in accept_addr;
 	pthread_mutex_t * master_mtx;
 	pthread_mutex_t * var_mtx;
+	pthread_mutex_t * con_mtx;
 	struct overseer_args* arg_o;
 	struct slave_args* arg_s;
 	ip_cache_entry acceptor_port_mapper_ip_cache_entry;

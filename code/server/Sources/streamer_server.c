@@ -84,13 +84,13 @@ static int send_chunk_to_client(void){
 
 	int result=-2;
 	if(!is_wav_mode){
-	result=send_meta_tcp(&stream_struct,server_drop_chunks_times_pair);
+	result=send_meta_udp(&stream_struct,server_drop_chunks_times_pair);
 	while((acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK))&&(result!=-1)){
                 //result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_ti>
                 result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
                 if(result==-2){
                         printf("Esperando ser respondido na stream do server\n");
-
+			continue;
                 }
                 else{
                         if(result<0){
@@ -111,7 +111,7 @@ static int send_chunk_to_client(void){
 		result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 			if(result==-2){
 				printf("Esperando ser respondido na stream do server\n");
-
+				continue;
 			}
 			else{
 				if(result<0){
@@ -142,8 +142,7 @@ static void* server_stream(void* args){
 		printf("We are NOT in wav mode!!!\n");
 		int count= 200;
 		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)&&count){
-			frame_info_t frame_stuff={0};
-			if(read(stream_struct.local_fd_boundary,&frame_stuff,sizeof(frame_stuff))<=0){
+			if(read(stream_struct.local_fd_boundary,stream_struct.chunk_meta_cache,sizeof(frame_info_t))<=0){
 				fprintf(stderr,"We could not read a frame info thing!\n");
 				break;
 			}
@@ -151,9 +150,9 @@ static void* server_stream(void* args){
 				memset(stream_struct.chunk_data_cache,0,server_chunk_size);
 			}
 			printf("We read a frame info thing!\n");
-			print_frame_info_data(&frame_stuff);
-			lseek(stream_struct.local_fd,frame_stuff.start,SEEK_SET);
-			if(read(stream_struct.local_fd,stream_struct.chunk_data_cache,frame_stuff.size)<=0){
+			print_frame_info_data(((frame_info_t*)stream_struct.chunk_meta_cache));
+			lseek(stream_struct.local_fd,((frame_info_t*)stream_struct.chunk_meta_cache)->start,SEEK_SET);
+			if(read(stream_struct.local_fd,stream_struct.chunk_data_cache,((frame_info_t*)stream_struct.chunk_meta_cache)->size)<=0){
 				fprintf(stderr,"We could not read a frame using frame info thing!\n");
 				break;
 			}

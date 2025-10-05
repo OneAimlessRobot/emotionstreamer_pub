@@ -75,7 +75,7 @@ if ((err =snd_pcm_set_params(player->play_stream_alsa,SND_PCM_FORMAT_S16_LE, SND
 		abort();
 	}
 	else{
-		printf("ALSA initialized successfully!!!!\n");
+		//printf("ALSA initialized successfully!!!!\n");
 	}
 
 }
@@ -94,7 +94,7 @@ static void initPA(chunk_player*player){
 	}
 	else{
 
-	printf("pulseaudio initialized successfully!!!!\n");
+	//printf("pulseaudio initialized successfully!!!!\n");
 
 	}
 }

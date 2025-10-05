@@ -24,29 +24,31 @@ static pthread_mutex_t eng_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t eng_cond=PTHREAD_COND_INITIALIZER;
 static int started=0;
 
-static void serverStop(int useless){
-	perror("Sinal de parar server\n");
+static void call_sigint(int useless){
+
 	close(state.server_sock_tcp);
+	perror("Sinal de parar server\n");
 	if(acess_var_mtx(&hb_mtx,&state.server_is_on,0,V_LOOK)){
 		acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
 		pthread_mutex_lock(&con_mtx);
-		close_con(&state.hb_con);
-		pthread_mutex_unlock(&con_mtx);
 		send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
 		send_ports_back(&state.hb_con);
+		pthread_mutex_unlock(&con_mtx);
 	}
 	else{
 		acess_var_mtx(&eng_mtx,&started,1,V_SET);
 	}
+}
+static void serverStop(int useless){
 	acess_var_mtx(&eng_mtx,&started,1,V_SET);
 	pthread_cond_signal(&eng_cond);
+	call_sigint(useless);
 }
 static void conStop(int useless){
-	
-	perror("Sinal de parar con\n");
-	close(state.server_sock_tcp);
-	acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
 
+	perror("Sinal de parar con\n");
+	acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
+	call_sigint(useless);
 }
 
 static int con_accepting_loop(void){
@@ -89,7 +91,7 @@ static int con_accepting_loop(void){
 							signal(SIGTERM,conStop);
 							signal(SIGINT,conStop);
 							signal(SIGPIPE,conStop);
-							raise(SIGINT);
+							call_sigint(SIGINT);
 							con_go(sock,curr_port);
 							return 0;
 						case -1:
@@ -154,6 +156,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	arg_s.ack_timeout_lim= server_ack_timeout_lim;
 	arg_s.sleep_us=10000;
 	arg_s.con_obj=&state.hb_con;
+	arg_s.sig_func=call_sigint;
 	arg_s.start_trigger=&started;
 	arg_s.loop_var=&state.server_is_on;
 	arg_s.var_mtx=&hb_mtx;

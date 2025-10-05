@@ -39,10 +39,8 @@ static void sigint_handler(int signal){
 	if(client_con_obj.is_on){
 		send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
 		send_ports_back(&client_con_obj);
-		close_con(&client_con_obj);
 	}
 	endwin();
-	fclose(logstream);
 	exit(signal);
 }
 static void sigpipe_handler(int signal){
@@ -61,6 +59,8 @@ static int64_t down_file_size(int is_streaming){
 
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
 			printf(UNSUCESSFUL_DOWNLOAD,reason);
+			close_con(&client_con_obj);
+			fclose(logstream);
 			raise(SIGINT);
 		}
 		clear_con_data(&client_con_obj);
@@ -93,12 +93,15 @@ static void down_func(char* file_name){
 		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,extension_from_server);
 		if((fp=creat(file_path,0777))<0){
 				perror("Nao foi possivel transferir ficheiro!!!!\n");
-                                raise(SIGINT);
+                                close_con(&client_con_obj);
+				raise(SIGINT);
                 }
 		initscr();
 		downloadtofd(client_con_obj.sockfd_tcp,fp,down_size,client_data_times_pair);
 		endwin();
 		printf("A musica foi guardada em: %s\n",file_path);
+		close_con(&client_con_obj);
+		fclose(logstream);
 		raise(SIGINT);
 		
 
@@ -109,6 +112,8 @@ static void peek_func(void){
 		int down_size=down_file_size(0);
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
+		close_con(&client_con_obj);
+		fclose(logstream);
 		raise(SIGINT);
 		
 
@@ -118,6 +123,7 @@ static void conf_func(void){
 		int down_size=down_file_size(0);
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
+		close_con(&client_con_obj);
 		raise(SIGINT);
 
 }
@@ -195,6 +201,7 @@ int clientStart(char* req_field,char* file_name){
 	
 		perror("Não conseguimos dar bind na socket do client!!!\n");
 		print_addr_aux("Este é o address:",&client_ip_address);
+		fclose(logstream);
 		raise(SIGINT);
 
 	}
@@ -206,6 +213,7 @@ int clientStart(char* req_field,char* file_name){
 
 	if(!tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address)){
 
+		fclose(logstream);
 		raise(SIGINT);
 	}
 	
@@ -219,6 +227,7 @@ int clientStart(char* req_field,char* file_name){
 		print_ip_cache(stdout,&cache);
 		if(!try_cache_connect(&client_con_obj.sockfd_tcp,client_con_times_pair,&cache)){
 
+			fclose(logstream);
 			raise(SIGINT);
 		}
 	}
@@ -275,6 +284,7 @@ int clientStart(char* req_field,char* file_name){
 		break;
 	default:
 		printf(UNKNOWN_REQ,req_buff);
+		fclose(logstream);
 		raise(SIGINT);
 		break;
 	}

@@ -103,7 +103,6 @@ static void sigint_handler(int useless){
         if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
 		send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
 		send_ports_back(stream_struct.con_obj);
-		close_con(stream_struct.con_obj);
 	}
 }
 
@@ -191,12 +190,12 @@ static void* rx_thread_func(void* args){
 		acess_var_mtx(&variable_acess_mtx,&reading,1,V_SET);
 		while((acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK))){
 			if(!is_wav_mode){
-				if(read_meta_tcp(&stream_struct,client_data_times_pair)<0){
-				
+				if(read_meta_udp(&stream_struct,client_data_times_pair)<0){
+					continue;
 				}
 				else{
 					con_send_udp(stream_struct.con_obj,client_data_times_pair);
-						(streaming_protocol<=0)?read_chunk_tcp(&stream_struct,client_data_times_pair):read_chunk_udp(&stream_struct,client_data_times_pair);
+			(streaming_protocol<=0)?read_chunk_tcp(&stream_struct,client_data_times_pair):read_chunk_udp(&stream_struct,client_data_times_pair);
 			if(decode&&!is_wav_mode){
 				pthread_cond_signal(&decoder_cond);
 			}
@@ -219,8 +218,7 @@ static void* rx_thread_func(void* args){
 			}
 			//(streaming_protocol<=0)?con_send_tcp(stream_struct.con_obj,client_data_times_pair):con_send_udp(stream_struct.con_obj,client_data_times_pair);
 			con_send_udp(stream_struct.con_obj,client_data_times_pair);
-		   
-				}
+			}
 			}
 			else{
 			(streaming_protocol<=0)?read_chunk_tcp(&stream_struct,client_data_times_pair):read_chunk_udp(&stream_struct,client_data_times_pair);
@@ -284,12 +282,13 @@ static void* dec_thread_func(void* args){
 		acess_var_mtx(&variable_acess_mtx,&decoding,1,V_SET);
 		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
 			perform_queue_op(stream_struct.auxiliar_que2,finfo,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
-			pthread_cond_signal(&reading_cond);
+			perform_queue_op(stream_struct.decoder_que,stream_struct.decoder->d_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
 			ret_val=perform_dec_op(stream_struct.decoder,(frame_info_t*)finfo,(decoder_result_struct*)result,D_DECODE_CHUNK,DO_DECODE);
-
+			
+			//print_decoder_frame_result((decoder_result_struct*)result,1);
 			if(((decoder_result_struct*)result)->decoder_state){
 
-				print_decoder_frame_result((decoder_result_struct*)result,1);
+				//print_decoder_frame_result((decoder_result_struct*)result,1);
 				perform_queue_op(stream_struct.player_que,stream_struct.decoder->p_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 				perform_queue_op(stream_struct.auxiliar_que,result,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 				pthread_cond_signal(&player_cond);
@@ -315,19 +314,25 @@ static void* dec_thread_func(void* args){
 					print_string(buff);
 					raise(SIGINT);
 				}
+				pthread_cond_signal(&reading_cond);
+			}
+			else{
+
+				//print_string("needs more!!!\n");
+			
 			}
 	}
 	pthread_mutex_lock(&decoder_mtx);
 	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)&&perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL})&&!perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL})){
 
-		print_string("Adormecemos o thread decoder!!!\n");
+		//print_string("Adormecemos o thread decoder!!!\n");
 		acess_var_mtx(&variable_acess_mtx,&decoding,0,V_SET);
 		pthread_cond_wait(&decoder_cond,&decoder_mtx);
-		print_string("Tentámos acordar o thread decoder!!!\n");
+		//print_string("Tentámos acordar o thread decoder!!!\n");
 	}
 	pthread_mutex_unlock(&decoder_mtx);
 	if(!(ret_val==MPG123_NEED_MORE)){
-		print_string("Acordámos o thread decoder!!!\n");
+		//print_string("Acordámos o thread decoder!!!\n");
 	}
 	}
 
@@ -375,13 +380,13 @@ static void* play_thread_func(void* args){
 	}
 	pthread_mutex_lock(&player_mtx);
 	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY}))){
-		print_string("Adormecemos o play thread!\n");
+		//print_string("Adormecemos o play thread!\n");
 		acess_var_mtx(&variable_acess_mtx,&playing,0,V_SET);
 		pthread_cond_wait(&player_cond,&player_mtx);
-		print_string("Tentámos acordar o play thread!\n");
+		//print_string("Tentámos acordar o play thread!\n");
 	}
 	pthread_mutex_unlock(&player_mtx);
-	print_string("Acordámos o play thread!\n");
+	//print_string("Acordámos o play thread!\n");
 	}
 	return  args;
 }
@@ -608,8 +613,8 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		perform_queue_op(stream_struct.auxiliar_que2,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
 		perform_dec_op(stream_struct.decoder,NULL,NULL,D_CLEAN,0);
 	}
-	perform_play_op(stream_struct.player,NULL,P_CLEAN);
 	close_con(stream_struct.con_obj);
+	perform_play_op(stream_struct.player,NULL,P_CLEAN);
 	printf("SAIMOS DO CLIENT!\nTimeouts excedidos? %s\nVamos ver errno:%s\n",(stream_struct.curr_timeout==cfg_client_ack_timeout_lim) ? "SIM": "NAO",strerror(errno));
 	return 0;
 }

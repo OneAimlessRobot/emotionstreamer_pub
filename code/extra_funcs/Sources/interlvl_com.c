@@ -57,7 +57,8 @@ void* slave_thread(void* args){
 
         if(arg_struct->con_obj->sockfd_tcp<0){
                 perror("Socket nao criada no hb thread!!!\n");
-                raise(arg_struct->exit_signal);
+        	arg_struct->sig_func(SIGINT);
+		return args;
         }
 
 
@@ -74,8 +75,8 @@ void* slave_thread(void* args){
 
                 perror("Não conseguimos dar bind na socket do client!!!\n");
                 print_addr_aux("Este é o address:",&arg_struct->this_con_addr);
-                raise(SIGINT);
-
+		arg_struct->sig_func(SIGINT);
+		return args;
         }
 	else{
 
@@ -85,7 +86,8 @@ void* slave_thread(void* args){
         if(!tryConnect(&arg_struct->con_obj->sockfd_tcp,arg_struct->con_times_pair,&arg_struct->master_addr)){
 
                 perror("Nao deu para contactar server de heartbeats!!!!\n");
-                raise(arg_struct->exit_signal);
+        	arg_struct->sig_func(SIGINT);
+		return args;
         }
 	
 
@@ -118,7 +120,10 @@ void* slave_thread(void* args){
 
                 perror("Nao deu para contactar server acima!!!!\nNao recebeu o que mandamos!!!\nNao recebeu pedido de login\n");
                 raise(arg_struct->exit_signal);
-
+	        raise(arg_struct->exit_signal);
+        
+        	arg_struct->sig_func(SIGINT);
+		return args;
         }
         result=con_read_udp_ack(arg_struct->con_obj,arg_struct->con_times_pair);
         if(result<0){
@@ -126,7 +131,9 @@ void* slave_thread(void* args){
 
                 perror("Nao deu para contactar server acima!!!!\nNao recebemos deles!!!\nNao recebeu pedido de login\n");
                 raise(arg_struct->exit_signal);
-
+		arg_struct->sig_func(SIGINT);
+		return args;
+        
         }
         acess_var_mtx(arg_struct->var_mtx,arg_struct->start_trigger,1,V_SET);
 
@@ -166,12 +173,12 @@ void* slave_thread(void* args){
                 usleep(arg_struct->sleep_us);
 
         }
-        send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-	pthread_mutex_lock(arg_struct->con_mtx);
+        pthread_mutex_lock(arg_struct->con_mtx);
+	send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
 	close_con(arg_struct->con_obj);
 	pthread_mutex_unlock(arg_struct->con_mtx);
-        raise(arg_struct->exit_signal);
-        printf("Saimos do lower thread\n");
+        arg_struct->sig_func(SIGINT);
+	printf("Saimos do lower thread\n");
         return args;
 
 
@@ -346,8 +353,8 @@ void* watch_dog_func(void* args){
         }
 
         }
-        raise(arg_s->exit_signal);
-        return args;
+        arg_s->sig_func(SIGINT);
+	return args;
 
 
 }
@@ -538,7 +545,8 @@ void* acceptor_func(void* args){
                 }
                 else if(iResult<0){
                         perror("Erro no select no thread de heartbeats!!!!\n");
-                        raise(SIGINT);
+                        arg_a->sig_func(SIGINT);
+			break;
                 }
                 print_addr_aux("Nada....\n",&arg_a->accept_addr);
 

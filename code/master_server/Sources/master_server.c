@@ -19,13 +19,12 @@ static overseer_args arg_o={0};
 
 pthread_mutex_t master_mtx=PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t master_running_mtx=PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t master_con_mtx=PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t master_running_cond=PTHREAD_COND_INITIALIZER;
 
 static int is_on=0;
 
 static int started=0;
-
-
 static void close_all_fds_here(void){
 
 
@@ -33,13 +32,13 @@ static void close_all_fds_here(void){
         pthread_cond_broadcast(arg_o.cons->start_cond);
 }
 
-static void sigint_handler(int useless){
-	closeDB();
-	close(arg_a.accept_sockfd);
+static void call_signal_func(int useless){
+
 	if(acess_var_mtx(&master_mtx,&is_on,0,V_LOOK)){
 		acess_var_mtx(&master_mtx,&is_on,0*useless,V_SET);
                 close_all_fds_here();
-                send_port_back(htons(arg_a.accept_addr.sin_port),&master_server_port_mapper_ip_cache_entry);
+                pthread_mutex_lock(&mastercon_mtx)
+		send_port_back(htons(arg_a.accept_addr.sin_port),&master_server_port_mapper_ip_cache_entry);
 		pthread_cond_signal(&master_running_cond);
 		perror("Saindo do heart beat server!!!!\n");
         }
@@ -47,6 +46,12 @@ static void sigint_handler(int useless){
 		acess_var_mtx(&master_mtx,&is_on,0*useless,V_SET);
                 pthread_cond_signal(&master_running_cond);
         }
+
+
+}
+
+static void sigint_handler(int useless){
+        call_signal_func(useless);
 }
 
 static void sigpipe_handler(int useless){
@@ -79,18 +84,21 @@ void start_master(char* hostname, uint16_t port){
 
         is_on=1;
         arg_a.is_on=&is_on;
+	arg_a.sig_func=call_signal_func;
         arg_a.started=&started;
         arg_a.exit_signal=SIGINT;
 
 	arg_o.is_on=&is_on;
         arg_o.exit_signal=SIGINT;
 	arg_o.ack_timeout_lim= master_ack_timeout_lim;
+        arg_o.sig_func=call_signal_func;
         arg_o.start_cond_mtx=&master_cond_mtx;
         arg_o.var_mtx=&master_mtx;
 
 
         arg_a.arg_o=&arg_o;
         arg_a.arg_s=NULL;
+        arg_a.con_mtx=&master_con_mtx;
         arg_a.var_mtx=&master_mtx;
 	arg_a.master_mtx=arg_o.start_cond_mtx;
 
@@ -123,7 +131,8 @@ void start_master(char* hostname, uint16_t port){
 	printf("Saimos do thread principal do master server!!!!\n");
 	pthread_join(master_tid_watchdog,NULL);
 	printf("Saimos do thread watchdog do master server!!!!\n");
-
+	closeDB();
+	close(arg_a.accept_sockfd);
 }
 
 

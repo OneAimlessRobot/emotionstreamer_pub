@@ -1,10 +1,10 @@
 #include "../../Includes/preprocessor.h"
 #include <alsa/asoundlib.h>
 #define MPG123_ENUM_API
+#include "../../converter_tool/Includes/converter.h"
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <pulse/error.h>
 #include <pulse/simple.h>
-#include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
@@ -77,6 +77,7 @@ static int decode_chunk(decoder*decoder,frame_info_t* finfo,decoder_result_struc
 	   	}
 
 		result->decoder_state=(result->total_bytes_in_chunk>0);
+		//print_frame_info_data(finfo);
 		break;
 	case DO_READ:
 
@@ -172,7 +173,7 @@ int init_decoder(decoder* decoder,uint64_t d_chunk_size,uint64_t p_chunk_size,ui
 	decoder->p_buffer_pos_cursor=0;
 	mpg123_init();
 	decoder->dec=mpg123_new(NULL,NULL);
-	//mpg123_param(decoder->dec, MPG123_ADD_FLAGS, MPG123_QUIET,0.0);
+	mpg123_param(decoder->dec, MPG123_ADD_FLAGS, MPG123_QUIET,0.0);
 	mpg123_param(decoder->dec, MPG123_RESYNC_LIMIT, 4096,0.0);
 	mpg123_open_feed(decoder->dec);
 	return 0;

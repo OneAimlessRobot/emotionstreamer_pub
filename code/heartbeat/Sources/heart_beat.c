@@ -31,7 +31,6 @@ static int is_on=0;
 static con_t con_obj={0};
 
 static int started=0;
-
 static void close_all_fds_here(void){
 
 
@@ -45,10 +44,8 @@ static void close_all_fds_here(void){
 
 
 }
+static void call_signal_func(int useless){
 
-static void sigint_handler(int useless){
-	closeDB();
-	close(arg_a.accept_sockfd);
 	if(acess_var_mtx(&hb_mtx,&is_on,0,V_LOOK)){
 		acess_var_mtx(&hb_mtx,&is_on,0*useless,V_SET);
 		send_port_back(htons(arg_a.accept_addr.sin_port),&heartbeat_port_mapper_ip_entry);
@@ -62,9 +59,14 @@ static void sigint_handler(int useless){
 	}
 }
 
+static void sigint_handler(int useless){
+
+	call_signal_func(useless);
+}
+
 static void sigpipe_handler(int useless){
 
-	sigint_handler(useless);
+	call_signal_func(useless);
 }
 
 void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
@@ -114,18 +116,21 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_s.var_mtx=&hb_mtx;
         arg_s.con_obj=&con_obj;
 	arg_s.con_mtx=&con_mtx;
+	arg_s.sig_func=call_signal_func;
 	arg_s.trg_cond=&master_cond;
 	arg_s.type=HB_SERVER;
 	arg_s.extension_buff=extension_buff;
 
         arg_o.is_on=arg_a.is_on;
         arg_o.exit_signal=SIGINT;
-        arg_o.ack_timeout_lim= hb_ack_timeout_lim;
+        arg_o.sig_func=call_signal_func;
+	arg_o.ack_timeout_lim= hb_ack_timeout_lim;
         arg_o.start_cond_mtx=&hb_cond_mtx;
         arg_o.var_mtx=arg_s.var_mtx;
 
         arg_a.arg_o=&arg_o;
-        arg_a.arg_s=&arg_s;
+        arg_a.sig_func=call_signal_func;
+	arg_a.arg_s=&arg_s;
 	arg_a.master_mtx=&master_mtx;
         arg_a.var_mtx=arg_s.var_mtx;
 
@@ -164,7 +169,9 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	printf("Saimos do thread master do server de heartbeat!!!!!\n");
 	pthread_join(hb_tid_watchdog,NULL);
 	printf("Saimos do thread watchdog do server de heartbeat!!!!!\n");
-
+	closeDB();
+	close(arg_a.accept_sockfd);
+	
 }
 
 
