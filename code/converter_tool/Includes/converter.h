@@ -5,40 +5,56 @@
 
 //AAAAAAAA AAABBCCD EEEEFFGH IIJJKLMM
 /* Index: 0–15.  0 = free, 15 = bad/invalid. */
-static const int bitrate_table[4][3][16] = {
-/* MPEG Version 2 & 2.5 (same table) */
-{
-    /* Layer I   */ {0,32,48,56,64,80,96,112,128,144,160,176,192,224,256,0},
-    /* Layer II  */ {0,8,16,24,32,40,48,56,64,80,96,112,128,144,160,0},
-    /* Layer III */ {0,8,16,24,32,40,48,56,64,80,96,112,128,144,160,0}
-},
-{
-	{0},
-	{0},
-	{0}
-},
-/* MPEG Version 2 & 2.5 (same table) */
-{
-    /* Layer I   */ {0,32,48,56,64,80,96,112,128,144,160,176,192,224,256,0},
-    /* Layer II  */ {0,8,16,24,32,40,48,56,64,80,96,112,128,144,160,0},
-    /* Layer III */ {0,8,16,24,32,40,48,56,64,80,96,112,128,144,160,0}
-},
-/* MPEG Version 1 */
-{
-    /* Layer I   */ {0,32,64,96,128,160,192,224,256,288,320,352,384,416,448,0},
-    /* Layer II  */ {0,32,48,56,64,80,96,112,128,160,192,224,256,320,384,0},
-    /* Layer III */ {0,32,40,48,56,64,80,96,112,128,160,192,224,256,320,0}
-}
+static const uint16_t bitrate_table[4][4][16] = {
+{ // Version 2.5
+    { 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0 }, // Reserved
+    { 0,   8,  16,  24,  32,  40,  48,  56,  64,  80,  96, 112, 128, 144, 160, 0 }, // Layer 3
+    { 0,   8,  16,  24,  32,  40,  48,  56,  64,  80,  96, 112, 128, 144, 160, 0 }, // Layer 2
+    { 0,  32,  48,  56,  64,  80,  96, 112, 128, 144, 160, 176, 192, 224, 256, 0 }  // Layer 1
+  },
+  { // Reserved
+    { 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0 }, // Invalid
+    { 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0 }, // Invalid
+    { 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0 }, // Invalid
+    { 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0 }  // Invalid
+  },
+  { // Version 2
+    { 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0 }, // Reserved
+    { 0,   8,  16,  24,  32,  40,  48,  56,  64,  80,  96, 112, 128, 144, 160, 0 }, // Layer 3
+    { 0,   8,  16,  24,  32,  40,  48,  56,  64,  80,  96, 112, 128, 144, 160, 0 }, // Layer 2
+    { 0,  32,  48,  56,  64,  80,  96, 112, 128, 144, 160, 176, 192, 224, 256, 0 }  // Layer 1
+  },
+  { // Version 1
+    { 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0 }, // Reserved
+    { 0,  32,  40,  48,  56,  64,  80,  96, 112, 128, 160, 192, 224, 256, 320, 0 }, // Layer 3
+    { 0,  32,  48,  56,  64,  80,  96, 112, 128, 160, 192, 224, 256, 320, 384, 0 }, // Layer 2
+    { 0,  32,  64,  96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448, 0 }, // Layer 1
+  }
 
 };
 
-static const int samplerate_table[4][3] = {
-/* index: 00, 01, 10, 11(reserved) */
-    {11025,12000,8000},   // MPEG-2.5
-    {0,0,0},               // reserved
-    {22050,24000,16000},  // MPEG-2
-    {44100,48000,32000} // MPEG-1
+// Samples per frame - use [version][layer]
+static const uint16_t frame_samples_table[4][4] = {
+//    Rsvd     3     2     1  < Layer  v Version
+    {    0,  576, 1152,  384 }, //       2.5
+    {    0,    0,    0,    0 }, //       Reserved
+    {    0,  576, 1152,  384 }, //       2
+    {    0, 1152, 1152,  384 }  //       1
 };
+
+
+// Slot size (MPEG unit of measurement) - use [layer]
+static const uint8_t mpeg_slot_size[4] = { 0, 1, 1, 4 }; // Rsvd, 3, 2, 1
+
+
+// Sample rates - use [version][srate]
+static const uint16_t samplerate_table[4][4] = {
+    { 11025, 12000,  8000, 0 }, // MPEG 2.5
+    {     0,     0,     0, 0 }, // Reserved
+    { 22050, 24000, 16000, 0 }, // MPEG 2
+    { 44100, 48000, 32000, 0 }  // MPEG 1
+};
+
 
 #define MP3_WORD_BITS 32
 #define MP3_SAMPLE_SIZE (MP3_WORD_BITS/8)
@@ -84,8 +100,19 @@ static const int samplerate_table[4][3] = {
 
 typedef struct frame_info_t{
 
-	uint32_t start,size;
+	uint64_t frame_id,
+		start;
+	uint16_t size;
+	uint8_t	mpeg_layer,
+		mpeg_version,
+		mpeg_bitrate_idx,
+		mpeg_sample_rate_idx,
+		mpeg_padding;
+	uint16_t mpeg_samples;
+	uint8_t	 mpeg_slotsize;
 
+	uint32_t sample_rate,
+		 bitrate;
 
 }frame_info_t;
 
@@ -106,4 +133,5 @@ void start_frame_info_machine(const char* file_name_in,const char* file_name_out
 
 void end_frame_info_machine(frame_info_machine_t* machine);
 
+void print_frame_info_data(frame_info_t *frame_info);
 #endif

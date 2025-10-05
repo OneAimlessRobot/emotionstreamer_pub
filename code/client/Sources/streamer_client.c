@@ -4,6 +4,7 @@
 #include <alsa/asoundlib.h>
 #include <pulse/error.h>
 #include <pulse/simple.h>
+#include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
@@ -66,6 +67,7 @@ static client_stream_t stream_struct={
                                         NULL,
                                         NULL,
 					NULL,
+					NULL,
                                         NULL
                                         };
 
@@ -110,6 +112,28 @@ static void sigpipe_handler(int useless){
 	print_string("SIGPIPE! ");
 	sigint_handler(useless);
 
+}
+
+static int read_meta_tcp(client_stream_t* strm,int_pair pair){
+
+	int result= readsome(strm->con_obj->sockfd_tcp,(char*)strm->decoder->h2_chunk,sizeof(frame_info_t),pair);
+	if(result<0){
+		acess_var_mtx(&variable_acess_mtx,&lost_packet,1,V_SET);
+		return result;
+	}
+	acess_var_mtx(&variable_acess_mtx,&lost_packet,0,V_SET);
+	perform_queue_op(strm->auxiliar_que2,strm->decoder->h2_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
+	return result;
+}
+static int read_meta_udp(client_stream_t* strm,int_pair pair){
+        int result= readsome_udp(strm->con_obj->sockfd_udp,(char*)strm->decoder->h2_chunk,sizeof(frame_info_t),pair,&strm->con_obj->peer_udp_addr);
+	if(result<0){
+		acess_var_mtx(&variable_acess_mtx,&lost_packet,1,V_SET);
+		return result;
+	}
+	acess_var_mtx(&variable_acess_mtx,&lost_packet,0,V_SET);
+	perform_queue_op(strm->auxiliar_que2,strm->decoder->h2_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
+	return result;
 }
 
 static int read_chunk_tcp(client_stream_t* strm,int_pair pair){
@@ -166,7 +190,13 @@ static void* rx_thread_func(void* args){
 	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
 		acess_var_mtx(&variable_acess_mtx,&reading,1,V_SET);
 		while((acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK))){
-			(streaming_protocol<=0)?read_chunk_tcp(&stream_struct,client_data_times_pair):read_chunk_udp(&stream_struct,client_data_times_pair);
+			if(!is_wav_mode){
+				if(read_meta_tcp(&stream_struct,client_data_times_pair)<0){
+				
+				}
+				else{
+					con_send_udp(stream_struct.con_obj,client_data_times_pair);
+						(streaming_protocol<=0)?read_chunk_tcp(&stream_struct,client_data_times_pair):read_chunk_udp(&stream_struct,client_data_times_pair);
 			if(decode&&!is_wav_mode){
 				pthread_cond_signal(&decoder_cond);
 			}
@@ -189,18 +219,48 @@ static void* rx_thread_func(void* args){
 			}
 			//(streaming_protocol<=0)?con_send_tcp(stream_struct.con_obj,client_data_times_pair):con_send_udp(stream_struct.con_obj,client_data_times_pair);
 			con_send_udp(stream_struct.con_obj,client_data_times_pair);
+		   
+				}
+			}
+			else{
+			(streaming_protocol<=0)?read_chunk_tcp(&stream_struct,client_data_times_pair):read_chunk_udp(&stream_struct,client_data_times_pair);
+			if(decode&&!is_wav_mode){
+				pthread_cond_signal(&decoder_cond);
+			}
+			else if(!acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK)){
+				pthread_cond_signal(&player_cond);
+			}
+			if(input_enabled){
+				pthread_cond_signal(&input_cond);
+			}
+			if(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)){
+
+				break;
+			}
+			full=perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(is_wav_mode||!decode)?(q_op){Q_LOOK,Q_IS_FULL}:(q_op){Q_LOOK,Q_IS_ALMOST_FULL});
+			if(full){
+				break;
+			}
+			if(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK)){
+				break;
+			}
+			//(streaming_protocol<=0)?con_send_tcp(stream_struct.con_obj,client_data_times_pair):con_send_udp(stream_struct.con_obj,client_data_times_pair);
+			con_send_udp(stream_struct.con_obj,client_data_times_pair);
+		
+
+			}
 		}
 		
 		pthread_mutex_lock(&reading_mtx);
 		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||(perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,(is_wav_mode||!decode)?Q_IS_FULL:Q_IS_FULL})))){
 
-			print_string("Adormecemos o thread rx!!!\n");
+			//print_string("Adormecemos o thread rx!!!\n");
 			acess_var_mtx(&variable_acess_mtx,&reading,0,V_SET);
 			pthread_cond_wait(&reading_cond,&reading_mtx);
-			print_string("Tentámos acordar o thread rx!!!\n");
+			//print_string("Tentámos acordar o thread rx!!!\n");
 		}
 		pthread_mutex_unlock(&reading_mtx);
-		print_string("Acordámos o thread rx!!!\n");
+		//print_string("Acordámos o thread rx!!!\n");
 	}
 	return args;
 }
@@ -210,7 +270,8 @@ static void* dec_thread_func(void* args){
 	int empty=0;
 	int full=0;
 	int ret_val=MPG123_NEED_MORE;
-	decoder_result_struct result={0};
+	uint8_t result[sizeof(decoder_result_struct)]={0};
+	uint8_t finfo[sizeof(frame_info_t)]={0};
 	char buff[1024]={0};
 	pthread_mutex_lock(&decoder_mtx);
 	while(!acess_var_mtx(&variable_acess_mtx,&reading,0,V_LOOK)&&acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
@@ -222,15 +283,15 @@ static void* dec_thread_func(void* args){
 	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
 		acess_var_mtx(&variable_acess_mtx,&decoding,1,V_SET);
 		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
-			perform_queue_op(stream_struct.decoder_que,stream_struct.decoder->d_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
+			perform_queue_op(stream_struct.auxiliar_que2,finfo,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
 			pthread_cond_signal(&reading_cond);
-			ret_val=perform_dec_op(stream_struct.decoder,&result,D_DECODE_CHUNK,DO_DECODE);
+			ret_val=perform_dec_op(stream_struct.decoder,(frame_info_t*)finfo,(decoder_result_struct*)result,D_DECODE_CHUNK,DO_DECODE);
 
-			if(result.decoder_state){
+			if(((decoder_result_struct*)result)->decoder_state){
 
-				print_decoder_frame_result(&result,1);
+				print_decoder_frame_result((decoder_result_struct*)result,1);
 				perform_queue_op(stream_struct.player_que,stream_struct.decoder->p_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
-				perform_queue_op(stream_struct.auxiliar_que,(uint8_t*)&result,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
+				perform_queue_op(stream_struct.auxiliar_que,result,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 				pthread_cond_signal(&player_cond);
 				full=perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL});
 				if(full){
@@ -259,14 +320,14 @@ static void* dec_thread_func(void* args){
 	pthread_mutex_lock(&decoder_mtx);
 	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)&&perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL})&&!perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL})){
 
-		//print_string("Adormecemos o thread decoder!!!\n");
+		print_string("Adormecemos o thread decoder!!!\n");
 		acess_var_mtx(&variable_acess_mtx,&decoding,0,V_SET);
 		pthread_cond_wait(&decoder_cond,&decoder_mtx);
-		//print_string("Tentámos acordar o thread decoder!!!\n");
+		print_string("Tentámos acordar o thread decoder!!!\n");
 	}
 	pthread_mutex_unlock(&decoder_mtx);
 	if(!(ret_val==MPG123_NEED_MORE)){
-		//print_string("Acordámos o thread decoder!!!\n");
+		print_string("Acordámos o thread decoder!!!\n");
 	}
 	}
 
@@ -314,13 +375,13 @@ static void* play_thread_func(void* args){
 	}
 	pthread_mutex_lock(&player_mtx);
 	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY}))){
-		//print_string("Adormecemos o play thread!\n");
+		print_string("Adormecemos o play thread!\n");
 		acess_var_mtx(&variable_acess_mtx,&playing,0,V_SET);
 		pthread_cond_wait(&player_cond,&player_mtx);
-		//print_string("Tentámos acordar o play thread!\n");
+		print_string("Tentámos acordar o play thread!\n");
 	}
 	pthread_mutex_unlock(&player_mtx);
-	//print_string("Acordámos o play thread!\n");
+	print_string("Acordámos o play thread!\n");
 	}
 	return  args;
 }
@@ -455,6 +516,8 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	
 	uint8_t h_chunk_buff[is_wav_mode?chunk_size:1];
 	memset(h_chunk_buff,0,sizeof(h_chunk_buff));
+	uint8_t h2_chunk_buff[is_wav_mode?chunk_size:1];
+	memset(h2_chunk_buff,0,sizeof(h2_chunk_buff));
 	uint8_t r_chunk_buff[chunk_size];
 	memset(r_chunk_buff,0,sizeof(r_chunk_buff));
 	uint8_t d_chunk_buff[(!decode||is_wav_mode)?1:chunk_size];
@@ -466,6 +529,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	chunk_queue player_que={0};
 	chunk_queue decoder_que={0};
 	chunk_queue auxiliar_que={0};
+	chunk_queue auxiliar_que2={0};
 	chunk_player player={0};
 	decoder decoder={0};
 	init_queue(&player_que,(!decode||is_wav_mode)?chunk_size:chunk_size*CHANNELS*SIZE ,cfg_stream_player_cache_size_chunks);
@@ -476,8 +540,10 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		printf("Decoder will be initialized\n");
 		init_queue(&decoder_que,chunk_size,cfg_stream_decoder_cache_size_chunks);
 		init_queue(&auxiliar_que,sizeof(decoder_result_struct),cfg_stream_player_cache_size_chunks);
-		init_decoder(&decoder,chunk_size,chunk_size*CHANNELS*SIZE,r_chunk_buff,d_chunk_buff,pd_chunk_buff);
+		init_queue(&auxiliar_que2,sizeof(frame_info_t),cfg_stream_player_cache_size_chunks);
+		init_decoder(&decoder,chunk_size,chunk_size*CHANNELS*SIZE,r_chunk_buff,d_chunk_buff,pd_chunk_buff,h2_chunk_buff);
 		stream_struct.decoder=&decoder;
+		stream_struct.auxiliar_que2=&auxiliar_que2;
 		stream_struct.auxiliar_que=&auxiliar_que;
 		stream_struct.decoder_que=&decoder_que;
 		is_first_player_chunk=0;
@@ -539,7 +605,8 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	if(decode&&!is_wav_mode){
 		perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
 		perform_queue_op(stream_struct.auxiliar_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
-		perform_dec_op(stream_struct.decoder,NULL,D_CLEAN,0);
+		perform_queue_op(stream_struct.auxiliar_que2,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
+		perform_dec_op(stream_struct.decoder,NULL,NULL,D_CLEAN,0);
 	}
 	perform_play_op(stream_struct.player,NULL,P_CLEAN);
 	close_con(stream_struct.con_obj);

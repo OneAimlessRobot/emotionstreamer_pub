@@ -10,6 +10,7 @@ typedef struct client_stream_t{
 	  chunk_queue* decoder_que;
 	  chunk_queue* player_que;
 	  chunk_queue* auxiliar_que;
+	  chunk_queue* auxiliar_que2;
 	  chunk_player* player;
 	  decoder* decoder;
 }client_stream_t;

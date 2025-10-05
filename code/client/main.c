@@ -1,6 +1,7 @@
 #include "../Includes/preprocessor.h"
 #include "Includes/client.h"
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
+#include "../../converter_tool/Includes/converter.h"
 #include "../extra_funcs/Includes/fileshit.h"
 #include "../extra_funcs/Includes/sockio.h"
 #include "../extra_funcs/Includes/ip_cache_file.h"

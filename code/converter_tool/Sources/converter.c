@@ -6,16 +6,14 @@
 
 
 static frame_info_machine_t machine={0};
-static int get_mp3_frame_size(int version, int layer, int bitrate, int samplerate, int padding) {
-    if (bitrate == 0 || samplerate == 0)
-        return 0; // invalid
-
-    if (layer == 1)
-        return ((12 * bitrate / samplerate) + padding) * 4;
-    else if (version == 3) // MPEG1
-        return (144 * bitrate / samplerate) + padding;
-    else                    // MPEG2 / 2.5
-        return (72 * bitrate / samplerate) + padding;
+static uint16_t get_mp3_frame_size(uint16_t samples,uint32_t bitrate, uint32_t samplerate, uint32_t pad,uint8_t slot_size) {
+	
+	if (!bitrate || !samplerate) return 0;
+    uint64_t num = (uint64_t)samples * (uint64_t)bitrate;   // e.g., 1152 * 128000
+    uint64_t den = (uint64_t)8 * (uint64_t)samplerate;      // 8 bits/byte
+    uint64_t base = num / den;                              
+    uint64_t total = base + (pad ? slot_size : 0);
+    return (total <= 0xFFFF) ? (uint16_t)total : 0;
 }
 
 static void sigint_handler(int signal_arg){
@@ -43,13 +41,13 @@ void start_frame_info_machine(const char* file_name_in, const char* file_name_ou
 	snprintf(path_buff_in,sizeof(path_buff_in)-1,"%s/%s",converter_in_dir,file_name_in);
 	snprintf(path_buff_out,sizeof(path_buff_out)-1,"%s/%s%s",converter_out_dir,file_name_out,BOUNDARY_FILE_EXT);
 
-	machine.fd_in=open(path_buff_in,O_RDONLY,0777);
+	machine.fd_in=open(path_buff_in,O_RDONLY);
 	if(machine.fd_in<0){
 
 		fprintf(stderr,"Error at opening frame_info_machine input fd!: %s\nPath: %s\n",strerror(errno),path_buff_in);
 		return;
 	}
-	machine.fd_out=(dry_run?0:open(path_buff_out,O_WRONLY|O_TRUNC|O_CREAT,0777));
+	machine.fd_out=(dry_run?0:open(path_buff_out,O_WRONLY|O_TRUNC|O_CREAT,0664));
 	if(machine.fd_out<0){
 
 		fprintf(stderr,"Error at opening frame_info_machine output fd!: %s\nPath: %s\n",strerror(errno),path_buff_out);
@@ -58,78 +56,122 @@ void start_frame_info_machine(const char* file_name_in, const char* file_name_ou
 	}
 	signal(SIGINT,sigint_handler);
 	int nread=-1;
-	uint64_t curr_ftell=0;
+	uint64_t frame_id=0;
 	int nwritten=-1;
-	char curr_sample[MP3_SAMPLE_SIZE]={0};
-	while((nread=read(machine.fd_in,curr_sample,MP3_SAMPLE_SIZE)==4)){
-		if ((((uint32_t)curr_sample[0])&SYNC_BITS_MASK)==SYNC_BITS_MASK)
+	char hdr[MP3_SAMPLE_SIZE]={0};
+	unsigned char id3[10];
+	ssize_t r = read(machine.fd_in, id3, 10);
+	if (r == 10 && id3[0]=='I' && id3[1]=='D' && id3[2]=='3') {
+		size_t sz = ((id3[6]&0x7F)<<21)|((id3[7]&0x7F)<<14)|((id3[8]&0x7F)<<7)|(id3[9]&0x7F);
+		int has_footer = (id3[5] & 0x10) != 0; // v2.4 footer flag
+		lseek(machine.fd_in, 10 + sz + (has_footer ? 10 : 0), SEEK_SET);
+	} else {
+		lseek(machine.fd_in, 0, SEEK_SET);
+	}
+	while((nread=read(machine.fd_in,hdr,MP3_SAMPLE_SIZE))==4){
+		 off_t start = lseek(machine.fd_in, 0, SEEK_CUR) - 4;  // where this header began
+
+		// quick header sanity
+		if ((unsigned char)hdr[0] != 0xFF ||
+			(hdr[1] & 0xE0) != 0xE0 ||
+			(hdr[1] & 0x18) == 0x08 ||
+			(hdr[1] & 0x06) == 0x00 ||
+			(hdr[2] & 0xF0) == 0xF0) {
+			lseek(machine.fd_in, start + 1, SEEK_SET);
+			continue;
+		}
+		// Data to be extracted from the header
+		uint8_t   ver = (hdr[1] & 0x18) >> 3;   // Version index
+		uint8_t   lyr = (hdr[1] & 0x06) >> 1;   // Layer index
+		uint8_t   pad = (hdr[2] & 0x02) >> 1;   // Padding? 0/1
+		uint8_t   brx = (hdr[2] & 0xf0) >> 4;   // Bitrate index
+		uint8_t   srx = (hdr[2] & 0x0c) >> 2;   // SampRate index
+		uint8_t   prot = (hdr[1] & 0x01); // 1=no CRC, 0=CRC present
+
+
+	
+
+		if (ver == 1 || brx == 0 || brx == 15 || srx > 2) {
+			lseek(machine.fd_in, start + 1, SEEK_SET);
+			continue;
+		}
+		uint32_t sample_rate = samplerate_table[ver][srx];
+		uint32_t bitrate     = bitrate_table  [ver][lyr][brx] * 1000;
+		uint16_t samples     = frame_samples_table[ver][lyr];   // 1152 or 576 for L3
+		uint8_t  slotsize    = mpeg_slot_size[lyr];             // 1 for L3
+
+		uint16_t size = get_mp3_frame_size(samples, bitrate, sample_rate, pad, slotsize);
+		if (!size) { lseek(machine.fd_in, start + 1, SEEK_SET); continue; }
+		if (!prot) size += 2;                 // add CRC if present
+		if (size < 4) { lseek(machine.fd_in, start + 1, SEEK_SET); continue; }
+		frame_info_t info = { frame_id++, (uint64_t)start, size, lyr, ver, brx, srx,
+                      pad, samples, slotsize, sample_rate, bitrate };
+		if (dry_run) print_frame_info_data(&info);
+		else {
+				if ((nwritten = write(machine.fd_out, &info, sizeof(info))) < 0) {
+					fprintf(stderr,"We had issues with writing frame header info to file!\nAborting!\n%s\n",strerror(errno));
+					end_frame_info_machine(&machine);
+					return;
+				}
+		}
+		// peek next header to confirm lock
+		off_t next = (off_t)(start + size);
+		lseek(machine.fd_in, next, SEEK_SET);
+		unsigned char peek[4];
+		if (read(machine.fd_in, peek, 4) == 4 &&
+			peek[0] == 0xFF && (peek[1] & 0xE0) == 0xE0 &&
+			(peek[1] & 0x18) != 0x08 && (peek[1] & 0x06) != 0x00)
 		{
-		uint32_t hdr = (curr_sample[0] << 24) | (curr_sample[1]  << 16) | (curr_sample[2]  << 8) | curr_sample[3];
-
-		//printf("We found a frame header!!!\n");
-		uint32_t mpeg_layer	             = (hdr & LAYER_BITS_MASK)        >> MP3_LAYER_SHIFT;
-		if(mpeg_layer!=1){
-			//printf("....But its [not] layer 3. So we scrap it\n");
-			continue;
+			lseek(machine.fd_in, next, SEEK_SET); // locked
 		}
-		//usleep(1000000);
-		uint32_t mpeg_version	     = ((uint32_t)(hdr & VERSION_BITS_MASK))      >> MP3_VERSION_SHIFT;
-		uint32_t mpeg_bitrate_idx 	     = ((uint32_t)(hdr & BITRATE_BITS_MASK))     >> MP3_BITRATE_SHIFT;
-		uint32_t mpeg_sample_rate_idx     = ((uint32_t)(hdr & SAMPLE_RATE_BITS_MASK))  >> MP3_SAMPLERATE_SHIFT;
-		uint32_t mpeg_padding     	     = ((uint32_t)(hdr & PADDING_BIT_MASK))       >> MP3_PADDING_SHIFT;
-		uint32_t mpeg_channelmode 	     = ((uint32_t)(hdr & CHANNEL_MODE_BITS_MASK)) >> MP3_CHANNELMODE_SHIFT;
-		if(mpeg_sample_rate_idx==3){
-
-			//printf("Invalid sample_rate idx.\nSkipping...\n");
-			continue;
-
+		else {
+			// fallback: advance 1 byte from current frame start and try again
+			lseek(machine.fd_in, start + 1, SEEK_SET);
 		}
-		int sample_rate=samplerate_table[mpeg_version][mpeg_sample_rate_idx];
-		int bitrate=bitrate_table[mpeg_version][mpeg_layer][mpeg_bitrate_idx]*1000;
-		curr_ftell=lseek(machine.fd_in,0,SEEK_CUR);
-		frame_info_t frame_info_struct={curr_ftell-4,0};
-		if(!(frame_info_struct.size=get_mp3_frame_size(mpeg_version,mpeg_layer,bitrate,sample_rate,mpeg_padding))){
-			continue;
-		}
-
-		/*printf("This frame header has the following data:\n"
-						"mpeg_layer: %u\n"
-						"mpeg_version: %u\n"
-						"mpeg_bitrate_idx: %u\n"
-						"mpeg_sample_rate_idx: %u\n"
-						"bitrate: %d\n"
-						"sample_rate: %d\n"
-						"mpeg_padding: %u\n"
-						"mpeg_channelmode: %u\n"
-						"frame_info_struct.start: %lu\n"
-						"frame_info_struct.size: %lu\n\n\n",
-						mpeg_layer,
-						mpeg_version,
-						mpeg_bitrate_idx,
-						mpeg_sample_rate_idx,
-						bitrate,
-						sample_rate,
-						mpeg_padding,
-						mpeg_channelmode,
-						frame_info_struct.start,
-						frame_info_struct.size
-						);
-		*/
-		if(!dry_run){
-			if((nwritten=write(machine.fd_out,&frame_info_struct,sizeof(frame_info_struct)))<0){
-				fprintf(stderr,"We had issues with writing frame header info to file!\nAborting!\n%s\n",strerror(errno));
-				end_frame_info_machine(&machine);
-				return;
-			}
-		}
-		}
-		memset(curr_sample,0,sizeof(curr_sample));
+		memset(hdr,0,sizeof(hdr));
 	}
 	printf("Frame machine completed task!\n");
 	end_frame_info_machine(&machine);
 }
 
+void print_frame_info_data(frame_info_t *frame_info){
 
+
+	if(!frame_info){
+
+		printf("Null frame info!!!\nWill not print\n");
+		return;
+	}
+
+	printf("This frame header has the following data:\n"
+				"frame_id: %lu\n"
+				"mpeg_layer: %hu\n"
+				"mpeg_version: %hu\n"
+				"mpeg_bitrate_idx: %hu\n"
+				"mpeg_sample_rate_idx: %hu\n"
+				"bitrate: %u\n"
+				"sample_rate: %u\n"
+				"mpeg_padding: %hu\n"
+				"mpeg_samples: %hu\n"
+				"mpeg_slotsize: %hu\n"
+				"frame_info_struct.start: %lu\n"
+				"frame_info_struct.size: %hu\n\n\n",
+				frame_info->frame_id,
+				frame_info->mpeg_layer,
+				frame_info->mpeg_version,
+				frame_info->mpeg_bitrate_idx,
+				frame_info->mpeg_sample_rate_idx,
+				frame_info->bitrate,
+				frame_info->sample_rate,
+				frame_info->mpeg_padding,
+				frame_info->mpeg_samples,
+				frame_info->mpeg_slotsize,
+				frame_info->start,
+				frame_info->size
+				);
+
+
+}
 
 void end_frame_info_machine(frame_info_machine_t* machine){
 

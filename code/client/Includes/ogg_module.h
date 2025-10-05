@@ -11,6 +11,7 @@ typedef struct decoder{
 	pthread_mutex_t* mtx;
 	mpg123_handle *dec;
 	uint8_t* r_chunk;
+	uint8_t* h2_chunk;
 	uint8_t* d_chunk;
 	uint8_t* p_chunk;
 	uint64_t d_chunk_size;
@@ -20,7 +21,7 @@ typedef struct decoder{
 	
 }decoder;
 
-int init_decoder(decoder* decoder,uint64_t d_chunk_size,uint64_t p_chunk_size,uint8_t* r_buff,uint8_t* d_buff,uint8_t* p_buff);
-int perform_dec_op(decoder* decoder,decoder_result_struct* result,dec_op op,decoding_option option);
+int init_decoder(decoder* decoder,uint64_t d_chunk_size,uint64_t p_chunk_size,uint8_t* r_buff,uint8_t* d_buff,uint8_t* p_buff,uint8_t* h2_buff);
+int perform_dec_op(decoder* decoder,frame_info_t* finfo,decoder_result_struct* result,dec_op op,decoding_option option);
 
 #endif

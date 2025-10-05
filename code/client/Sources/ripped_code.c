@@ -1,5 +1,6 @@
 #include "../../Includes/preprocessor.h"
 #include <ncurses.h>
+#include "../../converter_tool/Includes/converter.h"
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <pulse/error.h>
 #include <pulse/simple.h>

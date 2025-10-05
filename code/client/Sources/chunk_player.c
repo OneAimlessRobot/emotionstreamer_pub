@@ -4,6 +4,7 @@
 #include "../../wav_stuff_i_stole_because_i_am_lazy/wav.h"
 #include <pulse/error.h>
 #include <pulse/simple.h>
+#include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"

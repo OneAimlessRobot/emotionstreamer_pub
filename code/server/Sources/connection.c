@@ -66,6 +66,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 			
 			sock_tcp=sockfd_tcp;
 				unsigned char stream_cache_data[server_chunk_size];
+				unsigned char stream_meta_data[sizeof(frame_info_t)];
 
 				char file_name[PATHSIZE]={0};
 				char file_path[PATHSIZE*3 +4]={0};
@@ -139,7 +140,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 					raise(SIGINT);
 				}
 				else{
-					if(!is_wav_mode){
+					if(!is_wav_mode&&(recvd_type==PLAY)){
 				 		printf("We are NOT in WAV mode bruuuhhhhh\n");
 						if(!strs_are_strictly_equal(server_working_extension,".mp3")){
 						char fp_boundary_path[PATHSIZE*10]={0};
@@ -171,7 +172,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 
 							raise(SIGINT);
 						}
-						begin_stream(&server_con_obj,fp,fp_boundary,server_chunk_size,stream_cache_data);
+						begin_stream(&server_con_obj,fp,fp_boundary,server_chunk_size,stream_cache_data,stream_meta_data);
 						break;
 					case CONF:
 						sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);

@@ -30,6 +30,7 @@ static server_stream_t stream_struct={
 					-1,
 					-1,
 					NULL,
+					NULL,
 					0
 					};
 
@@ -54,6 +55,18 @@ static void cleanup(int useless){
 		close_con(stream_struct.con_obj);
 	}
 }
+static int send_meta_tcp(server_stream_t* strm,int_pair pair){
+
+	return sendsome(strm->con_obj->sockfd_tcp,(char*)strm->chunk_meta_cache,sizeof(frame_info_t),pair);
+        
+
+}
+static int send_meta_udp(server_stream_t* strm,int_pair pair){
+
+	return sendsome_udp(strm->con_obj->sockfd_udp,(char*)strm->chunk_meta_cache,sizeof(frame_info_t),pair,&strm->con_obj->peer_udp_addr);
+        
+
+}
 static int send_chunk_tcp(server_stream_t* strm,int_pair pair){
 
 	return sendsome(strm->con_obj->sockfd_tcp,(char*)strm->chunk_data_cache,strm->chunk_size,pair);
@@ -70,6 +83,28 @@ static int send_chunk_udp(server_stream_t* strm,int_pair pair){
 static int send_chunk_to_client(void){
 
 	int result=-2;
+	if(!is_wav_mode){
+	result=send_meta_tcp(&stream_struct,server_drop_chunks_times_pair);
+	while((acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK))&&(result!=-1)){
+                //result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_ti>
+                result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
+                if(result==-2){
+                        printf("Esperando ser respondido na stream do server\n");
+
+                }
+                else{
+                        if(result<0){
+                                perror("Erro em read na stream do server!!!\n");
+                        }
+                        break;
+                }
+		}
+		if(result==-1){
+		        perror("Erro em send na stream do server!!!\n");
+
+			return result;
+		}
+	}
 	result=(server_transmission_protocol<=0)?send_chunk_tcp(&stream_struct,server_drop_chunks_times_pair):send_chunk_udp(&stream_struct,server_drop_chunks_times_pair);
 	while((acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK))&&(result!=-1)){
 		//result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_times_pair):con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
@@ -105,17 +140,19 @@ static void* server_stream(void* args){
 	}
 	else{
 		printf("We are NOT in wav mode!!!\n");
-		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)){
+		int count= 200;
+		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)&&count){
 			frame_info_t frame_stuff={0};
 			if(read(stream_struct.local_fd_boundary,&frame_stuff,sizeof(frame_stuff))<=0){
-				fprintf(stderr,"We could not read a frame info thing!\nThe start is: %d\nThe size is: %d\n",frame_stuff.start,frame_stuff.size);
+				fprintf(stderr,"We could not read a frame info thing!\n");
 				break;
 			}
 			else{
 				memset(stream_struct.chunk_data_cache,0,server_chunk_size);
 			}
-			printf("We read a frame info thing!\nThe start is: %d\nThe size is: %d\n",frame_stuff.start,frame_stuff.size);
-			lseek(stream_struct.local_fd,frame_stuff.start+frame_stuff.size,SEEK_SET);
+			printf("We read a frame info thing!\n");
+			print_frame_info_data(&frame_stuff);
+			lseek(stream_struct.local_fd,frame_stuff.start,SEEK_SET);
 			if(read(stream_struct.local_fd,stream_struct.chunk_data_cache,frame_stuff.size)<=0){
 				fprintf(stderr,"We could not read a frame using frame info thing!\n");
 				break;
@@ -127,7 +164,7 @@ static void* server_stream(void* args){
 
 			}
 			printf("We sent a frame obtained using a frame_info_thing!\n");
-
+			//count--;
 		}
 	}
 	return args;
@@ -170,8 +207,8 @@ static void* ack_exchange_thread(void* args){
 
 
 }
-
-static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chunk_size,unsigned char* stream_buff){
+ 
+static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chunk_size,unsigned char* stream_buff,unsigned char* meta_buff){
 	
 	signal(SIGINT,cleanup);
 	stream_struct.initted=1;
@@ -180,6 +217,7 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
         stream_struct.local_fd_boundary=fd_boundary;
 	stream_struct.chunk_size=chunk_size;
 	stream_struct.chunk_data_cache=stream_buff;
+	stream_struct.chunk_meta_cache=meta_buff;
 	memset(stream_struct.chunk_data_cache,0,stream_struct.chunk_size);
         pthread_create(&tid_ack,NULL,ack_exchange_thread,NULL);
         pthread_create(&tid_stream,NULL,server_stream,NULL);
@@ -205,9 +243,9 @@ void close_stream(void){
 	raise(SIGINT);
 }
 
-void begin_stream(con_t*con_obj,int fd, int fd_boundary,uint64_t chunk_size,unsigned char* stream_buff){
+void begin_stream(con_t*con_obj,int fd, int fd_boundary,uint64_t chunk_size,unsigned char* stream_buff,unsigned char* meta_buff){
 
-	init_server_stream(fd,fd_boundary,con_obj, chunk_size,stream_buff);
+	init_server_stream(fd,fd_boundary,con_obj, chunk_size,stream_buff,meta_buff);
 
 
 
