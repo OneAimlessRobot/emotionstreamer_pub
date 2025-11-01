@@ -25,7 +25,6 @@ typedef struct port_mapper{
 	
 	int32_t* port_arr; //its a 32 bit int because it makes using my mtx functions more convenient
 	int32_t curr_num_ports;
-	int running;
 	int socket;
 	struct sockaddr_in addr_struct;
 	fd_set con_fds;

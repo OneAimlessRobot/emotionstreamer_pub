@@ -28,6 +28,9 @@ static const int play=1;
 static const int decode=1;
 static const int rx_enabled=1;
 static const int input_enabled=1;
+static struct sigaction sa;
+
+atomic_int innited=ATOMIC_VAR_INIT(0);
 
 static pthread_cond_t reading_cond=PTHREAD_COND_INITIALIZER,
 	       player_cond=PTHREAD_COND_INITIALIZER,
@@ -61,7 +64,6 @@ static int is_first_player_chunk=1;
 
 static client_stream_t stream_struct={
 					0,
-					0,
 					NULL,
 					NULL,
                                         NULL,
@@ -83,34 +85,29 @@ static void endwin_wrapper(void){
 
 }
 
-static void stop_client_stream(int useless){
+static void stop_client_stream(void){
 
-	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
-		acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_SET);
-       		pthread_cond_signal(&running_cond+(0*useless));
-		pthread_cond_signal(&player_cond);
-		pthread_cond_signal(&decoder_cond);
-		pthread_cond_signal(&reading_cond);
-		pthread_cond_signal(&input_cond);
-		endwin_wrapper();
-	}
-
-}
-static void sigint_handler(int useless){
-
-	print_string("SIGINT! ");
-	stop_client_stream((0*useless));
+	pthread_cond_signal(&running_cond);
+	pthread_cond_signal(&player_cond);
+	pthread_cond_signal(&decoder_cond);
+	pthread_cond_signal(&reading_cond);
+	pthread_cond_signal(&input_cond);
+	endwin_wrapper();
         if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
 		send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
 		send_ports_back(stream_struct.con_obj);
 	}
+
+
+}
+static void sigint_handler(int useless){
+
+	innited=0*useless;
 }
 
 static void sigpipe_handler(int useless){
 
-	print_string("SIGPIPE! ");
-	sigint_handler(useless);
-
+	innited=0*useless;
 }
 
 static int read_meta_tcp(client_stream_t* strm,int_pair pair){
@@ -186,9 +183,9 @@ static int read_chunk_udp(client_stream_t* strm,int_pair pair){
 static void* rx_thread_func(void* args){
 	int full=0;
 	print_string("Thread de reading alcançado!\n");
-	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&reading,1,V_SET);
-		while((acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK))){
+		while(innited){
 			if(!is_wav_mode){
 				if(read_meta_udp(&stream_struct,client_data_times_pair)<0){
 					continue;
@@ -250,7 +247,7 @@ static void* rx_thread_func(void* args){
 		}
 		
 		pthread_mutex_lock(&reading_mtx);
-		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||(perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,(is_wav_mode||!decode)?Q_IS_FULL:Q_IS_FULL})))){
+		while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||(perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,(is_wav_mode||!decode)?Q_IS_FULL:Q_IS_FULL})))){
 
 			//print_string("Adormecemos o thread rx!!!\n");
 			acess_var_mtx(&variable_acess_mtx,&reading,0,V_SET);
@@ -272,15 +269,15 @@ static void* dec_thread_func(void* args){
 	uint8_t finfo[sizeof(frame_info_t)]={0};
 	char buff[1024]={0};
 	pthread_mutex_lock(&decoder_mtx);
-	while(!acess_var_mtx(&variable_acess_mtx,&reading,0,V_LOOK)&&acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+	while(!acess_var_mtx(&variable_acess_mtx,&reading,0,V_LOOK)&&innited){
 
 		pthread_cond_wait(&decoder_cond,&decoder_mtx);
 	}
 	pthread_mutex_unlock(&decoder_mtx);
 	print_string("Thread de decoding alcançado!\n");
-	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&decoding,1,V_SET);
-		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+		while(innited){
 			perform_queue_op(stream_struct.auxiliar_que2,finfo,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
 			perform_queue_op(stream_struct.decoder_que,stream_struct.decoder->d_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
 			ret_val=perform_dec_op(stream_struct.decoder,(frame_info_t*)finfo,(decoder_result_struct*)result,D_DECODE_CHUNK,DO_DECODE);
@@ -323,7 +320,7 @@ static void* dec_thread_func(void* args){
 			}
 	}
 	pthread_mutex_lock(&decoder_mtx);
-	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)&&perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL})&&!perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL})){
+	while(innited&&perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL})&&!perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL})){
 
 		//print_string("Adormecemos o thread decoder!!!\n");
 		acess_var_mtx(&variable_acess_mtx,&decoding,0,V_SET);
@@ -344,15 +341,15 @@ static void* play_thread_func(void* args){
 	int empty=0;
 	decoder_result_struct result={0};
 	pthread_mutex_lock(&player_mtx);
-	while((decode&&!is_wav_mode)?!acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK):!acess_var_mtx(&variable_acess_mtx,&reading,0,V_LOOK)&&acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+	while((decode&&!is_wav_mode)?!acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK):!acess_var_mtx(&variable_acess_mtx,&reading,0,V_LOOK)&&innited){
 
 		pthread_cond_wait(&player_cond,&player_mtx);
 	}
 	pthread_mutex_unlock(&player_mtx);
 	print_string("Thread de play alcançado!\n");
-	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&playing,1,V_SET);
-		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+		while(innited){
 			if(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK)){
 
 				continue;
@@ -379,7 +376,7 @@ static void* play_thread_func(void* args){
 			}
 	}
 	pthread_mutex_lock(&player_mtx);
-	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY}))){
+	while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY}))){
 		//print_string("Adormecemos o play thread!\n");
 		acess_var_mtx(&variable_acess_mtx,&playing,0,V_SET);
 		pthread_cond_wait(&player_cond,&player_mtx);
@@ -394,7 +391,7 @@ static void* ack_exchange_thread(void* args){
 
 	int result=0;
 	char buff[1024]={0};
-	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+	while(innited){
         result=con_send_udp_ack(stream_struct.con_obj,client_data_times_pair);
         if(result<=0){
 		if(result==-2){
@@ -433,7 +430,7 @@ static void* show_stats(void* args){
         initscr();
 	}
 	//nodelay(stdscr,1);
-	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+	while(innited){
 		usleep(1000);
 		decoder_result_struct result={0};
 		
@@ -476,13 +473,13 @@ static void* show_stats(void* args){
 static void* input_thread_func(void* args){
 
 	pthread_mutex_lock(&input_mtx);
-        while((decode&&!is_wav_mode)?!acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK):!acess_var_mtx(&variable_acess_mtx,&reading,0,V_LOOK)&&acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+        while((decode&&!is_wav_mode)?!acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK):!acess_var_mtx(&variable_acess_mtx,&reading,0,V_LOOK)&&innited){
 
                 pthread_cond_wait(&input_cond,&input_mtx);
         }
 	pthread_mutex_unlock(&input_mtx);
 
-	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+	while(innited){
 
 		char input_buff[DEF_DATASIZE+1]={0};
 		if(stream_enable_ncurses){
@@ -518,6 +515,11 @@ static void* input_thread_func(void* args){
 static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_mode){
 	signal(SIGINT,sigint_handler);
 	signal(SIGPIPE,sigpipe_handler);
+
+        sa.sa_handler = sigint_handler;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = SA_RESTART;
+        sigaction(SIGINT, &sa, NULL);
 	
 	uint8_t h_chunk_buff[is_wav_mode?chunk_size:1];
 	memset(h_chunk_buff,0,sizeof(h_chunk_buff));
@@ -555,8 +557,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	}
 	
 	stream_struct.con_obj=con_obj;
-	stream_struct.innited=1;
-	
+	innited=1;
 	pthread_create(&tid_ack,NULL,ack_exchange_thread,NULL);
 	if(rx_enabled){
 		pthread_create(&tid_rx,NULL,rx_thread_func,NULL);
@@ -575,7 +576,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	}
 	
 	pthread_mutex_lock(&running_mtx);
-	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.innited,0,V_LOOK)){
+	while(innited){
 
 		pthread_cond_wait(&running_cond,&running_mtx);
 	}
@@ -616,6 +617,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	close_con(stream_struct.con_obj);
 	perform_play_op(stream_struct.player,NULL,P_CLEAN);
 	printf("SAIMOS DO CLIENT!\nTimeouts excedidos? %s\nVamos ver errno:%s\n",(stream_struct.curr_timeout==cfg_client_ack_timeout_lim) ? "SIM": "NAO",strerror(errno));
+	stop_client_stream();
 	return 0;
 }
 

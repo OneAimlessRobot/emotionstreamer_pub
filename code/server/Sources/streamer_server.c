@@ -21,10 +21,11 @@ static pthread_mutex_t running_mtx=PTHREAD_MUTEX_INITIALIZER,
 
 static pthread_t tid_stream,
 		tid_ack;
+atomic_int initted=ATOMIC_VAR_INIT(0);
+static struct sigaction sa;
 
 
 static server_stream_t stream_struct={
-					0,
 					0,
 					NULL,
 					-1,
@@ -37,23 +38,19 @@ static server_stream_t stream_struct={
 
 static void stop_server_stream(server_stream_t* strm){
 
-	if(acess_var_mtx(&variable_acess_mtx,&strm->initted,0,V_LOOK)){
-        	acess_var_mtx(&variable_acess_mtx,&strm->initted,0,V_SET);
-		close(strm->local_fd);
-		close(strm->local_fd_boundary);
-		pthread_cond_signal(&running_cond);
-	}
-	
-}
 
-static void cleanup(int useless){
-
-	stop_server_stream(&stream_struct + (0*useless));
 	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
 		send_port_back(htons(stream_struct.con_obj->tcp_data_local_port),&server_port_mapper_ip_cache_entry);
 		send_ports_back(stream_struct.con_obj);
 		close_con(stream_struct.con_obj);
 	}
+	close(strm->local_fd);
+	close(strm->local_fd_boundary);
+	pthread_cond_signal(&running_cond);
+}
+
+static void cleanup(int useless){
+	initted=0*useless;
 }
 static int send_meta_tcp(server_stream_t* strm,int_pair pair){
 
@@ -85,7 +82,7 @@ static int send_chunk_to_client(void){
 	int result=-2;
 	if(!is_wav_mode){
 	result=send_meta_udp(&stream_struct,server_drop_chunks_times_pair);
-	while((acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK))&&(result!=-1)){
+	while(initted){
                 //result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_ti>
                 result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
                 if(result==-2){
@@ -106,7 +103,7 @@ static int send_chunk_to_client(void){
 		}
 	}
 	result=(server_transmission_protocol<=0)?send_chunk_tcp(&stream_struct,server_drop_chunks_times_pair):send_chunk_udp(&stream_struct,server_drop_chunks_times_pair);
-	while((acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK))&&(result!=-1)){
+	while(initted&&(result!=-1)){
 		//result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_times_pair):con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 		result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 			if(result==-2){
@@ -129,7 +126,7 @@ static int send_chunk_to_client(void){
 
 static void* server_stream(void* args){
 	if(is_wav_mode){
-	        while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)
+	        while(initted
 			&&
 			(read(stream_struct.local_fd,stream_struct.chunk_data_cache,stream_struct.chunk_size)>0)
 			&&
@@ -141,7 +138,7 @@ static void* server_stream(void* args){
 	else{
 		printf("We are NOT in wav mode!!!\n");
 		int count= 200;
-		while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)&&count){
+		while(initted&&count){
 			if(read(stream_struct.local_fd_boundary,stream_struct.chunk_meta_cache,sizeof(frame_info_t))<=0){
 				fprintf(stderr,"We could not read a frame info thing!\n");
 				break;
@@ -166,6 +163,7 @@ static void* server_stream(void* args){
 			//count--;
 		}
 	}
+	raise(SIGINT);
 	return args;
 
 }
@@ -173,7 +171,7 @@ static void* server_stream(void* args){
 static void* ack_exchange_thread(void* args){
 
 	int result=0;
-	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)){
+	while(initted){
         result=con_read_udp_ack(stream_struct.con_obj,server_data_times_pair);
 	if(result<=0){
 
@@ -200,7 +198,7 @@ static void* ack_exchange_thread(void* args){
 		perror("");
         }
 	}
-	stop_server_stream(&stream_struct);
+	raise(SIGINT);
 	printf("Saimos do thread de acks!!!\n");
 	return args;
 
@@ -209,9 +207,13 @@ static void* ack_exchange_thread(void* args){
  
 static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chunk_size,unsigned char* stream_buff,unsigned char* meta_buff){
 	
-	signal(SIGINT,cleanup);
-	stream_struct.initted=1;
-        stream_struct.con_obj=con_obj;
+
+        sa.sa_handler = cleanup;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = SA_RESTART;
+        sigaction(SIGINT, &sa, NULL);
+
+	stream_struct.con_obj=con_obj;
         stream_struct.local_fd=fd;
         stream_struct.local_fd_boundary=fd_boundary;
 	stream_struct.chunk_size=chunk_size;
@@ -222,7 +224,7 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
         pthread_create(&tid_stream,NULL,server_stream,NULL);
 	
 	pthread_mutex_lock(&running_mtx);
-	while(acess_var_mtx(&variable_acess_mtx,&stream_struct.initted,0,V_LOOK)){
+	while(initted){
 
 		pthread_cond_wait(&running_cond,&running_mtx);
 
@@ -234,6 +236,7 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 	pthread_join(tid_ack,NULL);
 	printf("Saimos do thread de ack!!!\n");
 	printf("SAIMOS DA STREAM DO SERVER!\nTimeouts excedidos? %s\nVamos ver errno:%s\n",(stream_struct.curr_timeout==server_ack_timeout_lim) ? "SIM": "NAO",strerror(errno));
+	stop_server_stream(&stream_struct);
 	return 0;
 }
 

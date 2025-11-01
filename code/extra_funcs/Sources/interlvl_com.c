@@ -135,15 +135,14 @@ void* slave_thread(void* args){
 		return args;
         
         }
-        acess_var_mtx(arg_struct->var_mtx,arg_struct->start_trigger,1,V_SET);
-
+	(*arg_struct->start_trigger)=1;
         pthread_cond_signal(arg_struct->trg_cond);
 
 
         printf("hb_thread do streamer server: online\n");
         uint64_t curr_timeout=0;
         result=0;
-        while(acess_var_mtx(arg_struct->var_mtx,arg_struct->loop_var,0,V_LOOK)){
+        while(*arg_struct->loop_var){
 	int result[2]={0};
         do_indexed_slave_con_op(arg_struct,1,result);
 	if(result[0]<=0){
@@ -294,15 +293,15 @@ void* watch_dog_func(void* args){
 
 	FD_ZERO(&arg_s->cons->rdfds);
 
-        while(acess_var_mtx(arg_s->var_mtx,arg_s->is_on,0,V_LOOK)){
+        while(*arg_s->is_on){
 
         pthread_mutex_lock(arg_s->start_cond_mtx);
-        while(acess_var_mtx(arg_s->var_mtx,arg_s->is_on,0,V_LOOK)&&!acess_var_mtx(arg_s->cons->set_mtx,&arg_s->cons->curr_size,0,V_LOOK)){
+        while((*arg_s->is_on)&&!acess_var_mtx(arg_s->cons->set_mtx,&arg_s->cons->curr_size,0,V_LOOK)){
 	       pthread_cond_wait(arg_s->cons->start_cond,arg_s->start_cond_mtx);
         }
         pthread_mutex_unlock(arg_s->start_cond_mtx);
 
-        while(acess_var_mtx(arg_s->var_mtx,arg_s->is_on,0,V_LOOK)&&acess_var_mtx(arg_s->cons->set_mtx,&arg_s->cons->curr_size,0,V_LOOK)){
+        while((*arg_s->is_on)&&acess_var_mtx(arg_s->cons->set_mtx,&arg_s->cons->curr_size,0,V_LOOK)){
 
         for(int i=1;i<arg_s->cons->max_size;i++){
         int result[2]={0};
@@ -419,14 +418,14 @@ void* acceptor_func(void* args){
         printf("Chegamos ao loop de heart beat!\n");
 	if(!is_master){
         pthread_mutex_lock(arg_a->master_mtx);
-        while(!acess_var_mtx(arg_a->var_mtx,arg_a->started,0,V_LOOK)){
+        while(!(*arg_a->started)){
                  printf("Esperando sinal do master server thread!!!\n");
                  pthread_cond_wait(arg_a->arg_s->trg_cond,arg_a->master_mtx);
         }
         pthread_mutex_unlock(arg_a->master_mtx);
         }
 	
-        while(acess_var_mtx(arg_a->var_mtx,arg_a->is_on,0,V_LOOK)){
+        while((*arg_a->is_on)){
 
 
 

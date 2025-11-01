@@ -22,9 +22,13 @@ pthread_mutex_t master_running_mtx=PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t master_con_mtx=PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t master_running_cond=PTHREAD_COND_INITIALIZER;
 
-static int is_on=0;
 
-static int started=0;
+atomic_int is_on = ATOMIC_VAR_INIT(0);
+
+static struct sigaction sa;
+
+atomic_int started=ATOMIC_VAR_INIT(0);
+
 static void close_all_fds_here(void){
 
 
@@ -32,37 +36,32 @@ static void close_all_fds_here(void){
         pthread_cond_broadcast(arg_o.cons->start_cond);
 }
 
-static void call_signal_func(int useless){
+static void call_signal_func(void){
 
-	if(acess_var_mtx(&master_mtx,&is_on,0,V_LOOK)){
-		acess_var_mtx(&master_mtx,&is_on,0*useless,V_SET);
-                close_all_fds_here();
-                pthread_mutex_lock(&mastercon_mtx)
-		send_port_back(htons(arg_a.accept_addr.sin_port),&master_server_port_mapper_ip_cache_entry);
-		pthread_cond_signal(&master_running_cond);
-		perror("Saindo do heart beat server!!!!\n");
-        }
-        else{
-		acess_var_mtx(&master_mtx,&is_on,0*useless,V_SET);
-                pthread_cond_signal(&master_running_cond);
-        }
+
+	close_all_fds_here();
+        pthread_mutex_lock(&master_con_mtx);
+	send_port_back(htons(arg_a.accept_addr.sin_port),&master_server_port_mapper_ip_cache_entry);
+	pthread_cond_signal(&master_running_cond);
+	perror("Saindo do heart beat server!!!!\n");
 
 
 }
 
 static void sigint_handler(int useless){
-        call_signal_func(useless);
+
+	is_on=0*useless;
+	started=1;
 }
 
-static void sigpipe_handler(int useless){
-
-	sigint_handler(useless);
-}
 
 void start_master(char* hostname, uint16_t port){
 
-	signal(SIGINT,sigint_handler);
-	signal(SIGPIPE,sigpipe_handler);
+	sa.sa_handler = sigint_handler;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGPIPE, &sa, NULL);
 	int fd_arr[MAX_HB_SERVERS]={0},
 		timeout_arr[MAX_HB_SERVERS]={0};
 
@@ -84,14 +83,14 @@ void start_master(char* hostname, uint16_t port){
 
         is_on=1;
         arg_a.is_on=&is_on;
-	arg_a.sig_func=call_signal_func;
+	arg_a.sig_func=sigint_handler;
         arg_a.started=&started;
         arg_a.exit_signal=SIGINT;
 
 	arg_o.is_on=&is_on;
         arg_o.exit_signal=SIGINT;
 	arg_o.ack_timeout_lim= master_ack_timeout_lim;
-        arg_o.sig_func=call_signal_func;
+        arg_o.sig_func=sigint_handler;
         arg_o.start_cond_mtx=&master_cond_mtx;
         arg_o.var_mtx=&master_mtx;
 
@@ -122,7 +121,7 @@ void start_master(char* hostname, uint16_t port){
 	pthread_create(&master_tid_watchdog,NULL,watch_dog_func,(void*)&arg_o);
 
 	pthread_mutex_lock(&master_running_mtx);
-	while(acess_var_mtx(&master_mtx,&is_on,0,V_LOOK)){
+	while(is_on){
 		pthread_cond_wait(&master_running_cond,&master_running_mtx);
 	}
 	pthread_mutex_unlock(&master_running_mtx);
@@ -131,6 +130,7 @@ void start_master(char* hostname, uint16_t port){
 	printf("Saimos do thread principal do master server!!!!\n");
 	pthread_join(master_tid_watchdog,NULL);
 	printf("Saimos do thread watchdog do master server!!!!\n");
+	call_signal_func();
 	closeDB();
 	close(arg_a.accept_sockfd);
 }

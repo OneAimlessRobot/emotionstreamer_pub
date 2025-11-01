@@ -25,12 +25,13 @@ pthread_mutex_t	master_mtx=PTHREAD_MUTEX_INITIALIZER,
 pthread_mutex_t master_running_mtx=PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t master_running_cond=PTHREAD_COND_INITIALIZER;
 
+atomic_int is_on=ATOMIC_VAR_INIT(0);
+static struct sigaction sa;
 
-static int is_on=0;
+atomic_int started=ATOMIC_VAR_INIT(0);
 
 static con_t con_obj={0};
 
-static int started=0;
 static void close_all_fds_here(void){
 
 
@@ -44,33 +45,28 @@ static void close_all_fds_here(void){
 
 
 }
-static void call_signal_func(int useless){
+static void call_signal_func(void){
 
-	if(acess_var_mtx(&hb_mtx,&is_on,0,V_LOOK)){
-		acess_var_mtx(&hb_mtx,&is_on,0*useless,V_SET);
-		send_port_back(htons(arg_a.accept_addr.sin_port),&heartbeat_port_mapper_ip_entry);
-		close_all_fds_here();
-		perror("Saindo do heart beat server!!!!\n");
-		pthread_cond_signal(&master_running_cond);
-	}
-	else{
-		acess_var_mtx(&hb_mtx,&is_on,0*useless,V_SET);
-		pthread_cond_signal(&master_running_cond);
-	}
+
+	send_port_back(htons(arg_a.accept_addr.sin_port),&heartbeat_port_mapper_ip_entry);
+	close_all_fds_here();
+	perror("Saindo do heart beat server!!!!\n");
+	pthread_cond_signal(&master_running_cond);
 }
 
 static void sigint_handler(int useless){
 
-	call_signal_func(useless);
-}
-
-static void sigpipe_handler(int useless){
-
-	call_signal_func(useless);
+	is_on=0*useless;
+	started=1;
 }
 
 void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
+ 	sa.sa_handler = sigint_handler;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = SA_RESTART;
+        sigaction(SIGINT, &sa, NULL);
+        sigaction(SIGPIPE, &sa, NULL);
 
 	int fd_arr[MAX_SERVERS]={0},
 		timeout_arr[MAX_SERVERS]={0};
@@ -83,8 +79,6 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	pthread_cond_t  hb_cond=PTHREAD_COND_INITIALIZER,
 			master_cond=PTHREAD_COND_INITIALIZER;
 
-	signal(SIGINT,sigint_handler);
-	signal(SIGPIPE,sigpipe_handler);
 	char buff[HB_SERVER_NAME_SIZE]={0};
         randStr(HB_SERVER_NAME_SIZE-1,buff);
 	char extension_buff[EXTENSION_SIZE+1]={0};
@@ -116,20 +110,20 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_s.var_mtx=&hb_mtx;
         arg_s.con_obj=&con_obj;
 	arg_s.con_mtx=&con_mtx;
-	arg_s.sig_func=call_signal_func;
+	arg_s.sig_func=sigint_handler;
 	arg_s.trg_cond=&master_cond;
 	arg_s.type=HB_SERVER;
 	arg_s.extension_buff=extension_buff;
 
         arg_o.is_on=arg_a.is_on;
         arg_o.exit_signal=SIGINT;
-        arg_o.sig_func=call_signal_func;
+        arg_o.sig_func=sigint_handler;
 	arg_o.ack_timeout_lim= hb_ack_timeout_lim;
         arg_o.start_cond_mtx=&hb_cond_mtx;
         arg_o.var_mtx=arg_s.var_mtx;
 
         arg_a.arg_o=&arg_o;
-        arg_a.sig_func=call_signal_func;
+        arg_a.sig_func=sigint_handler;
 	arg_a.arg_s=&arg_s;
 	arg_a.master_mtx=&master_mtx;
         arg_a.var_mtx=arg_s.var_mtx;
@@ -158,7 +152,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	pthread_create(&hb_tid_watchdog,NULL,watch_dog_func,(void*)&arg_o);
 
         pthread_mutex_lock(&master_running_mtx);
-        while(acess_var_mtx(&hb_mtx,&is_on,0,V_LOOK)){
+        while(is_on){
                 pthread_cond_wait(&master_running_cond,&master_running_mtx);
         }
         pthread_mutex_unlock(&master_running_mtx);
@@ -169,6 +163,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	printf("Saimos do thread master do server de heartbeat!!!!!\n");
 	pthread_join(hb_tid_watchdog,NULL);
 	printf("Saimos do thread watchdog do server de heartbeat!!!!!\n");
+	call_signal_func();
 	closeDB();
 	close(arg_a.accept_sockfd);
 	

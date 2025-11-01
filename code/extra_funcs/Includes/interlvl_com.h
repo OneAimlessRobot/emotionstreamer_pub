@@ -34,9 +34,9 @@ typedef struct slave_args{
 	quit_func sig_func;
 	uint64_t ack_timeout_lim;
 	uint64_t sleep_us;
-	int* start_trigger;
+	atomic_int* start_trigger;
 	con_t* con_obj;
-	int* loop_var;
+	atomic_int* loop_var;
 	int_pair con_times_pair;
 	int_pair data_times_pair;
 	int_pair holepunching_times_pair;
@@ -53,7 +53,7 @@ typedef struct slave_args{
 
 typedef struct overseer_args{
 
-	int*is_on;
+	atomic_int* is_on;
 	int exit_signal;
 	quit_func sig_func;
 	pthread_mutex_t* start_cond_mtx;
@@ -69,8 +69,8 @@ typedef struct overseer_args{
 
 typedef struct acceptor_args{
 
-	int*is_on;
-	int*started;
+	atomic_int* is_on;
+	atomic_int* started;
 	int exit_signal;
 	quit_func sig_func;
 	int_pair data_times_pair;

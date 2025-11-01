@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <stdint.h>
+#include <stdatomic.h>
 #include <time.h>
 #include <signal.h>
 #include <sys/types.h>

@@ -22,47 +22,43 @@ static pthread_mutex_t hb_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t con_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t eng_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t eng_cond=PTHREAD_COND_INITIALIZER;
-static int started=0;
+atomic_int started=ATOMIC_VAR_INIT(0);
+atomic_int is_on=ATOMIC_VAR_INIT(0);
+static struct sigaction sa;
 
-static void call_sigint(int useless){
+static void call_sigint(void){
 
 	close(state.server_sock_tcp);
 	perror("Sinal de parar server\n");
-	if(acess_var_mtx(&hb_mtx,&state.server_is_on,0,V_LOOK)){
-		acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
-		pthread_mutex_lock(&con_mtx);
-		send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
-		send_ports_back(&state.hb_con);
-		pthread_mutex_unlock(&con_mtx);
-	}
-	else{
-		acess_var_mtx(&eng_mtx,&started,1,V_SET);
-	}
+	pthread_mutex_lock(&con_mtx);
+	send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
+	send_ports_back(&state.hb_con);
+	pthread_mutex_unlock(&con_mtx);
+
 }
 static void serverStop(int useless){
-	acess_var_mtx(&eng_mtx,&started,1,V_SET);
-	pthread_cond_signal(&eng_cond);
-	call_sigint(useless);
+
+	is_on=0*useless;
+	started=1;
 }
 static void conStop(int useless){
 
-	perror("Sinal de parar con\n");
-	acess_var_mtx(&hb_mtx,&state.server_is_on,0*useless,V_SET);
-	call_sigint(useless);
+	is_on=0*useless;
+	started=1;
 }
 
 static int con_accepting_loop(void){
 
 		printf("Chegamos ao loop de conexoes!\n");
 		pthread_mutex_lock(&eng_mtx);
-		while(!acess_var_mtx(&hb_mtx,&started,0,V_LOOK)){
+		while(!started){
 			printf("Esperando sinal do hearbeat thread!!!\n");
 			pthread_cond_wait(&eng_cond,&eng_mtx);
 		}
 		pthread_mutex_unlock(&eng_mtx);
 
 
-		while(acess_var_mtx(&hb_mtx,&state.server_is_on,0,V_LOOK)){
+		while(is_on){
 
 			int iResult,
 				pid=-1,
@@ -88,10 +84,12 @@ static int con_accepting_loop(void){
 					switch(pid){
 						case 0:
 							setNonBlocking(sock);
-							signal(SIGTERM,conStop);
-							signal(SIGINT,conStop);
-							signal(SIGPIPE,conStop);
-							call_sigint(SIGINT);
+						        sa.sa_handler = conStop;
+						        sigemptyset(&sa.sa_mask);
+						        sa.sa_flags = SA_RESTART;
+						        sigaction(SIGINT, &sa, NULL);
+						        sigaction(SIGPIPE, &sa, NULL);
+						        sigaction(SIGTERM, &sa, NULL);
 							con_go(sock,curr_port);
 							return 0;
 						case -1:
@@ -128,9 +126,13 @@ static int con_accepting_loop(void){
 
 int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
-	signal(SIGTERM,serverStop);
-	signal(SIGINT,serverStop);
-	signal(SIGPIPE,serverStop);
+        sa.sa_handler = serverStop;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = SA_RESTART;
+        sigaction(SIGINT, &sa, NULL);
+        sigaction(SIGPIPE, &sa, NULL);
+        sigaction(SIGTERM, &sa, NULL);
+
 	char buff[SERVER_NAME_SIZE]={0};
 	char extension_buff[EXTENSION_SIZE+1]={0};
 	strncpy(extension_buff,server_working_extension,EXTENSION_SIZE+1);
@@ -156,9 +158,9 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	arg_s.ack_timeout_lim= server_ack_timeout_lim;
 	arg_s.sleep_us=10000;
 	arg_s.con_obj=&state.hb_con;
-	arg_s.sig_func=call_sigint;
+	arg_s.sig_func=serverStop;
 	arg_s.start_trigger=&started;
-	arg_s.loop_var=&state.server_is_on;
+	arg_s.loop_var=&is_on;
 	arg_s.var_mtx=&hb_mtx;
 	arg_s.con_mtx=&con_mtx;
 	arg_s.trg_cond=&eng_cond;
@@ -172,7 +174,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	memcpy(&arg_s.holepunching_times_pair,&server_holepunching_times_pair,sizeof(int_pair));
 	
 
-	state.server_is_on=1;
+	is_on=1;
 	started=0;
 	
 	pthread_create(&hb_tid,NULL,slave_thread,(void*)&arg_s);
@@ -182,6 +184,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	printf("Juntamos o thread hb_tid\n");
 	close_con(&state.hb_con);
 	}
+	call_sigint();
 	return result;
 }
 

@@ -3,7 +3,7 @@
 typedef enum var_op{V_LOOK,V_SET}var_op;
 
 int acess_var_mtx(pthread_mutex_t* mtx,int* var,int value_if_change,var_op op);
-
+int acess_loop_var_mtx(pthread_mutex_t* mtx,atomic_int* var,int value_if_change,var_op op);
 //All strings are null terminated
 int strs_are_strictly_equal(char* str1, char* str2);
 

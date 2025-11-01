@@ -25,24 +25,32 @@ static pthread_t input_tid=0,
 		main_tid=0;
 
 static int input_enabled=0;
+atomic_int running=ATOMIC_VAR_INIT(0);
+static struct sigaction sa;
 
-static port_mapper mapper={NULL,0,0,-1,{0},{{0}}};
+static port_mapper mapper={NULL,0,-1,{0},{{0}}};
 
 
 
 static void sigterm_handler(int useless){
 
-	
-	close(mapper.socket);
-	acess_var_mtx(&running_mtx,&mapper.running,0*useless,V_SET);
-	pthread_cond_signal(&running_cond);
-	pthread_cond_signal(&input_cond);
+
+	running=0*useless;
+
 }
 static void sigint_handler(int useless){
 
-	sigterm_handler(useless);
+	running=0*useless;
 }
 
+static void cleanup(void){
+
+	close(mapper.socket);
+	pthread_cond_signal(&running_cond);
+	pthread_cond_signal(&input_cond);
+
+
+}
 static int port_in_range(int port){
 
 	return (port>=cfg_init_port)&&(port<=(cfg_init_port+cfg_num_ports));
@@ -198,7 +206,7 @@ static void port_mapper_print(int fd){
 						"\nEstamos vazios? %s"
 						"\nNumero atual de portas:%d\n\n",
 						prev_ptr,
-						acess_var_mtx(&running_mtx,&mapper.running,0,V_LOOK)?"Yes!":"No...",
+						running?"Yes!":"No...",
 						is_no_more_room()?"Yes!":"No....",
 						is_empty()?"Yes!":"No....",
 						acess_var_mtx(&running_mtx,&mapper.curr_num_ports,0,V_LOOK));
@@ -428,14 +436,14 @@ void* port_mapper_input_loop(void* args){
 
 	
         pthread_mutex_lock(&input_mtx);
-        while(acess_var_mtx(&variable_mtx,&mapper.running,0,V_LOOK)&&!acess_var_mtx(&variable_mtx,&input_enabled,0,V_LOOK)){
+        while(running&&!acess_var_mtx(&variable_mtx,&input_enabled,0,V_LOOK)){
 
                 pthread_cond_wait(&input_cond,&input_mtx);
         }
         pthread_mutex_unlock(&input_mtx);
 	printf("Thread de input do port mapper acordou!\n");
 	
-	while(acess_var_mtx(&running_mtx,&mapper.running,0,V_LOOK)){
+	while(running){
   		
 		char string[128]={0};
 		uint16_t port_to_check=0;
@@ -452,8 +460,7 @@ void* port_mapper_input_loop(void* args){
 				port_mapper_print(1);
 				break;
 			case STOP_MAPPER:
-				acess_var_mtx(&variable_mtx,&mapper.running,0,V_SET);
-				raise(SIGTERM);
+				raise(SIGINT);
 				break;
 			case PRINT_HELP:
 				print_help();
@@ -522,7 +529,7 @@ static void* accepted_connection_thread(void* args){
 void* port_mapper_main_loop(void* args){
 
 	
-	while(acess_var_mtx(&running_mtx,&mapper.running,0,V_LOOK)){
+	while(running){
 		 struct timeval tv;
 		 int sock=-1;
                  tv.tv_sec=port_mapper_times_pair[0];
@@ -552,7 +559,7 @@ void* port_mapper_main_loop(void* args){
 		else{
 
 		       perror("Select error no port mapper!!!!\n");
-		       raise(SIGTERM);
+		       raise(SIGINT);
 		}
 		pthread_cond_signal(&input_cond);
 	}
@@ -568,33 +575,37 @@ void* port_mapper_main_loop(void* args){
 void port_mapper_init(ip_cache_entry* ent){
 
 	signal(SIGINT,sigint_handler);
-	signal(SIGTERM,sigterm_handler);
+	sa.sa_handler = sigint_handler;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = SA_RESTART;
+        sigaction(SIGINT, &sa, NULL);
+        sigaction(SIGTERM, &sa, NULL);
+
 	int32_t port_arr[cfg_num_ports];
 	memset(port_arr,0,sizeof(int32_t)*cfg_num_ports);
 	mapper.port_arr=port_arr;
-	
+
 
 
 	init_addr(&mapper.addr_struct, ent->hostname,ent->port);
 	init_module_tcp_stuff(&mapper.socket,ent->hostname,ent->port,&mapper.addr_struct,SIGTERM,cfg_num_ports,1,NULL);
-	mapper.running=1;
+	running=1;
 	input_enabled=1;
         pthread_create(&input_tid,NULL,port_mapper_input_loop,NULL);
 
         pthread_create(&main_tid,NULL,port_mapper_main_loop,NULL);
 
 	pthread_mutex_lock(&running_mtx);
-        while(acess_var_mtx(&variable_mtx,&mapper.running,0,V_LOOK)){
+        while(running){
 
                 pthread_cond_wait(&running_cond,&running_mtx);
         }
         pthread_mutex_unlock(&running_mtx);
-
+	cleanup();
 	pthread_join(input_tid ,NULL);
 	printf("Saimos do thread de input!\n");
 	pthread_join(main_tid ,NULL);
 	printf("Saimos do main thread!\n");
-
 	exit(0);
 
 }

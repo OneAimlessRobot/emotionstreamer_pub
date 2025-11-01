@@ -4,7 +4,6 @@
 typedef struct client_stream_t{
 
 
-          int innited;
 	  uint64_t curr_timeout;
           struct con_t* con_obj;
 	  chunk_queue* decoder_que;

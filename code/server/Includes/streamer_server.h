@@ -4,8 +4,7 @@
 
 typedef struct server_stream_t{
 
-	  int initted;
-          uint64_t curr_timeout;
+	  uint64_t curr_timeout;
 	  struct con_t* con_obj;
           int local_fd;
           int local_fd_boundary;
