@@ -39,9 +39,11 @@ static server_stream_t stream_struct={
 static void stop_server_stream(server_stream_t* strm){
 
 
-	send_port_back(htons(stream_struct.con_obj->tcp_data_local_port),&server_port_mapper_ip_cache_entry);
-	send_ports_back(stream_struct.con_obj);
-	close_con(stream_struct.con_obj);
+	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
+		send_port_back(htons(stream_struct.con_obj->tcp_data_local_port),&server_port_mapper_ip_cache_entry);
+		send_ports_back(stream_struct.con_obj);
+		close_con(stream_struct.con_obj);
+	}
 	close(strm->local_fd);
 	close(strm->local_fd_boundary);
 	pthread_cond_signal(&running_cond);
@@ -161,8 +163,8 @@ static void* server_stream(void* args){
 			//count--;
 		}
 	}
-	stop_server_stream(&stream_struct);
 	raise(SIGINT);
+	stop_server_stream(&stream_struct);
 	return args;
 
 }
@@ -197,8 +199,8 @@ static void* ack_exchange_thread(void* args){
 		perror("");
         }
 	}
-	stop_server_stream(&stream_struct);
 	raise(SIGINT);
+	stop_server_stream(&stream_struct);
 	printf("Saimos do thread de acks!!!\n");
 	return args;
 
@@ -242,8 +244,8 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 
 void close_stream(void){
 
-	stop_server_stream(&stream_struct);
 	raise(SIGINT);
+	stop_server_stream(&stream_struct);
 }
 
 void begin_stream(con_t*con_obj,int fd, int fd_boundary,uint64_t chunk_size,unsigned char* stream_buff,unsigned char* meta_buff){
