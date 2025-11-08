@@ -15,7 +15,8 @@
 typedef enum command_char{CHECK_PORT='c',
 				PRINT_STUFF='p',
 				STOP_MAPPER='s',
-				PRINT_HELP='h'}command_char;
+				PRINT_HELP='h',
+				TERM_SIGNAL=3}command_char;
 typedef enum port_state{PORT_RESERVED=-1,
 				PORT_FREE=0,
 				PORT_ALLOCATED=1}port_state;

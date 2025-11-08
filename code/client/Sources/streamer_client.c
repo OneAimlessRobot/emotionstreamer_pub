@@ -93,11 +93,8 @@ static void stop_client_stream(void){
 	pthread_cond_signal(&reading_cond);
 	pthread_cond_signal(&input_cond);
 	endwin_wrapper();
-        if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
-		send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
-		send_ports_back(stream_struct.con_obj);
-	}
-
+        send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
+	send_ports_back(stream_struct.con_obj);
 
 }
 static void sigint_handler(int useless){
@@ -418,7 +415,8 @@ static void* ack_exchange_thread(void* args){
 	}
         }
 
-        raise(SIGINT);
+        stop_client_stream();
+	raise(SIGINT);
         return args;
 
 
@@ -614,10 +612,10 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		perform_queue_op(stream_struct.auxiliar_que2,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
 		perform_dec_op(stream_struct.decoder,NULL,NULL,D_CLEAN,0);
 	}
+	stop_client_stream();
 	close_con(stream_struct.con_obj);
 	perform_play_op(stream_struct.player,NULL,P_CLEAN);
 	printf("SAIMOS DO CLIENT!\nTimeouts excedidos? %s\nVamos ver errno:%s\n",(stream_struct.curr_timeout==cfg_client_ack_timeout_lim) ? "SIM": "NAO",strerror(errno));
-	stop_client_stream();
 	return 0;
 }
 

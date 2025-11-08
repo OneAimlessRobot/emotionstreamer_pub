@@ -3,6 +3,7 @@
 
 typedef enum{SERVER,HB_SERVER,M_SERVER,TYPE_NA}module_type;
 typedef typeof(void (int))  *quit_func;
+typedef typeof(void (void))  *cleanup_func;
 
 //NULL TERMI8ed
 module_type string_to_module_type(char*str);
@@ -32,6 +33,7 @@ typedef struct slave_args{
 		master_addr;
 	uint16_t exit_signal;
 	quit_func sig_func;
+	cleanup_func clean_func;
 	uint64_t ack_timeout_lim;
 	uint64_t sleep_us;
 	atomic_int* start_trigger;
@@ -56,6 +58,7 @@ typedef struct overseer_args{
 	atomic_int* is_on;
 	int exit_signal;
 	quit_func sig_func;
+	cleanup_func clean_func;
 	pthread_mutex_t* start_cond_mtx;
 	pthread_mutex_t* var_mtx;
 	struct con_set* cons;
@@ -73,6 +76,7 @@ typedef struct acceptor_args{
 	atomic_int* started;
 	int exit_signal;
 	quit_func sig_func;
+	cleanup_func clean_func;
 	int_pair data_times_pair;
 	int_pair con_times_pair;
 	int_pair holepunching_times_pair;

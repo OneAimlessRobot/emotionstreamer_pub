@@ -461,10 +461,15 @@ void* port_mapper_input_loop(void* args){
 				break;
 			case STOP_MAPPER:
 				raise(SIGINT);
-				break;
+				cleanup();
+				return args;
 			case PRINT_HELP:
 				print_help();
 				break;
+			case TERM_SIGNAL:
+				raise(SIGINT);
+				cleanup();
+				return args;
 			default:
 				printf("Hotel?.......\nTrivago....\nNão é? Eu... Eu não sei, memo...\n");
 				break;
@@ -560,6 +565,8 @@ void* port_mapper_main_loop(void* args){
 
 		       perror("Select error no port mapper!!!!\n");
 		       raise(SIGINT);
+		       cleanup();
+	
 		}
 		pthread_cond_signal(&input_cond);
 	}
@@ -601,7 +608,6 @@ void port_mapper_init(ip_cache_entry* ent){
                 pthread_cond_wait(&running_cond,&running_mtx);
         }
         pthread_mutex_unlock(&running_mtx);
-	cleanup();
 	pthread_join(input_tid ,NULL);
 	printf("Saimos do thread de input!\n");
 	pthread_join(main_tid ,NULL);

@@ -158,6 +158,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	arg_s.ack_timeout_lim= server_ack_timeout_lim;
 	arg_s.sleep_us=10000;
 	arg_s.con_obj=&state.hb_con;
+	arg_s.clean_func=call_sigint;
 	arg_s.sig_func=serverStop;
 	arg_s.start_trigger=&started;
 	arg_s.loop_var=&is_on;
@@ -182,9 +183,9 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	if(result){
 	pthread_join(hb_tid,NULL);
 	printf("Juntamos o thread hb_tid\n");
+	call_sigint();
 	close_con(&state.hb_con);
 	}
-	call_sigint();
 	return result;
 }
 

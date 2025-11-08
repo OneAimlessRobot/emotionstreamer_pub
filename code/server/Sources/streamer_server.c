@@ -39,11 +39,9 @@ static server_stream_t stream_struct={
 static void stop_server_stream(server_stream_t* strm){
 
 
-	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
-		send_port_back(htons(stream_struct.con_obj->tcp_data_local_port),&server_port_mapper_ip_cache_entry);
-		send_ports_back(stream_struct.con_obj);
-		close_con(stream_struct.con_obj);
-	}
+	send_port_back(htons(stream_struct.con_obj->tcp_data_local_port),&server_port_mapper_ip_cache_entry);
+	send_ports_back(stream_struct.con_obj);
+	close_con(stream_struct.con_obj);
 	close(strm->local_fd);
 	close(strm->local_fd_boundary);
 	pthread_cond_signal(&running_cond);
@@ -163,6 +161,7 @@ static void* server_stream(void* args){
 			//count--;
 		}
 	}
+	stop_server_stream(&stream_struct);
 	raise(SIGINT);
 	return args;
 
@@ -198,6 +197,7 @@ static void* ack_exchange_thread(void* args){
 		perror("");
         }
 	}
+	stop_server_stream(&stream_struct);
 	raise(SIGINT);
 	printf("Saimos do thread de acks!!!\n");
 	return args;
@@ -220,6 +220,7 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 	stream_struct.chunk_data_cache=stream_buff;
 	stream_struct.chunk_meta_cache=meta_buff;
 	memset(stream_struct.chunk_data_cache,0,stream_struct.chunk_size);
+	initted=1;
         pthread_create(&tid_ack,NULL,ack_exchange_thread,NULL);
         pthread_create(&tid_stream,NULL,server_stream,NULL);
 	
@@ -236,12 +237,12 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 	pthread_join(tid_ack,NULL);
 	printf("Saimos do thread de ack!!!\n");
 	printf("SAIMOS DA STREAM DO SERVER!\nTimeouts excedidos? %s\nVamos ver errno:%s\n",(stream_struct.curr_timeout==server_ack_timeout_lim) ? "SIM": "NAO",strerror(errno));
-	stop_server_stream(&stream_struct);
 	return 0;
 }
 
 void close_stream(void){
 
+	stop_server_stream(&stream_struct);
 	raise(SIGINT);
 }
 

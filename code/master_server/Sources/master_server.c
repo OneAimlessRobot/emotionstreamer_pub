@@ -84,6 +84,7 @@ void start_master(char* hostname, uint16_t port){
         is_on=1;
         arg_a.is_on=&is_on;
 	arg_a.sig_func=sigint_handler;
+	arg_a.clean_func=call_signal_func;
         arg_a.started=&started;
         arg_a.exit_signal=SIGINT;
 
@@ -91,6 +92,7 @@ void start_master(char* hostname, uint16_t port){
         arg_o.exit_signal=SIGINT;
 	arg_o.ack_timeout_lim= master_ack_timeout_lim;
         arg_o.sig_func=sigint_handler;
+        arg_o.clean_func=call_signal_func;
         arg_o.start_cond_mtx=&master_cond_mtx;
         arg_o.var_mtx=&master_mtx;
 
@@ -130,7 +132,6 @@ void start_master(char* hostname, uint16_t port){
 	printf("Saimos do thread principal do master server!!!!\n");
 	pthread_join(master_tid_watchdog,NULL);
 	printf("Saimos do thread watchdog do master server!!!!\n");
-	call_signal_func();
 	closeDB();
 	close(arg_a.accept_sockfd);
 }

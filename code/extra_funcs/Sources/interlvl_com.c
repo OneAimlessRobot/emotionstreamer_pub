@@ -57,7 +57,8 @@ void* slave_thread(void* args){
 
         if(arg_struct->con_obj->sockfd_tcp<0){
                 perror("Socket nao criada no hb thread!!!\n");
-        	arg_struct->sig_func(SIGINT);
+        	arg_struct->clean_func();
+		arg_struct->sig_func(SIGINT);
 		return args;
         }
 
@@ -86,7 +87,8 @@ void* slave_thread(void* args){
         if(!tryConnect(&arg_struct->con_obj->sockfd_tcp,arg_struct->con_times_pair,&arg_struct->master_addr)){
 
                 perror("Nao deu para contactar server de heartbeats!!!!\n");
-        	arg_struct->sig_func(SIGINT);
+        	arg_struct->clean_func();
+		arg_struct->sig_func(SIGINT);
 		return args;
         }
 	
@@ -119,10 +121,8 @@ void* slave_thread(void* args){
 
 
                 perror("Nao deu para contactar server acima!!!!\nNao recebeu o que mandamos!!!\nNao recebeu pedido de login\n");
-                raise(arg_struct->exit_signal);
-	        raise(arg_struct->exit_signal);
-        
-        	arg_struct->sig_func(SIGINT);
+                arg_struct->clean_func();
+		arg_struct->sig_func(SIGINT);
 		return args;
         }
         result=con_read_udp_ack(arg_struct->con_obj,arg_struct->con_times_pair);
@@ -130,7 +130,7 @@ void* slave_thread(void* args){
 
 
                 perror("Nao deu para contactar server acima!!!!\nNao recebemos deles!!!\nNao recebeu pedido de login\n");
-                raise(arg_struct->exit_signal);
+                arg_struct->clean_func();
 		arg_struct->sig_func(SIGINT);
 		return args;
         
@@ -176,7 +176,8 @@ void* slave_thread(void* args){
 	send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
 	close_con(arg_struct->con_obj);
 	pthread_mutex_unlock(arg_struct->con_mtx);
-        arg_struct->sig_func(SIGINT);
+        arg_struct->clean_func();
+	arg_struct->sig_func(SIGINT);
 	printf("Saimos do lower thread\n");
         return args;
 
@@ -544,7 +545,8 @@ void* acceptor_func(void* args){
                 }
                 else if(iResult<0){
                         perror("Erro no select no thread de heartbeats!!!!\n");
-                        arg_a->sig_func(SIGINT);
+                        arg_a->clean_func();
+			arg_a->sig_func(SIGINT);
 			break;
                 }
                 print_addr_aux("Nada....\n",&arg_a->accept_addr);
@@ -554,8 +556,8 @@ void* acceptor_func(void* args){
         send_port_back(curr_port,&arg_a->acceptor_port_mapper_ip_cache_entry);
         printf("Saimos do thread de heart_beat_master!!!!\n");
 
-
-
+	arg_a->clean_func();
+	arg_a->sig_func(SIGINT);
         return args;
 
 
