@@ -1,10 +1,10 @@
 #include "../../Includes/preprocessor.h"
-#include <ncurses.h>
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
+#include "../Includes/terminal_mgmt.h"
 #include "../Includes/download_func.h"
 
 typedef struct download_bar{
@@ -36,16 +36,15 @@ static void* print_download_bar(void* mem,int64_t len,int64_t* timeout_num){
                 bar[i]='#';
 
         }
-        erase();
-        printw("Progresso atual de download: %ld de %ld kbytes transferidos!\n\n%s\n",bar_inside->curr/1000,bar_inside->total/1000,bar);
+        printf("Progresso atual de download: %ld de %ld kbytes transferidos!\n\n%s\n",bar_inside->curr/1000,bar_inside->total/1000,bar);
         if(len==-2){
 		(*timeout_num)++;
-		printw("Timeout no read!!!! Timeout no. %ld\n",*timeout_num);
+		printf("Timeout no read!!!! Timeout no. %ld\n",*timeout_num);
         }
 	else{
 		(*timeout_num)=0;
 	}
-	refresh();
+	system("clear");
         return mem;
 
 }
@@ -64,7 +63,7 @@ int downloadtofd(int sock,int fd,int64_t size,int_pair times){
         for(;(len==-2||len>0)&&(total!=size);){
 		len=readsome(sock,buff,DEF_DATASIZE,times);
                 if(len==-2){
-			printw("Timeout no download!!!\n");
+			printf("Timeout no download!!!\n");
                 }
                 written=write(fd,buff,len);
 		total+= (written<0)? 0:written;

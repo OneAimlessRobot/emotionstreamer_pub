@@ -111,6 +111,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_s.con_obj=&con_obj;
 	arg_s.con_mtx=&con_mtx;
 	arg_s.sig_func=sigint_handler;
+	arg_s.clean_func=call_signal_func;
 	arg_s.trg_cond=&master_cond;
 	arg_s.type=HB_SERVER;
 	arg_s.extension_buff=extension_buff;
@@ -118,6 +119,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_o.is_on=arg_a.is_on;
         arg_o.exit_signal=SIGINT;
         arg_o.sig_func=sigint_handler;
+	arg_o.clean_func=call_signal_func;
 	arg_o.ack_timeout_lim= hb_ack_timeout_lim;
         arg_o.start_cond_mtx=&hb_cond_mtx;
         arg_o.var_mtx=arg_s.var_mtx;
@@ -163,7 +165,6 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	printf("Saimos do thread master do server de heartbeat!!!!!\n");
 	pthread_join(hb_tid_watchdog,NULL);
 	printf("Saimos do thread watchdog do server de heartbeat!!!!!\n");
-	call_signal_func();
 	closeDB();
 	close(arg_a.accept_sockfd);
 	

@@ -1,5 +1,4 @@
 #include "../Includes/preprocessor.h"
-#include <ncurses.h>
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <alsa/asoundlib.h>
 #include <pulse/error.h>
@@ -27,6 +26,7 @@
 #include "../Includes/client.h"
 #include "../Includes/download_func.h"
 #include "../Includes/ip_cache_file_ops.h"
+#include "../Includes/terminal_mgmt.h"
 
 static char extension_from_server[PATHSIZE]={0};
 static struct sockaddr_in server_ip_address;
@@ -38,7 +38,6 @@ static void sigint_handler(int signal){
 
 	send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
 	send_ports_back(&client_con_obj);
-	endwin();
 	exit(signal);
 }
 static void sigpipe_handler(int signal){
@@ -57,9 +56,9 @@ static int64_t down_file_size(int is_streaming){
 
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
 			printf(UNSUCESSFUL_DOWNLOAD,reason);
+			sigint_handler(SIGINT);
 			close_con(&client_con_obj);
 			fclose(logstream);
-			sigint_handler(SIGINT);
 		}
 		clear_con_data(&client_con_obj);
 		snprintf((char*)client_con_obj.ack_udp_data,DEF_DATASIZE,"%s",CON_STRING);
@@ -91,17 +90,16 @@ static void down_func(char* file_name){
 		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,extension_from_server);
 		if((fp=creat(file_path,0777))<0){
 				perror("Nao foi possivel transferir ficheiro!!!!\n");
+                		sigint_handler(SIGINT);
                                 close_con(&client_con_obj);
-				sigint_handler(SIGINT);
-                }
-		initscr();
+		}
+		enable_raw(1);
 		downloadtofd(client_con_obj.sockfd_tcp,fp,down_size,client_data_times_pair);
-		endwin();
+		disable_raw(1);
 		printf("A musica foi guardada em: %s\n",file_path);
+		sigint_handler(SIGINT);
 		close_con(&client_con_obj);
 		fclose(logstream);
-		sigint_handler(SIGINT);
-
 
 }
 static void peek_func(void){
@@ -110,9 +108,9 @@ static void peek_func(void){
 		int down_size=down_file_size(0);
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
+		sigint_handler(SIGINT);
 		close_con(&client_con_obj);
 		fclose(logstream);
-		sigint_handler(SIGINT);
 
 }
 static void conf_func(void){
@@ -120,8 +118,8 @@ static void conf_func(void){
 		int down_size=down_file_size(0);
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
-		close_con(&client_con_obj);
 		sigint_handler(SIGINT);
+		close_con(&client_con_obj);
 }
 
 

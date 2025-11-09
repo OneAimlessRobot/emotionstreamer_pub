@@ -19,13 +19,17 @@
 
 static con_t server_con_obj;
 static int sock_tcp;
+
+
 int fp=-1;
 int fp_boundary=-1;
-static void cleanup(int useless){
-	close(fp + (0*useless));
+
+static void cleanup(void){
+	close(fp);
 	close(sock_tcp);
 	send_ports_back(&server_con_obj);
 	close_con(&server_con_obj);
+	printf("Sent ports after minor server operation!\n");
 	raise(SIGTERM);
 
 }
@@ -34,7 +38,7 @@ static int open_file(char* filepath){
 		int fp=-1;
 		if((fp=open(filepath,O_RDONLY,0777))<0){
 			setNonBlocking(fp);
-			printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(server_con_obj.peer_tcp_addr.sin_addr),filepath);
+			printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(	server_con_obj.peer_tcp_addr.sin_addr),filepath);
                        	
 	        }
 		return fp;
@@ -51,7 +55,7 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 				if(strs_are_strictly_equal((char*)server_con_obj.ack_udp_data,CON_STRING)){
 
 					printf("Ma resposta do cliente!!!!\n Abortando conexao!\nResposta: |%s|\n",(char*)server_con_obj.ack_udp_data);
-					raise(SIGINT);
+					cleanup();
 				}
 			}
 			else{
@@ -62,8 +66,7 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 //static get_filename_extension
 void con_go(int sockfd_tcp, uint16_t curr_port){
 
-		signal(SIGINT,cleanup);
-			
+
 			sock_tcp=sockfd_tcp;
 				unsigned char stream_cache_data[server_chunk_size];
 				unsigned char stream_meta_data[sizeof(frame_info_t)];
@@ -133,11 +136,11 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						break;
 					default:
 						printf(UNKNOWN_REQ,req_buff);
-						raise(SIGINT);
+						cleanup();
 				}
 				clear_con_data(&server_con_obj);
 				if((fp=open_file(file_path))<0){
-					raise(SIGINT);
+					cleanup();
 				}
 				else{
 					if(!is_wav_mode&&(recvd_type==PLAY)){
@@ -147,7 +150,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						snprintf(fp_boundary_path,sizeof(fp_boundary_path)-1,"%s%s",file_path,BOUNDARY_FILE_EXT);
 							if((fp_boundary=open_file(fp_boundary_path))<0){
 								perror("Could not open boundary file!!!\n");
-								raise(SIGINT);
+								cleanup();
 							}
 							printf("sucessfully opened boundary file at %s\n",fp_boundary_path);
 						}
@@ -170,7 +173,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%lu",server_chunk_size);
 						if(con_send_udp(&server_con_obj,server_data_times_pair)<=0){
 
-							raise(SIGINT);
+							cleanup();
 						}
 						begin_stream(&server_con_obj,fp,fp_boundary,server_chunk_size,stream_cache_data,stream_meta_data);
 						break;
@@ -181,7 +184,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 					default:
 						break;
 					}
-					raise(SIGINT);
+					cleanup();
 				}
 }
 

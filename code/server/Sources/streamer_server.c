@@ -147,7 +147,7 @@ static void* server_stream(void* args){
 				memset(stream_struct.chunk_data_cache,0,server_chunk_size);
 			}
 			printf("We read a frame info thing!\n");
-			print_frame_info_data(((frame_info_t*)stream_struct.chunk_meta_cache));
+			//print_frame_info_data(((frame_info_t*)stream_struct.chunk_meta_cache));
 			lseek(stream_struct.local_fd,((frame_info_t*)stream_struct.chunk_meta_cache)->start,SEEK_SET);
 			if(read(stream_struct.local_fd,stream_struct.chunk_data_cache,((frame_info_t*)stream_struct.chunk_meta_cache)->size)<=0){
 				fprintf(stderr,"We could not read a frame using frame info thing!\n");

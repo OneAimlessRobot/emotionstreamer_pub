@@ -79,17 +79,17 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 
 	if(!que){
 
-		printw("Queue NULL\n");
+		printf("Queue NULL\n");
 		return;
 	}
 	if(!(que->chunk_buff)){
 
-		printw("Chunk buff NULL na queue\n");
+		printf("Chunk buff NULL na queue\n");
 		return;
 	}
 	if(!(que->total_size)){
 
-		printw("Queue com sizes null!\nSize total da queue: %lu bytes\n"
+		printf("Queue com sizes null!\nSize total da queue: %lu bytes\n"
 							"Size de chunk da queue: %lu bytes\n"
 							"Numero de chunks totais da queue: %lu bytes\n",
 							que->total_size,
@@ -113,13 +113,13 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 		bar[i]='=';
 	}
 	
-	printw("Queue visual:\nplay cursor: %lu\nrecv cursor: %lu\nCurr occupied: %lu\nMax occupied: %lu\n",que->play_cursor,que->recv_cursor,que->n_occupied,que->max_occupied);
-	printw("Queue esta quase vazia? %s\nQueue esta quase cheia? %s\nQueue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %lu\nTemos %lu ms de audio no buffer!\n",
+	printf("Queue visual:\nplay cursor: %lu\nrecv cursor: %lu\nCurr occupied: %lu\nMax occupied: %lu\n",que->play_cursor,que->recv_cursor,que->n_occupied,que->max_occupied);
+	printf("Queue esta quase vazia? %s\nQueue esta quase cheia? %s\nQueue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %lu\nTemos %lu ms de audio no buffer!\n",
 					que_is_almost_empty(que) ? "SIM":"NAO",
 					que_is_almost_full(que)? "SIM":"NAO",
 					que_is_empty(que) ? "SIM":"NAO",
 					que_is_full(que)? "SIM":"NAO",que->n_occupied*que->chunk_size,buff_ms);
-	printw("O buff:\n%s\n",bar);
+	printf("O buff:\n%s\n",bar);
 	free(bar);
 }
 int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, decoder_result_struct* frame_data_struct,q_op op){

@@ -1,5 +1,4 @@
 #include "../Includes/preprocessor.h"
-#include <ncurses.h>
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <alsa/asoundlib.h>
 #include <pulse/error.h>
@@ -23,6 +22,7 @@
 #include "../Includes/chunk_player.h"
 
 #include "../Includes/streamer_client.h"
+#include "../Includes/terminal_mgmt.h"
 
 static const int play=1;
 static const int decode=1;
@@ -76,10 +76,15 @@ static client_stream_t stream_struct={
 static void endwin_wrapper(void){
 
 	pthread_mutex_lock(&ncurses_mtx);
-	if(!isendwin()){
+	if(is_raw(STDOUT)){
 
-		print_string("Chamamos endwin!!!!\n");
-		endwin();
+		print_string("Chamamos disable raw em out!!!!\n");
+		disable_raw(STDOUT);
+	}
+	if(is_raw(STDIN)){
+
+		print_string("Chamamos disable raw em in!!!!\n");
+		disable_raw(STDIN);
 	}
 	pthread_mutex_unlock(&ncurses_mtx);
 
@@ -429,9 +434,8 @@ static void* ack_exchange_thread(void* args){
 static void* show_stats(void* args){
 
 	if(stream_enable_ncurses){
-        initscr();
+        	enable_raw(STDOUT);
 	}
-	//nodelay(stdscr,1);
 	while(innited){
 		usleep(1000);
 		decoder_result_struct result={0};
@@ -443,12 +447,7 @@ static void* show_stats(void* args){
 		if(decode&&!is_wav_mode){
 			pct_full_decoding=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
 		}
-		if(stream_enable_ncurses){
-			erase();
-		}
-		else{
-			system("clear");
-		}
+		system("clear");
 		char buff[1024]={0};
 		snprintf(buff,1023,"Tempo restante no buffer, atualmente: %d ms\nPercentagem de preenchimento em playing: %d\nPercentagem de preenchimento em decoding: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nAre we yet to receive the WAV header? %s\n\n",
 					time_ms,
@@ -465,7 +464,6 @@ static void* show_stats(void* args){
 				perform_queue_op(stream_struct.decoder_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
 			}
 			perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
-			refresh();
 		}
 	}
 	endwin_wrapper();
@@ -484,13 +482,7 @@ static void* input_thread_func(void* args){
 	while(innited){
 
 		char input_buff[DEF_DATASIZE+1]={0};
-		if(stream_enable_ncurses){
-			scanw("%s",input_buff);
-		}
-		else{
-
-			scanf("%s",input_buff);
-		}
+		scanf("%s",input_buff);
 		switch(input_buff[0]){
 
 			case 'p':
