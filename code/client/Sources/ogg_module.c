@@ -17,6 +17,13 @@ static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
 static int is_decoder_buffer_empty(decoder* decoder){
 
 
+	return decoder->d_buffer_pos_cursor<=0;
+
+
+}
+static int is_decoder_buffer_full(decoder* decoder){
+
+
 	return decoder->d_buffer_pos_cursor>=decoder->d_chunk_size;
 
 
@@ -25,6 +32,14 @@ static int is_play_buffer_full(decoder* decoder){
 
 
 	return decoder->p_buffer_pos_cursor>=(decoder->p_chunk_size);
+
+
+}
+
+static int is_play_buffer_empty(decoder* decoder){
+
+
+	return decoder->p_buffer_pos_cursor<=0;
 
 
 }
@@ -66,7 +81,7 @@ static int decode_chunk(decoder*decoder,frame_info_t* finfo,decoder_result_struc
 		ret_val=mpg123_feed(decoder->dec,decoder->d_chunk,decoder->d_chunk_size);
 		break;
 	case DO_DECODE:
-		ret_val= mpg123_decode(decoder->dec,decoder->d_chunk,finfo->size,decoder->p_chunk,decoder->p_chunk_size,&result->total_bytes_in_chunk);
+		ret_val= mpg123_decode(decoder->dec,decoder->d_chunk,finfo->size,decoder->p_chunk+decoder->p_buffer_pos_cursor,decoder->p_chunk_size,&result->total_bytes_in_chunk);
 	   	if (ret_val == MPG123_OK || ret_val == MPG123_NEW_FORMAT) {
 	        // Now you can safely query format info
 	        	mpg123_getformat(decoder->dec, &result->hz, &result->channels, &result->encoding);
@@ -75,6 +90,10 @@ static int decode_chunk(decoder*decoder,frame_info_t* finfo,decoder_result_struc
 		if(result->total_bytes_in_chunk){
 			result->nsamples=(result->total_bytes_in_chunk)/(result->sample_size*result->channels);
 	   	}
+		/*if(ret_val== MPG123_NEED_MORE){
+			decoder->d_buffer_pos_cursor+=(!is_decoder_buffer_full(decoder)?finfo->size:0);
+
+		}*/
 
 		result->decoder_state=(result->total_bytes_in_chunk>0);
 		//print_frame_info_data(finfo);
@@ -133,6 +152,18 @@ int perform_dec_op(decoder* decoder,frame_info_t*finfo,decoder_result_struct* re
 			break;
 		case D_IS_P_BUFFER_FULL:
 			res=is_play_buffer_full(decoder);
+			break;
+		case D_IS_D_BUFFER_FULL:
+			res=is_decoder_buffer_full(decoder);
+			break;
+		case D_IS_P_BUFFER_EMPTY:
+			res=is_play_buffer_empty(decoder);
+			break;
+		case D_D_BUFFER_CURSOR:
+			res=decoder->d_buffer_pos_cursor;
+			break;
+		case D_P_BUFFER_CURSOR:
+			res=decoder->p_buffer_pos_cursor;
 			break;
 		case D_SWAP:
 			swap_read_decode_buffs(decoder);

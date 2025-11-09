@@ -290,8 +290,13 @@ static void* dec_thread_func(void* args){
 			
 			//print_decoder_frame_result((decoder_result_struct*)result,1);
 			if(((decoder_result_struct*)result)->decoder_state){
-
+				
 				//print_decoder_frame_result((decoder_result_struct*)result,1);
+				/*if(ret_val==MPG123_NEED_MORE){
+
+					continue;
+				}*/
+				perform_dec_op(stream_struct.decoder,(frame_info_t*)NULL,(decoder_result_struct*)NULL,D_RESET_BOTH,DO_DECODE);
 				perform_queue_op(stream_struct.player_que,stream_struct.decoder->p_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 				perform_queue_op(stream_struct.auxiliar_que,result,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 				pthread_cond_signal(&player_cond);
@@ -321,7 +326,7 @@ static void* dec_thread_func(void* args){
 			}
 			else{
 
-				//print_string("needs more!!!\n");
+				print_string("needs more!!!\n");
 			
 			}
 	}

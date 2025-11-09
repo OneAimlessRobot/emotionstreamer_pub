@@ -28,10 +28,9 @@ static void cleanup(void){
 	close(fp);
 	close(sock_tcp);
 	send_ports_back(&server_con_obj);
-	close_con(&server_con_obj);
 	printf("Sent ports after minor server operation!\n");
 	raise(SIGTERM);
-
+	close_con(&server_con_obj);
 }
 static int open_file(char* filepath){
 
