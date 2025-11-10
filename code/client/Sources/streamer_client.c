@@ -213,7 +213,7 @@ static void* rx_thread_func(void* args){
 
 				break;
 			}
-			full=perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_ALMOST_FULL});
+			full=perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL});
 			if(full){
 				break;
 			}
@@ -239,7 +239,7 @@ static void* rx_thread_func(void* args){
 
 				break;
 			}
-			full=perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(is_wav_mode||!decode)?(q_op){Q_LOOK,Q_IS_FULL}:(q_op){Q_LOOK,Q_IS_ALMOST_FULL});
+			full=perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(is_wav_mode||!decode)?(q_op){Q_LOOK,Q_IS_FULL}:(q_op){Q_LOOK,Q_IS_FULL});
 			if(full){
 				break;
 			}
@@ -250,7 +250,7 @@ static void* rx_thread_func(void* args){
 			}
 		}
 		pthread_mutex_lock(&reading_mtx);
-		while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||(perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,(is_wav_mode||!decode)?Q_IS_FULL:Q_IS_FULL})))){
+		while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||(perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,(is_wav_mode||!decode)?Q_IS_FULL:Q_IS_ALMOST_FULL})))){
 
 			acess_var_mtx(&variable_acess_mtx,&reading,0,V_SET);
 			pthread_cond_wait(&reading_cond,&reading_mtx);
@@ -261,7 +261,7 @@ static void* rx_thread_func(void* args){
 }
 
 static void* dec_thread_func(void* args){
-
+	int empty=0;
 	int full=0;
 	int ret_val=MPG123_NEED_MORE;
 	uint8_t result[sizeof(decoder_result_struct)]={0};
@@ -295,6 +295,10 @@ static void* dec_thread_func(void* args){
 
 				break;
 			}
+			empty=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY});
+			if(empty){
+				break;
+			}
 			if(!(ret_val==MPG123_NEED_MORE)){
 				if(ret_val==MPG123_DONE){
 					memset(buff,0,1024);
@@ -311,7 +315,7 @@ static void* dec_thread_func(void* args){
 			}
 	}
 	pthread_mutex_lock(&decoder_mtx);
-	while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL}))){
+	while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL})||perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_ALMOST_EMPTY}))){
 
 		acess_var_mtx(&variable_acess_mtx,&decoding,0,V_SET);
 		pthread_cond_wait(&decoder_cond,&decoder_mtx);
@@ -362,7 +366,7 @@ static void* play_thread_func(void* args){
 			}
 	}
 	pthread_mutex_lock(&player_mtx);
-	while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY}))){
+	while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_ALMOST_EMPTY}))){
 		acess_var_mtx(&variable_acess_mtx,&playing,0,V_SET);
 		pthread_cond_wait(&player_cond,&player_mtx);
 	}
