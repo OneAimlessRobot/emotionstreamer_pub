@@ -1,5 +1,4 @@
 #include "../../Includes/preprocessor.h"
-#include <ncurses.h>
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
@@ -25,19 +24,13 @@ static pthread_t input_tid=0,
 		main_tid=0;
 
 static int input_enabled=0;
-atomic_int running=ATOMIC_VAR_INIT(0);
+atomic_int running=0;
 static struct sigaction sa;
 
 static port_mapper mapper={NULL,0,-1,{0},{{0}}};
 
 
 
-static void sigterm_handler(int useless){
-
-
-	running=0*useless;
-
-}
 static void sigint_handler(int useless){
 
 	running=0*useless;

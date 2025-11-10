@@ -21,7 +21,7 @@ static pthread_mutex_t running_mtx=PTHREAD_MUTEX_INITIALIZER,
 
 static pthread_t tid_stream,
 		tid_ack;
-atomic_int initted=ATOMIC_VAR_INIT(0);
+atomic_int initted=0;
 static struct sigaction sa;
 
 

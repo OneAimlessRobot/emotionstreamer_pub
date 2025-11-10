@@ -20,6 +20,7 @@ LDLIBS :=  -lm
 
 LDLIBS_SOUND := -lasound -lpulse -lpulse-simple -lmpg123
 
+TSAN_FLAGS = -fsanitize=thread -O0 -g -fno-omit-frame-pointer
 
 LDLIBS_PTHREAD= -lpthread
 
@@ -68,15 +69,15 @@ RESDIR= ./resources
 
 CURRDIR=echo `pwd`
 
-CC= cc
-#CC=clang
+#CC= cc
+CC=clang
 DEPFLAGS= -MP -MD
 
-#CFLAGS += -fsanitize=thread -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
+CFLAGS += -fsanitize=thread -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
 #CFLAGS += -fsanitize=address -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
-CFLAGS += -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
+#CFLAGS += -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
 
-CFLAGS2 :=  $(CFLAGS) $(SDL_CFLAGS) -O3
+CFLAGS2 :=  $(CFLAGS) $(SDL_CFLAGS) -O0
 
 
 SOURCEFILES=$(foreach D,$(SOURCES), $(wildcard $(D)/*.c))
@@ -211,7 +212,7 @@ $(SERVERBIN): $(SERVERSTUFF) $(CONVERTER_TOOL_EXTRA_STUFF)
 	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
 
 $(CLIENTBIN): $(CLIENTSTUFF) $(CONVERTER_TOOL_EXTRA_STUFF)
-	$(CC) -g -v  -fsanitize=thread   $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES) $(LDLIBS_CLIENT) $(LDLIBS) $(LDLIBS_SQLITE)
+	$(CC) -g -v   $(TSAN_FLAGS) $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES) $(LDLIBS_CLIENT) $(LDLIBS) $(LDLIBS_SQLITE)
 
 $(BROWSERBIN): $(BROWSERSTUFF)
 	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(BROWSERRESOURCEFILES) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)

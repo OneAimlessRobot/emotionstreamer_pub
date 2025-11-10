@@ -30,7 +30,7 @@ static const int rx_enabled=1;
 static const int input_enabled=1;
 static struct sigaction sa;
 
-atomic_int innited=ATOMIC_VAR_INIT(0);
+atomic_int innited=0;
 
 static pthread_cond_t reading_cond=PTHREAD_COND_INITIALIZER,
 	       player_cond=PTHREAD_COND_INITIALIZER,
@@ -262,7 +262,6 @@ static void* rx_thread_func(void* args){
 
 static void* dec_thread_func(void* args){
 
-	int empty=0;
 	int full=0;
 	int ret_val=MPG123_NEED_MORE;
 	uint8_t result[sizeof(decoder_result_struct)]={0};

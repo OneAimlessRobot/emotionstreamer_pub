@@ -22,8 +22,8 @@ static pthread_mutex_t hb_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t con_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t eng_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t eng_cond=PTHREAD_COND_INITIALIZER;
-atomic_int started=ATOMIC_VAR_INIT(0);
-atomic_int is_on=ATOMIC_VAR_INIT(0);
+atomic_int started=0;
+atomic_int is_on=0;
 static struct sigaction sa;
 
 static void call_sigint(void){

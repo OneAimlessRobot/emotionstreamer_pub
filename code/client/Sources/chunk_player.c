@@ -2,7 +2,26 @@
 #include <alsa/asoundlib.h>
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include "../../wav_stuff_i_stole_because_i_am_lazy/wav.h"
+
+#include <pulse/pulseaudio.h>
+#include <pulse/thread-mainloop.h>
+#include <pulse/xmalloc.h>
 #include <pulse/error.h>
+#include <pulse/stream.h>
+#include <pulse/proplist.h>
+
+struct pa_simple {
+    pa_threaded_mainloop *mainloop;
+    pa_context *context;
+    pa_stream *stream;
+    pa_stream_direction_t direction;
+
+    const void *read_data;
+    size_t read_index, read_length;
+
+    int operation_success;
+};
+
 #include <pulse/simple.h>
 #include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/sockio.h"
@@ -15,6 +34,7 @@
 
 static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
 static int wav_header_received=0;
+static int innited=0;
 static void parse_wav_header_into_player_result(chunk_player* player){
 
 
@@ -64,18 +84,20 @@ static void clean_player(chunk_player* player){
 static void initALSA(chunk_player* player){
 
 int err;
-if ((err=snd_pcm_open(&player->play_stream_alsa, DEVICE, SND_PCM_STREAM_PLAYBACK, 0)) < 0){
-     printf("Playback open error: %s\n", snd_strerror(err));
-     exit(-1);
-}
+if(!innited){
+	if ((err=snd_pcm_open(&player->play_stream_alsa, DEVICE, SND_PCM_STREAM_PLAYBACK, 0)) < 0){
+	     printf("Playback open error: %s\n", snd_strerror(err));
+	     exit(-1);
+	}
 
+}
 if ((err =snd_pcm_set_params(player->play_stream_alsa,SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED,player->current_result.channels,player->current_result.hz, 1, cfg_latency_ms*1000) ) < 0 ){
 	        printf("Playback open error: %s\n", snd_strerror(err));
  		raise(SIGINT);
 		abort();
 	}
 	else{
-		//printf("ALSA initialized successfully!!!!\n");
+		printf("ALSA initialized successfully!!!!\n");
 	}
 
 }
@@ -94,9 +116,27 @@ static void initPA(chunk_player*player){
 	}
 	else{
 
-	//printf("pulseaudio initialized successfully!!!!\n");
+	printf("pulseaudio initialized successfully!!!!\n");
 
 	}
+}
+static void changePA(chunk_player*player){
+     pa_sample_spec ss = {
+         .format = PA_SAMPLE_S16LE,
+         .rate = player->current_result.hz,
+         .channels = player->current_result.channels
+     };
+     if(player->play_stream_pa->stream){
+	//PA_UPDATE_REPLACE
+
+	pa_proplist* proplist=pa_proplist_new();;
+	pa_proplist_set(proplist, PA_PROP_FORMAT_RATE , (int*)&(ss.rate), 4);
+	pa_proplist_set(proplist, PA_PROP_FORMAT_CHANNELS  , (int*)&(ss.channels), 4);
+	pa_stream_proplist_update(player->play_stream_pa->stream, PA_UPDATE_REPLACE, proplist,NULL,NULL);
+	//player->play_stream_pa->stream=pa_stream_new(player->play_stream_pa->context,"playback", &ss, NULL);
+     	pa_proplist_free(proplist);
+	printf("pulseaudio changed successfully!!!!\n");
+     }
 }
 
 static void init_player_lib(chunk_player* player){
@@ -119,7 +159,12 @@ static void init_player_lib(chunk_player* player){
 				initALSA(player);
 				break;
 			case PLAY_PA:
-				initPA(player);
+				if(!innited){
+					initPA(player);
+				}
+				else{
+					changePA(player);
+				}
 				break;
 			default:
 				break;
@@ -174,9 +219,12 @@ static void safe_play_wrapper(chunk_player* player,decoder_result_struct* result
 	
 	if(result&&result->total_bytes_in_chunk){
 		if((should_switch(result,&player->current_result)!=0)&&!is_wav_mode){
-			clean_player(player);
+			if(!innited){
+				clean_player(player);
+			}
 			write_player_result(player,result,1);
 			init_player_lib(player);
+			innited=1;
 		}
 
 		play_chunk(player,dry);

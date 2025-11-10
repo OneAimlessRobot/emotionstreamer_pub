@@ -23,11 +23,11 @@ pthread_mutex_t master_con_mtx=PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t master_running_cond=PTHREAD_COND_INITIALIZER;
 
 
-atomic_int is_on = ATOMIC_VAR_INIT(0);
+atomic_int is_on = 0;
 
 static struct sigaction sa;
 
-atomic_int started=ATOMIC_VAR_INIT(0);
+atomic_int started= 0;
 
 static void close_all_fds_here(void){
 

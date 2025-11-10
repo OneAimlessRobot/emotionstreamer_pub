@@ -34,16 +34,11 @@ static struct sockaddr_in client_ip_address;
 ip_cache_t cache=(ip_cache_t){NULL,0};
 static con_t client_con_obj;
 static method play_way=PLAY_PA;
-static void sigint_handler(int signal){
+static void clear_ports_and_quit(int signal){
 
 	send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
 	send_ports_back(&client_con_obj);
 	exit(signal);
-}
-static void sigpipe_handler(int signal){
-
-	sigint_handler(signal);
-
 }
 static int64_t down_file_size(int is_streaming){
 
@@ -56,7 +51,7 @@ static int64_t down_file_size(int is_streaming){
 
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
 			printf(UNSUCESSFUL_DOWNLOAD,reason);
-			sigint_handler(SIGINT);
+			clear_ports_and_quit(SIGINT);
 			close_con(&client_con_obj);
 			fclose(logstream);
 		}
@@ -90,14 +85,14 @@ static void down_func(char* file_name){
 		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,extension_from_server);
 		if((fp=creat(file_path,0777))<0){
 				perror("Nao foi possivel transferir ficheiro!!!!\n");
-                		sigint_handler(SIGINT);
+                		clear_ports_and_quit(SIGINT);
                                 close_con(&client_con_obj);
 		}
 		enable_raw(1);
 		downloadtofd(client_con_obj.sockfd_tcp,fp,down_size,client_data_times_pair);
 		disable_raw(1);
 		printf("A musica foi guardada em: %s\n",file_path);
-		sigint_handler(SIGINT);
+		clear_ports_and_quit(SIGINT);
 		close_con(&client_con_obj);
 		fclose(logstream);
 
@@ -108,7 +103,7 @@ static void peek_func(void){
 		int down_size=down_file_size(0);
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
-		sigint_handler(SIGINT);
+		clear_ports_and_quit(SIGINT);
 		close_con(&client_con_obj);
 		fclose(logstream);
 
@@ -118,7 +113,7 @@ static void conf_func(void){
 		int down_size=down_file_size(0);
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
-		sigint_handler(SIGINT);
+		clear_ports_and_quit(SIGINT);
 		close_con(&client_con_obj);
 }
 
@@ -178,7 +173,7 @@ int clientStart(char* req_field,char* file_name){
 	client_con_obj.sockfd_tcp= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if(client_con_obj.sockfd_tcp<0){
 
-		sigint_handler(SIGINT);
+		clear_ports_and_quit(SIGINT);
         }
     	int ptr=1;
 	setsockopt(client_con_obj.sockfd_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
@@ -193,7 +188,7 @@ int clientStart(char* req_field,char* file_name){
 		perror("Não conseguimos dar bind na socket do client!!!\n");
 		print_addr_aux("Este é o address:",&client_ip_address);
 		fclose(logstream);
-		sigint_handler(SIGINT);
+		clear_ports_and_quit(SIGINT);
         	
 	}
 	else{
@@ -205,7 +200,7 @@ int clientStart(char* req_field,char* file_name){
 	if(!tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address)){
 
 		fclose(logstream);
-		sigint_handler(SIGINT);
+		clear_ports_and_quit(SIGINT);
         }
 	
 	if(is_new<0){
@@ -219,7 +214,7 @@ int clientStart(char* req_field,char* file_name){
 		if(!try_cache_connect(&client_con_obj.sockfd_tcp,client_con_times_pair,&cache)){
 
 			fclose(logstream);
-			sigint_handler(SIGINT);
+			clear_ports_and_quit(SIGINT);
         	}
 	}
 	print_sock_addr(client_con_obj.sockfd_tcp);
@@ -276,7 +271,7 @@ int clientStart(char* req_field,char* file_name){
 	default:
 		printf(UNKNOWN_REQ,req_buff);
 		fclose(logstream);
-		sigint_handler(SIGINT);
+		clear_ports_and_quit(SIGINT);
         	break;
 	}
 	return 0;
