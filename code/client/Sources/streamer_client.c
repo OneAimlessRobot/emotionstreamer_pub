@@ -305,13 +305,15 @@ static void* dec_thread_func(void* args){
 					snprintf(buff,1023,"Stream done!\n");
 					print_string(buff);
 					raise(SIGINT);
-				}
+        				stop_client_stream();
+        			}
 				else if(ret_val==MPG123_ERR){
 					memset(buff,0,1024);
 					snprintf(buff,1023,"Decoding error: %s\n",mpg123_strerror(stream_struct.decoder->dec));
 					print_string(buff);
 					raise(SIGINT);
-				}
+					stop_client_stream();
+        			}
 			}
 	}
 	pthread_mutex_lock(&decoder_mtx);
@@ -405,8 +407,8 @@ static void* ack_exchange_thread(void* args){
 	}
         }
 
-        stop_client_stream();
 	raise(SIGINT);
+        stop_client_stream();
         return args;
 
 
@@ -488,13 +490,11 @@ static void* input_thread_func(void* args){
 
 }
 static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_mode){
-	signal(SIGINT,sigint_handler);
-	signal(SIGPIPE,sigpipe_handler);
-
         sa.sa_handler = sigint_handler;
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
+        sigaction(SIGPIPE, &sa, NULL);
 	
 	uint8_t h_chunk_buff[is_wav_mode?chunk_size:1];
 	memset(h_chunk_buff,0,sizeof(h_chunk_buff));
