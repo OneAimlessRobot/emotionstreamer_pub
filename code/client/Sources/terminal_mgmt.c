@@ -1,11 +1,6 @@
 #include "../../Includes/preprocessor.h"
 #include "../Includes/terminal_mgmt.h"
 
-#define TERMBUFFSIZE 1024
-
-#define TERMIOS_BUFFER_THRESHOLD_BYTES 0
-#define TERMIOS_INPUT_DELAY_TENTHS 10
-
 static int is_raw_fd[TOTAL_NUM_TERM_FDS]={0};
 
 static struct termios orig_fd[TOTAL_NUM_TERM_FDS]={{0}};

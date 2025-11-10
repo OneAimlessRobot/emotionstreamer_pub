@@ -14,20 +14,22 @@ static struct sockaddr_in hb_server_addr;
 static struct sockaddr_in our_addr;
 static int fd=1;
 static con_t con_obj={0};
+static struct sigaction sa;
 
-static void sigint_handler(int useless){
+atomic_int innited=0;
 
-	perror("Saimos do server browser!!!!\n");
+static void cleanup_and_send_ports_back(int useless){
+
 	send_ports_back(&con_obj);
 	send_port_back(htons(our_addr.sin_port),&server_browser_port_mapper_ip_cache_entry);
 	close_con(&con_obj);
 	exit(useless);
-	
+
 }
-static void sigpipe_handler(int useless){
+static void sigint_handler(int useless){
 
 
-	sigint_handler(useless);
+	innited=useless*0;
 
 }
 
@@ -45,6 +47,7 @@ static void recv_servers(void){
 			else{
 				perror("erro 1!!!\n");
 				raise(SIGINT);
+				cleanup_and_send_ports_back(SIGINT);
 			}
 
 	}
@@ -58,11 +61,11 @@ static void recv_servers(void){
 			else{
 				perror("erro 2!!!\n");
 				raise(SIGINT);
+				cleanup_and_send_ports_back(SIGINT);
 			}
 
 	}
-	
-	while(strs_are_strictly_equal((char*)con_obj.udp_data,"done")){
+	while(innited&&strs_are_strictly_equal((char*)con_obj.udp_data,"done")){
 
 		int result=con_read_udp(&con_obj,browser_data_times_pair);
 		if(result<0){
@@ -75,12 +78,9 @@ static void recv_servers(void){
 				break;
 			}
 		}
-		
 		dprintf(fd,"%s\n",(char*)con_obj.udp_data);
-			
 		result=con_send_udp(&con_obj,browser_data_times_pair);
 		if(result<0){
-			
 			if(result==-2){
 				printf("timeout 4!!!\n");
 				continue;
@@ -90,24 +90,27 @@ static void recv_servers(void){
 				break;
 			}
 		}
-		
 	}
 	raise(SIGINT);
-
+	cleanup_and_send_ports_back(SIGINT);
 
 
 }
 
 
 void init_browser(char* hostname, char* req,uint16_t port){
-	signal(SIGINT,sigint_handler);
-	signal(SIGPIPE,sigpipe_handler);
+	sa.sa_handler = sigint_handler;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGPIPE, &sa, NULL);
 
 
         con_obj.sockfd_tcp=tcp_sock= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if(con_obj.sockfd_tcp<0){
                 perror("Socket nao criada no hb thread!!!\n");
-                raise(SIGINT);
+		raise(SIGINT);
+        	cleanup_and_send_ports_back(SIGINT);
         }
 
 
@@ -122,7 +125,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	    perror("Não conseguimos dar bind na socket do client!!!\n");
 	    print_addr_aux("Este é o address:",&our_addr);
 	    raise(SIGINT);
-
+	    cleanup_and_send_ports_back(SIGINT);
 	}
 	else{
 
@@ -134,7 +137,8 @@ void init_browser(char* hostname, char* req,uint16_t port){
         if(!tryConnect(&tcp_sock,browser_con_times_pair,&hb_server_addr)){
 
                 perror("Nao deu para contactar server de heartbeats!!!!\n");
-                raise(SIGINT);
+		raise(SIGINT);
+        	cleanup_and_send_ports_back(SIGINT);
         }
 
         init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry);
@@ -170,8 +174,8 @@ void init_browser(char* hostname, char* req,uint16_t port){
 
 
                 perror("Nao deu para contactar server de heartbeats!!!! Nao recebeu pedido de login\n");
-                raise(SIGINT);
-
+		raise(SIGINT);
+		cleanup_and_send_ports_back(SIGINT);
         }
 	/*
 	read the damned ack, doofus

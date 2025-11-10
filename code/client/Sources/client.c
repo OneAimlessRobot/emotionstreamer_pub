@@ -38,6 +38,7 @@ static void clear_ports_and_quit(int signal){
 
 	send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
 	send_ports_back(&client_con_obj);
+	close_con(&client_con_obj);
 	exit(signal);
 }
 static int64_t down_file_size(int is_streaming){
@@ -52,7 +53,6 @@ static int64_t down_file_size(int is_streaming){
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
 			printf(UNSUCESSFUL_DOWNLOAD,reason);
 			clear_ports_and_quit(SIGINT);
-			close_con(&client_con_obj);
 			fclose(logstream);
 		}
 		clear_con_data(&client_con_obj);
@@ -86,14 +86,12 @@ static void down_func(char* file_name){
 		if((fp=creat(file_path,0777))<0){
 				perror("Nao foi possivel transferir ficheiro!!!!\n");
                 		clear_ports_and_quit(SIGINT);
-                                close_con(&client_con_obj);
-		}
+                }
 		enable_raw(1);
 		downloadtofd(client_con_obj.sockfd_tcp,fp,down_size,client_data_times_pair);
 		disable_raw(1);
 		printf("A musica foi guardada em: %s\n",file_path);
 		clear_ports_and_quit(SIGINT);
-		close_con(&client_con_obj);
 		fclose(logstream);
 
 }
@@ -114,7 +112,6 @@ static void conf_func(void){
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
 		clear_ports_and_quit(SIGINT);
-		close_con(&client_con_obj);
 }
 
 

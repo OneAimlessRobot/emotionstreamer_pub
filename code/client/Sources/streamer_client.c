@@ -111,11 +111,6 @@ static void sigint_handler(int useless){
 	innited=0*useless;
 }
 
-static void sigpipe_handler(int useless){
-
-	innited=0*useless;
-}
-
 static int read_meta_tcp(client_stream_t* strm,int_pair pair){
 
 	int result= readsome(strm->con_obj->sockfd_tcp,(char*)strm->decoder->h2_chunk,sizeof(frame_info_t),pair);

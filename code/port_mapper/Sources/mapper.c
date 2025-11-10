@@ -574,12 +574,11 @@ void* port_mapper_main_loop(void* args){
 
 void port_mapper_init(ip_cache_entry* ent){
 
-	signal(SIGINT,sigint_handler);
 	sa.sa_handler = sigint_handler;
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
-        sigaction(SIGTERM, &sa, NULL);
+        sigaction(SIGPIPE, &sa, NULL);
 
 	int32_t port_arr[cfg_num_ports];
 	memset(port_arr,0,sizeof(int32_t)*cfg_num_ports);
@@ -588,7 +587,7 @@ void port_mapper_init(ip_cache_entry* ent){
 
 
 	init_addr(&mapper.addr_struct, ent->hostname,ent->port);
-	init_module_tcp_stuff(&mapper.socket,ent->hostname,ent->port,&mapper.addr_struct,SIGTERM,cfg_num_ports,1,NULL);
+	init_module_tcp_stuff(&mapper.socket,ent->hostname,ent->port,&mapper.addr_struct,SIGINT,cfg_num_ports,1,NULL);
 	running=1;
 	input_enabled=1;
         pthread_create(&input_tid,NULL,port_mapper_input_loop,NULL);

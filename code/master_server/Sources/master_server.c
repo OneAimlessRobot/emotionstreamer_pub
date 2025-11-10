@@ -62,6 +62,7 @@ void start_master(char* hostname, uint16_t port){
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGPIPE, &sa, NULL);
+
 	int fd_arr[MAX_HB_SERVERS]={0},
 		timeout_arr[MAX_HB_SERVERS]={0};
 

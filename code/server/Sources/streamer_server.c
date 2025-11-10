@@ -200,6 +200,7 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
+        sigaction(SIGPIPE, &sa, NULL);
 
 	stream_struct.con_obj=con_obj;
         stream_struct.local_fd=fd;

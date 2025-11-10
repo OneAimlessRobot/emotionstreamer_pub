@@ -4,7 +4,7 @@
 
 #define TERMBUFFSIZE 1024
 #define TERMIOS_BUFFER_THRESHOLD_BYTES 0
-#define TERMIOS_INPUT_DELAY_TENTHS 0
+#define TERMIOS_INPUT_DELAY_TENTHS 10
 #define TOTAL_NUM_TERM_FDS 3
 //Assumes numbers match OS specs.
 //its crap.
