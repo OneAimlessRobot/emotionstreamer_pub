@@ -90,13 +90,7 @@ static int decode_chunk(decoder*decoder,frame_info_t* finfo,decoder_result_struc
 		if(result->total_bytes_in_chunk){
 			result->nsamples=(result->total_bytes_in_chunk)/(result->sample_size*result->channels);
 	   	}
-		/*if(ret_val== MPG123_NEED_MORE){
-			decoder->d_buffer_pos_cursor+=(!is_decoder_buffer_full(decoder)?finfo->size:0);
-
-		}*/
-
 		result->decoder_state=(result->total_bytes_in_chunk>0);
-		//print_frame_info_data(finfo);
 		break;
 	case DO_READ:
 

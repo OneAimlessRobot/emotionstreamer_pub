@@ -107,19 +107,11 @@ static int send_chunk_to_client(void){
 		//result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_times_pair):con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 		result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 			if(result==-2){
-				printf("Esperando ser respondido na stream do server\n");
 				continue;
 			}
 			else{
-				if(result<0){
-					perror("Erro em read na stream do server!!!\n");
-				}
 				break;
 			}
-	}
-	if(result==-1){
-		perror("Erro em send na stream do server!!!\n");
-
 	}
 	return result;
 }
@@ -137,8 +129,7 @@ static void* server_stream(void* args){
 	}
 	else{
 		printf("We are NOT in wav mode!!!\n");
-		int count= 200;
-		while(initted&&count){
+		while(initted){
 			if(read(stream_struct.local_fd_boundary,stream_struct.chunk_meta_cache,sizeof(frame_info_t))<=0){
 				fprintf(stderr,"We could not read a frame info thing!\n");
 				break;
@@ -146,21 +137,16 @@ static void* server_stream(void* args){
 			else{
 				memset(stream_struct.chunk_data_cache,0,server_chunk_size);
 			}
-			printf("We read a frame info thing!\n");
-			//print_frame_info_data(((frame_info_t*)stream_struct.chunk_meta_cache));
 			lseek(stream_struct.local_fd,((frame_info_t*)stream_struct.chunk_meta_cache)->start,SEEK_SET);
 			if(read(stream_struct.local_fd,stream_struct.chunk_data_cache,((frame_info_t*)stream_struct.chunk_meta_cache)->size)<=0){
 				fprintf(stderr,"We could not read a frame using frame info thing!\n");
 				break;
 			}
-			printf("We read a frame using a frame_info_thing!\n");
 			if(send_chunk_to_client()<=0){
 				fprintf(stderr,"send a frame obtained using a frame_info_thing!\n");
 				break;
 
 			}
-			printf("We sent a frame obtained using a frame_info_thing!\n");
-			//count--;
 		}
 	}
 	raise(SIGINT);
