@@ -126,22 +126,7 @@ static void* ack_exchange_thread(void* args){
         if(result<=0){
                 stream_struct.curr_timeout++;
                 if(result==-2){
-                        snprintf(buff,1023,"Timeout no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
-                        printf("%s",buff);
-                        if(stream_struct.curr_timeout==server_ack_timeout_lim){
-                                break;
-                        }
-                }
-                else{
-                        perror("");
-                        break;
-                }
-        }
-        result= con_send_udp_ack(stream_struct.con_obj,server_data_times_pair);
-        if(result<=0){
-                stream_struct.curr_timeout++;
-                if(result==-2){
-                        snprintf(buff,1023,"Timeout no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
+                        snprintf(buff,1023,"Timeout em read ack no server!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
                         printf("%s",buff);
                         if(stream_struct.curr_timeout==server_ack_timeout_lim){
                                 break;
@@ -155,6 +140,21 @@ static void* ack_exchange_thread(void* args){
         else{
 
                 stream_struct.curr_timeout=0;
+        }
+        result= con_send_udp_ack(stream_struct.con_obj,server_data_times_pair);
+        if(result<=0){
+                stream_struct.curr_timeout++;
+                if(result==-2){
+                        snprintf(buff,1023,"Timeout send ack no server!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
+                        printf("%s",buff);
+                        if(stream_struct.curr_timeout==server_ack_timeout_lim){
+                                break;
+                        }
+                }
+                else{
+                        perror("");
+                        break;
+                }
         }
         }
 
