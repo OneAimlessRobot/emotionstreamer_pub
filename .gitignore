@@ -13,6 +13,7 @@
 *.wav
 *.save
 *.raw
+*.fuse*
 .metadata/
 
 
