@@ -199,6 +199,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	con_read_udp(&con_obj,browser_con_times_pair);
 
 	printf("They got it! They really got it, man! They replied with: \"%s\"\n",con_obj.udp_data);
+	innited=1;
 	recv_servers();
 
 

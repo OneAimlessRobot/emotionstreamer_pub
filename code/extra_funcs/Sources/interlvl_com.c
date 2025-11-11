@@ -76,6 +76,7 @@ void* slave_thread(void* args){
 
                 perror("Não conseguimos dar bind na socket do client!!!\n");
                 print_addr_aux("Este é o address:",&arg_struct->this_con_addr);
+		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
 		arg_struct->sig_func(SIGINT);
 		arg_struct->clean_func();
 		return args;
@@ -88,7 +89,8 @@ void* slave_thread(void* args){
         if(!tryConnect(&arg_struct->con_obj->sockfd_tcp,arg_struct->con_times_pair,&arg_struct->master_addr)){
 
                 perror("Nao deu para contactar server de heartbeats!!!!\n");
-        	arg_struct->sig_func(SIGINT);
+        	send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
+		arg_struct->sig_func(SIGINT);
 		arg_struct->clean_func();
 		return args;
         }
@@ -122,7 +124,11 @@ void* slave_thread(void* args){
 
 
                 perror("Nao deu para contactar server acima!!!!\nNao recebeu o que mandamos!!!\nNao recebeu pedido de login\n");
-                arg_struct->sig_func(SIGINT);
+                pthread_mutex_lock(arg_struct->con_mtx);
+		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
+		close_con(arg_struct->con_obj);
+		pthread_mutex_unlock(arg_struct->con_mtx);
+        	arg_struct->sig_func(SIGINT);
 		arg_struct->clean_func();
 		return args;
         }
@@ -131,7 +137,11 @@ void* slave_thread(void* args){
 
 
                 perror("Nao deu para contactar server acima!!!!\nNao recebemos deles!!!\nNao recebeu pedido de login\n");
-                arg_struct->sig_func(SIGINT);
+                pthread_mutex_lock(arg_struct->con_mtx);
+		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
+		close_con(arg_struct->con_obj);
+		pthread_mutex_unlock(arg_struct->con_mtx);
+        	arg_struct->sig_func(SIGINT);
 		arg_struct->clean_func();
 		return args;
         
@@ -463,12 +473,14 @@ void* acceptor_func(void* args){
                               sscanf((char*)con.ack_udp_data,"%s %s %s %s %hu %s",req_buff,type_buff,name_buff,ip_buff,&stored_port, extension_buff);
                               if(result<=0){
                                         perror("Nao sabemos o que querem....\n");
+                                        send_ports_back(&con);
                                         close_con(&con);
                                         continue;
                               }
                               result=con_send_udp_ack(&con,arg_a->con_times_pair);
                               if(result<=0){
                                         perror("Nao sabemos o que querem....\n");
+                                        send_ports_back(&con);
                                         close_con(&con);
                                         continue;
                               }

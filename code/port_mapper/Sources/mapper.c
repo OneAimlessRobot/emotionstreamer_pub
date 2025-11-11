@@ -187,7 +187,7 @@ static void port_mapper_print(int fd){
 	prev_ptr=ptr+=cfg_num_ports;
 	int arr[NUM_PORTS_TO_GIVE+1]={0};
 	fetch_ports_to_give(arr,0);
-	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%s]\n\nAqui estão as portas que seriam entregadas a seguir:\nSeriam entregues %d portas!\n",prev_ptr,arr[0]);
+	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%s]\n\nAqui estão as portas que seriam entregues a seguir:\nSeriam entregues %d portas!\n",prev_ptr,arr[0]);
 
 	for(int i=1;i<=NUM_PORTS_TO_GIVE;i++){
 	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%s-%d\n",prev_ptr,arr[i]);
