@@ -24,6 +24,7 @@ struct pa_simple {
 
 #include <pulse/simple.h>
 #include "../../converter_tool/Includes/converter.h"
+#include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
@@ -91,7 +92,7 @@ if(!innited){
 	}
 
 }
-if ((err =snd_pcm_set_params(player->play_stream_alsa,SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED,player->current_result.channels,player->current_result.hz, 1, cfg_latency_ms*1000) ) < 0 ){
+if ((err =snd_pcm_set_params(player->play_stream_alsa,SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED,player->current_result.channels,player->current_result.hz, 1, 1000) ) < 0 ){
 	        printf("Playback open error: %s\n", snd_strerror(err));
  		raise(SIGINT);
 		abort();
@@ -173,11 +174,11 @@ static void init_player_lib(chunk_player* player){
 	}
 }
 static void play_chunk_alsa(chunk_player* player){
-	play_from_sound_device_alsa(player->play_stream_alsa,player->p_chunk,&player->current_result);
+	play_from_sound_device_alsa(player->play_stream_alsa,player->p_chunk+(wav_header_received?0:(4+sizeof(decoder_result_struct))),&player->current_result);
 
 }
 static void play_chunk_pa(chunk_player* player){
-	play_from_sound_device_pa(player->play_stream_pa,player->p_chunk,&player->current_result);
+	play_from_sound_device_pa(player->play_stream_pa,player->p_chunk+(wav_header_received?0:(4+sizeof(decoder_result_struct))),&player->current_result);
 }
 
 static void play_chunk(chunk_player* player,int dry){
@@ -202,21 +203,18 @@ static void play_chunk(chunk_player* player,int dry){
 
 static void write_player_result(chunk_player* player,decoder_result_struct* result,int in){
 
-	if(result){
-		if(in){
-			memcpy(&player->current_result,result,sizeof(decoder_result_struct));
-		}
-		else {
-			memcpy(result,&player->current_result,sizeof(decoder_result_struct));
-		}
-		
+	if(in){
+		memcpy(&player->current_result,result,sizeof(decoder_result_struct));
+	}
+	else {
+		memcpy(result,&player->current_result,sizeof(decoder_result_struct));
 	}
 }
 static void print_player_result(chunk_player* player){
 	print_decoder_frame_result(&player->current_result,1);
 }
-static void safe_play_wrapper(chunk_player* player,decoder_result_struct* result,int dry){
-	
+static void safe_play_wrapper(chunk_player* player,int dry){
+	decoder_result_struct* result=&((mp3_processed_chunk*)player->p_chunk)->result_struct;
 	if(result&&result->total_bytes_in_chunk){
 		if((should_switch(result,&player->current_result)!=0)&&!is_wav_mode){
 			if(!innited){
@@ -240,10 +238,10 @@ void perform_play_op(chunk_player* player,decoder_result_struct* result,play_op 
 	pthread_mutex_lock(&mtx);
 	switch(op){
 		case P_REAL_PLAY:
-			safe_play_wrapper(player,result,0);
+			safe_play_wrapper(player,0);
 			break;
 		case P_DRY_PLAY:
-			safe_play_wrapper(player,result,1);
+			safe_play_wrapper(player,1);
 			break;
 		case P_GET_FRAME_DATA:
 			write_player_result(player,result,0);

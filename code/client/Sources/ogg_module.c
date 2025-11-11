@@ -2,6 +2,7 @@
 #include <alsa/asoundlib.h>
 #define MPG123_ENUM_API
 #include "../../converter_tool/Includes/converter.h"
+#include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <pulse/error.h>
 #include <pulse/simple.h>
@@ -72,16 +73,13 @@ static void reset_decoder_state(decoder* decoder,dec_op op){
 		}
 	}
 }
-static int decode_chunk(decoder*decoder,frame_info_t* finfo,decoder_result_struct* result,decoding_option what_we_want){
+static int decode_chunk(decoder*decoder,decoding_option what_we_want){
 	int ret_val=MPG123_NEED_MORE;
 	
 	switch(what_we_want){
-
-	case DO_FEED:
-		ret_val=mpg123_feed(decoder->dec,decoder->d_chunk,decoder->d_chunk_size);
-		break;
 	case DO_DECODE:
-		ret_val= mpg123_decode(decoder->dec,decoder->d_chunk,finfo->size,decoder->p_chunk+decoder->p_buffer_pos_cursor,decoder->p_chunk_size,&result->total_bytes_in_chunk);
+		decoder_result_struct* result=&(((mp3_processed_chunk*)decoder->p_chunk)->result_struct);
+		ret_val= mpg123_decode(decoder->dec,decoder->d_chunk+4+sizeof(frame_info_t),((mp3_stream_chunk*)decoder->d_chunk)->the_frame_info.size,decoder->p_chunk+sizeof(decoder_result_struct)+4+decoder->p_buffer_pos_cursor,decoder->p_chunk_size-4-sizeof(decoder_result_struct),&result->total_bytes_in_chunk);
 	   	if (ret_val == MPG123_OK || ret_val == MPG123_NEW_FORMAT) {
 	        // Now you can safely query format info
 	        	mpg123_getformat(decoder->dec, &result->hz, &result->channels, &result->encoding);
@@ -91,21 +89,6 @@ static int decode_chunk(decoder*decoder,frame_info_t* finfo,decoder_result_struc
 			result->nsamples=(result->total_bytes_in_chunk)/(result->sample_size*result->channels);
 	   	}
 		result->decoder_state=(result->total_bytes_in_chunk>0);
-		break;
-	case DO_READ:
-
-		ret_val= mpg123_read(decoder->dec,decoder->p_chunk,decoder->p_chunk_size,&result->total_bytes_in_chunk);
-	   	if (ret_val == MPG123_OK || ret_val == MPG123_NEW_FORMAT) {
-	        // Now you can safely query format info
-	        	mpg123_getformat(decoder->dec, &result->hz, &result->channels, &result->encoding);
-			result->sample_size=mpg123_encsize(result->encoding);
-		}
-		if(result->total_bytes_in_chunk){
-			result->nsamples=(result->total_bytes_in_chunk)/(result->sample_size*result->channels);
-	   	}
-		
-		result->decoder_state=(result->total_bytes_in_chunk>0);
-
 		break;
 	default:
 		break;
@@ -133,13 +116,12 @@ static void swap_read_decode_buffs(decoder* decoder){
 
 
 }
-int perform_dec_op(decoder* decoder,frame_info_t*finfo,decoder_result_struct* result,dec_op op,decoding_option option){
-	
+int perform_dec_op(decoder* decoder,dec_op op,decoding_option option){
 	int res=-1;
 	pthread_mutex_lock(decoder->mtx);
 	switch(op){
 		case D_DECODE_CHUNK:
-			res=decode_chunk(decoder,finfo,result,option);
+			res=decode_chunk(decoder,option);
 			break;
 		case D_IS_D_BUFFER_EMPTY:
 			res=is_decoder_buffer_empty(decoder);
@@ -185,13 +167,12 @@ int perform_dec_op(decoder* decoder,frame_info_t*finfo,decoder_result_struct* re
 	pthread_mutex_unlock(decoder->mtx);
 	return res;
 }
-int init_decoder(decoder* decoder,uint64_t d_chunk_size,uint64_t p_chunk_size,uint8_t* r_buff,uint8_t* d_buff,uint8_t* p_buff,uint8_t* h2_buff){
+int init_decoder(decoder* decoder,uint64_t d_chunk_size,uint64_t p_chunk_size,uint8_t* r_buff,uint8_t* d_buff,uint8_t* p_buff){
 
 	decoder->mtx=&mtx;
 	decoder->r_chunk=r_buff;
 	decoder->d_chunk=d_buff;
 	decoder->p_chunk=p_buff;
-	decoder->h2_chunk=h2_buff;
 	decoder->d_chunk_size=d_chunk_size;
 	decoder->p_chunk_size=p_chunk_size;
 	decoder->d_buffer_pos_cursor=0;

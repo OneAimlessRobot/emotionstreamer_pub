@@ -9,8 +9,8 @@
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
 #include <alsa/asoundlib.h>
+#include "../../extra_funcs/Includes/streamer_const.h"
 #include "../Includes/ripped_code.h"
-
 #include "../Includes/ogg_module.h"
 
 static const char* frame_print_format="Estes sao os dados deste frame:\n"

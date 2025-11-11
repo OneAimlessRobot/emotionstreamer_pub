@@ -12,8 +12,8 @@
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/engine.h"
 #include "../Includes/connection.h"
-#include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../converter_tool/Includes/converter.h"
+#include "../../extra_funcs/Includes/streamer_const.h"
 #include "../Includes/streamer_server.h"
 #include "../Includes/upload_func.h"
 
@@ -67,8 +67,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 
 
 			sock_tcp=sockfd_tcp;
-				unsigned char stream_cache_data[server_chunk_size];
-				unsigned char stream_meta_data[sizeof(frame_info_t)];
+				unsigned char stream_cache_data[sizeof(mp3_stream_chunk)];
 
 				char file_name[PATHSIZE]={0};
 				char file_path[PATHSIZE*3 +4]={0};
@@ -174,7 +173,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 
 							cleanup();
 						}
-						begin_stream(&server_con_obj,fp,fp_boundary,server_chunk_size,stream_cache_data,stream_meta_data);
+						begin_stream(&server_con_obj,fp,fp_boundary,server_chunk_size,stream_cache_data);
 						break;
 					case CONF:
 						sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);

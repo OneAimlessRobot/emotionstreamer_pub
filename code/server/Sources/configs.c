@@ -1,5 +1,7 @@
 #include "../../Includes/preprocessor.h"
+#include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
@@ -75,7 +77,7 @@ void read_values_cfg_server(void){
 		raise(SIGINT);
 	}
 	sscanf(curr_line_buff,"server_chunk_size: %lu",&server_chunk_size);
-
+	server_chunk_size=max(0,min(MAX_MP3_STREAM_CHUNK_BUFF_SIZE,server_chunk_size));
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -181,7 +183,7 @@ void print_values_cfg_server(int fd){
 
 	dprintf(fd,"server_transmission_protocol: %s (value in configs is %s)\n",(server_transmission_protocol<=0)?"TCP":"UDP",(server_transmission_protocol<=0)?"<= 0":"> 0");
 
-	dprintf(fd,"server_chunk_size: %lu\n",server_chunk_size);
+	dprintf(fd,"server_chunk_size: %lu (max: %u)\n",server_chunk_size,MAX_MP3_STREAM_CHUNK_BUFF_SIZE);
 
 	dprintf(fd,"server_timeouts_data: %lus %lu us\n",server_data_times_pair[0],server_data_times_pair[1]);
 

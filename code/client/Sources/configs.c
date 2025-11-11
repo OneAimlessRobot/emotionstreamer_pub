@@ -1,5 +1,6 @@
 #include "../../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
@@ -20,8 +21,8 @@ char client_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 
 //EM BYTES E HZ!
 u_int64_t cfg_latency_ms=DEF_LATENCY_MS,
-	cfg_stream_decoder_cache_size_chunks=STREAM_DECODE_CACHE_SIZE_CHUNKS,
-	cfg_stream_player_cache_size_chunks=STREAM_PLAYER_CACHE_SIZE_CHUNKS,
+	cfg_stream_decoder_cache_size_chunks=STREAM_DEF_DECODE_CACHE_SIZE_CHUNKS,
+	cfg_stream_player_cache_size_chunks=STREAM_DEF_PLAYER_CACHE_SIZE_CHUNKS,
 	cfg_client_ack_timeout_lim=CLIENT_ACK_TIMEOUT_LIM;
 
 uint16_t cfg_cache_almost_full_pct=CACHE_ALMOST_FULL_PCT,
