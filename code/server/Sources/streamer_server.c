@@ -119,39 +119,48 @@ static void* server_stream(void* args){
 }
 
 static void* ack_exchange_thread(void* args){
-
 	int result=0;
-	while(initted){
+        char buff[1024]={0};
+        while(initted){
         result=con_read_udp_ack(stream_struct.con_obj,server_data_times_pair);
-	if(result<=0){
-
+        if(result<=0){
+                stream_struct.curr_timeout++;
                 if(result==-2){
-			stream_struct.curr_timeout++;
-			printf("Timeout na stream do server!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
-			if(stream_struct.curr_timeout==server_ack_timeout_lim){
-				break;
-			}
-			continue;
-		}
-		perror("");
+                        snprintf(buff,1023,"Timeout no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
+                        printf("%s",buff);
+                        if(stream_struct.curr_timeout==server_ack_timeout_lim){
+                                break;
+                        }
+                }
+                else{
+                        perror("");
+                        break;
+                }
         }
-	result= con_send_udp_ack(stream_struct.con_obj,server_data_times_pair);
-	if(result<=0){
-
+        result= con_send_udp_ack(stream_struct.con_obj,server_data_times_pair);
+        if(result<=0){
+                stream_struct.curr_timeout++;
                 if(result==-2){
-			stream_struct.curr_timeout++;
-			printf("Timeout na stream do server!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
-			if(stream_struct.curr_timeout==server_ack_timeout_lim){
-				break;
-			}
-		}
-		perror("");
+                        snprintf(buff,1023,"Timeout no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
+                        printf("%s",buff);
+                        if(stream_struct.curr_timeout==server_ack_timeout_lim){
+                                break;
+                        }
+                }
+                else{
+                        perror("");
+                        break;
+                }
         }
-	}
-	raise(SIGINT);
-	stop_server_stream(&stream_struct);
-	printf("Saimos do thread de acks!!!\n");
-	return args;
+        else{
+
+                stream_struct.curr_timeout=0;
+        }
+        }
+
+        raise(SIGINT);
+        stop_server_stream(&stream_struct);
+        return args;
 
 
 }

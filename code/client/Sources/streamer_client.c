@@ -321,29 +321,45 @@ static void* ack_exchange_thread(void* args){
 	while(innited){
         result=con_send_udp_ack(stream_struct.con_obj,client_data_times_pair);
         if(result<=0){
-		if(result==-2){
-                        stream_struct.curr_timeout++;
-                        snprintf(buff,1023,"Timeout no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
+		stream_struct.curr_timeout++;
+                if(result==-2){
+                        snprintf(buff,1023,"Timeout em send ack no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
                         print_string(buff);
 			if(stream_struct.curr_timeout==cfg_client_ack_timeout_lim){
                                 break;
                         }
-			continue;
-	        }
-                perror("");
+		}
+		else {
+			perror("");
+			break;
+		}
         }
         result= con_read_udp_ack(stream_struct.con_obj,client_data_times_pair);
         if(result<=0){
+                stream_struct.curr_timeout++;
                 if(result==-2){
-                        stream_struct.curr_timeout++;
-                        snprintf(buff,1023,"Timeout no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
+                        snprintf(buff,1023,"Timeout em read ack no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
                         print_string(buff);
 			if(stream_struct.curr_timeout==cfg_client_ack_timeout_lim){
                                 break;
                         }
-        }
+		}
+		else {
+			perror("");
+			break;
+		}
 	}
+	else{
+
+		stream_struct.curr_timeout=0;
         }
+        }
+	while(innited&&(acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)||acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK))){
+		usleep(1000000);
+		snprintf(buff,1023,"We ran out of timeouts. Not quitting yet due to leftover chunks in stream\nPlaying? %s\nDecoding? %s\n",acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)?"Yes!":"No...",acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK)?"Yes!":"No...");
+                print_string(buff);
+
+	}
 
 	raise(SIGINT);
         stop_client_stream();
@@ -374,10 +390,10 @@ static void* show_stats(void* args){
 					time_ms,
 					pct_full_playing,
 					pct_full_decoding,
-					acess_var_mtx(&variable_acess_mtx,&reading,1,V_LOOK) ? "READING ": "    ",
-					acess_var_mtx(&variable_acess_mtx,&decoding,1,V_LOOK) ? "DECODING ": "    ",
-					acess_var_mtx(&variable_acess_mtx,&playing,1,V_LOOK) ? "PLAYING ": "    ",
-					acess_var_mtx(&variable_acess_mtx,&paused,1,V_LOOK) ? "PAUSED ": "    ",
+					acess_var_mtx(&variable_acess_mtx,&reading,0,V_LOOK) ? "READING ": "    ",
+					acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK) ? "DECODING ": "    ",
+					acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK) ? "PLAYING ": "    ",
+					acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK) ? "PAUSED ": "    ",
 					is_wav_mode?(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK) ? "YES! ": "NO..."):"Not in wav mode...");
 		print_string(buff);
 		if(stream_enable_ncurses){
