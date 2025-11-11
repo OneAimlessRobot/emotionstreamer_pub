@@ -9,7 +9,6 @@
 #include "../../extra_funcs/Includes/interlvl_proto.h"
 #include "../Includes/browser.h"
 
-static int tcp_sock=-1;
 static struct sockaddr_in hb_server_addr;
 static struct sockaddr_in our_addr;
 static int fd=1;
@@ -106,7 +105,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	sigaction(SIGPIPE, &sa, NULL);
 
 
-        con_obj.sockfd_tcp=tcp_sock= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+        con_obj.sockfd_tcp=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if(con_obj.sockfd_tcp<0){
                 perror("Socket nao criada no hb thread!!!\n");
 		raise(SIGINT);
@@ -144,7 +143,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
         init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry);
 
 
-        getsockname(tcp_sock,(struct sockaddr*)&our_addr,socklenvar);
+        getsockname(con_obj.sockfd_tcp,(struct sockaddr*)&our_addr,&socklenvar[1]);
 
         greet(&con_obj,browser_con_times_pair,browser_holepunching_times_pair);
 
