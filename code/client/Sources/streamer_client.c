@@ -117,9 +117,10 @@ static int read_chunk_tcp(client_stream_t* strm,int_pair pair){
 		result= readsome(strm->con_obj->sockfd_tcp,(char*)(strm->player->h_chunk),strm->player->chunk_size,pair);
 	}
 	else{
-		
 		result= readsome(strm->con_obj->sockfd_tcp,(char*)((is_wav_mode||!decode)?strm->player->r_chunk:chk),(is_wav_mode||!decode)?strm->player->chunk_size:sizeof(frame_info_t)+4+strm->decoder->d_chunk_size,pair);
-		memcpy(strm->decoder->r_chunk,&chk,sizeof(frame_info_t)+4+strm->decoder->d_chunk_size);
+		if(decode&&!is_wav_mode){
+			memcpy(strm->decoder->r_chunk,&chk,sizeof(frame_info_t)+4+strm->decoder->d_chunk_size);
+		}
 	}
 	if(result<0){
 		acess_var_mtx(&variable_acess_mtx,&lost_packet,1,V_SET);
@@ -143,7 +144,9 @@ static int read_chunk_udp(client_stream_t* strm,int_pair pair){
 	}
 	else{
 		result= readsome_udp(strm->con_obj->sockfd_udp,(char*)((is_wav_mode||!decode)?strm->player->r_chunk:chk),(is_wav_mode||!decode)?strm->player->chunk_size:sizeof(frame_info_t)+4+strm->decoder->d_chunk_size,pair,&strm->con_obj->peer_udp_addr);
-		memcpy(strm->decoder->r_chunk,&chk,sizeof(frame_info_t)+4+strm->decoder->d_chunk_size);
+		if(decode&&!is_wav_mode){
+			memcpy(strm->decoder->r_chunk,&chk,sizeof(frame_info_t)+4+strm->decoder->d_chunk_size);
+		}
 	}
 	if(result<0){
 		acess_var_mtx(&variable_acess_mtx,&lost_packet,1,V_SET);
