@@ -9,7 +9,7 @@ typedef struct client_stream_t{
 	  chunk_queue* decoder_que;
 	  chunk_queue* player_que;
 	  chunk_player* player;
-	  decoder* decoder;
+	  decoder_t* decoder;
 }client_stream_t;
 
 //BUFFS COME FROM THE OUTSIDE!

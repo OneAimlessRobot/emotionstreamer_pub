@@ -30,7 +30,7 @@ struct pa_simple {
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
 #include "../Includes/ripped_code.h"
-#include "../Includes/ogg_module.h"
+#include "../Includes/mp3module.h"
 #include "../Includes/chunk_player.h"
 
 static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
@@ -217,15 +217,13 @@ static void safe_play_wrapper(chunk_player* player,int dry){
 	decoder_result_struct* result=&((mp3_processed_chunk*)player->p_chunk)->result_struct;
 	if(result&&result->total_bytes_in_chunk){
 		if((should_switch(result,&player->current_result)!=0)&&!is_wav_mode){
-			if(!innited){
-				clean_player(player);
-			}
 			write_player_result(player,result,1);
 			init_player_lib(player);
 			innited=1;
 		}
-
-		play_chunk(player,dry);
+		else{
+			play_chunk(player,dry);
+		}
 	}
 	else if(is_wav_mode){
 

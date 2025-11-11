@@ -16,7 +16,7 @@
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/ripped_code.h"
-#include "../Includes/ogg_module.h"
+#include "../Includes/mp3module.h"
 
 #include "../Includes/chunk_queue.h"
 #include "../Includes/chunk_player.h"

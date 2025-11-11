@@ -17,7 +17,7 @@
 #include "../Includes/chunk_queue.h"
 #include "../Includes/queue_menus.h"
 
-#include "../Includes/ogg_module.h"
+#include "../Includes/mp3module.h"
 
 #include "../Includes/chunk_player.h"
 
@@ -213,6 +213,7 @@ static void* dec_thread_func(void* args){
 	}
 	pthread_mutex_unlock(&decoder_mtx);
 	print_string("Thread de decoding alcançado!\n");
+	usleep(cfg_latency_ms*1000);
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&decoding,1,V_SET);
 		while(innited){
@@ -275,6 +276,7 @@ static void* play_thread_func(void* args){
 	}
 	pthread_mutex_unlock(&player_mtx);
 	print_string("Thread de play alcançado!\n");
+	usleep(cfg_latency_ms*1000);
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&playing,1,V_SET);
 		while(innited){
@@ -443,7 +445,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	chunk_queue player_que={0};
 	chunk_queue decoder_que={0};
 	chunk_player player={0};
-	decoder decoder={0};
+	decoder_t decoder={0};
 	init_queue(&player_que,(!decode||is_wav_mode)?chunk_size:sizeof(pd_chunk_buff),cfg_stream_player_cache_size_chunks);
 	init_chunk_player(&player,(!decode||is_wav_mode)?chunk_size:sizeof(pp_chunk_buff),h_chunk_buff,r_chunk_buff,pp_chunk_buff,which_mode);
 	stream_struct.player_que=&player_que;
