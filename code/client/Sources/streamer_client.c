@@ -78,8 +78,7 @@ static void stop_client_stream(void){
 	pthread_cond_signal(&decoder_cond);
 	pthread_cond_signal(&reading_cond);
 	pthread_cond_signal(&input_cond);
-	endwin_wrapper();
-        if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
+	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
 		send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
 		send_ports_back(stream_struct.con_obj);
 		close_con(stream_struct.con_obj);
@@ -409,8 +408,12 @@ static void* input_thread_func(void* args){
 	while(innited){
 
 		char input_buff[DEF_DATASIZE+1]={0};
-		scanf("%s",input_buff);
-		switch(input_buff[0]){
+		if(stream_enable_ncurses){
+			scanf("%s",input_buff);
+		}
+		else{
+			scanw("%s",input_buff);
+		}switch(input_buff[0]){
 
 			case 'p':
 				pthread_mutex_lock(&input_mtx);
@@ -429,7 +432,6 @@ static void* input_thread_func(void* args){
 
 
 	}
-	endwin_wrapper();
 	return args;
 
 }
@@ -439,8 +441,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
-	
-	
+
 	uint8_t h_chunk_buff[is_wav_mode?chunk_size:1];
 	memset(h_chunk_buff,0,sizeof(h_chunk_buff));
 	uint8_t r_chunk_buff[sizeof(frame_info_t)+4+chunk_size];
