@@ -354,7 +354,7 @@ static void* show_stats(void* args){
 		clear();
 	}
 	else{
-		printf("\033[J");
+		printf("\033[2J");
 
 	}
 	while(innited){
