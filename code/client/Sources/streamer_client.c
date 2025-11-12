@@ -424,10 +424,10 @@ static void* input_thread_func(void* args){
 
 		char input_buff[DEF_DATASIZE+1]={0};
 		if(stream_enable_ncurses){
-			scanf("%s",input_buff);
+			scanw("%s",input_buff);
 		}
 		else{
-			scanw("%s",input_buff);
+			scanf("%s",input_buff);
 		}switch(input_buff[0]){
 
 			case 'p':
