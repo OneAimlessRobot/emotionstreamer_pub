@@ -31,7 +31,9 @@ extern uint8_t
 	stream_show_frames,
 	cfg_cache_almost_full_pct,
 	cfg_cache_almost_empty_pct,
-	cfg_cache_almost_empty_pct;
+	cfg_cache_almost_empty_pct,
+	stream_show_decoder_queue,
+	stream_show_player_queue;
 
 
 extern uint16_t cfg_client_chunk_size;

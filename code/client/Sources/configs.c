@@ -38,7 +38,9 @@ uint64_t cfg_ui_frame_period_us=UI_DEF_FRAME_PERIOD_US;
 int8_t streaming_protocol=0;
 uint8_t stream_enable_ncurses=0;
 uint8_t stream_show_stats=1;
-uint8_t stream_show_frames=0;
+uint8_t stream_show_decoder_queue=0;
+uint8_t stream_show_player_queue=1;
+uint8_t stream_show_frames=1;
 int8_t is_wav_mode=0;
 int_pair client_data_times_pair=(int_pair){CLIENT_TIMEOUT_DATA_SEC,CLIENT_TIMEOUT_DATA_USEC};
 int_pair client_con_times_pair=(int_pair){CLIENT_TIMEOUT_CON_SEC,CLIENT_TIMEOUT_CON_USEC};
@@ -137,6 +139,20 @@ void read_values_cfg_client(void){
 		raise(SIGINT);
 	}
 	sscanf(curr_line_buff,"cache_almost_empty_pct: %hhu",&cfg_cache_almost_empty_pct);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"show_decoder_queue: %hhu",&stream_show_decoder_queue);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"show_player_queue: %hhu",&stream_show_player_queue);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -258,6 +274,10 @@ void print_values_cfg_client(int fd){
 	dprintf(fd,"cache_almost_full_pct: %hhu\n",cfg_cache_almost_full_pct);
 
 	dprintf(fd,"cache_almost_empty_pct: %hhu\n",cfg_cache_almost_empty_pct);
+
+	dprintf(fd,"show_decoder_queue: %hhu\n",stream_show_decoder_queue);
+
+	dprintf(fd,"show_player_queue: %hhu\n",stream_show_player_queue);
 
 	dprintf(fd,"client_chunk_size: %hu\n",cfg_client_chunk_size);
 

@@ -383,10 +383,12 @@ static void* show_stats(void* args){
 
 		print_string(buff);
 		if(stream_enable_ncurses){
-			if(decode&&!is_wav_mode){
+			if(stream_show_decoder_queue&&decode&&!is_wav_mode){
 				perform_queue_op(stream_struct.decoder_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
 			}
-			perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
+			if(stream_show_player_queue){
+				perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
+			}
 		}
 		if(stream_enable_ncurses){
 			refresh();
