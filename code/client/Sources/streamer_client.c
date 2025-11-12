@@ -172,7 +172,6 @@ static void* rx_thread_func(void* args){
 			if(input_enabled){
 				pthread_cond_signal(&input_cond);
 			}
-			con_send_udp(stream_struct.con_obj,client_data_times_pair);
 			if(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)){
 
 				break;
@@ -184,6 +183,7 @@ static void* rx_thread_func(void* args){
 			if(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK)){
 				break;
 			}
+			con_send_udp(stream_struct.con_obj,client_data_times_pair);
 		}
 		pthread_mutex_lock(&reading_mtx);
 		while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||(perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,(is_wav_mode||!decode)?Q_IS_FULL:Q_IS_ALMOST_FULL})))){

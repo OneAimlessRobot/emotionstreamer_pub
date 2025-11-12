@@ -39,6 +39,7 @@ static void clear_ports_and_quit(int signal){
 	send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
 	send_ports_back(&client_con_obj);
 	close_con(&client_con_obj);
+	fclose(logstream);
 	exit(signal);
 }
 static int64_t down_file_size(int is_streaming){
@@ -53,7 +54,6 @@ static int64_t down_file_size(int is_streaming){
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
 			printf(UNSUCESSFUL_DOWNLOAD,reason);
 			clear_ports_and_quit(SIGINT);
-			fclose(logstream);
 		}
 		clear_con_data(&client_con_obj);
 		snprintf((char*)client_con_obj.ack_udp_data,DEF_DATASIZE,"%s",CON_STRING);
@@ -92,18 +92,15 @@ static void down_func(char* file_name){
 		disable_raw(1);
 		printf("A musica foi guardada em: %s\n",file_path);
 		clear_ports_and_quit(SIGINT);
-		fclose(logstream);
 
 }
 static void peek_func(void){
 
-		
+
 		int down_size=down_file_size(0);
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
 		clear_ports_and_quit(SIGINT);
-		close_con(&client_con_obj);
-		fclose(logstream);
 
 }
 static void conf_func(void){
@@ -181,12 +178,9 @@ int clientStart(char* req_field,char* file_name){
 	init_addr(&client_ip_address,client_ip_cache_entry.hostname,port);
 
 	if(bind(client_con_obj.sockfd_tcp,(struct sockaddr *)&client_ip_address,socklenvar[1])){
-	
 		perror("Não conseguimos dar bind na socket do client!!!\n");
 		print_addr_aux("Este é o address:",&client_ip_address);
-		fclose(logstream);
 		clear_ports_and_quit(SIGINT);
-        	
 	}
 	else{
 
@@ -196,10 +190,9 @@ int clientStart(char* req_field,char* file_name){
 
 	if(!tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address)){
 
-		fclose(logstream);
 		clear_ports_and_quit(SIGINT);
         }
-	
+
 	if(is_new<0){
 
 		insert_ip_addr_entry(&server_ip_cache_entry,&cache);
@@ -210,24 +203,20 @@ int clientStart(char* req_field,char* file_name){
 		print_ip_cache(stdout,&cache);
 		if(!try_cache_connect(&client_con_obj.sockfd_tcp,client_con_times_pair,&cache)){
 
-			fclose(logstream);
 			clear_ports_and_quit(SIGINT);
         	}
 	}
 	print_sock_addr(client_con_obj.sockfd_tcp);
 	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry);
-	
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	greet(&client_con_obj,client_con_times_pair,client_holepunching_times_pair);
 
 	snprintf((char*)client_con_obj.udp_data,3*DEF_DATASIZE-1,"%s %s",req_buff,file_name);
 
 	con_send_udp(&client_con_obj,client_data_times_pair);
-	
 	printf("Connection testing: UDP data\n");
 
 	con_read_udp(&client_con_obj,client_data_times_pair);
-	
 	char test_buff[DEF_DATASIZE]={0};
 	sscanf((char*)client_con_obj.udp_data,"%s",test_buff);
 	printf("server reply to our UDP test: \"%s\"\n",test_buff);
@@ -245,7 +234,6 @@ int clientStart(char* req_field,char* file_name){
 	printf("Connection testing: UDP ack, receiving\n");
 
 	con_read_udp_ack(&client_con_obj,client_data_times_pair);
-	
 	memset(&test_buff,0,DEF_DATASIZE);
 	sscanf((char*)client_con_obj.ack_udp_data,"%s",test_buff);
 	printf("server reply to our UDP ack test: \"%s\"\n",test_buff);
@@ -267,7 +255,6 @@ int clientStart(char* req_field,char* file_name){
 		break;
 	default:
 		printf(UNKNOWN_REQ,req_buff);
-		fclose(logstream);
 		clear_ports_and_quit(SIGINT);
         	break;
 	}
