@@ -392,7 +392,9 @@ static void* show_stats(void* args){
 		}
 		usleep(cfg_ui_frame_period_us);
 	}
-	endwin_wrapper();
+	if(stream_enable_ncurses){
+		endwin_wrapper();
+	}
 	return args;
 }
 
