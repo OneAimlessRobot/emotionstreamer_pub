@@ -15,9 +15,9 @@ extern ip_cache_entry server_port_mapper_ip_cache_entry;
 extern char generalized_config_filepath_buff[PATHSIZE+1];
 
 extern uint64_t server_chunk_size;
-extern int16_t server_transmission_protocol;
+extern int8_t server_transmission_protocol;
 
-extern int16_t is_wav_mode;
+extern int8_t is_wav_mode;
 
 extern int_pair server_data_times_pair,
 	server_con_times_pair,

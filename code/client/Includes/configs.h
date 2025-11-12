@@ -25,7 +25,7 @@ extern u_int64_t
 	cfg_client_ack_timeout_lim,
 	cfg_stream_player_cache_size_chunks;
 
-extern uint16_t
+extern uint8_t
 	stream_enable_ncurses,
 	stream_show_stats,
 	stream_show_frames,
@@ -33,8 +33,10 @@ extern uint16_t
 	cfg_cache_almost_empty_pct,
 	cfg_cache_almost_empty_pct;
 
-extern int16_t streaming_protocol;
-extern int16_t is_wav_mode;
+extern uint16_t cfg_client_chunk_size;
+
+extern int8_t streaming_protocol;
+extern int8_t is_wav_mode;
 extern char generalized_config_filepath_buff[PATHSIZE+1];
 extern char server_ip_address_buff[PATHSIZE+1];
 extern char client_ip_address_buff[PATHSIZE+1];

@@ -25,14 +25,15 @@ u_int64_t cfg_latency_ms=DEF_LATENCY_MS,
 	cfg_stream_player_cache_size_chunks=STREAM_DEF_PLAYER_CACHE_SIZE_CHUNKS,
 	cfg_client_ack_timeout_lim=CLIENT_ACK_TIMEOUT_LIM;
 
-uint16_t cfg_cache_almost_full_pct=CACHE_ALMOST_FULL_PCT,
+uint8_t cfg_cache_almost_full_pct=CACHE_ALMOST_FULL_PCT,
 	cfg_cache_almost_empty_pct=CACHE_ALMOST_EMPTY_PCT;
 
-int16_t streaming_protocol=0;
-uint16_t stream_enable_ncurses=0;
-uint16_t stream_show_stats=1;
-uint16_t stream_show_frames=0;
-int16_t is_wav_mode=0;
+uint16_t cfg_client_chunk_size=CLIENT_DEF_CHUNK_SIZE;
+int8_t streaming_protocol=0;
+uint8_t stream_enable_ncurses=0;
+uint8_t stream_show_stats=1;
+uint8_t stream_show_frames=0;
+int8_t is_wav_mode=0;
 int_pair client_data_times_pair=(int_pair){CLIENT_TIMEOUT_DATA_SEC,CLIENT_TIMEOUT_DATA_USEC};
 int_pair client_con_times_pair=(int_pair){CLIENT_TIMEOUT_CON_SEC,CLIENT_TIMEOUT_CON_USEC};
 int_pair client_holepunching_times_pair=(int_pair){HOLE_PUNCHING_TIMEOUT_SEC,HOLE_PUNCHING_TIMEOUT_USEC};
@@ -71,21 +72,21 @@ void read_values_cfg_client(void){
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
-	sscanf(curr_line_buff,"stream_enable_ncurses: %hu",&stream_enable_ncurses);
+	sscanf(curr_line_buff,"stream_enable_ncurses: %hhu",&stream_enable_ncurses);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
-	sscanf(curr_line_buff,"stream_show_stats: %hu",&stream_show_stats);
+	sscanf(curr_line_buff,"stream_show_stats: %hhu",&stream_show_stats);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
-	sscanf(curr_line_buff,"stream_show_frames: %hu",&stream_show_frames);
+	sscanf(curr_line_buff,"stream_show_frames: %hhu",&stream_show_frames);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -113,14 +114,21 @@ void read_values_cfg_client(void){
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
-	sscanf(curr_line_buff,"cache_almost_full_pct: %hu",&cfg_cache_almost_full_pct);
+	sscanf(curr_line_buff,"cache_almost_full_pct: %hhu",&cfg_cache_almost_full_pct);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
-	sscanf(curr_line_buff,"cache_almost_empty_pct: %hu",&cfg_cache_almost_empty_pct);
+	sscanf(curr_line_buff,"cache_almost_empty_pct: %hhu",&cfg_cache_almost_empty_pct);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"client_chunk_size: %hu",&cfg_client_chunk_size);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -214,9 +222,11 @@ void print_values_cfg_client(int fd){
 
 	dprintf(fd,"latency_ms: %lu\n",cfg_latency_ms);
 
-	dprintf(fd,"cache_almost_full_pct: %hu\n",cfg_cache_almost_full_pct);
+	dprintf(fd,"cache_almost_full_pct: %hhu\n",cfg_cache_almost_full_pct);
 
-	dprintf(fd,"cache_almost_empty_pct: %hu\n",cfg_cache_almost_empty_pct);
+	dprintf(fd,"cache_almost_empty_pct: %hhu\n",cfg_cache_almost_empty_pct);
+
+	dprintf(fd,"client_chunk_size: %hu\n",cfg_client_chunk_size);
 
 	dprintf(fd,"client_timeouts_data: %lus %lu us\n",client_data_times_pair[0],client_data_times_pair[1]);
 

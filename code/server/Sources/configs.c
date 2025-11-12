@@ -33,8 +33,8 @@ int_pair server_holepunching_times_pair=(int_pair){HOLE_PUNCHING_TIMEOUT_SEC,HOL
 uint64_t server_ack_timeout_lim=SERVER_ACK_TIMEOUT_LIM;
 
 uint64_t server_chunk_size=SERVER_CHUNK_SIZE;
-int16_t server_transmission_protocol=0;
-int16_t is_wav_mode=0;
+int8_t server_transmission_protocol=0;
+int8_t is_wav_mode=0;
 static void clean_buff(void){
 
 	memset(&curr_line_buff,0,CONFIG_READ_LINE_BUFF_SIZE);
@@ -70,7 +70,7 @@ void read_values_cfg_server(void){
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
-	sscanf(curr_line_buff,"server_transmission_protocol: %hd",&server_transmission_protocol);
+	sscanf(curr_line_buff,"server_transmission_protocol: %hhd",&server_transmission_protocol);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		fclose(cfg_fp);

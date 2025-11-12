@@ -128,13 +128,11 @@ static void changePA(chunk_player*player){
          .channels = player->current_result.channels
      };
      if(player->play_stream_pa->stream){
-	//PA_UPDATE_REPLACE
 
 	pa_proplist* proplist=pa_proplist_new();;
 	pa_proplist_set(proplist, PA_PROP_FORMAT_RATE , (int*)&(ss.rate), 4);
 	pa_proplist_set(proplist, PA_PROP_FORMAT_CHANNELS  , (int*)&(ss.channels), 4);
 	pa_stream_proplist_update(player->play_stream_pa->stream, PA_UPDATE_REPLACE, proplist,NULL,NULL);
-	//player->play_stream_pa->stream=pa_stream_new(player->play_stream_pa->context,"playback", &ss, NULL);
      	pa_proplist_free(proplist);
 	printf("pulseaudio changed successfully!!!!\n");
      }

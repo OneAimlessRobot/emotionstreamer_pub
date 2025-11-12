@@ -137,7 +137,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	char extension_buff[EXTENSION_SIZE+1]={0};
 	strncpy(extension_buff,server_working_extension,EXTENSION_SIZE+1);
 	randStr(SERVER_NAME_SIZE-1,buff);
-	is_wav_mode=(!strs_are_strictly_equal(extension_buff,WAV_MODE_EXTENSION));
+	is_wav_mode=(int8_t)(!strs_are_strictly_equal(extension_buff,WAV_MODE_EXTENSION));
 	if(is_wav_mode){
 		printf("Launched in '.wav' mode!!!\n");
 	}

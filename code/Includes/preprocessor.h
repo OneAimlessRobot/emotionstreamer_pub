@@ -25,6 +25,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+
+#define CONSTANT_TO_PRINT_TO_CLEAR_SCREEN_WITH_PRINTF "\033[3J\033[H\033[2J"
 #define ACK_STRING "sup"
 #define HB_SEND_STRING "imhere."
 #define HB_REPLY_STRING "you never left. You never left."

@@ -47,7 +47,7 @@ static int64_t down_file_size(int is_streaming){
 		clear_con_data(&client_con_obj);
 		printf("Recebendo tamanho!!!\n");
 		con_read_udp(&client_con_obj,client_data_times_pair);
-		sscanf((char*)client_con_obj.udp_data,"%ld %hd %s %hd",&down_size,&streaming_protocol,extension_from_server,&is_wav_mode);
+		sscanf((char*)client_con_obj.udp_data,"%ld %hhd %s %hhd",&down_size,&streaming_protocol,extension_from_server,&is_wav_mode);
 		if(down_size<=0){
 
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
