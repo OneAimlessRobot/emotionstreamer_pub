@@ -33,8 +33,12 @@ extern uint8_t
 	cfg_cache_almost_empty_pct,
 	cfg_cache_almost_empty_pct;
 
+
 extern uint16_t cfg_client_chunk_size;
 
+extern float cfg_ui_framerate_fps;
+
+extern uint64_t cfg_ui_frame_period_us;
 extern int8_t streaming_protocol;
 extern int8_t is_wav_mode;
 extern char generalized_config_filepath_buff[PATHSIZE+1];

@@ -28,7 +28,7 @@
 static const int play=1;
 static const int decode=1;
 static const int rx_enabled=1;
-static const int input_enabled=0;
+static const int input_enabled=1;
 static struct sigaction sa;
 
 atomic_int innited=0;
@@ -70,15 +70,6 @@ static client_stream_t stream_struct={
 					NULL,
                                         NULL
                                         };
-
-static void endwin_wrapper(void){
-
-	if(!isendwin()){
-
-		print_string("Chamamos disable raw em out!!!!\n");
-		endwin();
-	}
-}
 
 static void stop_client_stream(void){
 
@@ -236,6 +227,7 @@ static void* dec_thread_func(void* args){
 					memset(buff,0,1024);
 					snprintf(buff,1023,"Stream done!\n");
 					print_string(buff);
+					raise(SIGINT);
 				}
 				else if(ret_val==MPG123_ERR){
 					memset(buff,0,1024);
@@ -355,15 +347,6 @@ static void* ack_exchange_thread(void* args){
 
 
 }
-static void enable_ncurses(void){
-    initscr();            // start ncurses
-    cbreak();             // disable line buffering
-    noecho();             // don't echo keypresses
-    nodelay(stdscr, TRUE); // nonblocking input
-    curs_set(0);          // hide cursor
-    keypad(stdscr, TRUE); // enable arrow keys
-
-}
 static void* show_stats(void* args){
 
 	if(stream_enable_ncurses){
@@ -406,7 +389,7 @@ static void* show_stats(void* args){
 		if(stream_enable_ncurses){
 			refresh();
 		}
-		usleep(16000);
+		usleep(cfg_ui_frame_period_us);
 	}
 	endwin_wrapper();
 	return args;

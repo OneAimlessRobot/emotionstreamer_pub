@@ -3,6 +3,7 @@
 #include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../Includes/terminal_mgmt.h"
 #include "../Includes/configs.h"
 
 static FILE* cfg_fp=NULL;
@@ -29,6 +30,8 @@ uint8_t cfg_cache_almost_full_pct=CACHE_ALMOST_FULL_PCT,
 	cfg_cache_almost_empty_pct=CACHE_ALMOST_EMPTY_PCT;
 
 uint16_t cfg_client_chunk_size=CLIENT_DEF_CHUNK_SIZE;
+float cfg_ui_framerate_fps=UI_DEF_FRAMERATE_FPS;
+uint64_t cfg_ui_frame_period_us=UI_DEF_FRAME_PERIOD_US;
 int8_t streaming_protocol=0;
 uint8_t stream_enable_ncurses=0;
 uint8_t stream_show_stats=1;
@@ -87,6 +90,14 @@ void read_values_cfg_client(void){
 		raise(SIGINT);
 	}
 	sscanf(curr_line_buff,"stream_show_frames: %hhu",&stream_show_frames);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"ui_framerate_fps: %f",&cfg_ui_framerate_fps);
+	cfg_ui_frame_period_us=UI_FRAME_PERIOD_US(cfg_ui_framerate_fps);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -219,6 +230,8 @@ void print_values_cfg_client(int fd){
 	dprintf(fd,"stream_show_stats: %s\n",stream_show_stats?"Yes":"No");
 
 	dprintf(fd,"stream_show_frames: %s\n",stream_show_frames?"Yes":"No");
+
+	dprintf(fd,"ui_framerate_fps (frame period in us): %f (%lu us)\n",cfg_ui_framerate_fps,cfg_ui_frame_period_us);
 
 	dprintf(fd,"latency_ms: %lu\n",cfg_latency_ms);
 

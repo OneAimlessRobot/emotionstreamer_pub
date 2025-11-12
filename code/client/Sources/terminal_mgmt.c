@@ -1,7 +1,16 @@
 #include "../../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include <ncurses.h>
+#include <pulse/error.h>
+#include <pulse/simple.h>
+#include <sys/ioctl.h> //for ioctl()
+#include <linux/soundcard.h> //SOUND_PCM*
+#include <alsa/asoundlib.h>
+#include "../Includes/ripped_code.h"
 #include "../Includes/terminal_mgmt.h"
 #include "../../extra_funcs/Includes/fileshit.h"
+
+static pthread_mutex_t close_ncurses_mtx=PTHREAD_MUTEX_INITIALIZER;
 
 static int stream_arr_innited=0;
 
@@ -172,6 +181,24 @@ void execute_terminal_op(terminal_mgmt_fd fd, terminal_mgmt_op op,int x,int y,ch
 
 }
 
+void endwin_wrapper(void){
+	pthread_mutex_lock(&close_ncurses_mtx);
+	if(!isendwin()){
+
+		print_string("Chamamos endwin wrapper!!!!!!!\n");
+		endwin();
+	}
+	pthread_mutex_unlock(&close_ncurses_mtx);
+}
+void enable_ncurses(void){
+    initscr();            // start ncurses
+    cbreak();             // disable line buffering
+    noecho();             // don't echo keypresses
+    nodelay(stdscr, TRUE); // nonblocking input
+    curs_set(0);          // hide cursor
+    keypad(stdscr, TRUE); // enable arrow keys
+
+}
 /*
 //clear entire screen
 printf("\033[2J");        // clear entire screen

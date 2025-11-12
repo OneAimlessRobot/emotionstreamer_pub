@@ -3,8 +3,15 @@
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include <ncurses.h>
+#include <pulse/error.h>
+#include <pulse/simple.h>
+#include <sys/ioctl.h> //for ioctl()
+#include <linux/soundcard.h> //SOUND_PCM*
+#include <alsa/asoundlib.h>
 #include "../Includes/configs.h"
 #include "../Includes/terminal_mgmt.h"
+#include "../Includes/ripped_code.h"
 #include "../Includes/download_func.h"
 
 typedef struct download_bar{
@@ -36,16 +43,29 @@ static void* print_download_bar(void* mem,int64_t len,int64_t* timeout_num){
                 bar[i]='#';
 
         }
-        printf("Progresso atual de download: %ld de %ld kbytes transferidos!\n\n%s\n",bar_inside->curr/1000,bar_inside->total/1000,bar);
-        if(len==-2){
+	if(stream_enable_ncurses){
+		clear();
+	}
+	else{
+		system("clear");
+
+	}
+	char buff[1024]={0};
+        snprintf(buff,sizeof(buff)-1,"Progresso atual de download: %ld de %ld kbytes transferidos!\n\n%s\n",bar_inside->curr/1000,bar_inside->total/1000,bar);
+        print_string(buff);
+	if(len==-2){
 		(*timeout_num)++;
-		printf("Timeout no read!!!! Timeout no. %ld\n",*timeout_num);
-        }
+		char buff[1024]={0};
+        	snprintf(buff,sizeof(buff)-1,"Timeout no read!!!! Timeout no. %ld\n",*timeout_num);
+        	print_string(buff);
+	}
 	else{
 		(*timeout_num)=0;
 	}
-	system("clear");
-        return mem;
+        if(stream_enable_ncurses){
+		refresh();
+	}
+	return mem;
 
 }
 
