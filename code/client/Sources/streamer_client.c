@@ -365,7 +365,7 @@ static void* show_stats(void* args){
 			pct_full_decoding=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
 		}
 		if(stream_enable_ncurses){
-			clear();
+			erase();
 		}
 		else{
 			system("clear");
