@@ -17,7 +17,6 @@
 #include "../Includes/ripped_code.h"
 #include "../Includes/chunk_queue.h"
 #include "../Includes/queue_menus.h"
-
 #include "../Includes/mp3module.h"
 
 #include "../Includes/chunk_player.h"
@@ -354,7 +353,10 @@ static void* show_stats(void* args){
         	enable_ncurses();
 	}
 	while(innited){
-		decoder_result_struct result={0};
+	        clock_t start, end;
+	        float cpu_time_used;
+	        start = clock();
+	        decoder_result_struct result={0};
 		perform_play_op(stream_struct.player,&result,P_GET_FRAME_DATA);
 		int pct_full_decoding=0;
 		int time_ms=perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_GET_TIME,Q_LOOK_NA});
@@ -390,7 +392,12 @@ static void* show_stats(void* args){
 		if(stream_enable_ncurses){
 			refresh();
 		}
-		usleep(cfg_ui_frame_period_us);
+		end = clock();
+	        cpu_time_used = F_S_TO_US(((float) (end - start)) / CLOCKS_PER_SEC);
+		float time_diff=((float)cfg_ui_frame_period_us)-cpu_time_used;
+		if(time_diff>0.0){
+			usleep((uint64_t)roundf(time_diff));
+		}
 	}
 	if(stream_enable_ncurses){
 		endwin_wrapper();
