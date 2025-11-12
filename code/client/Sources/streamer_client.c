@@ -351,6 +351,11 @@ static void* show_stats(void* args){
 
 	if(stream_enable_ncurses){
         	enable_ncurses();
+		clear();
+	}
+	else{
+		printf("\033[J");
+
 	}
 	while(innited){
 	        clock_t start, end;
