@@ -3,11 +3,14 @@
 #include "../Includes/terminal_mgmt.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 
+static int stream_arr_innited=0;
+
 static int is_raw_fd[TOTAL_NUM_TERM_FDS]={0};
 
 static int fd_mappings[TOTAL_NUM_TERM_FDS]={STDIN_FILENO,
 					STDOUT_FILENO,
 					STDERR_FILENO};
+static FILE* fp_mappings[TOTAL_NUM_TERM_FDS]={NULL};
 
 static int_pair fd_timepairs[TOTAL_NUM_TERM_FDS]={
 						{0,500000},
@@ -120,6 +123,20 @@ void execute_terminal_op(terminal_mgmt_fd fd, terminal_mgmt_op op,int x,int y,ch
 	switch(op){
 		case TERMINAL_MGMT_CLEAR_SCREEN:
 			dprintf(fd_mappings[(int)fd],"\033[2J");
+		break;
+		case TERMINAL_MGMT_REFRESH_SCREEN:
+			if(stream_arr_innited){
+				dprintf(fd_mappings[(int)fd],"\033[H");
+    				fflush(fp_mappings[(int)fd]);
+			}
+		break;
+		case TERMINAL_MGMT_INIT_STREAMS:
+			if(!stream_arr_innited){
+				fp_mappings[0]=stdin;
+				fp_mappings[1]=stdout;
+				fp_mappings[2]=stderr;
+				stream_arr_innited=1;
+			}
 		break;
 		case TERMINAL_MGMT_MOVE_CURSOR_TO_POS:
 			dprintf(fd_mappings[(int)fd],"\033[%d;%dH", y, x);

@@ -363,6 +363,7 @@ static void* ack_exchange_thread(void* args){
 
 static void* show_stats(void* args){
 
+	execute_terminal_op(STDOUT, TERMINAL_MGMT_INIT_STREAMS,0,0,NULL,0);
 	if(stream_enable_ncurses){
         	enable_raw(STDOUT);
 	}
@@ -375,7 +376,7 @@ static void* show_stats(void* args){
 		if(decode&&!is_wav_mode){
 			pct_full_decoding=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
 		}
-		execute_terminal_op(STDOUT, TERMINAL_MGMT_CLEAR_SCREEN,0,0,NULL,0);
+		execute_terminal_op(STDOUT, TERMINAL_MGMT_REFRESH_SCREEN,0,0,NULL,0);
 		char buff[1024]={0};
 		snprintf(buff,1023,"Tempo restante no buffer, atualmente: %d ms\nPercentagem de preenchimento em playing: %d\nPercentagem de preenchimento em decoding: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nAre we yet to receive the WAV header? %s\n\n",
 					time_ms,
