@@ -110,6 +110,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_s.var_mtx=&hb_mtx;
         arg_s.con_obj=&con_obj;
 	arg_s.con_mtx=&con_mtx;
+	arg_s.ack_period_us=cfg_hb_ack_period_us;
 	arg_s.sig_func=sigint_handler;
 	arg_s.clean_func=call_signal_func;
 	arg_s.trg_cond=&master_cond;
@@ -121,12 +122,14 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_o.sig_func=sigint_handler;
 	arg_o.clean_func=call_signal_func;
 	arg_o.ack_timeout_lim= hb_ack_timeout_lim;
+	arg_o.ack_period_us=cfg_hb_ack_period_us;
         arg_o.start_cond_mtx=&hb_cond_mtx;
         arg_o.var_mtx=arg_s.var_mtx;
 
         arg_a.arg_o=&arg_o;
         arg_a.sig_func=sigint_handler;
 	arg_a.arg_s=&arg_s;
+	arg_a.ack_period_us=cfg_hb_ack_period_us;
 	arg_a.master_mtx=&master_mtx;
         arg_a.var_mtx=arg_s.var_mtx;
 
@@ -137,15 +140,18 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
 	memcpy(&arg_s.con_times_pair,&hb_con_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.data_times_pair,&hb_data_times_pair,sizeof(int_pair));
+	memcpy(&arg_s.ack_times_pair,&hb_ack_times_pair,sizeof(int_pair));
 
 	memcpy(&arg_a.con_times_pair,&hb_con_times_pair,sizeof(int_pair));
 	memcpy(&arg_a.holepunching_times_pair,&hb_holepunching_times_pair,sizeof(int_pair));
+	memcpy(&arg_a.ack_times_pair,&hb_ack_times_pair,sizeof(int_pair));
 
 	memcpy(&arg_a.data_times_pair,&hb_data_times_pair,sizeof(int_pair));
 
 
 	memcpy(&arg_o.data_times_pair,&hb_data_times_pair,sizeof(int_pair));
 	memcpy(&arg_o.holepunching_times_pair,&hb_holepunching_times_pair,sizeof(int_pair));
+	memcpy(&arg_o.ack_times_pair,&hb_ack_times_pair,sizeof(int_pair));
 
 	openDB(DB_FILE);
 

@@ -159,6 +159,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	arg_s.sleep_us=10000;
 	arg_s.con_obj=&state.hb_con;
 	arg_s.clean_func=call_sigint;
+	arg_s.ack_period_us=cfg_server_ack_period_us;
 	arg_s.sig_func=serverStop;
 	arg_s.start_trigger=&started;
 	arg_s.loop_var=&is_on;
@@ -173,6 +174,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	memcpy(&arg_s.con_times_pair,&server_con_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.data_times_pair,&server_data_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.holepunching_times_pair,&server_holepunching_times_pair,sizeof(int_pair));
+	memcpy(&arg_s.ack_times_pair,&server_ack_times_pair,sizeof(int_pair));
 	
 
 	is_on=1;

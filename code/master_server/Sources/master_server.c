@@ -87,6 +87,7 @@ void start_master(char* hostname, uint16_t port){
 	arg_a.sig_func=sigint_handler;
 	arg_a.clean_func=call_signal_func;
         arg_a.started=&started;
+	arg_a.ack_period_us=cfg_master_ack_period_us;
         arg_a.exit_signal=SIGINT;
 
 	arg_o.is_on=&is_on;
@@ -94,6 +95,7 @@ void start_master(char* hostname, uint16_t port){
 	arg_o.ack_timeout_lim= master_ack_timeout_lim;
         arg_o.sig_func=sigint_handler;
         arg_o.clean_func=call_signal_func;
+	arg_o.ack_period_us=cfg_master_ack_period_us;
         arg_o.start_cond_mtx=&master_cond_mtx;
         arg_o.var_mtx=&master_mtx;
 
@@ -102,6 +104,7 @@ void start_master(char* hostname, uint16_t port){
         arg_a.arg_s=NULL;
         arg_a.con_mtx=&master_con_mtx;
         arg_a.var_mtx=&master_mtx;
+	arg_a.ack_period_us=cfg_master_ack_period_us;
 	arg_a.master_mtx=arg_o.start_cond_mtx;
 
         init_con_set(&set,con_arr,timeout_arr,fd_arr,MAX_HB_SERVERS,&master_serv_mtx,&master_cond);
@@ -112,8 +115,10 @@ void start_master(char* hostname, uint16_t port){
         memcpy(&arg_a.con_times_pair,&master_con_times_pair,sizeof(int_pair));
         memcpy(&arg_a.data_times_pair,&master_data_times_pair,sizeof(int_pair));
         memcpy(&arg_a.holepunching_times_pair,&master_holepunching_times_pair,sizeof(int_pair));
+        memcpy(&arg_a.ack_times_pair,&master_ack_times_pair,sizeof(int_pair));
 
         memcpy(&arg_o.data_times_pair,&master_data_times_pair,sizeof(int_pair));
+        memcpy(&arg_o.ack_times_pair,&master_ack_times_pair,sizeof(int_pair));
 
 
 	openDB(DB_FILE);

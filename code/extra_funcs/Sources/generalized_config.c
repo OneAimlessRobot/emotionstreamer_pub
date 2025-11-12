@@ -6,7 +6,6 @@
 
 static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
-
 int_pair port_mapper_times_pair={REMAPPER_TIMEOUT_CON_SEC,REMAPPER_TIMEOUT_CON_USEC};
 
 static char cfg_full_file_path[PATHSIZE*3+1]={0};

@@ -41,6 +41,8 @@ typedef struct slave_args{
 	atomic_int* loop_var;
 	int_pair con_times_pair;
 	int_pair data_times_pair;
+	int_pair ack_times_pair;
+	uint64_t ack_period_us;
 	int_pair holepunching_times_pair;
 	pthread_mutex_t* var_mtx;
 	pthread_mutex_t* con_mtx;
@@ -64,6 +66,8 @@ typedef struct overseer_args{
 	struct con_set* cons;
 	int_pair data_times_pair;
 	int_pair holepunching_times_pair;
+	int_pair ack_times_pair;
+	uint64_t ack_period_us;
 	uint64_t ack_timeout_lim;
 
 
@@ -79,6 +83,8 @@ typedef struct acceptor_args{
 	cleanup_func clean_func;
 	int_pair data_times_pair;
 	int_pair con_times_pair;
+	int_pair ack_times_pair;
+	uint64_t ack_period_us;
 	int_pair holepunching_times_pair;
 
 	fd_set mainfds;

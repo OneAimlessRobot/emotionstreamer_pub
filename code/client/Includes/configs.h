@@ -46,10 +46,12 @@ extern char server_ip_address_buff[PATHSIZE+1];
 extern char client_ip_address_buff[PATHSIZE+1];
 extern char client_music_folder_path[PATHSIZE];
 extern char client_logs_file_name[PATHSIZE];
-extern int_pair client_data_times_pair;
-extern int_pair client_con_times_pair;
-extern int_pair client_holepunching_times_pair;
+extern int_pair client_data_times_pair,
+		client_con_times_pair,
+		client_ack_times_pair,
+		client_holepunching_times_pair;
 
+extern uint64_t cfg_client_ack_period_us;
 void read_values_cfg_client(void);
 void print_values_cfg_client(int fd);
 

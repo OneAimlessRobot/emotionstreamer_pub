@@ -5,7 +5,10 @@
 
 extern int_pair browser_data_times_pair,
 	browser_holepunching_times_pair,
+	browser_ack_times_pair,
         browser_con_times_pair;
+
+extern uint64_t cfg_browser_ack_period_us;
 
 extern ip_cache_entry server_browser_port_mapper_ip_cache_entry;
 extern ip_cache_entry server_browser_ip_cache_entry;

@@ -300,6 +300,7 @@ static void* ack_exchange_thread(void* args){
 	int result=0;
 	char buff[1024]={0};
 	while(innited){
+	usleep(cfg_client_ack_period_us);
         result=con_send_udp_ack(stream_struct.con_obj,client_data_times_pair);
         if(result<=0){
 		stream_struct.curr_timeout++;
@@ -315,6 +316,7 @@ static void* ack_exchange_thread(void* args){
 			break;
 		}
         }
+	usleep(cfg_client_ack_period_us);
         result= con_read_udp_ack(stream_struct.con_obj,client_data_times_pair);
         if(result<=0){
                 stream_struct.curr_timeout++;
