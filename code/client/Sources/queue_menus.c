@@ -12,8 +12,9 @@
 #include "../Includes/chunk_queue.h"
 #include "../Includes/queue_arithmetic.h"
 #include "../Includes/queue_menus.h"
+#include "../Includes/terminal_mgmt.h"
 
-
+#define BUFFSIZE 2048
 static int dequeue_chunk(chunk_queue* que,uint8_t* buff){
 
 	if(!que_is_empty(que)){
@@ -79,25 +80,26 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 
 	if(!que){
 
-		printf("Queue NULL\n");
+		execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,"Queue NULL\n",strlen("Queue NULL\n"));
 		return;
 	}
 	if(!(que->chunk_buff)){
 
-		printf("Chunk buff NULL na queue\n");
+		execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,"Queue buff NULL na queue\n",strlen("Queue buff NULL na queue\n"));
 		return;
 	}
 	if(!(que->total_size)){
-
-		printf("Queue com sizes null!\nSize total da queue: %lu bytes\n"
+		char buff[BUFFSIZE]={0};
+		snprintf(buff,BUFFSIZE-1,"Queue com sizes null!\nSize total da queue: %lu bytes\n"
 							"Size de chunk da queue: %lu bytes\n"
 							"Numero de chunks totais da queue: %lu bytes\n",
 							que->total_size,
 							que->chunk_size,
 							que->max_occupied);
+		execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,buff,strlen(buff));
 		return;
 	}
-	char* bar=malloc(PRINT_SIZE+3);
+	char bar[PRINT_SIZE+3];
 	memset(bar,0,PRINT_SIZE+3);
 	bar[0]='[';
 	memset(bar+1,' ',PRINT_SIZE);
@@ -106,21 +108,20 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 	uint64_t recv_cursor_bar_pos=1+(que->recv_cursor*PRINT_SIZE)/que->max_occupied;
 	bar[play_cursor_bar_pos]='P';
 	bar[recv_cursor_bar_pos]='R';
-	
 	uint64_t buff_ms=getQueueBufferedTime(que,result);
 	for(uint64_t i=circular_int_inc(PRINT_SIZE+1,play_cursor_bar_pos);(play_cursor_bar_pos!=recv_cursor_bar_pos)&&(i!=recv_cursor_bar_pos);i=circular_int_inc(PRINT_SIZE+1,i)){
 
 		bar[i]='=';
 	}
-	
-	printf("Queue visual:\nplay cursor: %lu\nrecv cursor: %lu\nCurr occupied: %lu\nMax occupied: %lu\n",que->play_cursor,que->recv_cursor,que->n_occupied,que->max_occupied);
-	printf("Queue esta quase vazia? %s\nQueue esta quase cheia? %s\nQueue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %lu\nTemos %lu ms de audio no buffer!\n",
+	char buff[BUFFSIZE]={0};
+	int inc=snprintf(buff,BUFFSIZE-1,"Queue visual:\nplay cursor: %lu\nrecv cursor: %lu\nCurr occupied: %lu\nMax occupied: %lu\n",que->play_cursor,que->recv_cursor,que->n_occupied,que->max_occupied);
+	inc+=snprintf(buff+inc,BUFFSIZE-1,"Queue esta quase vazia? %s\nQueue esta quase cheia? %s\nQueue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %lu\nTemos %lu ms de audio no buffer!\n",
 					que_is_almost_empty(que) ? "SIM":"NAO",
 					que_is_almost_full(que)? "SIM":"NAO",
 					que_is_empty(que) ? "SIM":"NAO",
 					que_is_full(que)? "SIM":"NAO",que->n_occupied*que->chunk_size,buff_ms);
-	printf("O buff:\n%s\n",bar);
-	free(bar);
+	snprintf(buff+inc,BUFFSIZE-1,"O buff:\n%s\n",bar);
+	execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,buff,strlen(buff));
 }
 int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, decoder_result_struct* frame_data_struct,q_op op){
 	int result=0;
