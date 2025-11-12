@@ -364,8 +364,12 @@ static void* show_stats(void* args){
 		if(decode&&!is_wav_mode){
 			pct_full_decoding=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
 		}
-		print_string("\033[H");
-
+		if(stream_enable_ncurses){
+			move(0,0);
+		}
+		else{
+			printf("\033[H");
+		}
 		char buff[1024]={0};
 		snprintf(buff,1023,"Tempo restante no buffer, atualmente: %d ms\nPercentagem de preenchimento em playing: %d\nPercentagem de preenchimento em decoding: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nAre we yet to receive the WAV header? %s\n\n",
 					time_ms,
@@ -508,7 +512,6 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		printf("Saimos do thread de stats?\n");
 		pthread_join(tid_stats,NULL);
 		printf("Saimos do thread de stats!!!!!!\n");
-		endwin_wrapper();
 	}
 	if(play){
 		printf("Saimos do thread play?\n");
