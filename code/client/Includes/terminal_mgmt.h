@@ -26,7 +26,7 @@ void enable_raw(terminal_mgmt_fd fd);
 
 void disable_raw(terminal_mgmt_fd fd);
 
-int is_raw(terminal_mgmt_fd fd);
+int is_term_mgmt_raw(terminal_mgmt_fd fd);
 
 void execute_terminal_op(terminal_mgmt_fd fd, terminal_mgmt_op op,int x, int y,char buff[],u_int64_t buff_size);
 

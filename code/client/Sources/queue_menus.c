@@ -1,4 +1,5 @@
 #include "../../Includes/preprocessor.h"
+#include <ncurses.h>
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <alsa/asoundlib.h>
 #include <pulse/error.h>
@@ -79,12 +80,12 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 
 	if(!que){
 
-		execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,"Queue NULL\n",strlen("Queue NULL\n"));
+		print_string("Queue NULL\n");
 		return;
 	}
 	if(!(que->chunk_buff)){
 
-		execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,"Queue buff NULL na queue\n",strlen("Queue buff NULL na queue\n"));
+		print_string("Queue buff NULL na queue\n");
 		return;
 	}
 	if(!(que->total_size)){
@@ -95,7 +96,7 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 							que->total_size,
 							que->chunk_size,
 							que->max_occupied);
-		execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,buff,strlen(buff));
+		print_string(buff);
 		return;
 	}
 	char bar[PRINT_SIZE+3];
@@ -120,7 +121,7 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 					que_is_empty(que) ? "SIM":"NAO",
 					que_is_full(que)? "SIM":"NAO",que->n_occupied*que->chunk_size,buff_ms);
 	snprintf(buff+inc,BUFFSIZE-1,"O buff:\n%s\n",bar);
-	execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,buff,strlen(buff));
+	print_string(buff);
 }
 int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, decoder_result_struct* frame_data_struct,q_op op){
 	int result=0;

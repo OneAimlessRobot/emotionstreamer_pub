@@ -114,7 +114,7 @@ void disable_raw(terminal_mgmt_fd fd) {
     tcsetattr(fd_mappings[(int)fd], TCSAFLUSH, &orig_fd[fd]);
     is_raw_fd[fd]=0;
 }
-int is_raw(terminal_mgmt_fd fd) {
+int is_term_mgmt_raw(terminal_mgmt_fd fd) {
 
 	return is_raw_fd[fd];
 }

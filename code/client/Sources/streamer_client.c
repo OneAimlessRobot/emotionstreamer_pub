@@ -1,4 +1,5 @@
 #include "../Includes/preprocessor.h"
+#include <ncurses.h>
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <alsa/asoundlib.h>
 #include <pulse/error.h>
@@ -72,15 +73,10 @@ static client_stream_t stream_struct={
 
 static void endwin_wrapper(void){
 
-	if(is_raw(STDOUT)){
+	if(!isendwin()){
 
 		print_string("Chamamos disable raw em out!!!!\n");
-		disable_raw(STDOUT);
-	}
-	if(is_raw(STDIN)){
-
-		print_string("Chamamos disable raw em in!!!!\n");
-		disable_raw(STDIN);
+		endwin();
 	}
 }
 
@@ -162,7 +158,7 @@ static int read_chunk_udp(client_stream_t* strm,int_pair pair){
 
 static void* rx_thread_func(void* args){
 	int full=0;
-	execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,"Thread de reading alcançado!\n",strlen("Thread de reading alcançado!\n"));
+	print_string("Thread de reading alcançado!\n");
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&reading,1,V_SET);
 		while(innited){
@@ -211,7 +207,7 @@ static void* dec_thread_func(void* args){
 		pthread_cond_wait(&decoder_cond,&decoder_mtx);
 	}
 	pthread_mutex_unlock(&decoder_mtx);
-	execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,"Thread de decoding alcançado!\n",strlen("Thread de decoding alcançado!\n"));
+	print_string("Thread de decoding alcançado!\n");
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&decoding,1,V_SET);
 		while(innited){
@@ -239,12 +235,12 @@ static void* dec_thread_func(void* args){
 				if(ret_val==MPG123_DONE){
 					memset(buff,0,1024);
 					snprintf(buff,1023,"Stream done!\n");
-					execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,buff,strlen(buff));
+					print_string(buff);
 				}
 				else if(ret_val==MPG123_ERR){
 					memset(buff,0,1024);
 					snprintf(buff,1023,"Decoding error: %s\n",mpg123_strerror(stream_struct.decoder->dec));
-					execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,buff,strlen(buff));
+					print_string(buff);
 					raise(SIGINT);
 					stop_client_stream();
         			}
@@ -271,7 +267,7 @@ static void* play_thread_func(void* args){
 		pthread_cond_wait(&player_cond,&player_mtx);
 	}
 	pthread_mutex_unlock(&player_mtx);
-	execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,"Thread de play alcançado!\n",strlen("Thread de play alcançado!\n"));
+	print_string("Thread de play alcançado!\n");
 	usleep(cfg_latency_ms*1000);
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&playing,1,V_SET);
@@ -317,7 +313,7 @@ static void* ack_exchange_thread(void* args){
 		stream_struct.curr_timeout++;
                 if(result==-2){
                         snprintf(buff,1023,"Timeout em send ack no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
-                        execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,buff,strlen(buff));
+                        print_string(buff);
 			if(stream_struct.curr_timeout==cfg_client_ack_timeout_lim){
                                 break;
                         }
@@ -332,7 +328,7 @@ static void* ack_exchange_thread(void* args){
                 stream_struct.curr_timeout++;
                 if(result==-2){
                         snprintf(buff,1023,"Timeout em read ack no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
-                        execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,buff,strlen(buff));
+                        print_string(buff);
 			if(stream_struct.curr_timeout==cfg_client_ack_timeout_lim){
                                 break;
                         }
@@ -350,8 +346,7 @@ static void* ack_exchange_thread(void* args){
 	while(innited&&(acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)||acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK))){
 		usleep(250000);
 		snprintf(buff,1023,"We ran out of timeouts. Not quitting yet due to leftover chunks in stream\nPlaying? %s\nDecoding? %s\n",acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)?"Yes!":"No...",acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK)?"Yes!":"No...");
-                execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,buff,strlen(buff));
-
+                print_string(buff);
 	}
 
 	raise(SIGINT);
@@ -360,12 +355,19 @@ static void* ack_exchange_thread(void* args){
 
 
 }
+static void enable_ncurses(void){
+    initscr();            // start ncurses
+    cbreak();             // disable line buffering
+    noecho();             // don't echo keypresses
+    nodelay(stdscr, TRUE); // nonblocking input
+    curs_set(0);          // hide cursor
+    keypad(stdscr, TRUE); // enable arrow keys
 
+}
 static void* show_stats(void* args){
 
-	execute_terminal_op(STDOUT, TERMINAL_MGMT_INIT_STREAMS,0,0,NULL,0);
 	if(stream_enable_ncurses){
-        	enable_raw(STDOUT);
+        	enable_ncurses();
 	}
 	while(innited){
 		decoder_result_struct result={0};
@@ -376,7 +378,13 @@ static void* show_stats(void* args){
 		if(decode&&!is_wav_mode){
 			pct_full_decoding=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
 		}
-		execute_terminal_op(STDOUT, TERMINAL_MGMT_REFRESH_SCREEN,0,0,NULL,0);
+		if(stream_enable_ncurses){
+			clear();
+		}
+		else{
+			system("clear");
+
+		}
 		char buff[1024]={0};
 		snprintf(buff,1023,"Tempo restante no buffer, atualmente: %d ms\nPercentagem de preenchimento em playing: %d\nPercentagem de preenchimento em decoding: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nAre we yet to receive the WAV header? %s\n\n",
 					time_ms,
@@ -388,13 +396,17 @@ static void* show_stats(void* args){
 					acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK) ? "PAUSED ": "    ",
 					is_wav_mode?(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK) ? "YES! ": "NO..."):"Not in wav mode...");
 
-		execute_terminal_op(STDOUT, TERMINAL_MGMT_WRITE_TO_FD,0,0,buff,strlen(buff));
-		//if(stream_enable_ncurses){
+		print_string(buff);
+		if(stream_enable_ncurses){
 			if(decode&&!is_wav_mode){
 				perform_queue_op(stream_struct.decoder_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
 			}
 			perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
-		//}
+		}
+		if(stream_enable_ncurses){
+			refresh();
+		}
+		usleep(16000);
 	}
 	endwin_wrapper();
 	return args;

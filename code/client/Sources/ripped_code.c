@@ -1,6 +1,7 @@
 #include "../../Includes/preprocessor.h"
 #include "../../converter_tool/Includes/converter.h"
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
+#include <ncurses.h>
 #include <pulse/error.h>
 #include <pulse/simple.h>
 #include <sys/ioctl.h> //for ioctl()
@@ -68,8 +69,12 @@ static const char* frame_print_format="Estes sao os dados deste frame:\n"
 
 //NULL TERMINATED ALWAYS!
 void print_string(const char* str){
-	printf("%s",str);
-
+	if(!stream_enable_ncurses){
+		printf("%s",str);
+	}
+	else{
+		printw("%s",str);
+	}
 
 }
 int should_switch(decoder_result_struct* before_result,decoder_result_struct* current_result){
@@ -89,8 +94,12 @@ int should_switch(decoder_result_struct* before_result,decoder_result_struct* cu
 void print_decoder_frame_result(decoder_result_struct* result,int fd){
 
 	if(result&&stream_show_frames){
-		dprintf(fd,frame_print_format,FRAME_PRINT_PARAMETERS);
-
+		if(!stream_enable_ncurses){
+			dprintf(fd,frame_print_format,FRAME_PRINT_PARAMETERS);
+		}
+		else{
+			printw(frame_print_format,FRAME_PRINT_PARAMETERS);
+		}
 	}
 
 }
