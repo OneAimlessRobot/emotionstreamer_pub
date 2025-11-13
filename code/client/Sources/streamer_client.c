@@ -237,7 +237,7 @@ static void* dec_thread_func(void* args){
 			}
 	}
 	pthread_mutex_lock(&decoder_mtx);
-	while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_FULL})||perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_ALMOST_EMPTY}))){
+	while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_ALMOST_FULL})||perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_ALMOST_EMPTY}))){
 
 		acess_var_mtx(&variable_acess_mtx,&decoding,0,V_SET);
 		pthread_cond_wait(&decoder_cond,&decoder_mtx);
