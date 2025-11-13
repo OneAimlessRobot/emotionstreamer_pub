@@ -172,14 +172,14 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 		perror("Erro a inicializar address de master em server!!!\n");
                 raise(SIGINT);
                 call_sigint();
-		return;
+		return 1;
 	}
 	if(init_addr(&arg_s.this_addr,ent_this->hostname, ntohs(state.server_tcp_addr.sin_port))){
 
 		perror("Erro a inicializar address de slave em server!!!\n");
                 raise(SIGINT);
                 call_sigint();
-		return;
+		return 1;
 	}
 	memcpy(&arg_s.con_times_pair,&server_con_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.data_times_pair,&server_data_times_pair,sizeof(int_pair));
