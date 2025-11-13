@@ -398,7 +398,7 @@ static void* show_stats(void* args){
                 }
 		else if(global_timeout_var){
 
-			snprintf(ptr,1023,"Timeout em read ack no client!!!!  timeout %lu de %lu\n",global_timeout_var,cfg_client_ack_timeout_lim);
+			snprintf(ptr,1023,"Timeout em read ack no client!!!!  timeout %u de %lu\n",global_timeout_var,cfg_client_ack_timeout_lim);
 		}
 		print_string(buff);
 		if(stream_enable_ncurses){
