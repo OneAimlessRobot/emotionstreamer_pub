@@ -74,11 +74,17 @@ void* slave_thread(void* args){
         setsockopt(arg_struct->con_obj->sockfd_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
         uint16_t port=0;
         ask_for_port(&port,&arg_struct->slave_port_mapper_ip_cache_entry);
-	init_addr(&arg_struct->this_con_addr,arg_struct->slave_ip_cache_entry.hostname,port);
+	if(init_addr(&arg_struct->this_con_addr,arg_struct->slave_ip_cache_entry.hostname,port)){
+
+	        perror("Não conseguimos inicializar address principal deste slave thread!!!\n");
+		arg_struct->sig_func(SIGINT);
+		arg_struct->clean_func();
+		return args;
+	}
 
         if(bind(arg_struct->con_obj->sockfd_tcp,(struct sockaddr *)&arg_struct->this_con_addr,socklenvar[0])){
 
-                perror("Não conseguimos dar bind na socket do client!!!\n");
+                perror("Não conseguimos dar bind na socket deste slave thread!!!\n");
                 print_addr_aux("Este é o address:",&arg_struct->this_con_addr);
 		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
 		arg_struct->sig_func(SIGINT);
@@ -214,13 +220,12 @@ void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct so
 	struct sockaddr_in sockaddr_buff_local={0};
         if(!is_port_mapper){
  		ask_for_port(&port,port_mapper_cache_entry);
-        	init_addr(&sockaddr_buff_local,addr,port);
+        }
+	if(init_addr(&sockaddr_buff_local,addr,port)){
+		perror("Erro a inicalizar address bind em bootstrapper de listening!!!\n");
+		raise(exit_signal);
+		exit(-1);
 	}
-	else{
-
-        	init_addr(&sockaddr_buff_local,addr,port);
-	}
-	
 	if(bind(*sockptr,(struct sockaddr*)(&sockaddr_buff_local),socklenvar[1])){
                 perror("Erro a dar bind em socket de listening!!!\n");
 		print_addr_aux("Address em questão:",&sockaddr_buff_local);
