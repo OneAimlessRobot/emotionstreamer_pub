@@ -30,7 +30,9 @@ static const int rx_enabled=1;
 static const int input_enabled=1;
 static struct sigaction sa;
 
-atomic_int innited=0;
+atomic_int innited=0,
+		exiting=0,
+		global_timeout_var=0;
 
 static pthread_cond_t reading_cond=PTHREAD_COND_INITIALIZER,
 	       player_cond=PTHREAD_COND_INITIALIZER,
@@ -301,12 +303,13 @@ static void* ack_exchange_thread(void* args){
 	usleep(cfg_client_ack_period_us);
         result=con_send_udp_ack(stream_struct.con_obj,client_data_times_pair);
         if(result<=0){
-		stream_struct.curr_timeout++;
+		global_timeout_var=stream_struct.curr_timeout++;
                 if(result==-2){
                         snprintf(buff,1023,"Timeout em send ack no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
                         print_string(buff);
 			if(stream_struct.curr_timeout==cfg_client_ack_timeout_lim){
-                                break;
+                               exiting=1;
+			       break;
                         }
 		}
 		else {
@@ -317,12 +320,11 @@ static void* ack_exchange_thread(void* args){
 	usleep(cfg_client_ack_period_us);
         result= con_read_udp_ack(stream_struct.con_obj,client_data_times_pair);
         if(result<=0){
-                stream_struct.curr_timeout++;
+                global_timeout_var=stream_struct.curr_timeout++;
                 if(result==-2){
-                        snprintf(buff,1023,"Timeout em read ack no client!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,cfg_client_ack_timeout_lim);
-                        print_string(buff);
-			if(stream_struct.curr_timeout==cfg_client_ack_timeout_lim){
-                                break;
+                        if(stream_struct.curr_timeout==cfg_client_ack_timeout_lim){
+                                exiting=1;
+				break;
                         }
 		}
 		else {
@@ -332,14 +334,12 @@ static void* ack_exchange_thread(void* args){
 	}
 	else{
 
-		stream_struct.curr_timeout=0;
+		global_timeout_var=stream_struct.curr_timeout=0;
         }
         }
 	while(innited&&(acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)||acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK))){
-		usleep(250000);
-		snprintf(buff,1023,"We ran out of timeouts. Not quitting yet due to leftover chunks in stream\nPlaying? %s\nDecoding? %s\n",acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)?"Yes!":"No...",acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK)?"Yes!":"No...");
-                print_string(buff);
-	}
+		usleep(cfg_client_ack_period_us);
+        }
 
 	raise(SIGINT);
         stop_client_stream();
@@ -376,7 +376,7 @@ static void* show_stats(void* args){
 			printf("\033[H");
 		}
 		char buff[1024]={0};
-		snprintf(buff,1023,"Tempo restante no buffer, atualmente: %d ms\nPercentagem de preenchimento em playing: %d\nPercentagem de preenchimento em decoding: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nAre we yet to receive the WAV header? %s\n\n",
+		char* ptr=buff+snprintf(buff,1023,"Tempo restante no buffer, atualmente: %d ms\nPercentagem de preenchimento em playing: %d\nPercentagem de preenchimento em decoding: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nAre we yet to receive the WAV header? %s\n\n",
 					time_ms,
 					pct_full_playing,
 					pct_full_decoding,
@@ -385,8 +385,6 @@ static void* show_stats(void* args){
 					acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK) ? "PLAYING ": "    ",
 					acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK) ? "PAUSED ": "    ",
 					is_wav_mode?(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK) ? "YES! ": "NO..."):"Not in wav mode...");
-
-		print_string(buff);
 		if(stream_enable_ncurses){
 			if(stream_show_decoder_queue&&decode&&!is_wav_mode){
 				perform_queue_op(stream_struct.decoder_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
@@ -395,6 +393,14 @@ static void* show_stats(void* args){
 				perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
 			}
 		}
+		if(exiting){
+			snprintf(ptr,1023,"We ran out of timeouts. Not quitting yet due to leftover chunks in stream\nPlaying? %s\nDecoding? %s\n",acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)?"Yes!":"No...",acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK)?"Yes!":"No...");
+                }
+		else if(global_timeout_var){
+
+			snprintf(ptr,1023,"Timeout em read ack no client!!!!  timeout %lu de %lu\n",global_timeout_var,cfg_client_ack_timeout_lim);
+		}
+		print_string(buff);
 		if(stream_enable_ncurses){
 			refresh();
 		}
