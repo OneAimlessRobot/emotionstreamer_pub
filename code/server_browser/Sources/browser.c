@@ -117,11 +117,16 @@ void init_browser(char* hostname, char* req,uint16_t port){
 
 	uint16_t port_for_us=0;
 	ask_for_port(&port_for_us,&server_browser_port_mapper_ip_cache_entry);
-	init_addr(&our_addr,server_browser_port_mapper_ip_cache_entry.hostname,port_for_us);
+	if(init_addr(&our_addr,server_browser_port_mapper_ip_cache_entry.hostname,port_for_us)){
+
+	    perror("Não conseguimos inicializar address em server_browser!!!\n");
+	    raise(SIGINT);
+	    cleanup_and_send_ports_back(SIGINT);
+	}
 
 	if(bind(con_obj.sockfd_tcp,(struct sockaddr *)&our_addr,socklenvar[1])){
 
-	    perror("Não conseguimos dar bind na socket do client!!!\n");
+	    perror("Não conseguimos dar bind na socket do server browser!!!\n");
 	    print_addr_aux("Este é o address:",&our_addr);
 	    raise(SIGINT);
 	    cleanup_and_send_ports_back(SIGINT);

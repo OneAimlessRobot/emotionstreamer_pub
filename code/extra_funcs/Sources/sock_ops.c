@@ -29,18 +29,18 @@ void print_sock_addr(int socket){
 	print_addr_aux("O endereço desta socket é:\n",&addr);
 
 }
-void init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
+int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 
-         addr->sin_family=AF_INET;
+        addr->sin_family=AF_INET;
 	struct addrinfo *addr_info_struct=NULL;
 	int error=0;
-         if((error=getaddrinfo(hostname_str, NULL, NULL, &addr_info_struct))){
+        if((error=getaddrinfo(hostname_str, NULL, NULL, &addr_info_struct))){
 		printf("Erro a obter address a partir de hostname!!\nErro: %s\n",gai_strerror(error));
 		if(addr_info_struct){
 			freeaddrinfo(addr_info_struct);
 		}
+		return 1;
 	}
-	
 	memcpy(addr,(struct sockaddr_in*)addr_info_struct->ai_addr,sizeof(struct sockaddr_in));
 
 	addr->sin_port= htons(port);
@@ -50,6 +50,7 @@ void init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 	if(addr_info_struct){
 		freeaddrinfo(addr_info_struct);
 	}
+	return 0;
 }
 
 int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){

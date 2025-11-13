@@ -246,13 +246,13 @@ static void send_ports_to_client(int sock,int port_arr[NUM_PORTS_TO_GIVE+1]){
 	memset(buff_with_the_ports,0,4096);
         result=readsome(sock,buff_with_the_ports,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
-                 fprintf(stderr,"Não conseguimos receber portas do port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",buff_with_the_ports,strerror(errno));
+                 fprintf(stderr,"Não conseguimos receber portas no port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",buff_with_the_ports,strerror(errno));
 		 close(sock);
                  raise(SIGTERM);
 
         }
 	else{
-	         fprintf(stdout,"Não conseguimos receber portas do port mapper!!!!!!\nString que recebemos: \"%s\"\n",buff_with_the_ports);
+	         fprintf(stdout,"Conseguimos receber portas no mapper!!!!!!\nString que recebemos: \"%s\"\n",buff_with_the_ports);
         }
 	close(sock);
 
