@@ -116,7 +116,8 @@ char* generateDirListing(char* pattern){
 			dprintf(fd,"%s\n",currListing);
 		}
 	}
-        close(fd);
+        fclose(fstream);
+	close(fd);
         return tmpDir2;
 
 }

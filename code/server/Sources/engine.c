@@ -33,8 +33,21 @@ static void call_sigint(void){
 	pthread_mutex_lock(&con_mtx);
 	send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
 	send_ports_back(&state.hb_con);
+	close_con(&state.hb_con);
+	if(state.hb_con.sockfd_tcp>=0){
+		close(state.hb_con.sockfd_tcp);
+		state.hb_con.sockfd_tcp=-1;
+	}
 	pthread_mutex_unlock(&con_mtx);
 
+}
+static void call_sigint_sub_connection(void){
+
+	close(state.server_sock_tcp);
+	perror("Sinal de parar sub conexão em server server\n");
+	pthread_mutex_lock(&con_mtx);
+	close_con(&state.hb_con);
+	pthread_mutex_unlock(&con_mtx);
 }
 static void serverStop(int useless){
 
@@ -91,6 +104,7 @@ static int con_accepting_loop(void){
 						        sigaction(SIGPIPE, &sa, NULL);
 						        sigaction(SIGTERM, &sa, NULL);
 							con_go(sock,curr_port);
+							call_sigint_sub_connection();
 							return 0;
 						case -1:
 							raise(SIGTERM);
@@ -136,7 +150,14 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	char buff[SERVER_NAME_SIZE]={0};
 	char extension_buff[EXTENSION_SIZE+1]={0};
 	strncpy(extension_buff,server_working_extension,EXTENSION_SIZE+1);
-	randStr(SERVER_NAME_SIZE-1,buff);
+	if(!strnlen(server_name_buff,SERVER_NAME_SIZE)){
+
+		randStr(SERVER_NAME_SIZE-1,buff);
+	}
+	else{
+
+		memcpy(buff,server_name_buff,min(strlen(server_name_buff),sizeof(buff)-1));
+	}
 	is_wav_mode=(int8_t)(!strs_are_strictly_equal(extension_buff,WAV_MODE_EXTENSION));
 	if(is_wav_mode){
 		printf("Launched in '.wav' mode!!!\n");

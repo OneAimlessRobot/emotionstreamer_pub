@@ -22,6 +22,11 @@ static void cleanup_and_send_ports_back(int useless){
 	send_ports_back(&con_obj);
 	send_port_back(htons(our_addr.sin_port),&server_browser_port_mapper_ip_cache_entry);
 	close_con(&con_obj);
+	if(con_obj.sockfd_tcp>=0){
+
+		close(con_obj.sockfd_tcp);
+		con_obj.sockfd_tcp=-1;
+	}
 	exit(useless);
 
 }

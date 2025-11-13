@@ -40,6 +40,10 @@ static void close_all_fds_here(void){
 	send_ports_back(arg_s.con_obj);
 	send_port_back(htons(arg_s.this_con_addr.sin_port),&heartbeat_port_mapper_ip_entry);
 	close_con(arg_s.con_obj);
+	if(arg_s.con_obj->sockfd_tcp>=0){
+		close(arg_s.con_obj->sockfd_tcp);
+		arg_s.con_obj->sockfd_tcp=-1;
+	}
 	pthread_mutex_unlock(&con_mtx);
 	pthread_cond_signal(arg_o.cons->start_cond);
 
@@ -80,8 +84,15 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 			master_cond=PTHREAD_COND_INITIALIZER;
 
 	char buff[HB_SERVER_NAME_SIZE]={0};
-        randStr(HB_SERVER_NAME_SIZE-1,buff);
-	char extension_buff[EXTENSION_SIZE+1]={0};
+   	if(!strnlen(hb_server_name_buff,HB_SERVER_NAME_SIZE)){
+
+                randStr(HB_SERVER_NAME_SIZE-1,buff);
+        }
+        else{
+
+                memcpy(buff,hb_server_name_buff,min(strlen(hb_server_name_buff),sizeof(buff)-1));
+	}
+        char extension_buff[EXTENSION_SIZE+1]={0};
 	strncpy(extension_buff,"N/A",EXTENSION_SIZE);
 	con_set set={0};
 
@@ -89,7 +100,6 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	memcpy(&arg_a.acceptor_port_mapper_ip_cache_entry,&heartbeat_port_mapper_ip_entry,sizeof(ip_cache_entry));
 	memcpy(&arg_s.slave_ip_cache_entry,ent_this,sizeof(ip_cache_entry));
 	if(init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port)){
-		
 		perror("Erro a inicializar address de slave em heartbeat server!!!\n");
 		exit(-1);
 		return;
@@ -99,10 +109,12 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
 	memcpy(&arg_s.this_addr,&arg_a.accept_addr,sizeof(struct sockaddr_in));
 
-	is_on=1;
 	arg_a.is_on=&is_on;
         arg_a.started=&started;
         arg_a.exit_signal=SIGINT;
+        arg_a.clean_func=call_signal_func;
+        arg_a.started=&started;
+        arg_a.ack_period_us=cfg_hb_ack_period_us;
 
 
 
@@ -159,7 +171,8 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	memcpy(&arg_o.ack_times_pair,&hb_ack_times_pair,sizeof(int_pair));
 
 	openDB(DB_FILE);
-
+	is_on=1;
+	started=0;
 	pthread_create(&master_tid,NULL,slave_thread,(void*)&arg_s);
 	pthread_create(&hb_tid_master,NULL,acceptor_func,(void*)&arg_a);
 	pthread_create(&hb_tid_watchdog,NULL,watch_dog_func,(void*)&arg_o);

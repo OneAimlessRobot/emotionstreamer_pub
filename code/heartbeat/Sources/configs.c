@@ -18,6 +18,7 @@ static char heartbeat_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 static char upper_ip_address_buff[PATHSIZE+1]={0};
 
 char generalized_config_filepath_buff[PATHSIZE+1]={0};
+char hb_server_name_buff[PATHSIZE+1]={0};
 
 
 ip_cache_entry heartbeat_ip_cache_entry={{0},0};
@@ -136,6 +137,13 @@ void read_values_cfg_hb(void){
         }
         sscanf(curr_line_buff,"generalized_config_filepath: %s",generalized_config_filepath_buff);
         clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
+        sscanf(curr_line_buff,"hb_server_name: %s",hb_server_name_buff);
+        clean_buff();
         fclose(cfg_fp);
 
 	process_ip_cache_entries();
@@ -157,6 +165,8 @@ void print_values_cfg_hb(int fd){
         dprintf(fd,"hb_ack_timeout_lim: %hu\n",hb_ack_timeout_lim);
 
         dprintf(fd,"generalized_config_filepath: %s\n",generalized_config_filepath_buff);
+
+	dprintf(fd,"hb_server_name: %s\n",hb_server_name_buff);
 
 	print_ip_cache_entry(stdout,&heartbeat_ip_cache_entry);
 

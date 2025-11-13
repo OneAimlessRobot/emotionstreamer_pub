@@ -13,6 +13,7 @@ extern ip_cache_entry server_ip_cache_entry;
 extern ip_cache_entry upper_ip_cache_entry;
 extern ip_cache_entry server_port_mapper_ip_cache_entry;
 extern char generalized_config_filepath_buff[PATHSIZE+1];
+extern char server_name_buff[PATHSIZE+1];
 
 extern uint64_t server_chunk_size;
 extern int8_t server_transmission_protocol;

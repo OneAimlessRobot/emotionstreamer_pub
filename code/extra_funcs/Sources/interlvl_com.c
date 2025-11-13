@@ -61,7 +61,9 @@ void* slave_thread(void* args){
 
         if(arg_struct->con_obj->sockfd_tcp<0){
                 perror("Socket nao criada no hb thread!!!\n");
-        	arg_struct->sig_func(SIGINT);
+        	(*arg_struct->start_trigger)=1;
+        	pthread_cond_signal(arg_struct->trg_cond);
+		arg_struct->sig_func(SIGINT);
 		arg_struct->clean_func();
 		return args;
         }
@@ -77,6 +79,8 @@ void* slave_thread(void* args){
 	if(!port||init_addr(&arg_struct->this_con_addr,arg_struct->slave_ip_cache_entry.hostname,port)){
 
 	        perror("Não conseguimos inicializar address principal deste slave thread!!!\n");
+		(*arg_struct->start_trigger)=1;
+        	pthread_cond_signal(arg_struct->trg_cond);
 		arg_struct->sig_func(SIGINT);
 		arg_struct->clean_func();
 		return args;
@@ -87,6 +91,8 @@ void* slave_thread(void* args){
                 perror("Não conseguimos dar bind na socket deste slave thread!!!\n");
                 print_addr_aux("Este é o address:",&arg_struct->this_con_addr);
 		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
+		(*arg_struct->start_trigger)=1;
+        	pthread_cond_signal(arg_struct->trg_cond);
 		arg_struct->sig_func(SIGINT);
 		arg_struct->clean_func();
 		return args;
@@ -100,6 +106,8 @@ void* slave_thread(void* args){
 
                 perror("Nao deu para contactar server de heartbeats!!!!\n");
         	send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
+		(*arg_struct->start_trigger)=1;
+        	pthread_cond_signal(arg_struct->trg_cond);
 		arg_struct->sig_func(SIGINT);
 		arg_struct->clean_func();
 		return args;

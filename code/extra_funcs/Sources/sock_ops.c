@@ -38,6 +38,7 @@ int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 		printf("Erro a obter address a partir de hostname!!\nErro: %s\n",gai_strerror(error));
 		if(addr_info_struct){
 			freeaddrinfo(addr_info_struct);
+			printf("Demos free a um addr info!!!\n");
 		}
 		return 1;
 	}
@@ -49,6 +50,7 @@ int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 
 	if(addr_info_struct){
 		freeaddrinfo(addr_info_struct);
+		printf("Demos free a um addr info!!!\n");
 	}
 	return 0;
 }

@@ -39,8 +39,9 @@ static void open_ip_addr_cache_fp(char* flags){
         if(!(ip_addr_cache_fp=fopen(PREV_ADDR_FILE_NAME_CLIENT, flags))){
 
                 perror("Nao foi possivel abrir cache de ips!!!!!!\n");
-                raise(SIGINT);
-
+                fclose(ip_addr_cache_fp);
+		raise(SIGINT);
+		
         }
 
 
@@ -55,16 +56,13 @@ static int open_ip_cache_file(void){
 
 
         }
+	close(ip_addr_cache_fd);
         if((ip_addr_cache_fd=open(PREV_ADDR_FILE_NAME_CLIENT,O_CREAT|O_RDONLY,0777))<0){
                 result=2;
                 perror("Ficheiro de cache de ips nao existe. Tentamos criar e n deu!!!!!!!!!\n");
 
         }
-        if(result){
-                close(ip_addr_cache_fd);
-        	raise(SIGINT);
-        }
-
+	close(ip_addr_cache_fd);
         open_ip_addr_cache_fp("r");
 
 	return result;
@@ -73,10 +71,12 @@ static int open_ip_cache_file(void){
 }
 
 
-static void populate_ip_addr_cache(ip_cache_t* con_cache){
+static int populate_ip_addr_cache(ip_cache_t* con_cache){
 
-        open_ip_cache_file();
+        if(open_ip_cache_file()){
+		return 1;
 
+	}
 
         char buff[PATHSIZE*2]={0};
         while(fgets(buff, PATHSIZE*2, ip_addr_cache_fp)){
@@ -99,7 +99,7 @@ static void populate_ip_addr_cache(ip_cache_t* con_cache){
                 memset(buff,0,PATHSIZE*2);
         }
 
-
+	return 0;
 
 }
 
@@ -107,11 +107,12 @@ static void populate_ip_addr_cache(ip_cache_t* con_cache){
 
 
 
-void init_ip_addr_cache(ip_cache_t* con_cache,ip_cache_entry* buff){
+int init_ip_addr_cache(ip_cache_t* con_cache,ip_cache_entry* buff){
         con_cache->num_of_addr=0;
 	con_cache->ips=buff;
-        populate_ip_addr_cache(con_cache);
+        int result=populate_ip_addr_cache(con_cache);
         fclose(ip_addr_cache_fp);
+	return result;
 }
 
 void save_ip_addr_entry_cache(ip_cache_t* saved_cache){

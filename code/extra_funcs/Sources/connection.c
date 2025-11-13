@@ -101,6 +101,7 @@ void send_ports_back(con_t* obj){
 	if(init_addr(&obj->port_mapper_addr, obj->port_mapper_entry.hostname,obj->port_mapper_entry.port)){
 
 		perror("Iniciacao de address para conectar ao port mapper para devolver varias portas mal sucedida. Abortando\n");
+		close(tmp_socket);
 		close_con(obj);
 		raise(SIGINT);
 		return;
@@ -152,9 +153,16 @@ void send_ports_back(con_t* obj){
 void close_con(con_t* con_obj){
 	
 	if(con_obj->is_on){
-		close(con_obj->sockfd_tcp);
-		close(con_obj->sockfd_udp);
-		close(con_obj->ack_sockfd_udp);
+		if(con_obj->sockfd_tcp>=0){
+			close(con_obj->sockfd_tcp);
+		}
+		if(con_obj->sockfd_udp>=0){
+			close(con_obj->sockfd_udp);
+		}
+		if(con_obj->ack_sockfd_udp>=0){
+			close(con_obj->ack_sockfd_udp);
+		}
+		con_obj->sockfd_tcp=con_obj->sockfd_udp=con_obj->ack_sockfd_udp=-1;
 		con_obj->is_on=0;
 		printf("Fechamos conexão!!!!\n");
 	}

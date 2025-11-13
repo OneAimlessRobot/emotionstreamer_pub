@@ -1,6 +1,6 @@
 #ifndef ENGINE_H
 #define ENGINE_H
-#define SERVER_NAME_SIZE 20
+#define SERVER_NAME_SIZE 100
 typedef struct server_state{
 
 	char* name;

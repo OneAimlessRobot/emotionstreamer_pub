@@ -28,6 +28,9 @@
 #include "../Includes/ip_cache_file_ops.h"
 #include "../Includes/terminal_mgmt.h"
 
+atomic_int started=0;
+atomic_int is_on=0;
+static struct sigaction sa;
 static char extension_from_server[PATHSIZE]={0};
 static struct sockaddr_in server_ip_address;
 static struct sockaddr_in client_ip_address;
@@ -39,8 +42,16 @@ static void clear_ports_and_quit(int signal){
 	send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
 	send_ports_back(&client_con_obj);
 	close_con(&client_con_obj);
+	if(client_con_obj.sockfd_tcp>=0){
+		close(client_con_obj.sockfd_tcp);
+		client_con_obj.sockfd_tcp=-1;
+	}
 	fclose(logstream);
 	exit(signal);
+}
+static void useless_handler(int useless){
+
+	started=is_on=useless;
 }
 static int64_t down_file_size(int is_streaming){
 
@@ -114,6 +125,11 @@ static void conf_func(void){
 
 //Strings todas 0 ended
 int clientStart(char* req_field,char* file_name){
+	sa.sa_handler = useless_handler;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = SA_RESTART;
+        sigaction(SIGINT, &sa, NULL);
+
 
 	char method_buff[PATHSIZE]={0};
 	char req_buff[PATHSIZE/4]={0};
@@ -151,7 +167,10 @@ int clientStart(char* req_field,char* file_name){
 	ip_cache_entry buff[PREV_ADDR_CACHE_MAX]={0};
 
 
-	init_ip_addr_cache(&cache,buff);
+	if(init_ip_addr_cache(&cache,buff)){
+
+	      clear_ports_and_quit(SIGINT);
+	}
 	int cache_asked= !strs_are_strictly_equal(server_ip_address_buff,PREV_ADDR_STRING);
 	int is_new=-1;
 	if(!cache_asked)
@@ -171,7 +190,11 @@ int clientStart(char* req_field,char* file_name){
         }
     	int ptr=1;
 	setsockopt(client_con_obj.sockfd_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
-	init_addr(&server_ip_address,server_ip_cache_entry.hostname,server_ip_cache_entry.port);
+	if(init_addr(&server_ip_address,server_ip_cache_entry.hostname,server_ip_cache_entry.port)){
+		perror("Não conseguimos inicializar address de server no client!!!\n");
+		clear_ports_and_quit(SIGINT);
+
+	}
 
 	uint16_t port=0;
         ask_for_port(&port,&client_port_mapper_ip_cache_entry);
@@ -193,7 +216,7 @@ int clientStart(char* req_field,char* file_name){
 
 
 	if(!tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address)){
-
+		
 		clear_ports_and_quit(SIGINT);
         }
 

@@ -10,7 +10,7 @@
 
 void save_ip_addr_entry_cache(ip_cache_t*saved_cache);
 int try_cache_connect(int* socket,int_pair times_pair,ip_cache_t* con_cache);
-void init_ip_addr_cache(ip_cache_t* con_cache,ip_cache_entry* buff);
+int init_ip_addr_cache(ip_cache_t* con_cache,ip_cache_entry* buff);
 void print_ip_cache(FILE* stream,ip_cache_t* printed_cache);
 
 #endif
