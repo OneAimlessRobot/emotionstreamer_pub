@@ -138,7 +138,9 @@ void* slave_thread(void* args){
 		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
 		close_con(arg_struct->con_obj);
 		pthread_mutex_unlock(arg_struct->con_mtx);
-        	arg_struct->sig_func(SIGINT);
+        	(*arg_struct->start_trigger)=1;
+        	pthread_cond_signal(arg_struct->trg_cond);
+		arg_struct->sig_func(SIGINT);
 		arg_struct->clean_func();
 		return args;
         }
@@ -151,7 +153,9 @@ void* slave_thread(void* args){
 		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
 		close_con(arg_struct->con_obj);
 		pthread_mutex_unlock(arg_struct->con_mtx);
-        	arg_struct->sig_func(SIGINT);
+        	(*arg_struct->start_trigger)=1;
+        	pthread_cond_signal(arg_struct->trg_cond);
+		arg_struct->sig_func(SIGINT);
 		arg_struct->clean_func();
 		return args;
         
