@@ -224,11 +224,13 @@ void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct so
 	}
 	if(!port||init_addr(&sockaddr_buff_local,addr,port)){
 		perror("Erro a inicalizar address bind em bootstrapper de listening!!!\n");
+		close(*sockptr);
 		raise(exit_signal);
 		exit(-1);
 	}
 	if(bind(*sockptr,(struct sockaddr*)(&sockaddr_buff_local),socklenvar[1])){
                 perror("Erro a dar bind em socket de listening!!!\n");
+		close(*sockptr);
 		print_addr_aux("Address em questão:",&sockaddr_buff_local);
 		raise(exit_signal);
 		exit(-1);
