@@ -113,11 +113,16 @@ void init_browser(char* hostname, char* req,uint16_t port){
         }
 
 
-        init_addr(&hb_server_addr,hostname,port);
+        if(init_addr(&hb_server_addr,hostname,port)){
+
+	    perror("Não conseguimos inicializar address do peer em server_browser!!!\n");
+	    raise(SIGINT);
+	    cleanup_and_send_ports_back(SIGINT);
+	}
 
 	uint16_t port_for_us=0;
 	ask_for_port(&port_for_us,&server_browser_port_mapper_ip_cache_entry);
-	if(init_addr(&our_addr,server_browser_port_mapper_ip_cache_entry.hostname,port_for_us)){
+	if(!port_for_us||init_addr(&our_addr,server_browser_port_mapper_ip_cache_entry.hostname,port_for_us)){
 
 	    perror("Não conseguimos inicializar address em server_browser!!!\n");
 	    raise(SIGINT);

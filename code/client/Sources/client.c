@@ -175,7 +175,7 @@ int clientStart(char* req_field,char* file_name){
 
 	uint16_t port=0;
         ask_for_port(&port,&client_port_mapper_ip_cache_entry);
-	if(init_addr(&client_ip_address,client_ip_cache_entry.hostname,port)){
+	if(!port||init_addr(&client_ip_address,client_ip_cache_entry.hostname,port)){
 		perror("Não conseguimos inicializar address no client!!!\n");
 		clear_ports_and_quit(SIGINT);
 
