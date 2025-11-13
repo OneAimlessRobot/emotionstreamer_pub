@@ -24,7 +24,7 @@ static void generateDirListingPrimitive(char* pattern){
 	//THIS LINE HAS RIPPED CODE! FIND ALL BASEFILENAMES WITH EXTENSION '.WAV', but dont show the extension! (IMPORTANT FOR SECURITY)
 	//https://www.baeldung.com/linux/find-filenames-no-extension
 	//https://stackoverflow.com/questions/1447625/list-files-with-certain-extensions-with-ls-and-grep
-        snprintf(cmd,PATHSIZE*10-1,"find %s -name \"*%s%s*\" | xargs -I{} basename {} \"%s%s\" > %s",currSearchedDir,pattern,server_working_extension,is_wav_mode?"":BOUNDARY_FILE_EXT,server_working_extension,is_wav_mode?"":BOUNDARY_FILE_EXT,tmpDir);
+        snprintf(cmd,PATHSIZE*10-1,"find %s/%s -name \"*%s%s*\" | xargs -I{}  \"%s%s\" > %s",currSearchedDir,pattern,server_working_extension,is_wav_mode?"":BOUNDARY_FILE_EXT,server_working_extension,is_wav_mode?"":BOUNDARY_FILE_EXT,tmpDir);
         //END OF RIPPEDD CODE
 	system(cmd);
         memset(cmd,0,PATHSIZE*10);
