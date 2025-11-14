@@ -7,7 +7,6 @@
 #define SERVER_CHUNK_SIZE 1024
 #define WAV_MODE_EXTENSION ".wav"
 
-extern int child_pid;
 extern char server_music_folder_path[PATHSIZE];
 extern char server_working_extension[EXTENSION_SIZE];
 extern ip_cache_entry server_ip_cache_entry;
