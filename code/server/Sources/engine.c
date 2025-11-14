@@ -132,7 +132,7 @@ static int con_accepting_loop(void){
 			}
 		else if(iResult<0){
 
-			perror("Select error:");
+			perror("Select error");
 			return 1;
 		}
 		else{

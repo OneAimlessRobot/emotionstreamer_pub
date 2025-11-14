@@ -172,7 +172,7 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 
         sa.sa_handler = cleanup;
         sigemptyset(&sa.sa_mask);
-        sa.sa_flags = SA_RESTART|SA_NOCLDWAIT;
+        sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
 
