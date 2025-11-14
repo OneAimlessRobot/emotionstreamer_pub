@@ -99,9 +99,13 @@ static void down_func(char* file_name){
 				perror("Nao foi possivel transferir ficheiro!!!!\n");
                 		clear_ports_and_quit(SIGINT);
                 }
-		enable_ncurses();
+		if(stream_enable_ncurses){
+			enable_ncurses();
+		}
 		downloadtofd(client_con_obj.sockfd_tcp,fp,down_size,client_data_times_pair);
-		endwin_wrapper();
+		if(stream_enable_ncurses){
+			endwin_wrapper();
+		}
 		printf("A musica foi guardada em: %s\n",file_path);
 		clear_ports_and_quit(SIGINT);
 
