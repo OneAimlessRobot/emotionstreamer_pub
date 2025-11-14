@@ -236,6 +236,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	}
 	else{
 	printf("Exiting child in server!!\n");
+	exit(-1);
 
 	}
 	return result;
