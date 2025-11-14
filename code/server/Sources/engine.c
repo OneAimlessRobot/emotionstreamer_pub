@@ -142,7 +142,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
         sa.sa_handler = serverStop;
         sigemptyset(&sa.sa_mask);
-        sa.sa_flags = SA_RESTART;
+        sa.sa_flags = SA_RESTART|SA_NOCLDWAIT;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
         sigaction(SIGTERM, &sa, NULL);
