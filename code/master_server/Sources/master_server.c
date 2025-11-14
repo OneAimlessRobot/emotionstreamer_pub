@@ -62,6 +62,7 @@ void start_master(char* hostname, uint16_t port){
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGPIPE, &sa, NULL);
+	logging=0;
 
 	int fd_arr[MAX_HB_SERVERS]={0},
 		timeout_arr[MAX_HB_SERVERS]={0};
@@ -81,8 +82,7 @@ void start_master(char* hostname, uint16_t port){
 	memcpy(&arg_a.acceptor_port_mapper_ip_cache_entry,&master_server_port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
 
         init_module_tcp_stuff(&arg_a.accept_sockfd,hostname,port,&arg_a.accept_addr,SIGPIPE,MAX_HB_SERVERS,0,&arg_a.acceptor_port_mapper_ip_cache_entry);
-
-        is_on=1;
+	is_on=1;
         arg_a.is_on=&is_on;
 	arg_a.sig_func=sigint_handler;
 	arg_a.clean_func=call_signal_func;

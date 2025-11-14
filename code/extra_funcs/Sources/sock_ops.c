@@ -36,22 +36,28 @@ int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 	struct addrinfo *addr_info_struct=NULL;
 	int error=0;
         if((error=getaddrinfo(hostname_str, NULL, NULL, &addr_info_struct))){
-		printf("Erro a obter address a partir de hostname!!\nErro: %s\n",gai_strerror(error));
+		if(logging){
+			printf("Erro a obter address a partir de hostname!!\nErro: %s\n",gai_strerror(error));
+		}
 		if(addr_info_struct){
 			freeaddrinfo(addr_info_struct);
-			printf("Demos free a um addr info!!!\n");
+			if(logging){
+				fprintf(logstream,"Demos free a um addr info!!!\n");
+			}
 		}
 		return 1;
 	}
 	memcpy(addr,(struct sockaddr_in*)addr_info_struct->ai_addr,sizeof(struct sockaddr_in));
 
 	addr->sin_port= htons(port);
-
-	print_addr_aux("ip address: ",addr);
-
+	if(logging){
+		print_addr_aux("ip address: ",addr);
+	}
 	if(addr_info_struct){
 		freeaddrinfo(addr_info_struct);
-		printf("Demos free a um addr info!!!\n");
+		if(logging){
+			fprintf(logstream,"Demos free a um addr info!!!\n");
+		}
 	}
 	return 0;
 }
@@ -62,13 +68,17 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 
 
         while(success==-1&& numOfTries){
-                print_addr_aux("Tentando conectar a:",dst_addr);
-		printf("(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
-                success=connect(*socket,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
+                if(logging){
+			print_addr_aux("Tentando conectar a:",dst_addr);
+			fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
+                }
+		success=connect(*socket,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
                 int sockerr=0;
 		socklen_t socklen_here =sizeof(sockerr);
                 getsockopt(*socket,SOL_SOCKET,SO_ERROR,(char*)&sockerr,&socklen_here);
-                fprintf(stderr,"Erro normal:%s\n Erro Socket: %s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*socket);
+                if(logging){
+			fprintf(logstream,"Erro normal:%s\n Erro Socket: %s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*socket);
+		}
 		numOfTries--;
 		fd_set wfds;
                 FD_ZERO(&wfds);
@@ -79,8 +89,10 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
                 t.tv_usec=times_pair[1];
                 int iResult=select((*socket)+1,0,&wfds,0,&t);
 		if(iResult>0&&!success){
-		print_addr_aux("Conexao de:",dst_addr);
-                        break;
+			if(logging){
+				print_addr_aux("Conexao de:",dst_addr);
+                        }
+			break;
 
                 }
 		if(errno==ECONNREFUSED){
@@ -89,15 +101,21 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 			break;
 		}
                 if(errno==ENOTSOCK){
-			printf("Not a socket!!!\n");
+			if(logging){
+				fprintf(logstream,"Not a socket!!!\n");
+			}
 			numOfTries=0;
 			break;
 		}
-                fprintf(stderr,"Não foi possivel: %s\n",strerror(errno));
-        }
+                if(logging){
+			fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
+        	}
+	}
         if(!numOfTries){
-        printf("Não foi possivel conectar. Numero limite de tentativas (%d) atingido!!!\n",MAX_TRIES);
-        }
+		if(logging){
+        		fprintf(logstream,"Não foi possivel conectar. Numero limite de tentativas (%d) atingido!!!\n",MAX_TRIES);
+        	}
+	}
 
 	return numOfTries;
 }

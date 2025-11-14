@@ -166,6 +166,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sigaction(SIGPIPE, &sa, NULL);
         sigaction(SIGTERM, &sa, NULL);
 
+	logging=0;
         sa_chld.sa_handler = call_sigint_chld;
         sigemptyset(&sa_chld.sa_mask);
         sa_chld.sa_flags = SA_RESTART|SA_NOCLDWAIT;
@@ -189,7 +190,6 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
 	slave_args arg_s={0};
 	curr_port=ent_this->port;
-	logging=1;
 	logstream=stderr;
 	memset(&state,0,sizeof(server_state));
 	state.name=buff;

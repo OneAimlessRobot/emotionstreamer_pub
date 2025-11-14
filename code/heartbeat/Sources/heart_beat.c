@@ -71,7 +71,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
-
+	logging=0;
 	int fd_arr[MAX_SERVERS]={0},
 		timeout_arr[MAX_SERVERS]={0};
 	con_t con_arr[MAX_SERVERS]={0};

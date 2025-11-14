@@ -89,7 +89,9 @@ void* slave_thread(void* args){
         if(bind(arg_struct->con_obj->sockfd_tcp,(struct sockaddr *)&arg_struct->this_con_addr,socklenvar[0])){
 
                 perror("Não conseguimos dar bind na socket deste slave thread!!!\n");
-                print_addr_aux("Este é o address:",&arg_struct->this_con_addr);
+                if(logging){
+			print_addr_aux("Este é o address:",&arg_struct->this_con_addr);
+		}
 		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
 		(*arg_struct->start_trigger)=1;
         	pthread_cond_signal(arg_struct->trg_cond);
@@ -99,7 +101,9 @@ void* slave_thread(void* args){
         }
 	else{
 
-	     	print_addr_aux("Bind com sucesso!!!:",&arg_struct->this_con_addr);
+	     	if(logging){
+			print_addr_aux("Bind com sucesso!!!:",&arg_struct->this_con_addr);
+		}
 	}
 
         if(!tryConnect(&arg_struct->con_obj->sockfd_tcp,arg_struct->con_times_pair,&arg_struct->master_addr)){
@@ -112,10 +116,9 @@ void* slave_thread(void* args){
 		arg_struct->clean_func();
 		return args;
         }
-	
-
-        print_addr_aux("Addr atual do server:",&arg_struct->this_addr);
-
+	if(logging){
+        	print_addr_aux("Addr atual do server:",&arg_struct->this_addr);
+	}
         init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,arg_struct->this_con_addr.sin_port,&arg_struct->slave_port_mapper_ip_cache_entry);
 
 	char ent_addr[PATHSIZE/8]={0};
@@ -182,8 +185,10 @@ void* slave_thread(void* args){
 
                 if(result[0]==-2){
                         curr_timeout++;
-                        printf("Timeout no nivel de baixo!!!!  timeout %lu de %lu\n",curr_timeout,arg_struct->ack_timeout_lim);
-                        if(curr_timeout==arg_struct->ack_timeout_lim){
+                        if(logging){
+				fprintf(logstream,"Timeout no nivel de baixo!!!!  timeout %lu de %lu\n",curr_timeout,arg_struct->ack_timeout_lim);
+                        }
+			if(curr_timeout==arg_struct->ack_timeout_lim){
                                 break;
                         }
                         continue;
@@ -195,8 +200,10 @@ void* slave_thread(void* args){
 
                 if(result[0]==-2){
                         curr_timeout++;
-                        printf("Timeout no nivel de baixo!!!!  timeout %lu de %lu\n",curr_timeout,arg_struct->ack_timeout_lim);
-                        if(curr_timeout==arg_struct->ack_timeout_lim){
+                        if(logging){
+				fprintf(logstream,"Timeout no nivel de baixo!!!!  timeout %lu de %lu\n",curr_timeout,arg_struct->ack_timeout_lim);
+                        }
+			if(curr_timeout==arg_struct->ack_timeout_lim){
                                 break;
                         }
                 }
@@ -241,19 +248,25 @@ void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct so
 		exit(-1);
 	}
 	if(bind(*sockptr,(struct sockaddr*)(&sockaddr_buff_local),socklenvar[1])){
-                perror("Erro a dar bind em socket de listening!!!\n");
+                if(logging){
+			perror("Erro a dar bind em socket de listening!!!\n");
+			print_addr_aux("Address em questão:",&sockaddr_buff_local);
+		}
 		close(*sockptr);
-		print_addr_aux("Address em questão:",&sockaddr_buff_local);
 		raise(exit_signal);
 		exit(-1);
         }
 	else{
-		print_addr_aux("Sucesso a dar bind!\nAddress em questão:",&sockaddr_buff_local);
+		if(logging){
+			print_addr_aux("Sucesso a dar bind!\nAddress em questão:",&sockaddr_buff_local);
+		}
 	}
         listen(*sockptr,max_connected);
 	memcpy(sockaddr_buff,&sockaddr_buff_local,sizeof(struct sockaddr_in));
-        printf("Listening e bindado!!!\n");
-        print_sock_addr(*sockptr);
+        if(logging){
+		fprintf(logstream,"Listening e bindado!!!\n");
+        }
+	print_sock_addr(*sockptr);
 
 }
 void close_all_fds(con_set* set){
@@ -349,8 +362,10 @@ void* watch_dog_func(void* args){
                 if(result[0]==-2){
                         uint64_t times=acess_var_mtx(arg_s->cons->set_mtx,&arg_s->cons->timeout_arr[i],0,V_LOOK);
                         times++;
-                        printf("Timeout no heartbeat server!!!!  timeout %lu de %lu\n",times,arg_s->ack_timeout_lim);
-                        if(times==arg_s->ack_timeout_lim){
+			if(logging){
+                        	fprintf(logstream,"Timeout no heartbeat server!!!!  timeout %lu de %lu\n",times,arg_s->ack_timeout_lim);
+                        }
+			if(times==arg_s->ack_timeout_lim){
                                 kill_con(arg_s->cons,i);
                                 break;
                         }
@@ -367,8 +382,10 @@ void* watch_dog_func(void* args){
                 if(result[0]==-2){
                         uint64_t times=acess_var_mtx(arg_s->cons->set_mtx,&arg_s->cons->timeout_arr[i],0,V_LOOK);
                         times++;
-                        printf("Timeout no heartbeat server!!!!  timeout %lu de %lu\n",times,arg_s->ack_timeout_lim);
-                        if(times==arg_s->ack_timeout_lim){
+                        if(logging){
+				fprintf(logstream,"Timeout no heartbeat server!!!!  timeout %lu de %lu\n",times,arg_s->ack_timeout_lim);
+                        }
+			if(times==arg_s->ack_timeout_lim){
                                 kill_con(arg_s->cons,i);
                                 break;
                         }
@@ -460,7 +477,6 @@ void* acceptor_func(void* args){
         }
         pthread_mutex_unlock(arg_a->master_mtx);
         }
-	
         while((*arg_a->is_on)){
 
 
@@ -513,31 +529,32 @@ void* acceptor_func(void* args){
                               switch(cmd){
 
 				case MASTER_SHOW:
-					printf("Waiting for UDP hole punching:\n");
+					if(logging){
+						fprintf(logstream,"Waiting for UDP hole punching:\n");
+					}
 					con_read_udp(&con,arg_a->con_times_pair);
-				
-					printf("Resposta em UDP hole punching: \"%s\"\n",(char*)(con.udp_data));
+					if(logging){
+						fprintf(logstream,"Resposta em UDP hole punching: \"%s\"\n",(char*)(con.udp_data));
+					}
 					snprintf((char*)buff_udp_hp,2*DEF_DATASIZE-1,"Ok good job, soldier!\n I know that your response was \"%s\"\nProceed, now.\n",(char*)(con.udp_data));
 					memcpy(con.udp_data,buff_udp_hp,DEF_DATASIZE);
 					con_send_udp(&con,arg_a->con_times_pair);
                                         clear_con_data(&con);
-					
-					printf("Anyways....\n....\n....\nShow master requested!!!!\n");
-                                        
+					if(logging){
+						fprintf(logstream,"Anyways....\n....\n....\nShow master requested!!!!\n");
+                                        }
 					if(!is_master){
 
 
 					snprint_addr_aux(ip_buff,PATHSIZE/4,&arg_a->arg_s->master_addr);
-                                        
 					snprintf((char*)con.udp_data,DEF_DATASIZE-1,"Nao sou um master."
                                                                                      "Mas, se quiseres, Está aqui o meu master."
                                                                                      "Tenta falar com ele: %s:%hu\n",
                                                                                                 ip_buff,ntohs(arg_a->arg_s->master_addr.sin_port));
-                                        
 					}
 					else{
 					snprintf((char*)con.udp_data,DEF_DATASIZE-1,"Sup. Im master. Waddyawant?\n");
-                                        
+
 					}
 					result=con_send_udp(&con,arg_a->data_times_pair);
                                         clear_con_data(&con);
@@ -548,27 +565,36 @@ void* acceptor_func(void* args){
                                         break;
 
                                 case SHOW:
-                                        printf("Waiting for UDP hole punching:\n");
+					if(logging){
+						fprintf(logstream,"Waiting for UDP hole punching:\n");
+					}
 					con_read_udp(&con,arg_a->con_times_pair);
-				
-					printf("Resposta em UDP hole punching: \"%s\"\n",(char*)(con.udp_data));
+					if(logging){
+						fprintf(logstream,"Resposta em UDP hole punching: \"%s\"\n",(char*)(con.udp_data));
+					}
 					snprintf((char*)buff_udp_hp,2*DEF_DATASIZE-1,"Ok good job, soldier!\n I know that your response was \"%s\"\nProceed, now.\n",(char*)(con.udp_data));
 					memcpy(con.udp_data,buff_udp_hp,DEF_DATASIZE);
 					con_send_udp(&con,arg_a->con_times_pair);
                                         clear_con_data(&con);
 
-					printf("Anyways....\n....\n....\nShow servers requested!!!!\n");
-                                        show_servers(&con,arg_a->data_times_pair);
+					if(logging){
+						fprintf(logstream,"Anyways....\n....\n....\nShow servers requested!!!!\n");
+                                        }
+					show_servers(&con,arg_a->data_times_pair);
                                         send_ports_back(&con);
                                         close_con(&con);
                                         break;
                                 case LOG:
-                                        printf("Log server requested!!!!\n");
-                                        add_con(arg_a->arg_o->cons,&con,type_buff,sock,name_buff,ip_buff,stored_port,extension_buff);
+					if(logging){
+						fprintf(logstream,"Log server requested!!!!\n");
+                                        }
+					add_con(arg_a->arg_o->cons,&con,type_buff,sock,name_buff,ip_buff,stored_port,extension_buff);
                                         break;
                                 default:
-                                        printf("Request desconhecido %s!!!!\n",req_buff);
-                                        close_con(&con);
+					if(logging){
+						fprintf(logstream,"Request desconhecido %s!!!!\n",req_buff);
+                                        }
+					close_con(&con);
                                         break;
 
 

@@ -145,7 +145,9 @@ void send_ports_back(con_t* obj){
 		raise(SIGINT);
 		return;
 	}
-	printf("Conseguimos enviar as portas para fechar ao port mapper!!!!!!\nO buff: %s\n",buff_for_ports);
+	if(logging){
+		fprintf(logstream,"Conseguimos enviar as portas para fechar ao port mapper!!!!!!\nO buff: %s\n",buff_for_ports);
+	}
 	close(tmp_socket);
 	close_con(obj);
 
@@ -164,7 +166,9 @@ void close_con(con_t* con_obj){
 		}
 		con_obj->sockfd_tcp=con_obj->sockfd_udp=con_obj->ack_sockfd_udp=-1;
 		con_obj->is_on=0;
-		printf("Fechamos conexão!!!!\n");
+		if(logging){
+			fprintf(logstream,"Fechamos conexão!!!!\n");
+		}
 	}
 }
 
@@ -172,7 +176,9 @@ void drop_peer_con(con_t* con_obj){
 
 		close(con_obj->sockfd_udp);
 		close(con_obj->ack_sockfd_udp);
-		printf("Largamos peer!!!!\n");
+		if(logging){
+			fprintf(logstream,"Largamos peer!!!!\n");
+		}
 }
 
 void init_con(con_t* con_obj,int sockfd_tcp,con_type type,uint16_t listen_port,ip_cache_entry *ent){
@@ -279,24 +285,29 @@ void ask_for_ports(con_t* obj){
 		return;
 	}
 	sscanf(buff_for_ports,"%hu %hu",&obj->udp_data_local_port,&obj->udp_ack_local_port);
-	printf("Recebemos portas do port_mapper!!!\n"
+	if(logging){
+		fprintf(logstream,"Recebemos portas do port_mapper!!!\n"
 						"Porta de dados udp: %hu\n"
 						"Porta de acks udp: %hu\n",
 						obj->udp_data_local_port,
 						obj->udp_ack_local_port);
-
+	}
 	memset(buff_for_ports,0,DEF_DATASIZE+1);
         snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_JOIN_GOT_IT_STRING);
         result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
         if(result<=0){
 
-                printf("Aviso de que já temos as portas não enviado!!!\nMensagem que devia ter sido enviada:\n%s\n",buff_for_ports);
+                if(logging){
+			fprintf(logstream,"Aviso de que já temos as portas não enviado!!!\nMensagem que devia ter sido enviada:\n%s\n",buff_for_ports);
+		}
 		close(tmp_socket);
 		raise(SIGINT);
         	return;
 	}
 
-        printf("Aviso de que já temos as portas enviado!!!\nMensagem que foi enviada:\n%s\n",buff_for_ports);
+        if(logging){
+		fprintf(logstream,"Aviso de que já temos as portas enviado!!!\nMensagem que foi enviada:\n%s\n",buff_for_ports);
+	}
 	close(tmp_socket);
 }
 void ask_for_port(uint16_t* port,ip_cache_entry* ent){
@@ -342,21 +353,26 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 
 	}
 	sscanf(buff_for_ports,"%hu",port);
-	printf("Recebemos porta do port_mapper!!!\n"
+	if(logging){
+		fprintf(logstream,"Recebemos porta do port_mapper!!!\n"
 						"%hu\n",
 						port[0]);
-
+	}
 	memset(buff_for_ports,0,DEF_DATASIZE+1);
         snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_JOIN_GOT_IT_STRING);
         result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
         if(result<=0){
 
-                printf("Aviso de que já temos as portas não enviado!!!\nMensagem que devia ter sido enviada:\n%s\n",buff_for_ports);
+                if(logging){
+			fprintf(logstream,"Aviso de que já temos as portas não enviado!!!\nMensagem que devia ter sido enviada:\n%s\n",buff_for_ports);
+		}
 		close(tmp_socket);
 		raise(SIGINT);
 		return;
         }
-        printf("Aviso de que já temos a porta enviado!!!\nMensagem que foi enviada:\n%s\n",buff_for_ports);
+        if(logging){
+		fprintf(logstream,"Aviso de que já temos a porta enviado!!!\nMensagem que foi enviada:\n%s\n",buff_for_ports);
+	}
 	close(tmp_socket);
 }
 
@@ -432,7 +448,9 @@ void reserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* ent)
 
 
 	}
-	printf("Reserva feita!!!\n");
+	if(logging){
+		fprintf(logstream,"Reserva feita!!!\n");
+	}
 	close(tmp_socket);
 
 
@@ -506,7 +524,9 @@ void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* en
 
 
 	}
-	printf("Desreserva feita!!!\n");
+	if(logging){
+		fprintf(logstream,"Desreserva feita!!!\n");
+	}
 	close(tmp_socket);
 
 }
@@ -563,7 +583,9 @@ static void set_up_local_udp_socks(con_t* con_obj){
 
 	}
 	else{
-		print_addr_aux("Demos bind em socket local de data UDP!!!!\nO address e:",&con_obj->this_udp_addr);
+		if(logging){
+			print_addr_aux("Demos bind em socket local de data UDP!!!!\nO address e:",&con_obj->this_udp_addr);
+		}
 	}
 
 	socklen_in=sizeof(struct sockaddr_in);
@@ -583,7 +605,9 @@ static void set_up_local_udp_socks(con_t* con_obj){
 	}
 	else{
 
-		print_addr_aux("Demos bind em socket local de acks UDP!!!\nO address e:",&con_obj->this_udp_ack_addr);
+		if(logging){
+			print_addr_aux("Demos bind em socket local de acks UDP!!!\nO address e:",&con_obj->this_udp_ack_addr);
+		}
 	}
 }
 
@@ -595,14 +619,19 @@ static void greet_server(con_t* con_obj, int_pair pair,int_pair holepunching_tim
 
 	sscanf((char*)con_obj->tcp_data,"%s %hu %hu %hu",(char*)client_data,&con_obj->tcp_data_peer_port,&con_obj->udp_data_peer_port,&con_obj->udp_ack_peer_port);
 
-	printf("Quatruplo recebido: (string, port, port, port) = (%s, %hu, %hu, %hu)\n",client_data,con_obj->tcp_data_peer_port,con_obj->udp_data_peer_port,con_obj->udp_ack_peer_port);
+	if(logging){
+		fprintf(logstream,"Quatruplo recebido: (string, port, port, port) = (%s, %hu, %hu, %hu)\n",client_data,con_obj->tcp_data_peer_port,con_obj->udp_data_peer_port,con_obj->udp_ack_peer_port);
+	}
 	clear_con_data(con_obj);
 	
 	int result=strs_are_strictly_equal(CON_STRING,client_data);
 	
 	if(result){
 
-		printf("String de conexão errada recebida! Recebemos \"%s\" do cliente!",client_data);
+		if(logging){
+
+			fprintf(logstream,"String de conexão errada recebida! Recebemos \"%s\" do cliente!",client_data);
+		}
 		raise(SIGINT);
 	}
 	set_up_peer_udp_socks(con_obj);
@@ -611,43 +640,52 @@ static void greet_server(con_t* con_obj, int_pair pair,int_pair holepunching_tim
 
 	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%hu %hu %hu",(uint16_t)(con_obj->tcp_data_local_port),(uint16_t)(con_obj->udp_data_local_port),(uint16_t)(con_obj->udp_ack_local_port));
 
-	printf("Portas enviadas: %s\n",(char*)con_obj->tcp_data);
-
+	if(logging){
+		fprintf(logstream,"Portas enviadas: %s\n",(char*)con_obj->tcp_data);
+	}
 	con_send_tcp(con_obj,pair);
 
 	clear_con_data(con_obj);
 
 	set_up_local_udp_socks(con_obj);
 	
-	printf("Server greet sucesfull so far!\nWaiting for client to initiate hole punching routines!\n");
-	printf("A receber UDP primeiro pela pipeline de dados!\n");
+	if(logging){
+		fprintf(logstream,"Server greet sucesfull so far!\nWaiting for client to initiate hole punching routines!\nA receber UDP primeiro pela pipeline de dados!\n");
+	}
 	clear_con_data(con_obj);
 	snprintf((char*)con_obj->udp_data,DEF_DATASIZE,"Hole punching 1: reply");
 	con_send_udp(con_obj,holepunching_times_pair);
-	printf("Ok....\nOK rápido, rápido!!\nA receber UDP, mas agora pela pipeline de acknowledgments!\n");
+	if(logging){
+		fprintf(logstream,"Ok....\nOK rápido, rápido!!\nA receber UDP, mas agora pela pipeline de acknowledgments!\n");
+	}
 	snprintf((char*)con_obj->ack_udp_data,DEF_DATASIZE,"Hole punching 2: reply");
 	con_send_udp_ack(con_obj,holepunching_times_pair);
-	printf("Tudo Enviado! Esperando resposta!\n");
+	if(logging){
+		fprintf(logstream,"Tudo Enviado! Esperando resposta!\n");
+	}
 	clear_con_data(con_obj);
 	if(con_read_udp(con_obj,holepunching_times_pair)>0){
-		printf("A resposta foi '%s'\nUDP holepunching recebido!\nEnviando resposta!\n",con_obj->udp_data);
-	
+		if(logging){
+			fprintf(logstream,"A resposta foi '%s'\nUDP holepunching recebido!\nEnviando resposta!\n",con_obj->udp_data);
+		}
 	}
 	else{
-		printf("OOofff... reply de holepunching não recebida!!\n");
-	
+		if(logging){
+			fprintf(logstream,"OOofff... reply de holepunching não recebida!!\n");
+		}
 
 	}
 	if(con_read_udp_ack(con_obj,holepunching_times_pair)>0){
-		printf("A resposta foi '%s'\nUDP holepunching recebido na pipeline de acknowledgements!\nEnviando resposta!\n",con_obj->ack_udp_data);
-	
+		if(logging){
+			fprintf(logstream,"A resposta foi '%s'\nUDP holepunching recebido na pipeline de acknowledgements!\nEnviando resposta!\n",con_obj->ack_udp_data);
+		}
 	}
 	else{
-		printf("OOofff... reply de holepunching nos acks não recebida!!\n");
-	
+		if(logging){
+			fprintf(logstream,"OOofff... reply de holepunching nos acks não recebida!!\n");
+		}
 
 	}
-	
 }
 
 static void greet_client(con_t* con_obj,int_pair pair,int_pair holepunching_times_pair){
@@ -659,46 +697,60 @@ static void greet_client(con_t* con_obj,int_pair pair,int_pair holepunching_time
 
 	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%s %hu %hu %hu",CON_STRING,(uint16_t)(con_obj->tcp_data_local_port),(uint16_t)(con_obj->udp_data_local_port),(uint16_t)(con_obj->udp_ack_local_port));
 
-	printf("String enviada %s\n",(char*)con_obj->tcp_data);
-
+	
+	if(logging){
+		fprintf(logstream,"String enviada %s\n",(char*)con_obj->tcp_data);
+	}
 	con_send_tcp(con_obj,pair);
 
 	clear_con_data(con_obj);
 
 	con_read_tcp(con_obj,pair);
 
-	printf("String recebida (portas do server) %s\n",(char*)con_obj->tcp_data);
-	
+	if(logging){
+		fprintf(logstream,"String recebida (portas do server) %s\n",(char*)con_obj->tcp_data);
+	}
 	sscanf((char*)con_obj->tcp_data,"%hu %hu %hu",&con_obj->tcp_data_peer_port,&con_obj->udp_data_peer_port,&con_obj->udp_ack_peer_port);
 
-	printf("Portas do client agora: %hu %hu %hu\n",con_obj->tcp_data_local_port,con_obj->udp_data_local_port,con_obj->udp_ack_local_port);
-
+	if(logging){
+		fprintf(logstream,"Portas do client agora: %hu %hu %hu\n",con_obj->tcp_data_local_port,con_obj->udp_data_local_port,con_obj->udp_ack_local_port);
+	}
 
 	set_up_peer_udp_socks(con_obj);
 
-	printf("Client greet sucessful so far!\nBeginning exaustive hole Punching routines!\n");
-	printf("A enviar UDP primeiro pela pipeline de dados!\n");
+	if(logging){
+		fprintf(logstream,"Client greet sucessful so far!\nBeginning exaustive hole Punching routines!\nA enviar UDP primeiro pela pipeline de dados!\n");
+	}
 	clear_con_data(con_obj);
 	snprintf((char*)con_obj->udp_data,DEF_DATASIZE,"Hole punching 1");
 	con_send_udp(con_obj,holepunching_times_pair);
-	printf("Alright!\nrápido, rápido!!\nA enviar o furo pela pipeline UDP de acknowledgements!\n");
+
+	if(logging){
+		fprintf(logstream,"Alright!\nrápido, rápido!!\nA enviar o furo pela pipeline UDP de acknowledgements!\n");
+	}
 	snprintf((char*)con_obj->ack_udp_data,DEF_DATASIZE,"Hole punching 2");
 	con_send_udp_ack(con_obj,holepunching_times_pair);
 	printf("Tudo Enviado! Esperando resposta!\n");
 	clear_con_data(con_obj);
 	if(con_read_udp(con_obj,holepunching_times_pair)>0){
-		printf("O que recebemos foi: '%s'\nRecebido!\nOkay! Agora vamos furar na pipeline de acknowledgements!\n",con_obj->udp_data);
+		if(logging){
+			fprintf(logstream,"O que recebemos foi: '%s'\nRecebido!\nOkay! Agora vamos furar na pipeline de acknowledgements!\n",con_obj->udp_data);
+		}
 	}
 	else{
-		printf("OOofff... reply de holepunching nos acks não recebida!!\n");
-
+		if(logging){
+			fprintf(logstream,"OOofff... reply de holepunching nos acks não recebida!!\n");
+		}
 	}
 	if(con_read_udp_ack(con_obj,holepunching_times_pair)>0){
-		printf("O que recebemos foi: '%s'\nRecebido!\nOkay! Agora vamos furar na pipeline de acknowledgements!\n",con_obj->ack_udp_data);
+		if(logging){
+			fprintf(logstream,"O que recebemos foi: '%s'\nRecebido!\nOkay! Agora vamos furar na pipeline de acknowledgements!\n",con_obj->ack_udp_data);
+		}
 	}
 	else{
-		printf("OOofff... reply de holepunching nos acks não recebida!!\n");
-
+		if(logging){
+			fprintf(logstream,"OOofff... reply de holepunching nos acks não recebida!!\n");
+		}
 	}
 }
 
@@ -716,19 +768,19 @@ void greet(con_t*con_obj,int_pair times_pair,int_pair holepunching_times_pair){
 			break;
 	}
 
-	print_addr_aux("Addresss tcp do peer:",&con_obj->peer_tcp_addr);
+	if(logging){
+		print_addr_aux("Addresss tcp do peer:",&con_obj->peer_tcp_addr);
 
-	print_addr_aux("Addresss tcp de nos:",&con_obj->this_tcp_addr);
+		print_addr_aux("Addresss tcp de nos:",&con_obj->this_tcp_addr);
 
-	print_addr_aux("Addresss udp de dados do peer:",&con_obj->peer_udp_addr);
+		print_addr_aux("Addresss udp de dados do peer:",&con_obj->peer_udp_addr);
 
-	print_addr_aux("Addresss udp de dados de nos:",&con_obj->this_udp_addr);
+		print_addr_aux("Addresss udp de dados de nos:",&con_obj->this_udp_addr);
 
-	print_addr_aux("Addresss udp de ack do peer:",&con_obj->peer_udp_ack_addr);
+		print_addr_aux("Addresss udp de ack do peer:",&con_obj->peer_udp_ack_addr);
 
-	print_addr_aux("Addresss udp de ack de nos:",&con_obj->this_udp_ack_addr);
-	
-	
+		print_addr_aux("Addresss udp de ack de nos:",&con_obj->this_udp_ack_addr);
+	}
 
 
 }

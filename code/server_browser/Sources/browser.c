@@ -109,6 +109,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGPIPE, &sa, NULL);
+	logging=0;
 
 
         con_obj.sockfd_tcp=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);

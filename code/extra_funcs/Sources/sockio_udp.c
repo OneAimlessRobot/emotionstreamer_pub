@@ -5,21 +5,25 @@
 
 
 
-int sendsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockaddr_in *udp_addr_dst){
+int sendsome_udp(int sd,char buff[],size_t size,int_pair times,struct sockaddr_in *udp_addr_dst){
                 if(sd>=0){
 		        int iResult;
                 	struct timeval tv;
-                	fd_set wfds;
-        		FD_ZERO(&wfds);
-	                FD_SET(sd,&wfds);
-	                tv.tv_sec=times[0];
-	                tv.tv_usec=times[1];
-	                iResult=select(sd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
+	                size_t send_total=0;
+			ssize_t s=0;
+			while(send_total<size){
+				fd_set wfds;
+		                FD_ZERO(&wfds);
+		                FD_SET(sd,&wfds);
+		                tv.tv_sec=times[0];
+		                tv.tv_usec=times[1];
+		                iResult=select(sd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
+		                if(iResult>0){
 
-			if(iResult>0){
-
-			return sendto(sd,buff,size,0,(struct sockaddr*)udp_addr_dst,*socklenvar);
-	                }
+		                send_total+= (s=sendto(sd,buff+send_total,size-send_total,0,(struct sockaddr*)udp_addr_dst,*socklenvar));
+	                	if (s < 0) return -1;
+	        		if (s == 0) return send_total;
+			}
 			else if(!iResult){
 	               	return -2;
 			}
@@ -30,6 +34,8 @@ int sendsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockadd
 			}
 			return -1;
 			}
+			}
+			return send_total;
 		}
 		return -1;
 }
@@ -38,7 +44,6 @@ int sendsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockadd
 int sendallfd_udp(int sock,int fd,int_pair times,struct sockaddr_in *udp_addr_dst){
 
 char buff[DEF_DATASIZE];
-memset(buff,0,DEF_DATASIZE);
 int numread;
 int sent=0;
 while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
@@ -83,15 +88,11 @@ while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
                 fprintf(logstream,"Outro erro qualquer!!!!!: %d %s\n",errno,strerror(errno));
                 }
 	
+		raise(SIGINT);
 		break;
 	}
-        }
-	else{
-	if(logging){
-	fprintf(logstream,"send de %d bytes feito!!!!!\n",sent);
 	}
 	totalsent += sent;
-    	}
 	}
 }
 
@@ -101,10 +102,13 @@ return 0;
 
 
 
-int readsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockaddr_in *udp_addr_src){
+int readsome_udp(int sd,char buff[],size_t size,int_pair times,struct sockaddr_in *udp_addr_src){
 		if(sd>=0){
 			int iResult;
 	                struct timeval tv;
+			size_t read_total=0;
+			ssize_t r=0;
+			while(read_total<size){
 	                fd_set rfds;
 	                FD_ZERO(&rfds);
 	                FD_SET(sd,&rfds);
@@ -114,8 +118,10 @@ int readsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockadd
 
 			if(iResult>0){
 
-	                return recvfrom(sd,buff,size,0,(struct sockaddr*)udp_addr_src,socklenvar);
-
+	                read_total+= (r=recvfrom(sd,buff+read_total,size-read_total,0,(struct sockaddr*)udp_addr_src,socklenvar));
+			if (r < 0) return -1;
+	        	if (r == 0) return read_total;
+			
 	                }
 			else if(!iResult){
 	               	return -2;
@@ -127,6 +133,8 @@ int readsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockadd
 			}
 			return -1;
 			}
+			}
+			return read_total;
 		}
 		return -1;
 }
