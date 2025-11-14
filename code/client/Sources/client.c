@@ -211,8 +211,9 @@ int clientStart(char* req_field,char* file_name){
 	}
 	else{
 
-                print_addr_aux("Bind com sucesso!!!:",&client_ip_address);
-        }
+		print_addr_aux("Bind com sucesso!!!:",&client_ip_address);
+		setLinger(&client_con_obj.sockfd_tcp,0,0);
+	}
 
 
 	if(!tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address)){
