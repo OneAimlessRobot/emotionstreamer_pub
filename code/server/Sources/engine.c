@@ -51,19 +51,6 @@ static void call_sigint_sub_connection(void){
 	pthread_mutex_lock(&con_mtx);
 	close_con(&state.hb_con);
 	pthread_mutex_unlock(&con_mtx);
-	siginfo_t sig_info;
-        printf("Waiting for subprocess children!\n");
-        int status=-1;
-        while(1){
-                status=waitid(P_ALL,-1,&sig_info,WEXITED|WNOHANG);
-                if(status>0){
-                        printf("process of pid: %d\nAnd uid %d\nExited!!!\n",sig_info.si_pid,sig_info.si_uid);
-                }
-                else{
-                        printf("Yeeey no more childreeen\n");
-                        break;
-                }
-        }
 
 }
 static void call_sigint_chld(int useless){
