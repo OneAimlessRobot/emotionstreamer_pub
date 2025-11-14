@@ -50,13 +50,17 @@ static void call_sigint_sub_connection(void){
 	perror("Sinal de parar sub conexão server\n");
 	pthread_mutex_lock(&con_mtx);
 	close_con(&state.hb_con);
+	if(state.hb_con.sockfd_tcp>=0){
+		close(state.hb_con.sockfd_tcp);
+		state.hb_con.sockfd_tcp=-1;
+	}
 	pthread_mutex_unlock(&con_mtx);
 
 }
 static void call_sigint_chld(int useless){
 
-	is_on=0*useless;
-	started=1;
+	is_on+=0*useless;
+	started+=0*useless;
 }
 static void serverStop(int useless){
 
