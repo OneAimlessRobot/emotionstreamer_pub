@@ -24,7 +24,6 @@ char server_music_folder_path[PATHSIZE]={0};
 char server_working_extension[EXTENSION_SIZE]={0};
 
 
-
 //EM BYTES E HZ!
 
 int_pair server_data_times_pair=(int_pair){SERVER_TIMEOUT_DATA_SEC,SERVER_TIMEOUT_DATA_USEC};

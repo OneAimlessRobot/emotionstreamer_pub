@@ -13,6 +13,7 @@
 #include "../../extra_funcs/Includes/interlvl_com.h"
 #include "../Includes/engine.h"
 #include "../Includes/connection.h"
+#include <sys/wait.h>
 
 
 static server_state state;
@@ -25,6 +26,8 @@ static pthread_cond_t eng_cond=PTHREAD_COND_INITIALIZER;
 atomic_int started=0;
 atomic_int is_on=0;
 static struct sigaction sa;
+static struct sigaction sa_chld;
+int child_pid=-1;
 
 static void call_sigint(void){
 
@@ -48,6 +51,27 @@ static void call_sigint_sub_connection(void){
 	pthread_mutex_lock(&con_mtx);
 	close_con(&state.hb_con);
 	pthread_mutex_unlock(&con_mtx);
+	kill(child_pid,SIGCHLD);
+        printf("We tried to kill process number %d!!!!!\n",child_pid);
+	siginfo_t sig_info;
+        printf("Waiting for subprocess children!\n");
+        int status=-1;
+        while(1){
+                status=waitid(P_ALL,-1,&sig_info,WEXITED|WNOHANG);
+                if(status>0){
+                        printf("process of pid: %d\nAnd uid %d\nExited!!!\n",sig_info.si_pid,sig_info.si_uid);
+                }
+                else{
+                        printf("Yeeey no more childreeen\n");
+                        break;
+                }
+        }
+
+}
+static void call_sigint_chld(int useless){
+
+	is_on+=0*useless;
+	started+=0*useless;
 }
 static void serverStop(int useless){
 
@@ -93,7 +117,7 @@ static int con_accepting_loop(void){
 					
 					printf("Connection accepted!\n");
 					pid=1;
-					pid=fork();
+					child_pid=pid=fork();
 					switch(pid){
 						case 0:
 							setNonBlocking(sock);
@@ -103,6 +127,7 @@ static int con_accepting_loop(void){
 						        sigaction(SIGINT, &sa, NULL);
 						        sigaction(SIGPIPE, &sa, NULL);
 						        sigaction(SIGTERM, &sa, NULL);
+
 							con_go(sock,curr_port);
 							call_sigint_sub_connection();
 							return 0;
@@ -142,10 +167,15 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
         sa.sa_handler = serverStop;
         sigemptyset(&sa.sa_mask);
-        sa.sa_flags = SA_RESTART|SA_NOCLDWAIT;
+        sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
         sigaction(SIGTERM, &sa, NULL);
+
+        sa_chld.sa_handler = call_sigint_chld;
+        sigemptyset(&sa_chld.sa_mask);
+        sa_chld.sa_flags = SA_RESTART|SA_NOCLDWAIT;
+	sigaction(SIGCHLD, &sa_chld, NULL);
 
 	char buff[SERVER_NAME_SIZE]={0};
 	char extension_buff[EXTENSION_SIZE+1]={0};
