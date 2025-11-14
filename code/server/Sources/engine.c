@@ -55,8 +55,8 @@ static void call_sigint_sub_connection(void){
 }
 static void call_sigint_chld(int useless){
 
-	is_on=0*useless;
-	started=1;
+	is_on+=0*useless;
+	started+=0*useless;
 }
 static void serverStop(int useless){
 
@@ -233,6 +233,10 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	printf("Juntamos o thread hb_tid\n");
 	call_sigint();
 	close_con(&state.hb_con);
+	}
+	else{
+	printf("Exiting child in server!!\n");
+
 	}
 	return result;
 }
