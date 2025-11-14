@@ -99,7 +99,7 @@ static int con_accepting_loop(void){
 							setNonBlocking(sock);
 						        sa.sa_handler = conStop;
 						        sigemptyset(&sa.sa_mask);
-						        sa.sa_flags = SA_RESTART;
+						        sa.sa_flags = SA_RESTART|SA_NOCLDWAIT;
 						        sigaction(SIGINT, &sa, NULL);
 						        sigaction(SIGPIPE, &sa, NULL);
 						        sigaction(SIGTERM, &sa, NULL);
