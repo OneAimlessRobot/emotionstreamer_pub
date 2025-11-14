@@ -51,8 +51,6 @@ static void call_sigint_sub_connection(void){
 	pthread_mutex_lock(&con_mtx);
 	close_con(&state.hb_con);
 	pthread_mutex_unlock(&con_mtx);
-	kill(child_pid,SIGCHLD);
-        printf("We tried to kill process number %d!!!!!\n",child_pid);
 	siginfo_t sig_info;
         printf("Waiting for subprocess children!\n");
         int status=-1;
@@ -123,7 +121,7 @@ static int con_accepting_loop(void){
 							setNonBlocking(sock);
 						        sa.sa_handler = conStop;
 						        sigemptyset(&sa.sa_mask);
-						        sa.sa_flags = SA_RESTART|SA_NOCLDWAIT;
+						        sa.sa_flags = SA_RESTART;
 						        sigaction(SIGINT, &sa, NULL);
 						        sigaction(SIGPIPE, &sa, NULL);
 						        sigaction(SIGTERM, &sa, NULL);
