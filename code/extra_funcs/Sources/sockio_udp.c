@@ -6,29 +6,32 @@
 
 
 int sendsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockaddr_in *udp_addr_dst){
-                int iResult;
-                struct timeval tv;
-                fd_set wfds;
-                FD_ZERO(&wfds);
-                FD_SET(sd,&wfds);
-                tv.tv_sec=times[0];
-                tv.tv_usec=times[1];
-                iResult=select(sd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
+                if(sd>=0){
+		        int iResult;
+                	struct timeval tv;
+                	fd_set wfds;
+        		FD_ZERO(&wfds);
+	                FD_SET(sd,&wfds);
+	                tv.tv_sec=times[0];
+	                tv.tv_usec=times[1];
+	                iResult=select(sd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
 
-		if(iResult>0){
+			if(iResult>0){
 
-		return sendto(sd,buff,size,0,(struct sockaddr*)udp_addr_dst,*socklenvar);
-                }
-		else if(!iResult){
-               	return -2;
-		}
-		else{
-		if(logging){
+			return sendto(sd,buff,size,0,(struct sockaddr*)udp_addr_dst,*socklenvar);
+	                }
+			else if(!iResult){
+	               	return -2;
+			}
+			else{
+			if(logging){
 
-		fprintf(logstream, "SELECT ERROR (UDP)!!!!! SEND:\n%s\n",strerror(errno));
+			fprintf(logstream, "SELECT ERROR (UDP)!!!!! SEND:\n%s\n",strerror(errno));
+			}
+			return -1;
+			}
 		}
 		return -1;
-		}
 }
 
 
@@ -99,30 +102,33 @@ return 0;
 
 
 int readsome_udp(int sd,char buff[],u_int64_t size,int_pair times,struct sockaddr_in *udp_addr_src){
-		int iResult;
-                struct timeval tv;
-                fd_set rfds;
-                FD_ZERO(&rfds);
-                FD_SET(sd,&rfds);
-                tv.tv_sec=times[0];
-                tv.tv_usec=times[1];
-                iResult=select(sd+1,&rfds,(fd_set*)0,(fd_set*)0,&tv);
+		if(sd>=0){
+			int iResult;
+	                struct timeval tv;
+	                fd_set rfds;
+	                FD_ZERO(&rfds);
+	                FD_SET(sd,&rfds);
+	                tv.tv_sec=times[0];
+	                tv.tv_usec=times[1];
+	                iResult=select(sd+1,&rfds,(fd_set*)0,(fd_set*)0,&tv);
 
-		if(iResult>0){
+			if(iResult>0){
 
-                return recvfrom(sd,buff,size,0,(struct sockaddr*)udp_addr_src,socklenvar);
+	                return recvfrom(sd,buff,size,0,(struct sockaddr*)udp_addr_src,socklenvar);
 
-                }
-		else if(!iResult){
-               	return -2;
-		}
-		else{
-		if(logging){
+	                }
+			else if(!iResult){
+	               	return -2;
+			}
+			else{
+			if(logging){
 
-		fprintf(logstream, "SELECT ERROR (UDP)!!!!! READ\n%s\n",strerror(errno));
+			fprintf(logstream, "SELECT ERROR (UDP)!!!!! READ\n%s\n",strerror(errno));
+			}
+			return -1;
+			}
 		}
 		return -1;
-		}
 }
 
 

@@ -6,28 +6,31 @@
 
 
 int sendsome(int sd,char buff[],u_int64_t size,int_pair times){
-                int iResult;
-                struct timeval tv;
-                fd_set wfds;
-                FD_ZERO(&wfds);
-                FD_SET(sd,&wfds);
-                tv.tv_sec=times[0];
-                tv.tv_usec=times[1];
-                iResult=select(sd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
-                if(iResult>0){
+                if(sd>=0){
+			int iResult;
+	                struct timeval tv;
+	                fd_set wfds;
+	                FD_ZERO(&wfds);
+	                FD_SET(sd,&wfds);
+	                tv.tv_sec=times[0];
+	                tv.tv_usec=times[1];
+	                iResult=select(sd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
+	                if(iResult>0){
 
-                return send(sd,buff,size,0);
-                }
-			else if(!iResult){
-               	return -2;
-		}
-		else{
-		if(logging){
+	                return send(sd,buff,size,0);
+	                }
+				else if(!iResult){
+	               	return -2;
+			}
+			else{
+			if(logging){
 
-		fprintf(logstream, "SELECT ERROR!!!!! SEND\n%s\n",strerror(errno));
+			fprintf(logstream, "SELECT ERROR!!!!! SEND\n%s\n",strerror(errno));
+			}
+			return -1;
+			}
 		}
 		return -1;
-		}
 }
 
 int sendallfd(int sock,int fd,int_pair times){
@@ -91,29 +94,32 @@ while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
 
 
 int readsome(int sd,char buff[],u_int64_t size,int_pair times){
-		int iResult;
-                struct timeval tv;
-                fd_set rfds;
-                FD_ZERO(&rfds);
-                FD_SET(sd,&rfds);
-                tv.tv_sec=times[0];
-                tv.tv_usec=times[1];
-                iResult=select(sd+1,&rfds,(fd_set*)0,(fd_set*)0,&tv);
-                if(iResult>0){
+		if(sd>=0){
+			int iResult;
+	                struct timeval tv;
+	                fd_set rfds;
+	                FD_ZERO(&rfds);
+	                FD_SET(sd,&rfds);
+	                tv.tv_sec=times[0];
+	                tv.tv_usec=times[1];
+	                iResult=select(sd+1,&rfds,(fd_set*)0,(fd_set*)0,&tv);
+	                if(iResult>0){
 
-                return recv(sd,buff,size,0);
+	                return recv(sd,buff,size,0);
 
-                }
-		else if(!iResult){
-               	return -2;
-		}
-		else{
-		if(logging){
+	                }
+			else if(!iResult){
+	               	return -2;
+			}
+			else{
+			if(logging){
 
-		fprintf(logstream, "SELECT ERROR!!!!! READ\n%s\n",strerror(errno));
+			fprintf(logstream, "SELECT ERROR!!!!! READ\n%s\n",strerror(errno));
+			}
+			return -1;
+			}
 		}
 		return -1;
-		}
 }
 
 
