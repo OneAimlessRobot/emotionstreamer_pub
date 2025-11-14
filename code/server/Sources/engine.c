@@ -56,7 +56,7 @@ static void call_sigint_sub_connection(void){
 static void call_sigint_chld(int useless){
 
 	is_on+=0*useless;
-	started+=0*useless;
+	started=1;
 }
 static void serverStop(int useless){
 
