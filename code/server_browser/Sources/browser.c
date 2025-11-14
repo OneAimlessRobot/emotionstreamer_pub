@@ -3,6 +3,7 @@
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
+#include "../../extra_funcs/Includes/more_socket_ops.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/configs.h"
@@ -117,7 +118,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
         	cleanup_and_send_ports_back(SIGINT);
         }
 
-
+	set_sock_reuseaddr(&con_obj.sockfd_tcp,1);
         if(init_addr(&hb_server_addr,hostname,port)){
 
 	    perror("Não conseguimos inicializar address do peer em server_browser!!!\n");

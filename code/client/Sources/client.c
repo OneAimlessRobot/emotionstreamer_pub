@@ -189,8 +189,7 @@ int clientStart(char* req_field,char* file_name){
 
 		clear_ports_and_quit(SIGINT);
         }
-    	int ptr=1;
-	setsockopt(client_con_obj.sockfd_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
+    	set_sock_reuseaddr(&client_con_obj.sockfd_tcp,1);
 	if(init_addr(&server_ip_address,server_ip_cache_entry.hostname,server_ip_cache_entry.port)){
 		perror("Não conseguimos inicializar address de server no client!!!\n");
 		clear_ports_and_quit(SIGINT);
@@ -213,7 +212,7 @@ int clientStart(char* req_field,char* file_name){
 	else{
 
 		print_addr_aux("Bind com sucesso!!!:",&client_ip_address);
-		setLinger(&client_con_obj.sockfd_tcp,0,0);
+		setLinger(&client_con_obj.sockfd_tcp,1,1);
 	}
 
 
