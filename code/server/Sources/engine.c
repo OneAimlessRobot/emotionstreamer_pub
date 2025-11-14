@@ -27,6 +27,7 @@ atomic_int started=0;
 atomic_int is_on=0;
 static struct sigaction sa;
 static struct sigaction sa_chld;
+int child_pid=-1;
 
 static void call_sigint(void){
 
@@ -105,7 +106,7 @@ static int con_accepting_loop(void){
 					
 					printf("Connection accepted!\n");
 					pid=1;
-					pid=fork();
+					child_pid=pid=fork();
 					switch(pid){
 						case 0:
 							setNonBlocking(sock);
@@ -136,7 +137,12 @@ static int con_accepting_loop(void){
 		else if(iResult<0){
 
 			perror("Select error");
-			return 1;
+			if(child_pid<0){
+				return 1;
+			}
+			else{
+				continue;
+			}
 		}
 		else{
 			
