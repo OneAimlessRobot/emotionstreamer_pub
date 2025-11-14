@@ -83,6 +83,15 @@ static void stop_client_stream(void){
 		send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
 		send_ports_back(stream_struct.con_obj);
 		close_con(stream_struct.con_obj);
+		if(stream_struct.con_obj->sockfd_tcp>=0){
+			close(stream_struct.con_obj->sockfd_tcp);
+			stream_struct.con_obj->sockfd_tcp=-1;
+
+		}
+	}
+	if(stream_struct.con_obj->sockfd_tcp>=0){
+		close(stream_struct.con_obj->sockfd_tcp);
+		stream_struct.con_obj->sockfd_tcp=-1;
 	}
 
 
