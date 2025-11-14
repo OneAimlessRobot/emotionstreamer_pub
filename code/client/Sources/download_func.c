@@ -44,11 +44,10 @@ static void* print_download_bar(void* mem,int64_t len,int64_t* timeout_num){
 
         }
 	if(stream_enable_ncurses){
-		clear();
+		move(0,0);
 	}
 	else{
-		system("clear");
-
+		printf("\033[H");
 	}
 	char buff[1024]={0};
         snprintf(buff,sizeof(buff)-1,"Progresso atual de download: %ld de %ld kbytes transferidos!\n\n%s\n",bar_inside->curr/1000,bar_inside->total/1000,bar);
