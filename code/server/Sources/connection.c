@@ -36,7 +36,7 @@ static int open_file(char* filepath){
 
 		int fp=-1;
 		if((fp=open(filepath,O_RDONLY,0777))<0){
-			setNonBlocking(fp);
+			setNonBlocking(&fp);
 			printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(	server_con_obj.peer_tcp_addr.sin_addr),filepath);
                        	
 	        }

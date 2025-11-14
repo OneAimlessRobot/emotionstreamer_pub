@@ -9,6 +9,7 @@
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
+#include "../../extra_funcs/Includes/more_socket_ops.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/fileshit.h"

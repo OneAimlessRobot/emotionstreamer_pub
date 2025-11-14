@@ -488,7 +488,7 @@ void* acceptor_func(void* args){
 
                               print_addr_aux("O address que nos calhou nesta socket que nos calhou é:",&tmp_addr);
 
-			      setNonBlocking(sock);
+			      setNonBlocking(&sock);
                               init_con(&con,sock,SERVER_C,curr_port,&arg_a->acceptor_port_mapper_ip_cache_entry);
                               uint16_t stored_port=0;
                               greet(&con,arg_a->con_times_pair,arg_a->holepunching_times_pair);

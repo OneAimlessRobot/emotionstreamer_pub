@@ -1,5 +1,6 @@
 #ifndef PRE_H
 #define PRE_H
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <errno.h>
 #include <arpa/inet.h>

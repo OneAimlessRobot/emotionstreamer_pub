@@ -479,7 +479,7 @@ static void* accepted_connection_thread(void* args){
 
 	int sock= ((int*)args)[0];
 	pthread_mutex_lock(&con_mtx);
-	setNonBlocking(sock);
+	setNonBlocking((int*)(&args[0]));
 	char request_buff[4096]={0};
 	char ports_and_info_buff[4096]={0};
 	int ports_to_work_with[NUM_PORTS_TO_GIVE+1]={0};
