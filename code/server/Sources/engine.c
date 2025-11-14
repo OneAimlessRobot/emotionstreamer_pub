@@ -56,7 +56,7 @@ static void call_sigint_sub_connection(void){
 static void call_sigint_chld(int useless){
 
 	is_on+=0*useless;
-	started=1;
+	started+=0*useless;
 }
 static void serverStop(int useless){
 
@@ -133,7 +133,12 @@ static int con_accepting_loop(void){
 		else if(iResult<0){
 
 			perror("Select error");
-			return 1;
+			if(child_pid<0){
+				return 1;
+			}
+			else{
+				continue;
+			}
 		}
 		else{
 			
