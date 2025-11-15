@@ -38,8 +38,10 @@ static void close_all_fds_here(void){
 
 	close_all_fds(arg_o.cons);
 	pthread_mutex_lock(&con_mtx);
-	send_ports_back(arg_s.con_obj);
 	send_port_back(htons(arg_s.this_con_addr.sin_port),&heartbeat_port_mapper_ip_entry);
+	if(!proto_is_tcp(arg_s.con_obj->app_level_proto)){
+		send_ports_back(arg_s.con_obj);
+	}
 	close_con(arg_s.con_obj);
 	if(arg_s.con_obj->sockfd_tcp>=0){
 		close(arg_s.con_obj->sockfd_tcp);
