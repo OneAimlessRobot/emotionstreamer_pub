@@ -157,7 +157,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
         	cleanup_and_send_ports_back(SIGINT);
         }
 
-        init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry);
+        init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry,1);
 
 
         getsockname(con_obj.sockfd_tcp,(struct sockaddr*)&our_addr,&socklenvar[1]);

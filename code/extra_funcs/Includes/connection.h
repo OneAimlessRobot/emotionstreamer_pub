@@ -32,8 +32,8 @@ typedef struct con_t{
 		udp_ack_peer_port;
 	 uint16_t listen_port; //if launched within a server of some variety;
 	 ip_cache_entry port_mapper_entry;
+	 int app_level_proto;
 	 con_type type;
-	 
 }con_t;
 //sockfd_tcp tem de ser obtida com connect ou accept!!!!!!!
 
@@ -41,7 +41,7 @@ typedef struct con_t{
 
 //DOES NOT FREE OR INITIALIZE THE BUFFS YOU GIVE IT!
 
-void init_con(con_t* con_obj, int sockfd_tcp,con_type type,uint16_t listen_port,ip_cache_entry* ent);
+void init_con(con_t* con_obj, int sockfd_tcp,con_type type,uint16_t listen_port,ip_cache_entry* ent,int app_level_proto);
 
 void close_con(con_t* con_obj);
 

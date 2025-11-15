@@ -69,8 +69,8 @@ static int send_chunk_to_client(void){
 	int result=-2;
 	result=(server_transmission_protocol<=0)?send_chunk_tcp(&stream_struct,server_drop_chunks_times_pair):send_chunk_udp(&stream_struct,server_drop_chunks_times_pair);
 	while(initted&&(result!=-1)){
-		//result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_times_pair):con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
-		result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
+		result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_times_pair):con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
+		//result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 			if(result==-2){
 				continue;
 			}
@@ -97,16 +97,17 @@ static void* server_stream(void* args){
 		while(initted){
 			memset(stream_struct.chunk_data_cache,0,sizeof(mp3_stream_chunk));
 			if(read(stream_struct.local_fd_boundary,stream_struct.chunk_data_cache,sizeof(frame_info_t))<=0){
-				fprintf(stderr,"We could not read a frame info thing!\n");
+				fprintf(stderr,"We could not read a frame info thing!\nError: %s\n",strerror(errno));
 				break;
 			}
+			print_frame_info_data((frame_info_t*)&stream_struct.chunk_data_cache);
 			lseek(stream_struct.local_fd,((mp3_stream_chunk*)(stream_struct.chunk_data_cache))->the_frame_info.start,SEEK_SET);
 			if(read(stream_struct.local_fd,stream_struct.chunk_data_cache+sizeof(frame_info_t)+4,((mp3_stream_chunk*)(stream_struct.chunk_data_cache))->the_frame_info.size)<=0){
-				fprintf(stderr,"We could not read a frame using frame info thing!\n");
+				fprintf(stderr,"We could not read a frame using frame info thing!\nError: %s\n",strerror(errno));
 				break;
 			}
 			if(send_chunk_to_client()<=0){
-				fprintf(stderr,"send a frame obtained using a frame_info_thing!\n");
+				fprintf(stderr,"send a frame obtained using a frame_info_thing!\nError: %s\n",strerror(errno));
 				break;
 
 			}
@@ -183,9 +184,11 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 	stream_struct.chunk_data_cache=stream_buff;
 	memset(stream_struct.chunk_data_cache,0,stream_struct.chunk_size);
 	initted=1;
-        pthread_create(&tid_ack,NULL,ack_exchange_thread,NULL);
-        pthread_create(&tid_stream,NULL,server_stream,NULL);
-	
+        if(!proto_is_tcp(server_transmission_protocol)){
+		pthread_create(&tid_ack,NULL,ack_exchange_thread,NULL);
+        }
+	pthread_create(&tid_stream,NULL,server_stream,NULL);
+
 	pthread_mutex_lock(&running_mtx);
 	while(initted){
 
@@ -196,8 +199,10 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 	
 	pthread_join(tid_stream,NULL);
 	printf("Saimos do thread de stream!!!\n");
-	pthread_join(tid_ack,NULL);
-	printf("Saimos do thread de ack!!!\n");
+        if(!proto_is_tcp(server_transmission_protocol)){
+		pthread_join(tid_ack,NULL);
+		printf("Saimos do thread de ack!!!\n");
+	}
 	printf("SAIMOS DA STREAM DO SERVER!\nTimeouts excedidos? %s\nVamos ver errno:%s\n",(stream_struct.curr_timeout==server_ack_timeout_lim) ? "SIM": "NAO",strerror(errno));
 	return 0;
 }

@@ -26,6 +26,9 @@ int fp_boundary=-1;
 
 static void cleanup(void){
 	close(fp);
+	if(fp_boundary>=0){
+		close(fp_boundary);
+	}
 	close(sock_tcp);
 	send_ports_back(&server_con_obj);
 	printf("Sent ports after minor server operation!\n");
@@ -47,19 +50,19 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 			clear_con_data(&server_con_obj);
 			if(fd>0){
 				stat(file_path,&file_info);
-				snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%ld %hhd %s %hhd",file_info.st_size,server_transmission_protocol,server_working_extension,is_wav_mode);
-				con_send_udp(&server_con_obj,server_data_times_pair);
+				snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%ld %hhd %s %hhd",file_info.st_size,server_transmission_protocol,server_working_extension,is_wav_mode);
+				con_send_tcp(&server_con_obj,server_data_times_pair);
 				clear_con_data(&server_con_obj);
-				con_read_udp_ack(&server_con_obj,server_data_times_pair);
-				if(strs_are_strictly_equal((char*)server_con_obj.ack_udp_data,CON_STRING)){
+				con_read_tcp(&server_con_obj,server_data_times_pair);
+				if(strs_are_strictly_equal((char*)server_con_obj.tcp_data,CON_STRING)){
 
-					printf("Ma resposta do cliente!!!!\n Abortando conexao!\nResposta: |%s|\n",(char*)server_con_obj.ack_udp_data);
+					printf("Ma resposta do cliente!!!!\n Abortando conexao!\nResposta: |%s|\n",(char*)server_con_obj.tcp_data);
 					cleanup();
 				}
 			}
 			else{
-				snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"-1");
-				con_send_udp(&server_con_obj,server_data_times_pair);
+				snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"-1");
+				con_send_tcp(&server_con_obj,server_data_times_pair);
 			}
 }
 //static get_filename_extension
@@ -76,36 +79,33 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				struct stat file_info={0};
 				char hp_udp_ack_buff[2*DEF_DATASIZE]={0};
 				char hp_udp_buff[2*DEF_DATASIZE]={0};
-				init_con(&server_con_obj,sock_tcp,SERVER_C,curr_port,&server_port_mapper_ip_cache_entry);
+				init_con(&server_con_obj,sock_tcp,SERVER_C,curr_port,&server_port_mapper_ip_cache_entry,server_transmission_protocol);
 
 				greet(&server_con_obj,server_con_times_pair,server_holepunching_times_pair);
 				
 				clear_con_data(&server_con_obj);
 
-				con_read_udp(&server_con_obj,server_data_times_pair);
+				con_read_tcp(&server_con_obj,server_data_times_pair);
 				
-				sscanf((char*)server_con_obj.udp_data,"%s %s",req_buff,file_name);
+				sscanf((char*)server_con_obj.tcp_data,"%s %s",req_buff,file_name);
 				
-				printf("Buff recebido:\n\"%s\"\n",server_con_obj.udp_data);
-				
-				clear_con_data(&server_con_obj);
-
-
-			        snprintf((char*)hp_udp_buff,2*DEF_DATASIZE-1,"Buff recebido:\n\"%s\"\n",(char*)server_con_obj.udp_data);
-
+				printf("Buff recebido:\n\"%s\"\n",server_con_obj.tcp_data);
 				
 
-				con_send_udp(&server_con_obj,server_data_times_pair);
+			        snprintf((char*)hp_udp_buff,2*DEF_DATASIZE-1,"Buff recebido:\n\"%s\"\n",(char*)server_con_obj.tcp_data);
+
+				
+				con_send_tcp(&server_con_obj,server_data_times_pair);
 
 				clear_con_data(&server_con_obj);
 
-				con_read_udp_ack(&server_con_obj,server_data_times_pair);
+				con_read_tcp(&server_con_obj,server_data_times_pair);
 
-				snprintf((char*)hp_udp_ack_buff,2*DEF_DATASIZE-1,"Buff recebido (TEST UDP ACK):\n\"%s\"\n",(char*)server_con_obj.ack_udp_data);
+				snprintf((char*)hp_udp_ack_buff,2*DEF_DATASIZE-1,"Buff recebido (TEST UDP ACK):\n\"%s\"\n",(char*)server_con_obj.tcp_data);
 				printf("Result from TEST UDP ACK:\n\"%s\"\n",hp_udp_ack_buff);
 			        
 
-				con_send_udp_ack(&server_con_obj,server_data_times_pair);
+				con_send_tcp(&server_con_obj,server_data_times_pair);
 
 				req_type recvd_type= str_to_req_type(req_buff);
 				//(Quis ler o request e o filename em transferencias diferentes)
@@ -168,8 +168,8 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						uploadtofd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						break;
 					case PLAY:
-						snprintf((char*)server_con_obj.udp_data,DEF_DATASIZE,"%lu",server_chunk_size);
-						if(con_send_udp(&server_con_obj,server_data_times_pair)<=0){
+						snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%lu",server_chunk_size);
+						if(con_send_tcp(&server_con_obj,server_data_times_pair)<=0){
 
 							cleanup();
 						}

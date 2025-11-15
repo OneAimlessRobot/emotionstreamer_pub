@@ -146,3 +146,7 @@ char* randStr(int size,char*buff){
 
 
 }
+int proto_is_tcp(int proto){
+	return proto<=0;
+
+}

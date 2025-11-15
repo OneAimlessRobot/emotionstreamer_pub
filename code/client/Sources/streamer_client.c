@@ -158,11 +158,12 @@ static int read_chunk_udp(client_stream_t* strm,int_pair pair){
 
 static void* rx_thread_func(void* args){
 	int full=0;
+	int result=1;
 	print_string("Thread de reading alcançado!\n");
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&reading,1,V_SET);
 		while(innited){
-			(streaming_protocol<=0)?read_chunk_tcp(&stream_struct,client_data_times_pair):read_chunk_udp(&stream_struct,client_data_times_pair);
+			result=((streaming_protocol<=0)?read_chunk_tcp(&stream_struct,client_data_times_pair):read_chunk_udp(&stream_struct,client_data_times_pair));
 			if(decode&&!is_wav_mode){
 				pthread_cond_signal(&decoder_cond);
 			}
@@ -183,7 +184,7 @@ static void* rx_thread_func(void* args){
 			if(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK)){
 				break;
 			}
-			con_send_udp(stream_struct.con_obj,client_data_times_pair);
+			result=((streaming_protocol<=0)?con_send_tcp(stream_struct.con_obj,client_data_times_pair):con_send_udp(stream_struct.con_obj,client_data_times_pair));
 		}
 		pthread_mutex_lock(&reading_mtx);
 		while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||(perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,(is_wav_mode||!decode)?Q_IS_FULL:Q_IS_ALMOST_FULL})))){
@@ -349,7 +350,6 @@ static void* ack_exchange_thread(void* args){
 	while(innited&&(acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)||acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK))){
 		usleep(cfg_client_ack_period_us);
         }
-
 	raise(SIGINT);
         stop_client_stream();
         return args;
@@ -502,7 +502,9 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	
 	stream_struct.con_obj=con_obj;
 	innited=1;
-	pthread_create(&tid_ack,NULL,ack_exchange_thread,NULL);
+	if(!proto_is_tcp(streaming_protocol)){
+		pthread_create(&tid_ack,NULL,ack_exchange_thread,NULL);
+	}
 	if(rx_enabled){
 		pthread_create(&tid_rx,NULL,rx_thread_func,NULL);
 	}
@@ -551,9 +553,10 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		pthread_join(tid_rx,NULL);
 		printf("Saimos do thread rx!!!!!\n");
 	}
-	pthread_join(tid_ack,NULL);
-	printf("Saimos do thread ack!!!!!\n");
-	
+	if(!proto_is_tcp(streaming_protocol)){
+		pthread_join(tid_ack,NULL);
+		printf("Saimos do thread ack!!!!!\n");
+	}
 	perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
 	if(decode&&!is_wav_mode){
 		perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});

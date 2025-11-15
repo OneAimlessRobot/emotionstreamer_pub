@@ -41,8 +41,10 @@ static method play_way=PLAY_PA;
 static void clear_ports_and_quit(int signal){
 
 	send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
-	send_ports_back(&client_con_obj);
-	close_con(&client_con_obj);
+	if(client_con_obj.is_on){
+		send_ports_back(&client_con_obj);
+		close_con(&client_con_obj);
+	}
 	if(client_con_obj.sockfd_tcp>=0){
 		close(client_con_obj.sockfd_tcp);
 		client_con_obj.sockfd_tcp=-1;
@@ -59,8 +61,8 @@ static int64_t down_file_size(int is_streaming){
 		int64_t down_size=-1;
 		clear_con_data(&client_con_obj);
 		printf("Recebendo tamanho!!!\n");
-		con_read_udp(&client_con_obj,client_data_times_pair);
-		sscanf((char*)client_con_obj.udp_data,"%ld %hhd %s %hhd",&down_size,&streaming_protocol,extension_from_server,&is_wav_mode);
+		con_read_tcp(&client_con_obj,client_data_times_pair);
+		sscanf((char*)client_con_obj.tcp_data,"%ld %hhd %s %hhd",&down_size,&streaming_protocol,extension_from_server,&is_wav_mode);
 		if(down_size<=0){
 
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
@@ -68,8 +70,8 @@ static int64_t down_file_size(int is_streaming){
 			clear_ports_and_quit(SIGINT);
 		}
 		clear_con_data(&client_con_obj);
-		snprintf((char*)client_con_obj.ack_udp_data,DEF_DATASIZE,"%s",CON_STRING);
-		con_send_udp_ack(&client_con_obj,client_data_times_pair);
+		snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE,"%s",CON_STRING);
+		con_send_tcp(&client_con_obj,client_data_times_pair);
 		if(!is_streaming){
 			printf(CONTENT_DOWNLOAD_INCOMMING,down_size,extension_from_server);
 		}
@@ -85,8 +87,8 @@ static int64_t down_file_size(int is_streaming){
 static void play_func(void){
 		down_file_size(1);
 		uint64_t chunk_size=0;
-		con_read_udp(&client_con_obj,client_data_times_pair);
-		sscanf((char*)client_con_obj.udp_data,"%lu",&chunk_size);
+		con_read_tcp(&client_con_obj,client_data_times_pair);
+		sscanf((char*)client_con_obj.tcp_data,"%lu",&chunk_size);
 		player_init_stream(&client_con_obj,chunk_size,play_way);
 }
 static void down_func(char* file_name){
@@ -239,35 +241,35 @@ int clientStart(char* req_field,char* file_name){
         	}
 	}
 	print_sock_addr(client_con_obj.sockfd_tcp);
-	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry);
+	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry,0);
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	greet(&client_con_obj,client_con_times_pair,client_holepunching_times_pair);
 
-	snprintf((char*)client_con_obj.udp_data,3*DEF_DATASIZE-1,"%s %s",req_buff,file_name);
+	snprintf((char*)client_con_obj.tcp_data,3*DEF_DATASIZE-1,"%s %s",req_buff,file_name);
 
-	con_send_udp(&client_con_obj,client_data_times_pair);
+	con_send_tcp(&client_con_obj,client_data_times_pair);
 	printf("Connection testing: UDP data\n");
 
-	con_read_udp(&client_con_obj,client_data_times_pair);
+	con_read_tcp(&client_con_obj,client_data_times_pair);
 	char test_buff[DEF_DATASIZE]={0};
-	sscanf((char*)client_con_obj.udp_data,"%s",test_buff);
+	sscanf((char*)client_con_obj.tcp_data,"%s",test_buff);
 	printf("server reply to our UDP test: \"%s\"\n",test_buff);
 
 	printf("Connection testing: UDP ack: sending\n");
 
 	memset(&test_buff,0,DEF_DATASIZE);
 	clear_con_data(&client_con_obj);
-	snprintf((char*)client_con_obj.ack_udp_data,DEF_DATASIZE-1,"ok, got it, sir! (lets see if they see it lol)\n");
+	snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE-1,"ok, got it, sir! (lets see if they see it lol)\n");
 
 
 	printf("Connection testing: UDP ack: sending\n");
 
-	con_send_udp_ack(&client_con_obj,client_data_times_pair);
+	con_send_tcp(&client_con_obj,client_data_times_pair);
 	printf("Connection testing: UDP ack, receiving\n");
 
-	con_read_udp_ack(&client_con_obj,client_data_times_pair);
+	con_read_tcp(&client_con_obj,client_data_times_pair);
 	memset(&test_buff,0,DEF_DATASIZE);
-	sscanf((char*)client_con_obj.ack_udp_data,"%s",test_buff);
+	sscanf((char*)client_con_obj.tcp_data,"%s",test_buff);
 	printf("server reply to our UDP ack test: \"%s\"\n",test_buff);
 
 
