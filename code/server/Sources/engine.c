@@ -35,7 +35,9 @@ static void call_sigint(void){
 	perror("Sinal de parar server\n");
 	pthread_mutex_lock(&con_mtx);
 	send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
-	send_ports_back(&state.hb_con);
+	if(!proto_is_tcp(state.hb_con.app_level_proto)){
+		send_ports_back(&state.hb_con);
+	}
 	close_con(&state.hb_con);
 	if(state.hb_con.sockfd_tcp>=0){
 		close(state.hb_con.sockfd_tcp);
@@ -166,7 +168,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sigaction(SIGPIPE, &sa, NULL);
         sigaction(SIGTERM, &sa, NULL);
 
-	logging=0;
+	logging=1;
         sa_chld.sa_handler = call_sigint_chld;
         sigemptyset(&sa_chld.sa_mask);
         sa_chld.sa_flags = SA_RESTART|SA_NOCLDWAIT;
@@ -205,6 +207,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	arg_s.con_obj=&state.hb_con;
 	arg_s.clean_func=call_sigint;
 	arg_s.ack_period_us=cfg_server_ack_period_us;
+	arg_s.transmit_protocol=server_transmission_protocol;
 	arg_s.sig_func=serverStop;
 	arg_s.start_trigger=&started;
 	arg_s.loop_var=&is_on;

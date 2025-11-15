@@ -136,8 +136,10 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_s.loop_var=arg_a.is_on;
         arg_s.var_mtx=&hb_mtx;
 	arg_a.heartbeat_protocol=hb_heartbeat_protocol;
-        arg_s.con_obj=&con_obj;
+
+	arg_s.con_obj=&con_obj;
 	arg_s.con_mtx=&con_mtx;
+	arg_s.transmit_protocol=0;
 	arg_s.ack_period_us=cfg_hb_ack_period_us;
 	arg_s.sig_func=sigint_handler;
 	arg_s.clean_func=call_signal_func;

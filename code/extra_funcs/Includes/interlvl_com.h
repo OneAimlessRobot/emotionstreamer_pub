@@ -38,7 +38,8 @@ typedef struct slave_args{
 	uint64_t sleep_us;
 	atomic_int* start_trigger;
 	con_t* con_obj;
-	int8_t heartbeat_protocol;
+	int8_t heartbeat_protocol,
+		transmit_protocol;
 	atomic_int* loop_var;
 	int_pair con_times_pair;
 	int_pair data_times_pair;
@@ -103,7 +104,7 @@ typedef struct acceptor_args{
 
 void init_con_set(con_set* set,con_t* con_buff,int* timeout_buff,int* fd_buff,int max_size,pthread_mutex_t* mtx,pthread_cond_t* cond);
 void close_all_fds(con_set* set);
-void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff);
+void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff,char* transmit_proto_buff,char* heartbeat_proto_buff);
 void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper,ip_cache_entry* port_mapper_cache_entry);
 
 

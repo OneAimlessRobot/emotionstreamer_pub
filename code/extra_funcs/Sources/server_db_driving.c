@@ -154,7 +154,7 @@ static int send_show_servers(void* arg1, int n_cols, char** cols,char** cols_nam
 
         while(curr_col!=n_cols){
 
-                ptr+=snprintf(ptr,(int)((buff+sizeof(buff)-1)-ptr),"%s ",cols[curr_col]);
+                ptr+=snprintf(ptr,(int)((buff+sizeof(buff)-1)-ptr),"%s %s %s",curr_col?"":"[",cols[curr_col],(curr_col!=n_cols-1)?"|":"]");
                 curr_col++;
         }
         clear_con_data(&sender->con_obj);
@@ -215,6 +215,7 @@ if(result<0){
 	     	perror("Timeout a servers a browser 2 read!!!!!\n");
 	}
 }
+
 
 snprintf(statement_str,PATHSIZE-1,SHOW_SERVERS_TMPL);
 
