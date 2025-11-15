@@ -172,6 +172,23 @@ void close_con(con_t* con_obj){
 	}
 }
 
+void close_udp_of_con(con_t* con_obj){
+
+	if(con_obj->is_on){
+		if(con_obj->sockfd_udp>=0){
+			close(con_obj->sockfd_udp);
+		}
+		if(con_obj->ack_sockfd_udp>=0){
+			close(con_obj->ack_sockfd_udp);
+		}
+		con_obj->sockfd_udp=con_obj->ack_sockfd_udp=-1;
+		if(logging){
+			fprintf(logstream,"Fechamos udp da conexão!!!!\n");
+		}
+		con_obj->app_level_proto=-1;
+	}
+}
+
 void drop_peer_con(con_t* con_obj){
 
 		close(con_obj->sockfd_udp);

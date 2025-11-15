@@ -45,6 +45,8 @@ void init_con(con_t* con_obj, int sockfd_tcp,con_type type,uint16_t listen_port,
 
 void close_con(con_t* con_obj);
 
+void close_udp_of_con(con_t* con_obj);
+
 int con_send_tcp(con_t* con_obj,int_pair pair);
 
 int con_send_udp(con_t* con_obj,int_pair pair);

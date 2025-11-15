@@ -89,6 +89,8 @@ static void play_func(void){
 		uint64_t chunk_size=0;
 		con_read_tcp(&client_con_obj,client_data_times_pair);
 		sscanf((char*)client_con_obj.tcp_data,"%lu",&chunk_size);
+		client_con_obj.app_level_proto=streaming_protocol;
+		greet(&client_con_obj,client_con_times_pair,client_holepunching_times_pair);
 		player_init_stream(&client_con_obj,chunk_size,play_way);
 }
 static void down_func(char* file_name){
@@ -243,34 +245,9 @@ int clientStart(char* req_field,char* file_name){
 	print_sock_addr(client_con_obj.sockfd_tcp);
 	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry,0);
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
-	greet(&client_con_obj,client_con_times_pair,client_holepunching_times_pair);
-
 	snprintf((char*)client_con_obj.tcp_data,3*DEF_DATASIZE-1,"%s %s",req_buff,file_name);
 
 	con_send_tcp(&client_con_obj,client_data_times_pair);
-	printf("Connection testing: UDP data\n");
-
-	con_read_tcp(&client_con_obj,client_data_times_pair);
-	char test_buff[DEF_DATASIZE]={0};
-	sscanf((char*)client_con_obj.tcp_data,"%s",test_buff);
-	printf("server reply to our UDP test: \"%s\"\n",test_buff);
-
-	printf("Connection testing: UDP ack: sending\n");
-
-	memset(&test_buff,0,DEF_DATASIZE);
-	clear_con_data(&client_con_obj);
-	snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE-1,"ok, got it, sir! (lets see if they see it lol)\n");
-
-
-	printf("Connection testing: UDP ack: sending\n");
-
-	con_send_tcp(&client_con_obj,client_data_times_pair);
-	printf("Connection testing: UDP ack, receiving\n");
-
-	con_read_tcp(&client_con_obj,client_data_times_pair);
-	memset(&test_buff,0,DEF_DATASIZE);
-	sscanf((char*)client_con_obj.tcp_data,"%s",test_buff);
-	printf("server reply to our UDP ack test: \"%s\"\n",test_buff);
 
 
 	switch(the_type){

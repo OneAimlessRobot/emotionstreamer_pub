@@ -74,38 +74,15 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 
 				char file_name[PATHSIZE]={0};
 				char file_path[PATHSIZE*3 +4]={0};
-				
 				char req_buff[PATHSIZE]={0};
 				struct stat file_info={0};
-				char hp_udp_ack_buff[2*DEF_DATASIZE]={0};
-				char hp_udp_buff[2*DEF_DATASIZE]={0};
-				init_con(&server_con_obj,sock_tcp,SERVER_C,curr_port,&server_port_mapper_ip_cache_entry,server_transmission_protocol);
-
-				greet(&server_con_obj,server_con_times_pair,server_holepunching_times_pair);
-				
-				clear_con_data(&server_con_obj);
+				init_con(&server_con_obj,sock_tcp,SERVER_C,curr_port,&server_port_mapper_ip_cache_entry,0);
 
 				con_read_tcp(&server_con_obj,server_data_times_pair);
-				
+
 				sscanf((char*)server_con_obj.tcp_data,"%s %s",req_buff,file_name);
-				
+
 				printf("Buff recebido:\n\"%s\"\n",server_con_obj.tcp_data);
-				
-
-			        snprintf((char*)hp_udp_buff,2*DEF_DATASIZE-1,"Buff recebido:\n\"%s\"\n",(char*)server_con_obj.tcp_data);
-
-				
-				con_send_tcp(&server_con_obj,server_data_times_pair);
-
-				clear_con_data(&server_con_obj);
-
-				con_read_tcp(&server_con_obj,server_data_times_pair);
-
-				snprintf((char*)hp_udp_ack_buff,2*DEF_DATASIZE-1,"Buff recebido (TEST UDP ACK):\n\"%s\"\n",(char*)server_con_obj.tcp_data);
-				printf("Result from TEST UDP ACK:\n\"%s\"\n",hp_udp_ack_buff);
-			        
-
-				con_send_tcp(&server_con_obj,server_data_times_pair);
 
 				req_type recvd_type= str_to_req_type(req_buff);
 				//(Quis ler o request e o filename em transferencias diferentes)
@@ -173,6 +150,8 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 
 							cleanup();
 						}
+						server_con_obj.app_level_proto=server_transmission_protocol;
+						greet(&server_con_obj,server_con_times_pair,server_holepunching_times_pair);
 						begin_stream(&server_con_obj,fp,fp_boundary,server_chunk_size,stream_cache_data);
 						break;
 					case CONF:
