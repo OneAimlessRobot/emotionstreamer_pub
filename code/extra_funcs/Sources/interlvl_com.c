@@ -18,7 +18,6 @@ static void do_indexed_overseer_con_op(int i,overseer_args* arg_s,int is_reply,i
         reply_result[0]=proto_is_tcp(arg_s->heartbeat_protocol)?con_read_tcp(&arg_s->cons->con_arr[i],arg_s->ack_times_pair):con_read_udp_ack(&arg_s->cons->con_arr[i],arg_s->ack_times_pair);
         reply_result[1]=strs_are_strictly_equal((char*)(proto_is_tcp(arg_s->heartbeat_protocol)?arg_s->cons->con_arr[i].tcp_data:arg_s->cons->con_arr[i].ack_udp_data),HB_SEND_STRING);
         pthread_mutex_unlock(arg_s->cons->set_mtx);
-	usleep(arg_s->ack_period_us);
 	}
 	else{
 	pthread_mutex_lock(arg_s->cons->set_mtx);
@@ -26,8 +25,7 @@ static void do_indexed_overseer_con_op(int i,overseer_args* arg_s,int is_reply,i
         snprintf((char*)(proto_is_tcp(arg_s->heartbeat_protocol)?arg_s->cons->con_arr[i].tcp_data:arg_s->cons->con_arr[i].ack_udp_data),DEF_DATASIZE-1,"%s",HB_REPLY_STRING);
         reply_result[0]=proto_is_tcp(arg_s->heartbeat_protocol)?con_send_tcp(&arg_s->cons->con_arr[i],arg_s->ack_times_pair):con_send_udp_ack(&arg_s->cons->con_arr[i],arg_s->ack_times_pair);
         pthread_mutex_unlock(arg_s->cons->set_mtx);
-        usleep(arg_s->ack_period_us);
-	}
+        }
 }
 
 static void do_indexed_slave_con_op(slave_args* arg_s,int is_reply,int reply_result[2]){
@@ -37,7 +35,6 @@ static void do_indexed_slave_con_op(slave_args* arg_s,int is_reply,int reply_res
         reply_result[0]=proto_is_tcp(arg_s->heartbeat_protocol)?con_read_tcp(arg_s->con_obj,arg_s->ack_times_pair):con_read_udp_ack(arg_s->con_obj,arg_s->ack_times_pair);
         reply_result[1]=strs_are_strictly_equal((char*)(proto_is_tcp(arg_s->heartbeat_protocol)?arg_s->con_obj->tcp_data:arg_s->con_obj->ack_udp_data),HB_REPLY_STRING);
         pthread_mutex_unlock(arg_s->con_mtx);
-	usleep(arg_s->ack_period_us);
 	}
 	else{
 	pthread_mutex_lock(arg_s->con_mtx);
@@ -45,8 +42,7 @@ static void do_indexed_slave_con_op(slave_args* arg_s,int is_reply,int reply_res
         snprintf((char*)(proto_is_tcp(arg_s->heartbeat_protocol)?arg_s->con_obj->tcp_data:arg_s->con_obj->ack_udp_data),DEF_DATASIZE-1,"%s",HB_SEND_STRING);
         reply_result[0]=proto_is_tcp(arg_s->heartbeat_protocol)?con_send_tcp(arg_s->con_obj,arg_s->ack_times_pair):con_send_udp_ack(arg_s->con_obj,arg_s->ack_times_pair);
         pthread_mutex_unlock(arg_s->con_mtx);
-        usleep(arg_s->ack_period_us);
-	}
+        }
 }
 
 
@@ -210,14 +206,15 @@ void* slave_thread(void* args){
 			if(curr_timeout==arg_struct->ack_timeout_lim){
                                 break;
                         }
-                	usleep(arg_struct->sleep_us);
-			continue;
-		}
+	        }
                 perror("");
-		break;
-		}
-        }
-        pthread_mutex_lock(arg_struct->con_mtx);
+	}
+	else{
+		curr_timeout=0;
+
+	}
+	}
+	pthread_mutex_lock(arg_struct->con_mtx);
 	send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
 	close_con(arg_struct->con_obj);
 	pthread_mutex_unlock(arg_struct->con_mtx);
@@ -387,6 +384,9 @@ void* watch_dog_func(void* args){
 			continue;
 		}
                 }
+		else{
+			//apply v_set to the timesarray variable cell here
+		}
 		do_indexed_overseer_con_op(i,arg_s,1,result);
 		if(result[0]<=0){
 
