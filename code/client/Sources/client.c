@@ -42,7 +42,9 @@ static void clear_ports_and_quit(int signal){
 
 	send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
 	if(client_con_obj.is_on){
-		send_ports_back(&client_con_obj);
+		if(!proto_is_tcp(client_con_obj.app_level_proto)){
+			send_ports_back(&client_con_obj);
+		}
 		close_con(&client_con_obj);
 	}
 	if(client_con_obj.sockfd_tcp>=0){
@@ -88,7 +90,7 @@ static void play_func(void){
 		down_file_size(1);
 		uint64_t chunk_size=0;
 		con_read_tcp(&client_con_obj,client_data_times_pair);
-		sscanf((char*)client_con_obj.tcp_data,"%lu",&chunk_size);
+		sscanf((char*)client_con_obj.tcp_data,"%lu %hhd",&chunk_size,&streaming_protocol);
 		client_con_obj.app_level_proto=streaming_protocol;
 		greet(&client_con_obj,client_con_times_pair,client_holepunching_times_pair);
 		player_init_stream(&client_con_obj,chunk_size,play_way);
@@ -243,6 +245,7 @@ int clientStart(char* req_field,char* file_name){
         	}
 	}
 	print_sock_addr(client_con_obj.sockfd_tcp);
+	setNonBlocking(&client_con_obj.sockfd_tcp);
 	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry,0);
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	snprintf((char*)client_con_obj.tcp_data,3*DEF_DATASIZE-1,"%s %s",req_buff,file_name);

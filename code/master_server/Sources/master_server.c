@@ -26,6 +26,7 @@ pthread_cond_t master_running_cond=PTHREAD_COND_INITIALIZER;
 atomic_int is_on = 0;
 
 static struct sigaction sa;
+static struct sigaction sa_sigpipe;
 
 atomic_int started= 0;
 
@@ -53,6 +54,10 @@ static void sigint_handler(int useless){
 	is_on=0*useless;
 	started=1;
 }
+static void sigpipe_handler(int useless){
+
+	is_on+=0*useless;
+}
 
 
 void start_master(char* hostname, uint16_t port){
@@ -61,8 +66,14 @@ void start_master(char* hostname, uint16_t port){
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGPIPE, &sa, NULL);
-	logging=0;
+
+	sa_sigpipe.sa_handler = sigpipe_handler;
+	sigemptyset(&sa_sigpipe.sa_mask);
+	sa_sigpipe.sa_flags = SA_RESTART;
+	sigaction(SIGPIPE, &sa_sigpipe, NULL);
+
+	logging=1;
+	logstream=stdout;
 
 	int fd_arr[MAX_HB_SERVERS]={0},
 		timeout_arr[MAX_HB_SERVERS]={0};
@@ -87,6 +98,7 @@ void start_master(char* hostname, uint16_t port){
 	arg_a.sig_func=sigint_handler;
 	arg_a.clean_func=call_signal_func;
         arg_a.started=&started;
+	arg_a.heartbeat_protocol=master_heartbeat_protocol;
 	arg_a.ack_period_us=cfg_master_ack_period_us;
         arg_a.exit_signal=SIGINT;
 
@@ -95,6 +107,7 @@ void start_master(char* hostname, uint16_t port){
 	arg_o.ack_timeout_lim= master_ack_timeout_lim;
         arg_o.sig_func=sigint_handler;
         arg_o.clean_func=call_signal_func;
+	arg_o.heartbeat_protocol=master_heartbeat_protocol;
 	arg_o.ack_period_us=cfg_master_ack_period_us;
         arg_o.start_cond_mtx=&master_cond_mtx;
         arg_o.var_mtx=&master_mtx;

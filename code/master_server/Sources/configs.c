@@ -18,7 +18,7 @@ static char master_server_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 
 ip_cache_entry master_ip_cache_entry={{0},0};
 ip_cache_entry master_server_port_mapper_ip_cache_entry={{0},0};
-
+int8_t master_heartbeat_protocol=0;
 //EM BYTES E HZ!
 
 int_pair master_data_times_pair=(int_pair){MASTER_TIMEOUT_DATA_SEC,MASTER_TIMEOUT_DATA_USEC};
@@ -58,6 +58,13 @@ void read_values_cfg_master(void){
 
                 raise(SIGINT);
         }
+        clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
+        sscanf(curr_line_buff,"master_heartbeat_protocol: %hhd",&master_heartbeat_protocol);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -135,6 +142,8 @@ void read_values_cfg_master(void){
 
 void print_values_cfg_master(int fd){
 
+
+	dprintf(fd,"master_heartbeat_protocol: %s (value in configs is %s)\n",(master_heartbeat_protocol<=0)?"TCP":"UDP",(master_heartbeat_protocol<=0)?"<= 0":"> 0");
 
         dprintf(fd,"master_timeouts_con: %lus %lu us\n",master_con_times_pair[0],master_con_times_pair[1]);
 

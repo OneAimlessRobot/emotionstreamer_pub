@@ -20,7 +20,6 @@ atomic_int innited=0;
 
 static void cleanup_and_send_ports_back(int useless){
 
-	send_ports_back(&con_obj);
 	send_port_back(htons(our_addr.sin_port),&server_browser_port_mapper_ip_cache_entry);
 	close_con(&con_obj);
 	if(con_obj.sockfd_tcp>=0){
@@ -43,7 +42,7 @@ static void recv_servers(void){
 
 
 	clear_con_data(&con_obj);
-	int result=con_read_udp(&con_obj,browser_data_times_pair);
+	int result=con_read_tcp(&con_obj,browser_data_times_pair);
 	if(result<0){
 
 			if(result==-2){
@@ -56,8 +55,8 @@ static void recv_servers(void){
 			}
 
 	}
-	dprintf(fd,"%s\n",(char*)con_obj.udp_data);
-	result=con_send_udp(&con_obj,browser_data_times_pair);
+	dprintf(fd,"%s\n",(char*)con_obj.tcp_data);
+	result=con_send_tcp(&con_obj,browser_data_times_pair);
 	if(result<0){
 
 			if(result==-2){
@@ -70,9 +69,9 @@ static void recv_servers(void){
 			}
 
 	}
-	while(innited&&strs_are_strictly_equal((char*)con_obj.udp_data,"done")){
+	while(innited&&strs_are_strictly_equal((char*)con_obj.tcp_data,"done")){
 
-		int result=con_read_udp(&con_obj,browser_data_times_pair);
+		int result=con_read_tcp(&con_obj,browser_data_times_pair);
 		if(result<0){
 			if(result==-2){
 				printf("timeout 3!!!\n");
@@ -83,8 +82,8 @@ static void recv_servers(void){
 				break;
 			}
 		}
-		dprintf(fd,"%s\n",(char*)con_obj.udp_data);
-		result=con_send_udp(&con_obj,browser_data_times_pair);
+		dprintf(fd,"%s\n",(char*)con_obj.tcp_data);
+		result=con_send_tcp(&con_obj,browser_data_times_pair);
 		if(result<0){
 			if(result==-2){
 				printf("timeout 4!!!\n");
@@ -162,15 +161,12 @@ void init_browser(char* hostname, char* req,uint16_t port){
 
         getsockname(con_obj.sockfd_tcp,(struct sockaddr*)&our_addr,&socklenvar[1]);
 
-        greet(&con_obj,browser_con_times_pair,browser_holepunching_times_pair);
-
         clear_con_data(&con_obj);
 	char string_to_send[PATHSIZE/2]={0};
-        
 	interlvl_cmd cmd= str_to_interlvl_cmd_type(req);
-	
+
 	switch(cmd){
-	
+
 		case SHOW:
 			strncpy(string_to_send,SHOW_STRING,(PATHSIZE/2)-1);
 			break;
@@ -180,12 +176,10 @@ void init_browser(char* hostname, char* req,uint16_t port){
 		default:
 			printf("Request desconhecido: |%s|\n",req);
 			return;
-			
 	}
 
-	snprintf((char*)con_obj.ack_udp_data,DEF_DATASIZE-1,"%s",string_to_send);
-        int result=con_send_udp_ack(&con_obj,browser_con_times_pair);
-	
+	snprintf((char*)con_obj.tcp_data,DEF_DATASIZE-1,"%s",string_to_send);
+        int result=con_send_tcp(&con_obj,browser_con_times_pair);
         if(result<0){
 
 
@@ -193,28 +187,6 @@ void init_browser(char* hostname, char* req,uint16_t port){
 		raise(SIGINT);
 		cleanup_and_send_ports_back(SIGINT);
         }
-	/*
-	read the damned ack, doofus
-	*/
-
-	clear_con_data(&con_obj);
-
-	con_read_udp_ack(&con_obj,browser_con_times_pair);
-
-	printf("Resposta do server: \"%s\"\n",con_obj.ack_udp_data);
-
-
-	clear_con_data(&con_obj);
-
-	snprintf((char*)con_obj.udp_data,DEF_DATASIZE-1,"ok got it, sir! Time for some holepunching!!\n");
-
-	con_send_udp(&con_obj,browser_con_times_pair);
-
-	clear_con_data(&con_obj);
-
-	con_read_udp(&con_obj,browser_con_times_pair);
-
-	printf("They got it! They really got it, man! They replied with: \"%s\"\n",con_obj.udp_data);
 	innited=1;
 	recv_servers();
 

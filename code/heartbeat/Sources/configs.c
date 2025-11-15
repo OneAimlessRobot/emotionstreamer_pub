@@ -19,7 +19,7 @@ static char upper_ip_address_buff[PATHSIZE+1]={0};
 
 char generalized_config_filepath_buff[PATHSIZE+1]={0};
 char hb_server_name_buff[PATHSIZE+1]={0};
-
+int8_t hb_heartbeat_protocol;
 
 ip_cache_entry heartbeat_ip_cache_entry={{0},0};
 ip_cache_entry upper_ip_cache_entry={{0},0};
@@ -65,6 +65,13 @@ void read_values_cfg_hb(void){
                 raise(SIGINT);
         }
         clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"hb_heartbeat_protocol: %hhd",&hb_heartbeat_protocol);
+	clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 fclose(cfg_fp);
@@ -151,6 +158,8 @@ void read_values_cfg_hb(void){
 }
 
 void print_values_cfg_hb(int fd){
+
+	dprintf(fd,"hb_heartbeat_protocol: %s (value in configs is %s)\n",(hb_heartbeat_protocol<=0)?"TCP":"UDP",(hb_heartbeat_protocol<=0)?"<= 0":"> 0");
 
         dprintf(fd,"hb_timeouts_con: %lus %lu us\n",hb_con_times_pair[0],hb_con_times_pair[1]);
 

@@ -38,6 +38,7 @@ typedef struct slave_args{
 	uint64_t sleep_us;
 	atomic_int* start_trigger;
 	con_t* con_obj;
+	int8_t heartbeat_protocol;
 	atomic_int* loop_var;
 	int_pair con_times_pair;
 	int_pair data_times_pair;
@@ -64,6 +65,7 @@ typedef struct overseer_args{
 	pthread_mutex_t* start_cond_mtx;
 	pthread_mutex_t* var_mtx;
 	struct con_set* cons;
+	int8_t heartbeat_protocol;
 	int_pair data_times_pair;
 	int_pair holepunching_times_pair;
 	int_pair ack_times_pair;
@@ -86,7 +88,7 @@ typedef struct acceptor_args{
 	int_pair ack_times_pair;
 	uint64_t ack_period_us;
 	int_pair holepunching_times_pair;
-
+	int8_t heartbeat_protocol;
 	fd_set mainfds;
         int accept_sockfd;
         struct sockaddr_in accept_addr;

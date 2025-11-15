@@ -16,7 +16,7 @@ extern int_pair hb_data_times_pair,
         hb_con_times_pair;
 
 extern uint64_t cfg_hb_ack_period_us;
-
+extern int8_t hb_heartbeat_protocol;
 extern uint16_t hb_ack_timeout_lim;
 
 void read_values_cfg_hb(void);

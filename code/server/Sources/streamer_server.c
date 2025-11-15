@@ -40,7 +40,9 @@ static void stop_server_stream(server_stream_t* strm){
 
 	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
 		send_port_back(htons(stream_struct.con_obj->tcp_data_local_port),&server_port_mapper_ip_cache_entry);
-		send_ports_back(stream_struct.con_obj);
+		if(!proto_is_tcp(stream_struct.con_obj->app_level_proto)){
+			send_ports_back(stream_struct.con_obj);
+		}
 		close_con(stream_struct.con_obj);
 	}
 	close(strm->local_fd);
@@ -70,7 +72,6 @@ static int send_chunk_to_client(void){
 	result=(server_transmission_protocol<=0)?send_chunk_tcp(&stream_struct,server_drop_chunks_times_pair):send_chunk_udp(&stream_struct,server_drop_chunks_times_pair);
 	while(initted&&(result!=-1)){
 		result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_times_pair):con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
-		//result=con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
 			if(result==-2){
 				continue;
 			}
@@ -100,7 +101,6 @@ static void* server_stream(void* args){
 				fprintf(stderr,"We could not read a frame info thing!\nError: %s\n",strerror(errno));
 				break;
 			}
-			print_frame_info_data((frame_info_t*)&stream_struct.chunk_data_cache);
 			lseek(stream_struct.local_fd,((mp3_stream_chunk*)(stream_struct.chunk_data_cache))->the_frame_info.start,SEEK_SET);
 			if(read(stream_struct.local_fd,stream_struct.chunk_data_cache+sizeof(frame_info_t)+4,((mp3_stream_chunk*)(stream_struct.chunk_data_cache))->the_frame_info.size)<=0){
 				fprintf(stderr,"We could not read a frame using frame info thing!\nError: %s\n",strerror(errno));

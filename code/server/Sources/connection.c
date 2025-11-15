@@ -30,7 +30,9 @@ static void cleanup(void){
 		close(fp_boundary);
 	}
 	close(sock_tcp);
-	send_ports_back(&server_con_obj);
+	if(!proto_is_tcp(server_con_obj.app_level_proto)){
+		send_ports_back(&server_con_obj);
+	}
 	printf("Sent ports after minor server operation!\n");
 	raise(SIGTERM);
 	close_con(&server_con_obj);
@@ -145,7 +147,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						uploadtofd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						break;
 					case PLAY:
-						snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%lu",server_chunk_size);
+						snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%lu %hhd",server_chunk_size,server_transmission_protocol);
 						if(con_send_tcp(&server_con_obj,server_data_times_pair)<=0){
 
 							cleanup();
@@ -157,6 +159,8 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 					case CONF:
 						sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						remove(TMP_CONFIG_FILE_PATH);
+						snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"\n\n\nServer contents successfully retrieved in full.\n\n");
+						con_send_tcp(&server_con_obj,server_data_times_pair);
 						break;
 					default:
 						break;

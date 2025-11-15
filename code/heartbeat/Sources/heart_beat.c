@@ -27,6 +27,7 @@ pthread_cond_t master_running_cond=PTHREAD_COND_INITIALIZER;
 
 atomic_int is_on=0;
 static struct sigaction sa;
+static struct sigaction sa_sigpipe;
 
 atomic_int started=0;
 
@@ -63,6 +64,10 @@ static void sigint_handler(int useless){
 	is_on=0*useless;
 	started=1;
 }
+static void sigpipe_handler(int useless){
+
+	is_on+=0*useless;
+}
 
 void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
@@ -70,7 +75,12 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
-        sigaction(SIGPIPE, &sa, NULL);
+
+	sa_sigpipe.sa_handler = sigpipe_handler;
+        sigemptyset(&sa_sigpipe.sa_mask);
+        sa_sigpipe.sa_flags = SA_RESTART;
+    	sigaction(SIGPIPE, &sa_sigpipe, NULL);
+
 	logging=0;
 	int fd_arr[MAX_SERVERS]={0},
 		timeout_arr[MAX_SERVERS]={0};
@@ -125,6 +135,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_s.start_trigger=&started;
         arg_s.loop_var=arg_a.is_on;
         arg_s.var_mtx=&hb_mtx;
+	arg_a.heartbeat_protocol=hb_heartbeat_protocol;
         arg_s.con_obj=&con_obj;
 	arg_s.con_mtx=&con_mtx;
 	arg_s.ack_period_us=cfg_hb_ack_period_us;
@@ -138,7 +149,8 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_o.exit_signal=SIGINT;
         arg_o.sig_func=sigint_handler;
 	arg_o.clean_func=call_signal_func;
-	arg_o.ack_timeout_lim= hb_ack_timeout_lim;
+	arg_o.heartbeat_protocol=hb_heartbeat_protocol;
+        arg_o.ack_timeout_lim= hb_ack_timeout_lim;
 	arg_o.ack_period_us=cfg_hb_ack_period_us;
         arg_o.start_cond_mtx=&hb_cond_mtx;
         arg_o.var_mtx=arg_s.var_mtx;

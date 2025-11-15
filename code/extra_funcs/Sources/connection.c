@@ -198,7 +198,7 @@ void drop_peer_con(con_t* con_obj){
 		}
 }
 
-void init_con(con_t* con_obj,int sockfd_tcp,con_type type,uint16_t listen_port,ip_cache_entry *ent,int app_level_proto){
+void init_con(con_t* con_obj,int sockfd_tcp,con_type type,uint16_t listen_port,ip_cache_entry *ent,int8_t app_level_proto){
 
 				prep_con(con_obj);
 				con_obj->is_on=1;
