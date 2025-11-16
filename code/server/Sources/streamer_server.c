@@ -19,8 +19,8 @@ static pthread_cond_t running_cond=PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t running_mtx=PTHREAD_MUTEX_INITIALIZER,
                  variable_acess_mtx=PTHREAD_MUTEX_INITIALIZER;
 
-static pthread_t tid_stream,
-		tid_ack;
+static pthread_t tid_stream;
+
 atomic_int initted=0;
 static struct sigaction sa;
 
@@ -40,9 +40,6 @@ static void stop_server_stream(server_stream_t* strm){
 
 	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
 		send_port_back(htons(stream_struct.con_obj->tcp_data_local_port),&server_port_mapper_ip_cache_entry);
-		if(!proto_is_tcp(stream_struct.con_obj->app_level_proto)){
-			send_ports_back(stream_struct.con_obj);
-		}
 		close_con(stream_struct.con_obj);
 	}
 	close(strm->local_fd);
@@ -59,19 +56,13 @@ static int send_chunk_tcp(server_stream_t* strm,int_pair pair){
         
 
 }
-static int send_chunk_udp(server_stream_t* strm,int_pair pair){
-
-	return sendsome_udp(strm->con_obj->sockfd_udp,(char*)strm->chunk_data_cache,sizeof(frame_info_t)+4+strm->chunk_size,pair,&strm->con_obj->peer_udp_addr);
-        
-
-}
 
 static int send_chunk_to_client(void){
 
 	int result=-2;
-	result=(server_transmission_protocol<=0)?send_chunk_tcp(&stream_struct,server_drop_chunks_times_pair):send_chunk_udp(&stream_struct,server_drop_chunks_times_pair);
+	result=send_chunk_tcp(&stream_struct,server_drop_chunks_times_pair);
 	while(initted&&(result!=-1)){
-		result=(server_transmission_protocol<=0)?con_read_tcp(stream_struct.con_obj,server_drop_chunks_times_pair):con_read_udp(stream_struct.con_obj,server_drop_chunks_times_pair);
+		result=con_read_tcp(stream_struct.con_obj,server_drop_chunks_times_pair);
 			if(result==-2){
 				continue;
 			}
@@ -119,57 +110,8 @@ static void* server_stream(void* args){
 
 }
 
-static void* ack_exchange_thread(void* args){
-	int result=0;
-        char buff[1024]={0};
-        while(initted){
-        usleep(cfg_server_ack_period_us);
-	result=con_read_udp_ack(stream_struct.con_obj,server_data_times_pair);
-        if(result<=0){
-                stream_struct.curr_timeout++;
-                if(result==-2){
-                        snprintf(buff,1023,"Timeout em read ack no server!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
-                        printf("%s",buff);
-                        if(stream_struct.curr_timeout==server_ack_timeout_lim){
-                                break;
-                        }
-                }
-                else{
-                        perror("");
-                        break;
-                }
-        }
-        else{
-
-                stream_struct.curr_timeout=0;
-        }
-        usleep(cfg_server_ack_period_us);
-        result= con_send_udp_ack(stream_struct.con_obj,server_data_times_pair);
-        if(result<=0){
-                stream_struct.curr_timeout++;
-                if(result==-2){
-                        snprintf(buff,1023,"Timeout send ack no server!!!!  timeout %lu de %lu\n",stream_struct.curr_timeout,server_ack_timeout_lim);
-                        printf("%s",buff);
-                        if(stream_struct.curr_timeout==server_ack_timeout_lim){
-                                break;
-                        }
-                }
-                else{
-                        perror("");
-                        break;
-                }
-        }
-        }
-
-        raise(SIGINT);
-        stop_server_stream(&stream_struct);
-        return args;
-
-
-}
- 
 static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chunk_size,unsigned char* stream_buff){
-	
+
 
         sa.sa_handler = cleanup;
         sigemptyset(&sa.sa_mask);
@@ -184,9 +126,6 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 	stream_struct.chunk_data_cache=stream_buff;
 	memset(stream_struct.chunk_data_cache,0,stream_struct.chunk_size);
 	initted=1;
-        if(!proto_is_tcp(server_transmission_protocol)){
-		pthread_create(&tid_ack,NULL,ack_exchange_thread,NULL);
-        }
 	pthread_create(&tid_stream,NULL,server_stream,NULL);
 
 	pthread_mutex_lock(&running_mtx);
@@ -199,11 +138,7 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 	
 	pthread_join(tid_stream,NULL);
 	printf("Saimos do thread de stream!!!\n");
-        if(!proto_is_tcp(server_transmission_protocol)){
-		pthread_join(tid_ack,NULL);
-		printf("Saimos do thread de ack!!!\n");
-	}
-	printf("SAIMOS DA STREAM DO SERVER!\nTimeouts excedidos? %s\nVamos ver errno:%s\n",(stream_struct.curr_timeout==server_ack_timeout_lim) ? "SIM": "NAO",strerror(errno));
+	printf("SAIMOS DA STREAM DO SERVER!\n Vamos ver errno:%s\n",strerror(errno));
 	return 0;
 }
 

@@ -30,14 +30,11 @@ int_pair server_data_times_pair=(int_pair){SERVER_TIMEOUT_DATA_SEC,SERVER_TIMEOU
 int_pair server_con_times_pair=(int_pair){SERVER_TIMEOUT_CON_SEC,SERVER_TIMEOUT_CON_USEC};
 int_pair server_ack_times_pair=(int_pair){SERVER_TIMEOUT_ACK_SEC,SERVER_TIMEOUT_ACK_USEC};
 int_pair server_drop_chunks_times_pair=(int_pair){SERVER_DROP_CHUNK_TIMEOUT_SEC,SERVER_DROP_CHUNK_TIMEOUT_USEC};
-int_pair server_holepunching_times_pair=(int_pair){HOLE_PUNCHING_TIMEOUT_SEC,HOLE_PUNCHING_TIMEOUT_USEC};
 
 uint64_t cfg_server_ack_period_us=DEF_SERVER_ACK_PERIOD_US;
 
-uint64_t server_ack_timeout_lim=SERVER_ACK_TIMEOUT_LIM;
 
 uint64_t server_chunk_size=SERVER_CHUNK_SIZE;
-int8_t server_transmission_protocol=0;
 int8_t is_wav_mode=0;
 static void clean_buff(void){
 
@@ -74,12 +71,6 @@ void read_values_cfg_server(void){
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
-	sscanf(curr_line_buff,"server_transmission_protocol: %hhd",&server_transmission_protocol);
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		fclose(cfg_fp);
-		raise(SIGINT);
-	}
 	sscanf(curr_line_buff,"server_chunk_size: %lu",&server_chunk_size);
 	server_chunk_size=max(0,min(MAX_MP3_STREAM_CHUNK_BUFF_SIZE,server_chunk_size));
 	clean_buff();
@@ -97,7 +88,7 @@ void read_values_cfg_server(void){
  	}
 	sscanf(curr_line_buff,"server_timeouts_data: %lu %lu",&server_data_times_pair[0],&server_data_times_pair[1]);
 	clean_buff();
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		fclose(cfg_fp);
 		raise(SIGINT);
@@ -118,21 +109,6 @@ void read_values_cfg_server(void){
  	}
 	sscanf(curr_line_buff,"server_timeouts_drop_chunks: %lu %lu",&server_drop_chunks_times_pair[0],&server_drop_chunks_times_pair[1]);
 	clean_buff();
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		fclose(cfg_fp);
-		raise(SIGINT);
- 	}
-	sscanf(curr_line_buff,"server_timeouts_holepunching: %lu %lu",&server_holepunching_times_pair[0],&server_holepunching_times_pair[1]);
-	clean_buff();
-
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                fclose(cfg_fp);
-                raise(SIGINT);
-        }
-        sscanf(curr_line_buff,"server_ack_timeout_lim: %lu",&server_ack_timeout_lim);
-        clean_buff();
 
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -206,8 +182,6 @@ void produce_config_file(void){
 
 void print_values_cfg_server(int fd){
 
-	dprintf(fd,"server_transmission_protocol: %s (value in configs is %s)\n",(server_transmission_protocol<=0)?"TCP":"UDP",(server_transmission_protocol<=0)?"<= 0":"> 0");
-
 	dprintf(fd,"server_chunk_size: %lu (max: %u)\n",server_chunk_size,MAX_MP3_STREAM_CHUNK_BUFF_SIZE);
 
 	dprintf(fd,"server_timeouts_data: %lus %lu us\n",server_data_times_pair[0],server_data_times_pair[1]);
@@ -219,10 +193,6 @@ void print_values_cfg_server(int fd){
 	dprintf(fd,"server_ack_period_us: %luus\n",cfg_server_ack_period_us);
 
 	dprintf(fd,"server_timeouts_drop_chunks: %lus %lu us\n",server_drop_chunks_times_pair[0],server_drop_chunks_times_pair[1]);
-
-	dprintf(fd,"server_timeouts_holepunching: %lus %lu us\n",server_holepunching_times_pair[0],server_holepunching_times_pair[1]);
-
-	dprintf(fd,"server_ack_timeout_lim: %lu\n",server_ack_timeout_lim);
 
 	dprintf(fd,"server_music_folder_path: %s\n",server_music_folder_path);
 

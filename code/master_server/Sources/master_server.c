@@ -75,9 +75,7 @@ void start_master(char* hostname, uint16_t port){
 	logging=1;
 	logstream=stdout;
 
-	int fd_arr[MAX_HB_SERVERS]={0},
-		timeout_arr[MAX_HB_SERVERS]={0};
-
+	int fd_arr[MAX_HB_SERVERS]={0};
 	con_t con_arr[MAX_HB_SERVERS]={0};
 
 	pthread_t master_tid_master,master_tid_watchdog;
@@ -98,16 +96,13 @@ void start_master(char* hostname, uint16_t port){
 	arg_a.sig_func=sigint_handler;
 	arg_a.clean_func=call_signal_func;
         arg_a.started=&started;
-	arg_a.heartbeat_protocol=master_heartbeat_protocol;
 	arg_a.ack_period_us=cfg_master_ack_period_us;
         arg_a.exit_signal=SIGINT;
 
 	arg_o.is_on=&is_on;
         arg_o.exit_signal=SIGINT;
-	arg_o.ack_timeout_lim= master_ack_timeout_lim;
-        arg_o.sig_func=sigint_handler;
+	arg_o.sig_func=sigint_handler;
         arg_o.clean_func=call_signal_func;
-	arg_o.heartbeat_protocol=master_heartbeat_protocol;
 	arg_o.ack_period_us=cfg_master_ack_period_us;
         arg_o.start_cond_mtx=&master_cond_mtx;
         arg_o.var_mtx=&master_mtx;
@@ -120,14 +115,13 @@ void start_master(char* hostname, uint16_t port){
 	arg_a.ack_period_us=cfg_master_ack_period_us;
 	arg_a.master_mtx=arg_o.start_cond_mtx;
 
-        init_con_set(&set,con_arr,timeout_arr,fd_arr,MAX_HB_SERVERS,&master_serv_mtx,&master_cond);
+        init_con_set(&set,con_arr,fd_arr,MAX_HB_SERVERS,&master_serv_mtx,&master_cond);
 
         arg_o.cons=&set;
 
 
         memcpy(&arg_a.con_times_pair,&master_con_times_pair,sizeof(int_pair));
         memcpy(&arg_a.data_times_pair,&master_data_times_pair,sizeof(int_pair));
-        memcpy(&arg_a.holepunching_times_pair,&master_holepunching_times_pair,sizeof(int_pair));
         memcpy(&arg_a.ack_times_pair,&master_ack_times_pair,sizeof(int_pair));
 
         memcpy(&arg_o.data_times_pair,&master_data_times_pair,sizeof(int_pair));

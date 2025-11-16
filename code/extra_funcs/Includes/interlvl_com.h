@@ -16,7 +16,6 @@ typedef struct con_set{
 	int max_size;
 	int curr_size;
 	int*fd_arr;
-	int*timeout_arr;
 	con_t* con_arr;
         fd_set rdfds;
 	pthread_cond_t* start_cond;
@@ -35,7 +34,6 @@ typedef struct slave_args{
 	quit_func sig_func;
 	cleanup_func clean_func;
 	uint64_t ack_timeout_lim;
-	uint64_t sleep_us;
 	atomic_int* start_trigger;
 	con_t* con_obj;
 	int8_t heartbeat_protocol,
@@ -45,7 +43,6 @@ typedef struct slave_args{
 	int_pair data_times_pair;
 	int_pair ack_times_pair;
 	uint64_t ack_period_us;
-	int_pair holepunching_times_pair;
 	pthread_mutex_t* var_mtx;
 	pthread_mutex_t* con_mtx;
 	pthread_cond_t* trg_cond;
@@ -66,9 +63,7 @@ typedef struct overseer_args{
 	pthread_mutex_t* start_cond_mtx;
 	pthread_mutex_t* var_mtx;
 	struct con_set* cons;
-	int8_t heartbeat_protocol;
 	int_pair data_times_pair;
-	int_pair holepunching_times_pair;
 	int_pair ack_times_pair;
 	uint64_t ack_period_us;
 	uint64_t ack_timeout_lim;
@@ -88,8 +83,6 @@ typedef struct acceptor_args{
 	int_pair con_times_pair;
 	int_pair ack_times_pair;
 	uint64_t ack_period_us;
-	int_pair holepunching_times_pair;
-	int8_t heartbeat_protocol;
 	fd_set mainfds;
         int accept_sockfd;
         struct sockaddr_in accept_addr;
@@ -102,7 +95,7 @@ typedef struct acceptor_args{
 
 }acceptor_args;
 
-void init_con_set(con_set* set,con_t* con_buff,int* timeout_buff,int* fd_buff,int max_size,pthread_mutex_t* mtx,pthread_cond_t* cond);
+void init_con_set(con_set* set,con_t* con_buff,int* fd_buff,int max_size,pthread_mutex_t* mtx,pthread_cond_t* cond);
 void close_all_fds(con_set* set);
 void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff,char* transmit_proto_buff,char* heartbeat_proto_buff);
 void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper,ip_cache_entry* port_mapper_cache_entry);

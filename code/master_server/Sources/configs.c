@@ -18,18 +18,13 @@ static char master_server_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 
 ip_cache_entry master_ip_cache_entry={{0},0};
 ip_cache_entry master_server_port_mapper_ip_cache_entry={{0},0};
-int8_t master_heartbeat_protocol=0;
 //EM BYTES E HZ!
 
 int_pair master_data_times_pair=(int_pair){MASTER_TIMEOUT_DATA_SEC,MASTER_TIMEOUT_DATA_USEC};
 int_pair master_con_times_pair=(int_pair){MASTER_TIMEOUT_CON_SEC,MASTER_TIMEOUT_CON_USEC};
 int_pair master_ack_times_pair=(int_pair){MASTER_TIMEOUT_ACK_SEC,MASTER_TIMEOUT_ACK_USEC};
-int_pair master_holepunching_times_pair=(int_pair){HOLE_PUNCHING_TIMEOUT_SEC,HOLE_PUNCHING_TIMEOUT_USEC};
-
 
 uint64_t cfg_master_ack_period_us=DEF_MASTER_ACK_PERIOD_US;
-
-uint16_t master_ack_timeout_lim=MASTER_ACK_TIMEOUT_LIM;
 
 static void process_ip_cache_entries(void){
 
@@ -64,13 +59,6 @@ void read_values_cfg_master(void){
                 fclose(cfg_fp);
                 raise(SIGINT);
         }
-        sscanf(curr_line_buff,"master_heartbeat_protocol: %hhd",&master_heartbeat_protocol);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                fclose(cfg_fp);
-                raise(SIGINT);
-        }
         sscanf(curr_line_buff,"master_timeouts_con: %lu %lu",&master_con_times_pair[0],&master_con_times_pair[1]);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -93,20 +81,6 @@ void read_values_cfg_master(void){
                 raise(SIGINT);
         }
         sscanf(curr_line_buff,"master_ack_period_us: %lu",&cfg_master_ack_period_us);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                fclose(cfg_fp);
-                raise(SIGINT);
-        }
-        sscanf(curr_line_buff,"master_timeouts_holepunching: %lu %lu",&master_holepunching_times_pair[0],&master_holepunching_times_pair[1]);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                fclose(cfg_fp);
-                raise(SIGINT);
-        }
-        sscanf(curr_line_buff,"master_ack_timeout_lim: %hu",&master_ack_timeout_lim);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -143,8 +117,6 @@ void read_values_cfg_master(void){
 void print_values_cfg_master(int fd){
 
 
-	dprintf(fd,"master_heartbeat_protocol: %s (value in configs is %s)\n",(master_heartbeat_protocol<=0)?"TCP":"UDP",(master_heartbeat_protocol<=0)?"<= 0":"> 0");
-
         dprintf(fd,"master_timeouts_con: %lus %lu us\n",master_con_times_pair[0],master_con_times_pair[1]);
 
         dprintf(fd,"master_timeouts_data: %lus %lu us\n",master_data_times_pair[0],master_data_times_pair[1]);
@@ -152,8 +124,6 @@ void print_values_cfg_master(int fd){
         dprintf(fd,"master_timeouts_ack: %lus %lu us\n",master_ack_times_pair[0],master_ack_times_pair[1]);
 
 	dprintf(fd,"master_ack_period_us: %luus\n",cfg_master_ack_period_us);
-
-        dprintf(fd,"master_timeouts_holepunching: %lus %lu us\n",master_holepunching_times_pair[0],master_holepunching_times_pair[1]);
 
         dprintf(fd,"generalized_config_filepath: %s\n",generalized_config_filepath_buff);
 

@@ -35,7 +35,6 @@ uint64_t cfg_client_ack_period_us=DEF_CLIENT_ACK_PERIOD_US;
 uint16_t cfg_client_chunk_size=CLIENT_DEF_CHUNK_SIZE;
 float cfg_ui_framerate_fps=UI_DEF_FRAMERATE_FPS;
 uint64_t cfg_ui_frame_period_us=UI_DEF_FRAME_PERIOD_US;
-int8_t streaming_protocol=0;
 uint8_t stream_enable_ncurses=0;
 uint8_t stream_show_stats=1;
 uint8_t stream_show_decoder_queue=0;
@@ -174,39 +173,6 @@ void read_values_cfg_client(void){
 		raise(SIGINT);
 	}
 	sscanf(curr_line_buff,"client_timeouts_data: %lu %lu",&client_data_times_pair[0],&client_data_times_pair[1]);
-
-	clean_buff();
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		fclose(cfg_fp);
-		raise(SIGINT);
-	}
-	sscanf(curr_line_buff,"client_timeouts_ack: %lu %lu",&client_ack_times_pair[0],&client_ack_times_pair[1]);
-
-	clean_buff();
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		fclose(cfg_fp);
-		raise(SIGINT);
-	}
-	sscanf(curr_line_buff,"client_ack_period_us: %lu",&cfg_client_ack_period_us);
-
-	clean_buff();
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		fclose(cfg_fp);
-		raise(SIGINT);
-	}
-	sscanf(curr_line_buff,"client_timeouts_holepunching: %lu %lu",&client_holepunching_times_pair[0],&client_holepunching_times_pair[1]);
-
-	clean_buff();
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		fclose(cfg_fp);
-		raise(SIGINT);
-	}
-	sscanf(curr_line_buff,"client_ack_timeout_lim: %lu",&cfg_client_ack_timeout_lim);
-
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -284,16 +250,6 @@ void print_values_cfg_client(int fd){
 	dprintf(fd,"client_timeouts_data: %lus %lu us\n",client_data_times_pair[0],client_data_times_pair[1]);
 
 	dprintf(fd,"client_timeouts_con: %lus %lu us\n",client_con_times_pair[0],client_con_times_pair[1]);
-
-	dprintf(fd,"client_timeouts_data: %lus %lu us\n",client_data_times_pair[0],client_data_times_pair[1]);
-
-	dprintf(fd,"client_timeouts_ack: %lus %lu us\n",client_ack_times_pair[0],client_ack_times_pair[1]);
-
-	dprintf(fd,"client_ack_period_us: %luus\n",cfg_client_ack_period_us);
-
-	dprintf(fd,"client_timeouts_holepunching: %lu %lu\n",client_holepunching_times_pair[0],client_holepunching_times_pair[1]);
-
-	dprintf(fd,"client_ack_timeout_lim: %lu\n",cfg_client_ack_timeout_lim);
 
 	dprintf(fd,"decoder_cache_num_chunks: %lu\n",cfg_stream_decoder_cache_size_chunks);
 

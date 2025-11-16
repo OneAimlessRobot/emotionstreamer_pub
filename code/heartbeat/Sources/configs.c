@@ -30,11 +30,8 @@ ip_cache_entry heartbeat_port_mapper_ip_entry={{0},0};
 int_pair hb_data_times_pair=(int_pair){HB_TIMEOUT_DATA_SEC,HB_TIMEOUT_DATA_USEC};
 int_pair hb_con_times_pair=(int_pair){HB_TIMEOUT_CON_SEC,HB_TIMEOUT_CON_USEC};
 int_pair hb_ack_times_pair=(int_pair){HB_TIMEOUT_ACK_SEC,HB_TIMEOUT_ACK_USEC};
-int_pair hb_holepunching_times_pair=(int_pair){HOLE_PUNCHING_TIMEOUT_SEC,HOLE_PUNCHING_TIMEOUT_USEC};
 
 uint64_t cfg_hb_ack_period_us=DEF_HB_ACK_PERIOD_US;
-
-uint16_t hb_ack_timeout_lim=HB_ACK_TIMEOUT_LIM;
 
 static void process_ip_cache_entries(void){
 
@@ -64,13 +61,6 @@ void read_values_cfg_hb(void){
 
                 raise(SIGINT);
         }
-        clean_buff();
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                fclose(cfg_fp);
-		raise(SIGINT);
-	}
-	sscanf(curr_line_buff,"hb_heartbeat_protocol: %hhd",&hb_heartbeat_protocol);
 	clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -105,20 +95,6 @@ void read_values_cfg_hb(void){
                 fclose(cfg_fp);
                 raise(SIGINT);
         }
-        sscanf(curr_line_buff,"hb_timeouts_holepunching: %lu %lu",&hb_holepunching_times_pair[0],&hb_holepunching_times_pair[1]);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                fclose(cfg_fp);
-                raise(SIGINT);
-        }
-        sscanf(curr_line_buff,"hb_ack_timeout_lim: %hu",&hb_ack_timeout_lim);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                fclose(cfg_fp);
-                raise(SIGINT);
-        }
         sscanf(curr_line_buff,"heartbeat_ip_address: %s",heartbeat_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -126,7 +102,6 @@ void read_values_cfg_hb(void){
                 fclose(cfg_fp);
                 raise(SIGINT);
         }
-//heartbeat_port_mapper_ip_address_buff
         sscanf(curr_line_buff,"upper_server_ip_address: %s",upper_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -134,7 +109,6 @@ void read_values_cfg_hb(void){
                 fclose(cfg_fp);
                 raise(SIGINT);
         }
-//
         sscanf(curr_line_buff,"heartbeat_port_mapper_ip_address: %s",heartbeat_port_mapper_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -159,8 +133,6 @@ void read_values_cfg_hb(void){
 
 void print_values_cfg_hb(int fd){
 
-	dprintf(fd,"hb_heartbeat_protocol: %s (value in configs is %s)\n",(hb_heartbeat_protocol<=0)?"TCP":"UDP",(hb_heartbeat_protocol<=0)?"<= 0":"> 0");
-
         dprintf(fd,"hb_timeouts_con: %lus %lu us\n",hb_con_times_pair[0],hb_con_times_pair[1]);
 
         dprintf(fd,"hb_timeouts_data: %lus %lu us\n",hb_data_times_pair[0],hb_data_times_pair[1]);
@@ -168,10 +140,6 @@ void print_values_cfg_hb(int fd){
         dprintf(fd,"hb_timeouts_ack: %lus %lu us\n",hb_ack_times_pair[0],hb_ack_times_pair[1]);
 
 	dprintf(fd,"hb_ack_period_us: %luus\n",cfg_hb_ack_period_us);
-
-        dprintf(fd,"hb_timeouts_holepunching: %lus %lu us\n",hb_holepunching_times_pair[0],hb_holepunching_times_pair[1]);
-
-        dprintf(fd,"hb_ack_timeout_lim: %hu\n",hb_ack_timeout_lim);
 
         dprintf(fd,"generalized_config_filepath: %s\n",generalized_config_filepath_buff);
 

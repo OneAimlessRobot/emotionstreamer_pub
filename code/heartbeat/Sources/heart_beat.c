@@ -39,9 +39,6 @@ static void close_all_fds_here(void){
 	close_all_fds(arg_o.cons);
 	pthread_mutex_lock(&con_mtx);
 	send_port_back(htons(arg_s.this_con_addr.sin_port),&heartbeat_port_mapper_ip_entry);
-	if(!proto_is_tcp(arg_s.con_obj->app_level_proto)){
-		send_ports_back(arg_s.con_obj);
-	}
 	close_con(arg_s.con_obj);
 	if(arg_s.con_obj->sockfd_tcp>=0){
 		close(arg_s.con_obj->sockfd_tcp);
@@ -83,9 +80,9 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sa_sigpipe.sa_flags = SA_RESTART;
     	sigaction(SIGPIPE, &sa_sigpipe, NULL);
 
-	logging=0;
-	int fd_arr[MAX_SERVERS]={0},
-		timeout_arr[MAX_SERVERS]={0};
+	logging=1;
+	logstream=stdout;
+	int fd_arr[MAX_SERVERS]={0};
 	con_t con_arr[MAX_SERVERS]={0};
 
 	pthread_t hb_tid_master,hb_tid_watchdog,
@@ -132,17 +129,13 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
         arg_s.lower_name=buff;
         arg_s.exit_signal=SIGINT;
-        arg_s.ack_timeout_lim= hb_ack_timeout_lim;
-        arg_s.sleep_us=100000;
+        arg_s.ack_period_us=cfg_hb_ack_period_us;
         arg_s.start_trigger=&started;
         arg_s.loop_var=arg_a.is_on;
         arg_s.var_mtx=&hb_mtx;
-	arg_a.heartbeat_protocol=hb_heartbeat_protocol;
 
 	arg_s.con_obj=&con_obj;
 	arg_s.con_mtx=&con_mtx;
-	arg_s.transmit_protocol=0;
-	arg_s.ack_period_us=cfg_hb_ack_period_us;
 	arg_s.sig_func=sigint_handler;
 	arg_s.clean_func=call_signal_func;
 	arg_s.trg_cond=&master_cond;
@@ -153,9 +146,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_o.exit_signal=SIGINT;
         arg_o.sig_func=sigint_handler;
 	arg_o.clean_func=call_signal_func;
-	arg_o.heartbeat_protocol=hb_heartbeat_protocol;
-        arg_o.ack_timeout_lim= hb_ack_timeout_lim;
-	arg_o.ack_period_us=cfg_hb_ack_period_us;
+        arg_o.ack_period_us=cfg_hb_ack_period_us;
         arg_o.start_cond_mtx=&hb_cond_mtx;
         arg_o.var_mtx=arg_s.var_mtx;
 
@@ -167,7 +158,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_a.var_mtx=arg_s.var_mtx;
 
 
-	init_con_set(&set,con_arr,timeout_arr,fd_arr,MAX_SERVERS,&hb_serv_mtx,&hb_cond);
+	init_con_set(&set,con_arr,fd_arr,MAX_SERVERS,&hb_serv_mtx,&hb_cond);
 	arg_o.cons=&set;
 
 
@@ -176,14 +167,12 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	memcpy(&arg_s.ack_times_pair,&hb_ack_times_pair,sizeof(int_pair));
 
 	memcpy(&arg_a.con_times_pair,&hb_con_times_pair,sizeof(int_pair));
-	memcpy(&arg_a.holepunching_times_pair,&hb_holepunching_times_pair,sizeof(int_pair));
 	memcpy(&arg_a.ack_times_pair,&hb_ack_times_pair,sizeof(int_pair));
 
 	memcpy(&arg_a.data_times_pair,&hb_data_times_pair,sizeof(int_pair));
 
 
 	memcpy(&arg_o.data_times_pair,&hb_data_times_pair,sizeof(int_pair));
-	memcpy(&arg_o.holepunching_times_pair,&hb_holepunching_times_pair,sizeof(int_pair));
 	memcpy(&arg_o.ack_times_pair,&hb_ack_times_pair,sizeof(int_pair));
 
 	openDB(DB_FILE);

@@ -42,9 +42,6 @@ static void clear_ports_and_quit(int signal){
 
 	send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
 	if(client_con_obj.is_on){
-		if(!proto_is_tcp(client_con_obj.app_level_proto)){
-			send_ports_back(&client_con_obj);
-		}
 		close_con(&client_con_obj);
 	}
 	if(client_con_obj.sockfd_tcp>=0){
@@ -58,13 +55,13 @@ static void useless_handler(int useless){
 
 	started=is_on=useless;
 }
-static int64_t down_file_size(int is_streaming){
+static int64_t down_file_size(void){
 
 		int64_t down_size=-1;
 		clear_con_data(&client_con_obj);
 		printf("Recebendo tamanho!!!\n");
 		con_read_tcp(&client_con_obj,client_data_times_pair);
-		sscanf((char*)client_con_obj.tcp_data,"%ld %hhd %s %hhd",&down_size,&streaming_protocol,extension_from_server,&is_wav_mode);
+		sscanf((char*)client_con_obj.tcp_data,"%ld %s %hhd",&down_size,extension_from_server,&is_wav_mode);
 		if(down_size<=0){
 
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
@@ -74,30 +71,22 @@ static int64_t down_file_size(int is_streaming){
 		clear_con_data(&client_con_obj);
 		snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE,"%s",CON_STRING);
 		con_send_tcp(&client_con_obj,client_data_times_pair);
-		if(!is_streaming){
-			printf(CONTENT_DOWNLOAD_INCOMMING,down_size,extension_from_server);
-		}
-		else{
-
-			printf(STREAM_INCOMMING,down_size,(streaming_protocol<=0)?"TCP":"UDP",extension_from_server,is_wav_mode? "Yes!":"No...");
-		
-		}
+		printf(CONTENT_DOWNLOAD_INCOMMING,down_size,extension_from_server);
 		clear_con_data(&client_con_obj);
 		return down_size;
 
 }
 static void play_func(void){
-		down_file_size(1);
+		down_file_size();
 		uint64_t chunk_size=0;
 		con_read_tcp(&client_con_obj,client_data_times_pair);
-		sscanf((char*)client_con_obj.tcp_data,"%lu %hhd",&chunk_size,&streaming_protocol);
-		client_con_obj.app_level_proto=streaming_protocol;
-		greet(&client_con_obj,client_con_times_pair,client_holepunching_times_pair);
+		sscanf((char*)client_con_obj.tcp_data,"%luï",&chunk_size);
+		greet(&client_con_obj,client_con_times_pair);
 		player_init_stream(&client_con_obj,chunk_size,play_way);
 }
 static void down_func(char* file_name){
 
-		int64_t down_size=down_file_size(0);
+		int64_t down_size=down_file_size();
 		int fp=-1;
 		char file_path[PATHSIZE*3-1]={0};
 		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,extension_from_server);
@@ -119,7 +108,7 @@ static void down_func(char* file_name){
 static void peek_func(void){
 
 
-		int down_size=down_file_size(0);
+		int down_size=down_file_size();
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
 		clear_ports_and_quit(SIGINT);
@@ -127,7 +116,7 @@ static void peek_func(void){
 }
 static void conf_func(void){
 
-		int down_size=down_file_size(0);
+		int down_size=down_file_size();
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
 		clear_ports_and_quit(SIGINT);
@@ -246,7 +235,7 @@ int clientStart(char* req_field,char* file_name){
 	}
 	print_sock_addr(client_con_obj.sockfd_tcp);
 	setNonBlocking(&client_con_obj.sockfd_tcp);
-	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry,0);
+	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry);
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	snprintf((char*)client_con_obj.tcp_data,3*DEF_DATASIZE-1,"%s %s",req_buff,file_name);
 

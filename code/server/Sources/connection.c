@@ -30,9 +30,6 @@ static void cleanup(void){
 		close(fp_boundary);
 	}
 	close(sock_tcp);
-	if(!proto_is_tcp(server_con_obj.app_level_proto)){
-		send_ports_back(&server_con_obj);
-	}
 	close_con(&server_con_obj);
 	printf("Sent ports after minor server operation!\n");
 	raise(SIGTERM);
@@ -52,7 +49,7 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 			clear_con_data(&server_con_obj);
 			if(fd>0){
 				stat(file_path,&file_info);
-				snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%ld %hhd %s %hhd",file_info.st_size,server_transmission_protocol,server_working_extension,is_wav_mode);
+				snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%ld %s %hhd",file_info.st_size,server_working_extension,is_wav_mode);
 				con_send_tcp(&server_con_obj,server_data_times_pair);
 				clear_con_data(&server_con_obj);
 				con_read_tcp(&server_con_obj,server_data_times_pair);
@@ -78,7 +75,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				char file_path[PATHSIZE*3 +4]={0};
 				char req_buff[PATHSIZE]={0};
 				struct stat file_info={0};
-				init_con(&server_con_obj,sock_tcp,SERVER_C,curr_port,&server_port_mapper_ip_cache_entry,0);
+				init_con(&server_con_obj,sock_tcp,SERVER_C,curr_port,&server_port_mapper_ip_cache_entry);
 
 				con_read_tcp(&server_con_obj,server_data_times_pair);
 
@@ -147,13 +144,12 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						uploadtofd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						break;
 					case PLAY:
-						snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%lu %hhd",server_chunk_size,server_transmission_protocol);
+						snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%lu",server_chunk_size);
 						if(con_send_tcp(&server_con_obj,server_data_times_pair)<=0){
 
 							cleanup();
 						}
-						server_con_obj.app_level_proto=server_transmission_protocol;
-						greet(&server_con_obj,server_con_times_pair,server_holepunching_times_pair);
+						greet(&server_con_obj,server_con_times_pair);
 						begin_stream(&server_con_obj,fp,fp_boundary,server_chunk_size,stream_cache_data);
 						break;
 					case CONF:

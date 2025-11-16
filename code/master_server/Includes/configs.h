@@ -10,13 +10,11 @@ extern ip_cache_entry master_server_port_mapper_ip_cache_entry;
 extern char generalized_config_filepath_buff[PATHSIZE+1];
 
 extern int_pair master_data_times_pair,
-	master_holepunching_times_pair,
 	master_ack_times_pair,
         master_con_times_pair;
 
 extern uint64_t cfg_master_ack_period_us;
 
-extern int8_t master_heartbeat_protocol;
 extern uint16_t master_ack_timeout_lim;
 
 void read_values_cfg_master(void);

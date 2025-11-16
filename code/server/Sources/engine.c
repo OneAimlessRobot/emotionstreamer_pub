@@ -35,9 +35,6 @@ static void call_sigint(void){
 	perror("Sinal de parar server\n");
 	pthread_mutex_lock(&con_mtx);
 	send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
-	if(!proto_is_tcp(state.hb_con.app_level_proto)){
-		send_ports_back(&state.hb_con);
-	}
 	close_con(&state.hb_con);
 	if(state.hb_con.sockfd_tcp>=0){
 		close(state.hb_con.sockfd_tcp);
@@ -202,12 +199,9 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
 	arg_s.lower_name=buff;
 	arg_s.exit_signal=SIGTERM;
-	arg_s.ack_timeout_lim= server_ack_timeout_lim;
-	arg_s.sleep_us=10000;
 	arg_s.con_obj=&state.hb_con;
 	arg_s.clean_func=call_sigint;
 	arg_s.ack_period_us=cfg_server_ack_period_us;
-	arg_s.transmit_protocol=server_transmission_protocol;
 	arg_s.sig_func=serverStop;
 	arg_s.start_trigger=&started;
 	arg_s.loop_var=&is_on;
@@ -231,7 +225,6 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	}
 	memcpy(&arg_s.con_times_pair,&server_con_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.data_times_pair,&server_data_times_pair,sizeof(int_pair));
-	memcpy(&arg_s.holepunching_times_pair,&server_holepunching_times_pair,sizeof(int_pair));
 	memcpy(&arg_s.ack_times_pair,&server_ack_times_pair,sizeof(int_pair));
 	
 
