@@ -26,7 +26,6 @@
 
 static const int play=1;
 static const int decode=1;
-static const int rx_enabled=1;
 static const int input_enabled=1;
 static struct sigaction sa;
 
@@ -46,11 +45,10 @@ static pthread_mutex_t reading_mtx=PTHREAD_MUTEX_INITIALIZER,
 		decoder_mtx=PTHREAD_MUTEX_INITIALIZER;
 
 
-static pthread_t tid_rx,
-	  tid_play,
-	  tid_dec,
-	  tid_input,
-	  tid_stats;
+static pthread_t tid_play,
+	  	tid_dec,
+	  	tid_input,
+	  	tid_stats;
 
 
 static int lost_packet=0,
@@ -126,7 +124,7 @@ static int read_chunk_tcp(client_stream_t* strm,int_pair pair){
 }
 
 
-static void* rx_thread_func(void* args){
+static void rx_thread_func(void){
 	int full=0;
 	int result=1;
 	print_string("Thread de reading alcançado!\n");
@@ -174,7 +172,7 @@ static void* rx_thread_func(void* args){
 		}
 		pthread_mutex_unlock(&reading_mtx);
 	}
-	return args;
+	return;
 }
 
 static void* dec_thread_func(void* args){
@@ -432,9 +430,6 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	
 	stream_struct.con_obj=con_obj;
 	innited=1;
-	if(rx_enabled){
-		pthread_create(&tid_rx,NULL,rx_thread_func,NULL);
-	}
 	if(decode&&!is_wav_mode){
 		pthread_create(&tid_dec,NULL,dec_thread_func,NULL);
 	}
@@ -447,7 +442,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	if(input_enabled){
 		pthread_create(&tid_input,NULL,input_thread_func,NULL);
 	}
-	
+	rx_thread_func();
 	pthread_mutex_lock(&running_mtx);
 	while(innited){
 
@@ -474,11 +469,6 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		printf("Saimos do thread decoder?\n");
 		pthread_join(tid_dec,NULL);
 		printf("Saimos do thread decoder!!!!!\n");
-	}
-	if(rx_enabled){
-		printf("Saimos do thread rx?\n");
-		pthread_join(tid_rx,NULL);
-		printf("Saimos do thread rx!!!!!\n");
 	}
 	perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
 	if(decode&&!is_wav_mode){

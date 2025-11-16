@@ -14,12 +14,7 @@
 
 
 
-static pthread_cond_t running_cond=PTHREAD_COND_INITIALIZER;
 
-static pthread_mutex_t running_mtx=PTHREAD_MUTEX_INITIALIZER,
-                 variable_acess_mtx=PTHREAD_MUTEX_INITIALIZER;
-
-static pthread_t tid_stream;
 
 atomic_int initted=0;
 static struct sigaction sa;
@@ -38,13 +33,12 @@ static server_stream_t stream_struct={
 static void stop_server_stream(server_stream_t* strm){
 
 
-	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
+	if(stream_struct.con_obj->is_on){
 		send_port_back(htons(stream_struct.con_obj->tcp_data_local_port),&server_port_mapper_ip_cache_entry);
 		close_con(stream_struct.con_obj);
 	}
 	close(strm->local_fd);
 	close(strm->local_fd_boundary);
-	pthread_cond_signal(&running_cond);
 }
 
 static void cleanup(int useless){
@@ -72,7 +66,7 @@ static int send_chunk_to_client(void){
 	return result;
 }
 
-static void* server_stream(void* args){
+static void server_stream(void){
 	if(is_wav_mode){
 	        while(initted
 			&&
@@ -103,9 +97,7 @@ static void* server_stream(void* args){
 			}
 		}
 	}
-	raise(SIGINT);
-	stop_server_stream(&stream_struct);
-	return args;
+	return;
 
 }
 
@@ -125,18 +117,9 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 	stream_struct.chunk_data_cache=stream_buff;
 	memset(stream_struct.chunk_data_cache,0,stream_struct.chunk_size);
 	initted=1;
-	pthread_create(&tid_stream,NULL,server_stream,NULL);
-
-	pthread_mutex_lock(&running_mtx);
-	while(initted){
-
-		pthread_cond_wait(&running_cond,&running_mtx);
-
-	}
-	pthread_mutex_unlock(&running_mtx);
-	
-	pthread_join(tid_stream,NULL);
-	printf("Saimos do thread de stream!!!\n");
+	server_stream();
+	raise(SIGINT);
+	stop_server_stream(&stream_struct);
 	printf("SAIMOS DA STREAM DO SERVER!\n Vamos ver errno:%s\n",strerror(errno));
 	return 0;
 }
