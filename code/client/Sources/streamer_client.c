@@ -133,15 +133,7 @@ static void rx_thread_func(void){
 		while(innited){
 			result=read_chunk_tcp(&stream_struct,client_data_times_pair);
 			if(result<=0){
-				if(result!=-2){
-					if(!result){
-						while(innited&&(acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)||acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK))){
-							usleep(1000000);
-						}
-					}
-					raise(SIGINT);
-					stop_client_stream();
-				}
+				return;
 			}
 			if(decode&&!is_wav_mode){
 				pthread_cond_signal(&decoder_cond);
@@ -172,6 +164,7 @@ static void rx_thread_func(void){
 		}
 		pthread_mutex_unlock(&reading_mtx);
 	}
+	print_string("Thread de reading parado!!!\n");
 	return;
 }
 
@@ -235,6 +228,7 @@ static void* dec_thread_func(void* args){
 	}
 	pthread_mutex_unlock(&decoder_mtx);
 	}
+	print_string("Thread de decoding parado!!!\n");
 
 	return  args;
 }
@@ -282,6 +276,7 @@ static void* play_thread_func(void* args){
 	}
 	pthread_mutex_unlock(&player_mtx);
 	}
+	print_string("Thread de playing parado!!!\n");
 	return  args;
 }
 static void* show_stats(void* args){
@@ -444,6 +439,9 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		pthread_create(&tid_input,NULL,input_thread_func,NULL);
 	}
 	rx_thread_func();
+	while(innited&&(acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)||acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK))){
+			usleep(1000000);
+	}
 	pthread_mutex_lock(&running_mtx);
 	while(innited){
 
