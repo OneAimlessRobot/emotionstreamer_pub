@@ -72,7 +72,7 @@ void start_master(char* hostname, uint16_t port){
 	sa_sigpipe.sa_flags = SA_RESTART;
 	sigaction(SIGPIPE, &sa_sigpipe, NULL);
 
-	logging=1;
+	logging=0;
 	logstream=stdout;
 
 	int fd_arr[MAX_HB_SERVERS]={0};
