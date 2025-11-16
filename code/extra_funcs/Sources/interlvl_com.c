@@ -131,7 +131,7 @@ void* slave_thread(void* args){
         clear_con_data(arg_struct->con_obj);
 	module_type_to_string(arg_struct->type,mod_type);
 
-        snprintf((char*)arg_struct->con_obj->tcp_data,DEF_DATASIZE-1,"%s %s %s %s %hu %s %s %s",LOG_STRING,mod_type,arg_struct->lower_name,ent_addr,arg_struct->this_addr.sin_port,arg_struct->extension_buff,(mod_type==SERVER)?((arg_struct->transmit_protocol<=0)?"TCP":"UDP"):"N/A",(mod_type==SERVER)?"N/A":((arg_struct->heartbeat_protocol<=0)?"TCP":"UDP"));
+        snprintf((char*)arg_struct->con_obj->tcp_data,DEF_DATASIZE-1,"%s %s %s %s %hu %s",LOG_STRING,mod_type,arg_struct->lower_name,ent_addr,arg_struct->this_addr.sin_port,arg_struct->extension_buff);
 
         int result=con_send_tcp(arg_struct->con_obj,arg_struct->ack_times_pair);
         if(result<0){
@@ -281,12 +281,12 @@ static void kill_con(con_set* set,int index){
 
 
 
-void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff,char* transmit_proto_buff,char* heartbeat_proto_buff){
+void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff){
 
         pthread_mutex_lock(set->set_mtx);
 	int i=1;
         char big_buff[PATHSIZE*6]={0};
-	snprintf(big_buff,sizeof(big_buff)-1,"'%s', %d, %s, '%s:%hu', '%s', '%s', '%s'",type_buff,id,name_buff,ip_buff,htons(stored_port),extension_buff,transmit_proto_buff,heartbeat_proto_buff);
+	snprintf(big_buff,sizeof(big_buff)-1,"'%s', %d, %s, '%s:%hu', '%s'",type_buff,id,name_buff,ip_buff,htons(stored_port),extension_buff);
         FD_SET(con->sockfd_tcp,&set->rdfds);
         for(;set->fd_arr[i];i++);
         set->fd_arr[i]=con->sockfd_tcp;
@@ -406,8 +406,6 @@ void* acceptor_func(void* args){
         char ip_buff[PATHSIZE/4]={0};
         char name_buff[PATHSIZE/4]={0};
         char type_buff[PATHSIZE/4]={0};
-        char transmit_proto_buff[PATHSIZE/4]={0};
-        char heartbeat_proto_buff[PATHSIZE/4]={0};
         char big_buff[PATHSIZE*6]={0};
 	int curr_port=htons(arg_a->accept_addr.sin_port);
         int result=0;
@@ -457,7 +455,7 @@ void* acceptor_func(void* args){
                                         continue;
                               }
                               uint16_t stored_port=0;
-                              sscanf((char*)con.tcp_data,"%s %s %s %s %hu %s %s %s",req_buff,type_buff,name_buff,ip_buff,&stored_port, extension_buff,transmit_proto_buff,heartbeat_proto_buff);
+                              sscanf((char*)con.tcp_data,"%s %s %s %s %hu %s",req_buff,type_buff,name_buff,ip_buff,&stored_port, extension_buff);
 			      clear_con_data(&con);
 			      if(result<=0){
                                         perror("Nao sabemos o que querem....\n");
@@ -507,7 +505,7 @@ void* acceptor_func(void* args){
                               		if(logging){
 						fprintf(logstream,"Log server requested!!!!\n");
                                         }
-					add_con(arg_a->arg_o->cons,&con,type_buff,sock,name_buff,ip_buff,stored_port,extension_buff,transmit_proto_buff,heartbeat_proto_buff);
+					add_con(arg_a->arg_o->cons,&con,type_buff,sock,name_buff,ip_buff,stored_port,extension_buff);
                                         break;
                                 default:
 					if(logging){

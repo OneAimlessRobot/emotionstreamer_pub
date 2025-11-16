@@ -7,9 +7,9 @@
 
 #define SHOW_SERVERS_TMPL "SELECT * from Servers;"
 
-#define SHOW_TABLE_HEADER_TMPL "\n[ MODULE_TYPE | id | MODULE_NAME | MODULE_ADDR | FILE_EXT | TRANSMISSION_PROTO | HEARTBEAT_PROTO ]\n"
+#define SHOW_TABLE_HEADER_TMPL "\n[ MODULE_TYPE | id | MODULE_NAME | MODULE_ADDR | FILE_EXT ]\n"
 
-#define SPAWN_SERVER_TABLE "CREATE TABLE Servers(server_type Varchar(256), server_id int unique not null,server_name Varchar(256) unique not null, server_ip Varchar(256), server_extension Varchar(256), server_transmit_protocol Varchar (256),server_heartbeat_protocol Varchar (256),primary key(server_id))"
+#define SPAWN_SERVER_TABLE "CREATE TABLE Servers(server_type Varchar(256), server_id int unique not null,server_name Varchar(256) unique not null, server_ip Varchar(256), server_extension Varchar(256), primary key(server_id))"
 
 #define REMOVE_SERVER_TABLE "DROP TABLE Servers"
 
