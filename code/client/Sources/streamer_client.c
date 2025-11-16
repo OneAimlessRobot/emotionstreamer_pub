@@ -165,7 +165,6 @@ static void* rx_thread_func(void* args){
 			if(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK)){
 				break;
 			}
-			con_send_tcp(stream_struct.con_obj,client_data_times_pair);
 		}
 		pthread_mutex_lock(&reading_mtx);
 		while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||(perform_queue_op((is_wav_mode||!decode)?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,(is_wav_mode||!decode)?Q_IS_FULL:Q_IS_ALMOST_FULL})))){
@@ -396,6 +395,7 @@ static void* input_thread_func(void* args){
 	return args;
 
 }
+
 static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_mode){
         sa.sa_handler = sigint_handler;
         sigemptyset(&sa.sa_mask);
