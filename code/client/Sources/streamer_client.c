@@ -216,7 +216,8 @@ static void* dec_thread_func(void* args){
 					snprintf(buff,1023,"Stream done!\n");
 					print_string(buff);
 					raise(SIGINT);
-				}
+					stop_client_stream();
+        			}
 				else if(ret_val==MPG123_ERR){
 					memset(buff,0,1024);
 					snprintf(buff,1023,"Decoding error: %s\n",mpg123_strerror(stream_struct.decoder->dec));
