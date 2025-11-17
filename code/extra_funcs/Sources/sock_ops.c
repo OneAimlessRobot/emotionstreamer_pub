@@ -62,38 +62,31 @@ int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 	return 0;
 }
 
-int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
+int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
         int success=-1;
         int numOfTries=MAX_TRIES;
-	int already_in_progress=0;
-
 
         while(success==-1&& numOfTries){
-                if(!already_in_progress){
-			if(logging){
-				print_addr_aux("Tentando conectar a:",dst_addr);
-				fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
-	                }
-			success=connect(*socket,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
-	        	numOfTries--;
-		}
+                if(logging){
+			print_addr_aux("Tentando conectar a:",dst_addr);
+			fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
+                }
+		success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
+        	numOfTries--;
 	        int sockerr=0;
 		socklen_t socklen_here =sizeof(sockerr);
-	        getsockopt(*socket,SOL_SOCKET,SO_ERROR,(char*)&sockerr,&socklen_here);
+	        getsockopt(*sockfd,SOL_SOCKET,SO_ERROR,(char*)&sockerr,&socklen_here);
 	        if(logging){
-			fprintf(logstream,"Erro normal:%s\n Erro Socket: %s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*socket);
-		}
-		if(logging){
-			fprintf(logstream,"Already in progress!\n");
+			fprintf(logstream,"Erro normal:%s\n Erro Socket: %s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*sockfd);
 		}
 		fd_set wfds;
                 FD_ZERO(&wfds);
-                FD_SET(*socket,&wfds);
+                FD_SET(*sockfd,&wfds);
 
                 struct timeval t;
                 t.tv_sec=times_pair[0];
                 t.tv_usec=times_pair[1];
-                int iResult=select((*socket)+1,0,&wfds,0,&t);
+                int iResult=select((*sockfd)+1,0,&wfds,0,&t);
 		if(iResult>0&&!success){
 			if(logging){
 				print_addr_aux("Conexao de:",dst_addr);
@@ -131,19 +124,24 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
                 if(logging){
 			fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
         	}
-		if(errno==EALREADY){
-			if(!already_in_progress){
-				already_in_progress=1;
-				numOfTries++;
-			}
-			continue;
-		}
-		else{
-			already_in_progress=0;
-		}
 		if((errno == EINPROGRESS)){
+			struct sockaddr_in * sockaddr_for_rebind={0};
+			getsockname(*sockfd, (struct sockaddr*)&sockaddr_for_rebind,&socklenvar[1]);
+			socket_close(sockfd,1);
+			(*sockfd)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+		        if((*sockfd)<0){
+				numOfTries=0;
+				break;
+		        }
+		        set_sock_reuseaddr(sockfd,1);
+		        setNonBlocking(sockfd);
+			if(bind(*sockfd,(struct sockaddr *)&sockaddr_for_rebind,socklenvar[1])){
+		                perror("Não conseguimos dar re bind neste sockfd!!!\n");
+		                print_addr_aux("Este é o address:",&sockaddr_for_rebind);
+		        	numOfTries=0;
+				break;
+			}
 
-			continue;
 		}
 	}
         if(!numOfTries){
