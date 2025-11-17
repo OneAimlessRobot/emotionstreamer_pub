@@ -1,4 +1,7 @@
 #include "../Includes/preprocessor.h"
+#include "../Includes/auxfuncs.h"
+#include "../Includes/sockio.h"
+#include "../Includes/sock_ops.h"
 #include "../Includes/more_socket_ops.h"
 #include "../Includes/fileshit.h"
 
@@ -115,4 +118,38 @@ void socket_close(int* fd, int right_now) {
     // Polite close (FIN)
     //shutdown(*fd, SHUT_RDWR);
     close(*fd);
+}
+
+int get_sockerr(int*sd){
+
+	int sockerr=0;
+	socklen_t socklen_here =sizeof(sockerr);
+	getsockopt(*sd,SOL_SOCKET,SO_ERROR,(char*)&sockerr,&socklen_here);
+	return sockerr;
+}
+int same_addr_sock_rebind(int*sd){
+
+	int result=0;
+	struct sockaddr_in sockaddr_for_rebind={0};
+	getsockname(*sd, (struct sockaddr*)&sockaddr_for_rebind,&socklenvar[1]);
+	socket_close(sd,1);
+	(*sd)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+        if((*sd)<0){
+		result = -1;
+        }
+        set_sock_reuseaddr(sd,1);
+        setNonBlocking(sd);
+	if(bind(*sd,(struct sockaddr *)&sockaddr_for_rebind,socklenvar[1])){
+                perror("Não conseguimos dar re bind neste sockfd!!!\n");
+                print_addr_aux("Este é o address:",&sockaddr_for_rebind);
+        	result = 1;
+	}
+	else{
+
+		if(logging){
+			fprintf(logstream,"Rebind successful! trying again!\n");
+		}
+		result = 0;
+	}
+	return result;
 }

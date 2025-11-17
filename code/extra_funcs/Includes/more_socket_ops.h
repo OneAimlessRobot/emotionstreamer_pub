@@ -16,9 +16,13 @@ void setSocketSendBuffSize(int* sd,int size);
 
 int getSocketRecvBuffSize(int*sd);
 
+int get_sockerr(int*sd);
+
 int getSocketSendBuffSize(int*sd);
 
 void setLinger(int*socket,int onoff,int time);
 
 void socket_close(int* fd, int right_now);
+
+int same_addr_sock_rebind(int*sd);
 #endif
