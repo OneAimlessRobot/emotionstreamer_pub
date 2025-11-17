@@ -66,15 +66,17 @@ int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
         int success=-1;
         int numOfTries=MAX_TRIES;
-
+	int already_in_progress=0;
         while(success==-1&& numOfTries){
                 if(logging){
 			print_addr_aux("Tentando conectar a:",dst_addr);
 			fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
                 }
-		success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
-        	numOfTries--;
-	  	if(success==-1){
+		if(!already_in_progress){
+			success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
+        		numOfTries--;
+	  	}
+		if(success){
 			if(errno == EINPROGRESS){
 				fd_set wfds;
 		                FD_ZERO(&wfds);
@@ -85,13 +87,24 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 		                t.tv_usec=times_pair[1];
 		                int iResult=select((*sockfd)+1,0,&wfds,0,&t);
 				if(iResult>0){
-					if(logging){
-						print_addr_aux("Conexao de:",dst_addr);
-		                        }
-					break;
+					int sockerr=get_sockerr(sockfd);
+					if(!sockerr){
+						if(logging){
+							fprintf(logstream,"Successful connection!\n");
+							print_addr_aux("Conectado a:",dst_addr);
+						}
+						break;
+					}
+					else if(same_addr_sock_rebind(sockfd)){
+						numOfTries=0;
+						break;
+					}
+					else{
+						numOfTries++;
+					}
 
 		                }
-				else if(iResult<=0){
+				else if(iResult<0){
 					if(iResult){
 						if(logging){
 							fprintf(logstream,"Select error!!\n");
@@ -103,19 +116,6 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 
 						if(logging){
 							fprintf(logstream,"Select timeout reached!!\n");
-						}
-					}
-				}
-				else{
-
-					int sockerr=get_sockerr(sockfd);
-					if(!sockerr){
-						break;
-					}
-					else{
-						if(same_addr_sock_rebind(sockfd)){
-							numOfTries=0;
-							break;
 						}
 					}
 				}
@@ -140,10 +140,15 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 					numOfTries=0;
 					break;
 				}
+				else{
+					numOfTries++;
+				}
 			}
 		}
 		else{
-
+			if(logging){
+				fprintf(logstream,"Successful connection!\n");
+			}
 			break;
 		}
 	}
