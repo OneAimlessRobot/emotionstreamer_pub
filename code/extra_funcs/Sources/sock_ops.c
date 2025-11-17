@@ -132,8 +132,17 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
                 if(logging){
 			fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
         	}
-		already_in_progress=(errno==EALREADY);
-		if((errno == EINPROGRESS)||(errno==EALREADY)){
+		if(errno==EALREADY){
+			if(!already_in_progress){
+				already_in_progress=1;
+				numOfTries--;
+			}
+			continue;
+		}
+		else{
+			already_in_progress=0;
+		}
+		if((errno == EINPROGRESS)){
 
 			continue;
 		}

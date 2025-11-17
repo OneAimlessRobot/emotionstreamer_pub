@@ -301,7 +301,7 @@ void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* en
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
         if(tmp_socket<0){
-		perror("Conexão ao port mapper para desreservar unica porta mal sucedida!\nSocket	 não pôde ser criada!\nAbortando\n");
+		perror("Conexão ao port mapper para desreservar unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
 		raise(SIGINT);
 	}
 
