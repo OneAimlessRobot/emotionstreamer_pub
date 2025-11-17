@@ -101,8 +101,8 @@ void* slave_thread(void* args){
 			print_addr_aux("Bind com sucesso!!!:",&arg_struct->this_con_addr);
 		}
 	}
-
-        if(!tryConnect(&arg_struct->con_obj->sockfd_tcp,arg_struct->con_times_pair,&arg_struct->master_addr)){
+	int result_con=0;
+        if((result_con=tryConnect(&arg_struct->con_obj->sockfd_tcp,arg_struct->con_times_pair,&arg_struct->master_addr))<=0){
 
                 perror("Nao deu para contactar server de heartbeats!!!!\n");
         	send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);

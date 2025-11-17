@@ -143,7 +143,7 @@ int try_cache_connect(int* sock,int_pair times_pair,ip_cache_t* con_cache){
 		print_addr_aux("",&curr_addr);
 		result=tryConnect(sock,times_pair,&curr_addr);
 		print_ip_cache_entry(stdout,&(con_cache->ips[i]));
-                if(result){
+                if(result>0){
                         printf(CACHE_CONNECT_MADE);
                         return result;
                 }

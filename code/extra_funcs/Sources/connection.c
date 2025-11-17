@@ -45,10 +45,10 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 	}
 	int result=-1;
 	char buff_for_ports[DEF_DATASIZE+1]={0};
-
-	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&addr)){
+	int result_con=0;
+	if((result_con=tryConnect(&tmp_socket,port_mapper_times_pair,&addr))<=0){
 		perror("Conexão ao port mapper para devolver porta unica mal sucedida! Abortando\n");
-		close(tmp_socket);
+		socket_close(&tmp_socket,result_con!=0);
 		raise(SIGINT);
 		return;
 	}
@@ -154,9 +154,10 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 	}
 	int result=-1;
 	char buff_for_ports[DEF_DATASIZE+1]={0};
-	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&addr)){
+	int result_con=0;
+	if((result_con=tryConnect(&tmp_socket,port_mapper_times_pair,&addr))<=0){
 		perror("Conexão ao port mapper para pedir unica porta mal sucedida! Abortando\n");
-		close(tmp_socket);
+		socket_close(&tmp_socket,result_con!=0);
 		raise(SIGINT);
 		return;
 	}
@@ -222,9 +223,10 @@ void reserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* ent)
 	}
 	int result=-1;
 	char buff_for_ports[DEF_DATASIZE+1]={0};
-	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&addr)){
+	int result_con=0;
+	if((result_con=tryConnect(&tmp_socket,port_mapper_times_pair,&addr))<=0){
 		perror("Conexão ao port mapper para reservar unica porta mal sucedida! Abortando\n");
-		close(tmp_socket);
+		socket_close(&tmp_socket,result_con!=0);
 		raise(SIGINT);
 		return;
 
@@ -300,9 +302,10 @@ void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* en
 	}
 	int result=-1;
 	char buff_for_ports[DEF_DATASIZE+1]={0};
-	if(!tryConnect(&tmp_socket,port_mapper_times_pair,&addr)){
+	int result_con=0;
+	if((result_con=tryConnect(&tmp_socket,port_mapper_times_pair,&addr))<=0){
 		perror("Conexão ao port mapper para desreservar unica porta mal sucedida! Abortando\n");
-		close(tmp_socket);
+		socket_close(&tmp_socket,result_con!=0);
 		raise(SIGINT);
 		return;
 	}

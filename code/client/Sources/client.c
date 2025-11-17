@@ -231,8 +231,9 @@ int clientStart(char* req_field,char* file_name){
 	}
 	else{
 		print_ip_cache(stdout,&cache);
-		if(!try_cache_connect(&client_con_obj.sockfd_tcp,client_con_times_pair,&cache)){
-
+		int result_con=0;
+		if((result_con=try_cache_connect(&client_con_obj.sockfd_tcp,client_con_times_pair,&cache))<=0){
+			forceful_teardown=(result_con!=0);
 			clear_ports_and_quit(SIGINT);
         	}
 	}

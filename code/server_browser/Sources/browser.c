@@ -12,6 +12,7 @@
 
 static struct sockaddr_in hb_server_addr;
 static struct sockaddr_in our_addr;
+static int forceful_teardown=0;
 static int fd=1;
 static con_t con_obj={0};
 static struct sigaction sa;
@@ -143,13 +144,14 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	}
 
 	print_addr_aux("Addr atual do server de heartbeat:",&hb_server_addr);
-
-        if(!tryConnect(&con_obj.sockfd_tcp,browser_con_times_pair,&hb_server_addr)){
+	int result_con=0;
+        if((result_con=tryConnect(&con_obj.sockfd_tcp,browser_con_times_pair,&hb_server_addr))<=0){
 
                 perror("Nao deu para contactar server de heartbeats!!!!\n");
 		raise(SIGINT);
+		forceful_teardown=(result_con!=0);
         	cleanup_and_send_ports_back(SIGINT);
-        }
+	}
 
         init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry);
 
