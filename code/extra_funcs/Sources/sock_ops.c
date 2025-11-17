@@ -65,21 +65,24 @@ int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
         int success=-1;
         int numOfTries=MAX_TRIES;
+	int already_in_progress=0;
 
 
         while(success==-1&& numOfTries){
-                if(logging){
-			print_addr_aux("Tentando conectar a:",dst_addr);
-			fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
-                }
-		success=connect(*socket,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
-                int sockerr=0;
-		socklen_t socklen_here =sizeof(sockerr);
-                getsockopt(*socket,SOL_SOCKET,SO_ERROR,(char*)&sockerr,&socklen_here);
-                if(logging){
-			fprintf(logstream,"Erro normal:%s\n Erro Socket: %s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*socket);
+                if(!already_in_progress){
+			if(logging){
+				print_addr_aux("Tentando conectar a:",dst_addr);
+				fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
+	                }
+			success=connect(*socket,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
+	                int sockerr=0;
+			socklen_t socklen_here =sizeof(sockerr);
+	                getsockopt(*socket,SOL_SOCKET,SO_ERROR,(char*)&sockerr,&socklen_here);
+	                if(logging){
+				fprintf(logstream,"Erro normal:%s\n Erro Socket: %s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*socket);
+			}
+			numOfTries--;
 		}
-		numOfTries--;
 		fd_set wfds;
                 FD_ZERO(&wfds);
                 FD_SET(*socket,&wfds);
@@ -95,6 +98,7 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 			break;
 
                 }
+		already_in_progress=(errno==EALREADY);
 		if((errno == EINPROGRESS)||(errno==EALREADY)){
 
 			continue;
@@ -121,5 +125,5 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
         	}
 	}
 
-	return numOfTries-(((errno == EINPROGRESS)||(errno==EALREADY))?1:0);
+	return numOfTries-((errno == EINPROGRESS)?1:0);
 }
