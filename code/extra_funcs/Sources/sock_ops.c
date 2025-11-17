@@ -142,6 +142,13 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 		        	numOfTries=0;
 				break;
 			}
+			else{
+
+				if(logging){
+					fprintf(logstream,"Rebind successful! trying again!\n");
+				}
+				numOfTries++;
+			}
 
 		}
 	}
