@@ -583,6 +583,7 @@ void port_mapper_init(ip_cache_entry* ent){
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
 	logging=cfg_port_mapper_logging;
+	logstream=stdout;
 	int32_t port_arr[cfg_num_ports];
 	memset(port_arr,0,sizeof(int32_t)*cfg_num_ports);
 	mapper.port_arr=port_arr;
