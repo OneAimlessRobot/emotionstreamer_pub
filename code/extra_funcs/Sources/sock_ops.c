@@ -68,15 +68,18 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 	int numOfTries=MAX_TRIES;
 	int already_in_progress=0;
 	while(success==-1&& numOfTries){
-		if(logging){
-			print_addr_aux("Tentando conectar a:",dst_addr);
-			fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
-		}
 		if(!already_in_progress){
+			if(logging){
+				print_addr_aux("Tentando conectar a:",dst_addr);
+				fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
+			}
 			success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
 			numOfTries--;
+			if (success == -1 && errno == EINPROGRESS) {
+				already_in_progress = 1;
+			}
 		}
-		if(success){
+		if(success==-1){
 			if(!(errno == EINPROGRESS)){
 				if(logging){
 					fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
@@ -85,7 +88,6 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 				break;
 			}
 			else{
-				already_in_progress=1;
 				fd_set wfds;
 				FD_ZERO(&wfds);
 				FD_SET(*sockfd,&wfds);
@@ -112,6 +114,10 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 				}
 				else if(iResult<=0){
 					if(iResult){
+						if(errno==EINTR){
+							numOfTries=0;
+							break;
+						}
 						if(logging){
 							fprintf(logstream,"Select error!!\n");
 						}
@@ -124,10 +130,6 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 					if(same_addr_sock_rebind(sockfd)){
 							numOfTries=0;
 							break;
-					}
-					else if(errno==EINTR){
-						numOfTries=0;
-						break;
 					}
 					already_in_progress=0;
 					numOfTries++;
