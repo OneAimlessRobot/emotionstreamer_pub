@@ -3,7 +3,7 @@
 
 extern FILE* logstream;
 
-extern u_int64_t logging;
+extern u_int8_t logging;
 
 extern char curr_dir[PATHSIZE];
 

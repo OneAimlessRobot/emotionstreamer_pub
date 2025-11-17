@@ -76,7 +76,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sa_sigpipe.sa_flags = SA_RESTART;
     	sigaction(SIGPIPE, &sa_sigpipe, NULL);
 
-	logging=0;
+	logging=cfg_hb_server_logging;
 	logstream=stdout;
 	int fd_arr[MAX_SERVERS]={0};
 	con_t con_arr[MAX_SERVERS]={0};

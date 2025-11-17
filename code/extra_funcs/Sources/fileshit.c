@@ -3,7 +3,7 @@
 
 FILE* logstream=NULL;
 
-u_int64_t logging=0;
+u_int8_t logging=0;
 
 char curr_dir[PATHSIZE]={0};
 

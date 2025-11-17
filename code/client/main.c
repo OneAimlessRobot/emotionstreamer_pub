@@ -20,7 +20,7 @@ int main(int argc, char ** argv){
         parse_generalized_cfg(generalized_config_filepath_buff);
         print_values_generalized_cfg(1);
 
-	logging=0;
+	logging=cfg_client_logging;
 	int fd=-1;
 	int result= strnlen(client_music_folder_path,PATHSIZE-1);
 	if(!result){
