@@ -41,7 +41,7 @@ static con_t client_con_obj;
 static method play_way=PLAY_PA;
 static void clear_ports_and_quit(int signal){
 
-	send_port_back(htons(port),&client_port_mapper_ip_cache_entry);
+	send_port_back(port,&client_port_mapper_ip_cache_entry);
 	close_con(&client_con_obj,0);
 	fclose(logstream);
 	exit(signal);
