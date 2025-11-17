@@ -121,5 +121,5 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
         	}
 	}
 
-	return numOfTries;
+	return numOfTries-((errno == EINPROGRESS)?1:0);
 }

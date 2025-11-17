@@ -31,6 +31,7 @@
 
 atomic_int started=0;
 atomic_int is_on=0;
+static int forceful_teardown=0;
 static struct sigaction sa;
 static uint16_t port=0;
 static char extension_from_server[PATHSIZE]={0};
@@ -42,7 +43,7 @@ static method play_way=PLAY_PA;
 static void clear_ports_and_quit(int signal){
 
 	send_port_back(port,&client_port_mapper_ip_cache_entry);
-	close_con(&client_con_obj,0);
+	close_con(&client_con_obj,forceful_teardown);
 	fclose(logstream);
 	exit(signal);
 }
@@ -209,9 +210,16 @@ int clientStart(char* req_field,char* file_name){
 		setLinger(&client_con_obj.sockfd_tcp,1,1);
 	}
 
+	int result_con=0;
+	if(!(result_con=tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address))){
+		clear_ports_and_quit(SIGINT);
+        }
+	else if(result_con<0){
+		if(logging){
 
-	if(!tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address)){
-		
+			fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n",result_con);
+		}
+		forceful_teardown=1;
 		clear_ports_and_quit(SIGINT);
         }
 
