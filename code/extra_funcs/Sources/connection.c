@@ -27,6 +27,12 @@ static void prep_con(con_t* con_obj){
 
 
 void send_port_back(uint16_t port,ip_cache_entry* ent){
+	if(!port){
+		if(logging){
+			fprintf(logstream,"Refusing to send back null port at send_port_back!\n");
+		}
+		return;
+	}
 	struct sockaddr_in addr={0};
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
@@ -285,6 +291,12 @@ void reserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* ent)
 
 }
 void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* ent){
+	if(!port_to_allocate){
+		if(logging){
+			fprintf(logstream,"Refusing to send back null port at send_port_back!\n");
+		}
+		return;
+	}
 	struct sockaddr_in addr={0};
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
