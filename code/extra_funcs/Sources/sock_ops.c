@@ -75,18 +75,16 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 				fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
 	                }
 			success=connect(*socket,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
-	                int sockerr=0;
-			socklen_t socklen_here =sizeof(sockerr);
-	                getsockopt(*socket,SOL_SOCKET,SO_ERROR,(char*)&sockerr,&socklen_here);
-	                if(logging){
-				fprintf(logstream,"Erro normal:%s\n Erro Socket: %s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*socket);
-			}
-			numOfTries--;
+	        	numOfTries--;
 		}
-		else{
-			if(logging){
-				fprintf(logstream,"Already in progress!\n");
-			}
+	        int sockerr=0;
+		socklen_t socklen_here =sizeof(sockerr);
+	        getsockopt(*socket,SOL_SOCKET,SO_ERROR,(char*)&sockerr,&socklen_here);
+	        if(logging){
+			fprintf(logstream,"Erro normal:%s\n Erro Socket: %s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*socket);
+		}
+		if(logging){
+			fprintf(logstream,"Already in progress!\n");
 		}
 		fd_set wfds;
                 FD_ZERO(&wfds);
