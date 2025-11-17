@@ -134,7 +134,7 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 		if(errno==EALREADY){
 			if(!already_in_progress){
 				already_in_progress=1;
-				numOfTries--;
+				numOfTries++;
 			}
 			continue;
 		}
