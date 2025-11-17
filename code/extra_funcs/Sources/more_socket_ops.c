@@ -112,6 +112,6 @@ void socket_close(int* fd, int right_now) {
     }
 
     // Polite close (FIN)
-    shutdown(*fd, SHUT_RDWR);
+    //shutdown(*fd, SHUT_RDWR);
     close(*fd);
 }
