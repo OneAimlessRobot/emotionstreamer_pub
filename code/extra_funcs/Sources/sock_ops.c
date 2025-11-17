@@ -83,6 +83,11 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 			}
 			numOfTries--;
 		}
+		else{
+			if(logging){
+				printf("Already_in_progress!\n");
+			}
+		}
 		fd_set wfds;
                 FD_ZERO(&wfds);
                 FD_SET(*socket,&wfds);
