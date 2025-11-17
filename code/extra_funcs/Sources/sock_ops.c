@@ -85,7 +85,7 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 		}
 		else{
 			if(logging){
-				printf("Already_in_progress!\n");
+				fprintf(logstream,"Already in progress!\n");
 			}
 		}
 		fd_set wfds;
@@ -103,6 +103,13 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 			break;
 
                 }
+		else if(iResult<0){
+			if(logging){
+				fprintf(logstream,"Select error!!\n");
+			}
+			numOfTries=0;
+			break;
+		}
 		already_in_progress=(errno==EALREADY);
 		if((errno == EINPROGRESS)||(errno==EALREADY)){
 
