@@ -101,17 +101,21 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 			break;
 
                 }
-		else if(iResult<0){
-			if(logging){
-				fprintf(logstream,"Select error!!\n");
+		else if(iResult<=0){
+			if(iResult){
+				if(logging){
+					fprintf(logstream,"Select error!!\n");
+				}
+				numOfTries=0;
+				break;
 			}
-			numOfTries=0;
-			break;
-		}
-		already_in_progress=(errno==EALREADY);
-		if((errno == EINPROGRESS)||(errno==EALREADY)){
+			else{
 
-			continue;
+				if(logging){
+					fprintf(logstream,"Select timeout reached!!\n");
+				}
+				continue;
+			}
 		}
 		if(errno==ECONNREFUSED){
 
@@ -128,6 +132,11 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
                 if(logging){
 			fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
         	}
+		already_in_progress=(errno==EALREADY);
+		if((errno == EINPROGRESS)||(errno==EALREADY)){
+
+			continue;
+		}
 	}
         if(!numOfTries){
 		if(logging){
