@@ -32,6 +32,7 @@
 atomic_int started=0;
 atomic_int is_on=0;
 static struct sigaction sa;
+static uint16_t port=0;
 static char extension_from_server[PATHSIZE]={0};
 static struct sockaddr_in server_ip_address;
 static struct sockaddr_in client_ip_address;
@@ -40,7 +41,7 @@ static con_t client_con_obj;
 static method play_way=PLAY_PA;
 static void clear_ports_and_quit(int signal){
 
-	send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
+	send_port_back(htons(port),&client_port_mapper_ip_cache_entry);
 	close_con(&client_con_obj,0);
 	fclose(logstream);
 	exit(signal);
@@ -189,8 +190,7 @@ int clientStart(char* req_field,char* file_name){
 
 	}
 
-	uint16_t port=0;
-        ask_for_port(&port,&client_port_mapper_ip_cache_entry);
+	ask_for_port(&port,&client_port_mapper_ip_cache_entry);
 	if(!port||init_addr(&client_ip_address,client_ip_cache_entry.hostname,port)){
 		perror("Não conseguimos inicializar address no client!!!\n");
 		clear_ports_and_quit(SIGINT);
