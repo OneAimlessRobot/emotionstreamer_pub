@@ -80,6 +80,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 	        if(logging){
 			fprintf(logstream,"Erro normal:%s\n Erro Socket: %s\nNumero socket: %d\n",strerror(errno),strerror(sockerr),*sockfd);
 		}
+		if((success==-1)&&(errno == EINPROGRESS)){
 		fd_set wfds;
                 FD_ZERO(&wfds);
                 FD_SET(*sockfd,&wfds);
@@ -110,22 +111,23 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 				}
 			}
 		}
-		if(errno==ECONNREFUSED){
+		}	
+		else if(errno==ECONNREFUSED){
 
 			numOfTries=0;
 			break;
 		}
-                if(errno==ENOTSOCK){
+        else if(errno==ENOTSOCK){
 			if(logging){
 				fprintf(logstream,"Not a socket!!!\n");
 			}
 			numOfTries=0;
 			break;
 		}
-                if(logging){
+		else{
+			if(logging){
 			fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
         	}
-		if((errno == EINPROGRESS)){
 			struct sockaddr_in sockaddr_for_rebind={0};
 			getsockname(*sockfd, (struct sockaddr*)&sockaddr_for_rebind,&socklenvar[1]);
 			socket_close(sockfd,1);
@@ -149,7 +151,6 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 				}
 				numOfTries++;
 			}
-
 		}
 	}
         if(!numOfTries){
