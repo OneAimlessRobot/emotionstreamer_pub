@@ -95,6 +95,10 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 			break;
 
                 }
+		if(errno == EINPROGRESS){
+
+			continue;
+		}
 		if(errno==ECONNREFUSED){
 
 			numOfTries=0;
