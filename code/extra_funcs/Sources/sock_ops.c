@@ -69,8 +69,8 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 	int already_in_progress=0;
 	while(success==-1&& numOfTries){
 		if(logging){
-				print_addr_aux("Tentando conectar a:",dst_addr);
-				fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
+			print_addr_aux("Tentando conectar a:",dst_addr);
+			fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
 		}
 		if(!already_in_progress){
 			success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
@@ -78,29 +78,11 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 		}
 		if(success){
 			if(!(errno == EINPROGRESS)){
-				already_in_progress=0;
 				if(logging){
 					fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
-					}
-					if(errno==ECONNREFUSED){
-
-						numOfTries=0;
-						break;
-					}
-					if(errno==ENOTSOCK){
-					if(logging){
-						fprintf(logstream,"Not a socket!!!\n");
-					}
-					numOfTries=0;
-					break;
 				}
-				if(same_addr_sock_rebind(sockfd)){
-					numOfTries=0;
-					break;
-				}
-				else{
-					numOfTries++;
-				}
+				numOfTries=0;
+				break;
 			}
 			else{
 				fd_set wfds;
@@ -125,19 +107,17 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 						break;
 					}
 					else{
-						if(!already_in_progress){
-							already_in_progress=1;
-							numOfTries++;
-						}
+						numOfTries++;
 					}
-
-						}
+				}
 				else if(iResult<=0){
-					if(logging){
-						if(iResult){
+					if(iResult){
+						if(logging){
 							fprintf(logstream,"Select error!!\n");
 						}
-						else{
+					}
+					else{
+						if(logging){
 							fprintf(logstream,"Select timeout reached!!\n");
 						}
 					}
@@ -145,9 +125,11 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 							numOfTries=0;
 							break;
 					}
-					else{
-						numOfTries++;
+					else if(iResult==EINTR){
+						numOfTries=0;
+						break;
 					}
+					numOfTries++;
 				}
 			}
 		}
