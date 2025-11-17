@@ -77,7 +77,32 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 			numOfTries--;
 		}
 		if(success){
-			if(errno == EINPROGRESS){
+			if(!(errno == EINPROGRESS)){
+				already_in_progress=0;
+				if(logging){
+					fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
+					}
+					if(errno==ECONNREFUSED){
+
+						numOfTries=0;
+						break;
+					}
+					if(errno==ENOTSOCK){
+					if(logging){
+						fprintf(logstream,"Not a socket!!!\n");
+					}
+					numOfTries=0;
+					break;
+				}
+				if(same_addr_sock_rebind(sockfd)){
+					numOfTries=0;
+					break;
+				}
+				else{
+					numOfTries++;
+				}
+			}
+			else{
 				fd_set wfds;
 				FD_ZERO(&wfds);
 				FD_SET(*sockfd,&wfds);
@@ -123,31 +148,6 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 					else{
 						numOfTries++;
 					}
-				}
-			}
-			else{
-				already_in_progress=0;
-				if(logging){
-					fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
-					}
-					if(errno==ECONNREFUSED){
-
-						numOfTries=0;
-						break;
-					}
-					if(errno==ENOTSOCK){
-					if(logging){
-						fprintf(logstream,"Not a socket!!!\n");
-					}
-					numOfTries=0;
-					break;
-				}
-				if(same_addr_sock_rebind(sockfd)){
-					numOfTries=0;
-					break;
-				}
-				else{
-					numOfTries++;
 				}
 			}
 		}
