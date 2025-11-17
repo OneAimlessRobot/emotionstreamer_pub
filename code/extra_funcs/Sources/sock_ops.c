@@ -74,71 +74,77 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
                 }
 		success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
         	numOfTries--;
-	  	if((success==-1)&&(errno == EINPROGRESS)){
-			fd_set wfds;
-	                FD_ZERO(&wfds);
-	                FD_SET(*sockfd,&wfds);
+	  	if(success==-1){
+			if(errno == EINPROGRESS){
+				fd_set wfds;
+		                FD_ZERO(&wfds);
+		                FD_SET(*sockfd,&wfds);
 
-	                struct timeval t;
-	                t.tv_sec=times_pair[0];
-	                t.tv_usec=times_pair[1];
-	                int iResult=select((*sockfd)+1,0,&wfds,0,&t);
-			if(iResult>0){
-				if(logging){
-					print_addr_aux("Conexao de:",dst_addr);
-	                        }
-				break;
-
-	                }
-			else if(iResult<=0){
-				if(iResult){
+		                struct timeval t;
+		                t.tv_sec=times_pair[0];
+		                t.tv_usec=times_pair[1];
+		                int iResult=select((*sockfd)+1,0,&wfds,0,&t);
+				if(iResult>0){
 					if(logging){
-						fprintf(logstream,"Select error!!\n");
-					}
-					numOfTries=0;
+						print_addr_aux("Conexao de:",dst_addr);
+		                        }
 					break;
+
+		                }
+				else if(iResult<=0){
+					if(iResult){
+						if(logging){
+							fprintf(logstream,"Select error!!\n");
+						}
+						numOfTries=0;
+						break;
+					}
+					else{
+
+						if(logging){
+							fprintf(logstream,"Select timeout reached!!\n");
+						}
+					}
 				}
 				else{
 
-					if(logging){
-						fprintf(logstream,"Select timeout reached!!\n");
+					int sockerr=get_sockerr(sockfd);
+					if(!sockerr){
+						break;
+					}
+					else{
+						if(same_addr_sock_rebind(sockfd)){
+							numOfTries=0;
+							break;
+						}
 					}
 				}
 			}
 			else{
+				if(logging){
+					fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
+		        	}
+				if(errno==ECONNREFUSED){
 
-				int sockerr=get_sockerr(sockfd);
-				if(!sockerr){
+					numOfTries=0;
 					break;
 				}
-				else{
-					if(same_addr_sock_rebind(sockfd)){
-						numOfTries=0;
-						break;
+		        	if(errno==ENOTSOCK){
+					if(logging){
+						fprintf(logstream,"Not a socket!!!\n");
 					}
+					numOfTries=0;
+					break;
+				}
+				if(same_addr_sock_rebind(sockfd)){
+					numOfTries=0;
+					break;
 				}
 			}
 		}
 		else{
-			if(logging){
-				fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
-	        	}
-			if(errno==ECONNREFUSED){
 
-				numOfTries=0;
-				break;
-			}
-	        	if(errno==ENOTSOCK){
-				if(logging){
-					fprintf(logstream,"Not a socket!!!\n");
-				}
-				numOfTries=0;
-				break;
-			}
-			if(same_addr_sock_rebind(sockfd)){
-				numOfTries=0;
-				break;
-			}
+			break;
 		}
 	}
         if(!numOfTries){
