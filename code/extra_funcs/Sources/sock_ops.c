@@ -114,7 +114,6 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 				if(logging){
 					fprintf(logstream,"Select timeout reached!!\n");
 				}
-				continue;
 			}
 		}
 		if(errno==ECONNREFUSED){
