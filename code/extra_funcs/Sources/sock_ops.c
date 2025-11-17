@@ -106,9 +106,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 						numOfTries=0;
 						break;
 					}
-					else{
-						numOfTries++;
-					}
+					numOfTries++;
 				}
 				else if(iResult<=0){
 					if(iResult){
@@ -125,7 +123,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 							numOfTries=0;
 							break;
 					}
-					else if(iResult==EINTR){
+					else if(errno==EINTR){
 						numOfTries=0;
 						break;
 					}
