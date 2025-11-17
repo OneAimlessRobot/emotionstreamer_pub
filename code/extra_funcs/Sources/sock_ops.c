@@ -3,6 +3,7 @@
 #include "../Includes/ip_cache_file.h"
 #include "../Includes/connection.h"
 #include "../Includes/sock_ops.h"
+#include "../Includes/more_socket_ops.h"
 #include "../Includes/fileshit.h"
 #include "../Includes/auxfuncs.h"
 
@@ -125,7 +126,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 			fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
         	}
 		if((errno == EINPROGRESS)){
-			struct sockaddr_in * sockaddr_for_rebind={0};
+			struct sockaddr_in sockaddr_for_rebind={0};
 			getsockname(*sockfd, (struct sockaddr*)&sockaddr_for_rebind,&socklenvar[1]);
 			socket_close(sockfd,1);
 			(*sockfd)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
