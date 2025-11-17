@@ -64,28 +64,28 @@ int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 }
 
 int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
-        int success=-1;
-        int numOfTries=MAX_TRIES;
+	int success=-1;
+	int numOfTries=MAX_TRIES;
 	int already_in_progress=0;
-        while(success==-1&& numOfTries){
-                if(logging){
-			print_addr_aux("Tentando conectar a:",dst_addr);
-			fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
-                }
+	while(success==-1&& numOfTries){
+		if(logging){
+				print_addr_aux("Tentando conectar a:",dst_addr);
+				fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
+		}
 		if(!already_in_progress){
 			success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
-        		numOfTries--;
-	  	}
+			numOfTries--;
+		}
 		if(success){
 			if(errno == EINPROGRESS){
 				fd_set wfds;
-		                FD_ZERO(&wfds);
-		                FD_SET(*sockfd,&wfds);
+				FD_ZERO(&wfds);
+				FD_SET(*sockfd,&wfds);
 
-		                struct timeval t;
-		                t.tv_sec=times_pair[0];
-		                t.tv_usec=times_pair[1];
-		                int iResult=select((*sockfd)+1,0,&wfds,0,&t);
+				struct timeval t;
+				t.tv_sec=times_pair[0];
+				t.tv_usec=times_pair[1];
+				int iResult=select((*sockfd)+1,0,&wfds,0,&t);
 				if(iResult>0){
 					int sockerr=get_sockerr(sockfd);
 					if(!sockerr){
@@ -106,7 +106,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 						}
 					}
 
-		                }
+						}
 				else if(iResult<=0){
 					if(logging){
 						if(iResult){
@@ -128,13 +128,13 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 			else{
 				if(logging){
 					fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
-		        	}
+					}
 				if(errno==ECONNREFUSED){
 
 					numOfTries=0;
 					break;
 				}
-		        	if(errno==ENOTSOCK){
+					if(errno==ENOTSOCK){
 					if(logging){
 						fprintf(logstream,"Not a socket!!!\n");
 					}
@@ -157,11 +157,10 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 			break;
 		}
 	}
-        if(!numOfTries){
+	if(!numOfTries){
 		if(logging){
-        		fprintf(logstream,"Não foi possivel conectar. Numero limite de tentativas (%d) atingido!!!\n",MAX_TRIES);
-        	}
+			fprintf(logstream,"Não foi possivel conectar. Numero limite de tentativas (%d) atingido!!!\n",MAX_TRIES);
+		}
 	}
-
 	return numOfTries-(((errno == EINPROGRESS)&&!numOfTries)?1:0);
 }
