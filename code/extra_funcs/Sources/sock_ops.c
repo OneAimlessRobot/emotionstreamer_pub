@@ -95,7 +95,7 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
 			break;
 
                 }
-		if(errno == EINPROGRESS){
+		if((errno == EINPROGRESS)||(errno==EALREADY)){
 
 			continue;
 		}
@@ -121,5 +121,5 @@ int tryConnect(int*socket,int_pair times_pair,struct sockaddr_in* dst_addr){
         	}
 	}
 
-	return numOfTries-((errno == EINPROGRESS)?1:0);
+	return numOfTries-(((errno == EINPROGRESS)||(errno==EALREADY))?1:0);
 }
