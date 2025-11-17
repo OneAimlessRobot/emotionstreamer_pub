@@ -126,14 +126,15 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 				}
 			}
 			else{
+				already_in_progress=0;
 				if(logging){
 					fprintf(logstream,"Não foi possivel: %s\n",strerror(errno));
 					}
-				if(errno==ECONNREFUSED){
+					if(errno==ECONNREFUSED){
 
-					numOfTries=0;
-					break;
-				}
+						numOfTries=0;
+						break;
+					}
 					if(errno==ENOTSOCK){
 					if(logging){
 						fprintf(logstream,"Not a socket!!!\n");
