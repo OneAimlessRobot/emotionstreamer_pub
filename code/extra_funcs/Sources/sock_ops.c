@@ -85,6 +85,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 				break;
 			}
 			else{
+				already_in_progress=1;
 				fd_set wfds;
 				FD_ZERO(&wfds);
 				FD_SET(*sockfd,&wfds);
@@ -106,6 +107,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 						numOfTries=0;
 						break;
 					}
+					already_in_progress=0;
 					numOfTries++;
 				}
 				else if(iResult<=0){
@@ -127,6 +129,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 						numOfTries=0;
 						break;
 					}
+					already_in_progress=0;
 					numOfTries++;
 				}
 			}
