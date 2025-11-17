@@ -100,23 +100,28 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 						break;
 					}
 					else{
-						numOfTries++;
+						if(!already_in_progress){
+							already_in_progress=1;
+							numOfTries++;
+						}
 					}
 
 		                }
-				else if(iResult<0){
-					if(iResult){
-						if(logging){
+				else if(iResult<=0){
+					if(logging){
+						if(iResult){
 							fprintf(logstream,"Select error!!\n");
 						}
-						numOfTries=0;
-						break;
-					}
-					else{
-
-						if(logging){
+						else{
 							fprintf(logstream,"Select timeout reached!!\n");
 						}
+					}
+					if(same_addr_sock_rebind(sockfd)){
+							numOfTries=0;
+							break;
+					}
+					else{
+						numOfTries++;
 					}
 				}
 			}
