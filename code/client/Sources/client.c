@@ -184,6 +184,7 @@ int clientStart(char* req_field,char* file_name){
 		clear_ports_and_quit(SIGINT);
         }
     	set_sock_reuseaddr(&client_con_obj.sockfd_tcp,1);
+	setNonBlocking(&client_con_obj.sockfd_tcp);
 	if(init_addr(&server_ip_address,server_ip_cache_entry.hostname,server_ip_cache_entry.port)){
 		perror("Não conseguimos inicializar address de server no client!!!\n");
 		clear_ports_and_quit(SIGINT);
