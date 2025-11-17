@@ -39,11 +39,7 @@ static void close_all_fds_here(void){
 	close_all_fds(arg_o.cons);
 	pthread_mutex_lock(&con_mtx);
 	send_port_back(htons(arg_s.this_con_addr.sin_port),&heartbeat_port_mapper_ip_entry);
-	close_con(arg_s.con_obj);
-	if(arg_s.con_obj->sockfd_tcp>=0){
-		close(arg_s.con_obj->sockfd_tcp);
-		arg_s.con_obj->sockfd_tcp=-1;
-	}
+	close_con(arg_s.con_obj,0);
 	pthread_mutex_unlock(&con_mtx);
 	pthread_cond_signal(arg_o.cons->start_cond);
 

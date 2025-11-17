@@ -3,6 +3,7 @@
 #include "../Includes/fileshit.h"
 #include "../Includes/sockio.h"
 #include "../Includes/sock_ops.h"
+#include "../Includes/more_socket_ops.h"
 #include "../Includes/sockio_udp.h"
 #include "../Includes/sockio_tcp.h"
 #include "../Includes/ip_cache_file.h"
@@ -87,11 +88,11 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 
 }
 
-void close_con(con_t* con_obj){
+void close_con(con_t* con_obj,int RIGHT_NOW){
 	
 	if(con_obj->is_on){
 		if(con_obj->sockfd_tcp>=0){
-			close(con_obj->sockfd_tcp);
+			socket_close(&(con_obj->sockfd_tcp),RIGHT_NOW);
 		}
 		con_obj->sockfd_tcp=-1;
 		con_obj->is_on=0;

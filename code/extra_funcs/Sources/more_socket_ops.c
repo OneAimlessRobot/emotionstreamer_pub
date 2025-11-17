@@ -104,3 +104,14 @@ if (setsockopt(*socket, SOL_SOCKET, SO_LINGER, &so_linger, sizeof(so_linger)) < 
 }
 
 }
+void socket_close(int* fd, int right_now) {
+    if (right_now) {
+        setLinger(fd,1,0);
+	close(*fd);
+        return;
+    }
+
+    // Polite close (FIN)
+    shutdown(*fd, SHUT_RDWR);
+    close(*fd);
+}

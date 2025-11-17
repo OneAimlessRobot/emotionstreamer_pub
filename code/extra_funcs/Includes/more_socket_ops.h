@@ -20,5 +20,5 @@ int getSocketSendBuffSize(int*sd);
 
 void setLinger(int*socket,int onoff,int time);
 
-
+void socket_close(int* fd, int right_now);
 #endif

@@ -140,7 +140,7 @@ void* slave_thread(void* args){
                 perror("Nao deu para contactar server acima!!!!\nNao recebeu o que mandamos!!!\nNao recebeu pedido de login\n");
                 pthread_mutex_lock(arg_struct->con_mtx);
 		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-		close_con(arg_struct->con_obj);
+		close_con(arg_struct->con_obj,0);
 		pthread_mutex_unlock(arg_struct->con_mtx);
         	(*arg_struct->start_trigger)=1;
         	pthread_cond_signal(arg_struct->trg_cond);
@@ -155,7 +155,7 @@ void* slave_thread(void* args){
                 perror("Nao deu para contactar server acima!!!!\nNao recebemos deles!!!\nNao recebeu pedido de login\n");
                 pthread_mutex_lock(arg_struct->con_mtx);
 		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-		close_con(arg_struct->con_obj);
+		close_con(arg_struct->con_obj,0);
 		pthread_mutex_unlock(arg_struct->con_mtx);
         	(*arg_struct->start_trigger)=1;
         	pthread_cond_signal(arg_struct->trg_cond);
@@ -190,7 +190,7 @@ void* slave_thread(void* args){
 	}
 	pthread_mutex_lock(arg_struct->con_mtx);
 	send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-	close_con(arg_struct->con_obj);
+	close_con(arg_struct->con_obj,0);
 	pthread_mutex_unlock(arg_struct->con_mtx);
         arg_struct->sig_func(SIGINT);
 	arg_struct->clean_func();
@@ -254,7 +254,7 @@ void close_all_fds(con_set* set){
 
                         FD_CLR(set->fd_arr[i],&set->rdfds);
                         FD_ZERO(&set->rdfds);
-                        close_con(&set->con_arr[i]);
+                        close_con(&set->con_arr[i],0);
                         close(set->fd_arr[i]);
                         set->curr_size--;
                         set->fd_arr[i]=0;
@@ -269,7 +269,7 @@ void close_all_fds(con_set* set){
 static void kill_con(con_set* set,int index){
 
         pthread_mutex_lock(set->set_mtx);
-        close_con(&set->con_arr[index]);
+        close_con(&set->con_arr[index],0);
         delete_server(set->fd_arr[index]);
 	memset(&set->con_arr[index],0,sizeof(con_t));
         FD_CLR(set->fd_arr[index],&set->rdfds);
@@ -451,7 +451,7 @@ void* acceptor_func(void* args){
                               result=con_read_tcp(&con,arg_a->con_times_pair);
                               if(result<=0){
                                         perror("Nao sabemos o que querem....\n");
-                                        close_con(&con);
+                                        close_con(&con,0);
                                         continue;
                               }
                               uint16_t stored_port=0;
@@ -459,7 +459,7 @@ void* acceptor_func(void* args){
 			      clear_con_data(&con);
 			      if(result<=0){
                                         perror("Nao sabemos o que querem....\n");
-                                        close_con(&con);
+                                        close_con(&con,0);
                                         continue;
                               }
 			      interlvl_cmd cmd=str_to_interlvl_cmd_type((char*)req_buff);
@@ -488,7 +488,7 @@ void* acceptor_func(void* args){
                                         snprintf((char*)con.tcp_data,DEF_DATASIZE-1,"done");
                                         con_send_tcp(&con,arg_a->data_times_pair);
                                         con_read_tcp(&con,arg_a->data_times_pair);
-                                        close_con(&con);
+                                        close_con(&con,0);
                                         break;
 
                                 case SHOW:
@@ -496,7 +496,7 @@ void* acceptor_func(void* args){
 						fprintf(logstream,"Anyways....\n....\n....\nShow servers requested!!!!\n");
                                         }
 					show_servers(&con,arg_a->data_times_pair);
-                                        close_con(&con);
+                                        close_con(&con,0);
                                         break;
                                 case LOG:
 					result=con_send_tcp(&con,arg_a->con_times_pair);
@@ -511,7 +511,7 @@ void* acceptor_func(void* args){
 					if(logging){
 						fprintf(logstream,"Request desconhecido %s!!!!\n",req_buff);
                                         }
-					close_con(&con);
+					close_con(&con,0);
                                         break;
 
 

@@ -35,11 +35,7 @@ static void call_sigint(void){
 	perror("Sinal de parar server\n");
 	pthread_mutex_lock(&con_mtx);
 	send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
-	close_con(&state.hb_con);
-	if(state.hb_con.sockfd_tcp>=0){
-		close(state.hb_con.sockfd_tcp);
-		state.hb_con.sockfd_tcp=-1;
-	}
+	close_con(&state.hb_con,0);
 	pthread_mutex_unlock(&con_mtx);
 
 }
@@ -48,11 +44,7 @@ static void call_sigint_sub_connection(void){
 	close(state.server_sock_tcp);
 	perror("Sinal de parar sub conexão server\n");
 	pthread_mutex_lock(&con_mtx);
-	close_con(&state.hb_con);
-	if(state.hb_con.sockfd_tcp>=0){
-		close(state.hb_con.sockfd_tcp);
-		state.hb_con.sockfd_tcp=-1;
-	}
+	close_con(&state.hb_con,0);
 	pthread_mutex_unlock(&con_mtx);
 
 }
@@ -237,7 +229,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	pthread_join(hb_tid,NULL);
 	printf("Juntamos o thread hb_tid\n");
 	call_sigint();
-	close_con(&state.hb_con);
+	close_con(&state.hb_con,0);
 	}
 	else{
 	printf("Exiting child in server!!\n");

@@ -30,7 +30,7 @@ typedef struct con_t{
 
 void init_con(con_t* con_obj, int sockfd_tcp,con_type type,uint16_t listen_port,ip_cache_entry* ent);
 
-void close_con(con_t* con_obj);
+void close_con(con_t* con_obj, int RIGHT_NOW);
 
 void close_udp_of_con(con_t* con_obj);
 

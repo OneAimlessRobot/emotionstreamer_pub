@@ -42,7 +42,7 @@ static void clear_ports_and_quit(int signal){
 
 	send_port_back(htons(client_ip_address.sin_port),&client_port_mapper_ip_cache_entry);
 	if(client_con_obj.is_on){
-		close_con(&client_con_obj);
+		close_con(&client_con_obj,0);
 	}
 	if(client_con_obj.sockfd_tcp>=0){
 		close(client_con_obj.sockfd_tcp);

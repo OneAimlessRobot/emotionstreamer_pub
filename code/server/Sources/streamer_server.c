@@ -35,7 +35,7 @@ static void stop_server_stream(server_stream_t* strm){
 
 	if(stream_struct.con_obj->is_on){
 		send_port_back(htons(stream_struct.con_obj->tcp_data_local_port),&server_port_mapper_ip_cache_entry);
-		close_con(stream_struct.con_obj);
+		close_con(stream_struct.con_obj,0);
 	}
 	close(strm->local_fd);
 	close(strm->local_fd_boundary);
