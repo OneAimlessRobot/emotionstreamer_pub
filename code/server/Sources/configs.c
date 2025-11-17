@@ -23,6 +23,7 @@ char server_music_folder_path[PATHSIZE]={0};
 
 char server_working_extension[EXTENSION_SIZE]={0};
 
+uint8_t cfg_server_logging=0;
 
 //EM BYTES E HZ!
 
@@ -65,6 +66,13 @@ void read_values_cfg_server(void){
 
 		raise(SIGINT);
 	}
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"server_logging: %hhu",&cfg_server_logging);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -181,6 +189,8 @@ void produce_config_file(void){
 }
 
 void print_values_cfg_server(int fd){
+
+	dprintf(fd,"server_logging: %hhu\n",cfg_server_logging);
 
 	dprintf(fd,"server_chunk_size: %lu (max: %u)\n",server_chunk_size,MAX_MP3_STREAM_CHUNK_BUFF_SIZE);
 

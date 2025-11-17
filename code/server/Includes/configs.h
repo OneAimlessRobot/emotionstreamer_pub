@@ -27,6 +27,7 @@ extern int_pair server_data_times_pair,
 
 extern uint64_t cfg_server_ack_period_us;
 
+extern uint8_t cfg_server_logging;
 extern uint64_t server_ack_timeout_lim;
 
 void read_values_cfg_server(void);

@@ -32,6 +32,7 @@ int_pair hb_con_times_pair=(int_pair){HB_TIMEOUT_CON_SEC,HB_TIMEOUT_CON_USEC};
 int_pair hb_ack_times_pair=(int_pair){HB_TIMEOUT_ACK_SEC,HB_TIMEOUT_ACK_USEC};
 
 uint64_t cfg_hb_ack_period_us=DEF_HB_ACK_PERIOD_US;
+uint8_t cfg_hb_server_logging=0;
 
 static void process_ip_cache_entries(void){
 
@@ -62,6 +63,13 @@ void read_values_cfg_hb(void){
                 raise(SIGINT);
         }
 	clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
+        sscanf(curr_line_buff,"hb_server_logging: %hhu",&cfg_hb_server_logging);
+        clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 fclose(cfg_fp);
@@ -132,6 +140,8 @@ void read_values_cfg_hb(void){
 }
 
 void print_values_cfg_hb(int fd){
+
+        dprintf(fd,"hb_server_logging: %hhu\n",cfg_hb_server_logging);
 
         dprintf(fd,"hb_timeouts_con: %lus %lu us\n",hb_con_times_pair[0],hb_con_times_pair[1]);
 

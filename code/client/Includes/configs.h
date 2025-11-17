@@ -39,6 +39,8 @@ extern uint16_t cfg_client_chunk_size;
 
 extern float cfg_ui_framerate_fps;
 
+extern uint8_t cfg_client_logging;
+
 extern uint64_t cfg_ui_frame_period_us;
 extern int8_t is_wav_mode;
 extern char generalized_config_filepath_buff[PATHSIZE+1];

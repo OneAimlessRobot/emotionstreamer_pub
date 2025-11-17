@@ -24,6 +24,8 @@ int_pair master_data_times_pair=(int_pair){MASTER_TIMEOUT_DATA_SEC,MASTER_TIMEOU
 int_pair master_con_times_pair=(int_pair){MASTER_TIMEOUT_CON_SEC,MASTER_TIMEOUT_CON_USEC};
 int_pair master_ack_times_pair=(int_pair){MASTER_TIMEOUT_ACK_SEC,MASTER_TIMEOUT_ACK_USEC};
 
+uint8_t cfg_master_server_logging=0;
+
 uint64_t cfg_master_ack_period_us=DEF_MASTER_ACK_PERIOD_US;
 
 static void process_ip_cache_entries(void){
@@ -53,6 +55,13 @@ void read_values_cfg_master(void){
 
                 raise(SIGINT);
         }
+        clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                fclose(cfg_fp);
+                raise(SIGINT);
+        }
+        sscanf(curr_line_buff,"master_server_logging: %hhu",&cfg_master_server_logging);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -116,6 +125,8 @@ void read_values_cfg_master(void){
 
 void print_values_cfg_master(int fd){
 
+
+        dprintf(fd,"master_server_logging: %hhu\n",cfg_master_server_logging);
 
         dprintf(fd,"master_timeouts_con: %lus %lu us\n",master_con_times_pair[0],master_con_times_pair[1]);
 
