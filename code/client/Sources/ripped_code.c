@@ -13,6 +13,7 @@
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../Includes/ripped_code.h"
 #include "../Includes/mp3module.h"
+static pthread_mutex_t ncurses_mtx=PTHREAD_MUTEX_INITIALIZER;
 
 static const char* frame_print_format="Estes sao os dados deste frame:\n"
 							"\nValor de MAXIMUM_SIZE_OGG_OUTPUT_BUFFER: %lu"
@@ -73,7 +74,9 @@ void print_string(const char* str){
 		printf("%s",str);
 	}
 	else{
+		pthread_mutex_lock(&ncurses_mtx);
 		printw("%s",str);
+		pthread_mutex_unlock(&ncurses_mtx);
 	}
 
 }
@@ -98,7 +101,9 @@ void print_decoder_frame_result(decoder_result_struct* result,int fd){
 			dprintf(fd,frame_print_format,FRAME_PRINT_PARAMETERS);
 		}
 		else{
+			pthread_mutex_lock(&ncurses_mtx);
 			printw(frame_print_format,FRAME_PRINT_PARAMETERS);
+			pthread_mutex_unlock(&ncurses_mtx);
 		}
 	}
 
