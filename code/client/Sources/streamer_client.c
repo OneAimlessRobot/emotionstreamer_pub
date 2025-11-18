@@ -439,6 +439,11 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		pthread_cond_wait(&running_cond,&running_mtx);
 	}
 	pthread_mutex_unlock(&running_mtx);
+	if(stream_show_stats){
+		printf("Saimos do thread de stats?\n");
+		pthread_join(tid_stats,NULL);
+		printf("Saimos do thread de stats!!!!!!\n");
+	}
 	if(play){
 		printf("Saimos do thread play?\n");
 		pthread_join(tid_play,NULL);
@@ -454,11 +459,6 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		pthread_join(tid_input,NULL);
 		printf("Saimos do thread input!!!!!!\n");
 		endwin_wrapper();
-	}
-	if(stream_show_stats){
-		printf("Saimos do thread de stats?\n");
-		pthread_join(tid_stats,NULL);
-		printf("Saimos do thread de stats!!!!!!\n");
 	}
 	perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
 	if(decode&&!is_wav_mode){
