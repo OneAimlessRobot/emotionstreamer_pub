@@ -66,19 +66,13 @@ int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 	int success=-1;
 	int numOfTries=MAX_TRIES;
-	int already_in_progress=0;
 	while(success==-1&& numOfTries){
-		if(!already_in_progress){
-			if(logging){
-				print_addr_aux("Tentando conectar a:",dst_addr);
-				fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
-			}
-			success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
-			numOfTries--;
-			if (success == -1 && errno == EINPROGRESS) {
-				already_in_progress = 1;
-			}
+		if(logging){
+			print_addr_aux("Tentando conectar a:",dst_addr);
+			fprintf(logstream,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
 		}
+		success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
+		numOfTries--;
 		if(success==-1){
 			if(!(errno == EINPROGRESS)){
 				if(logging){
@@ -91,10 +85,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 				fd_set wfds;
 				FD_ZERO(&wfds);
 				FD_SET(*sockfd,&wfds);
-
-				struct timeval t;
-				t.tv_sec=times_pair[0];
-				t.tv_usec=times_pair[1];
+				struct timeval t={times_pair[0],times_pair[1]};
 				int iResult=select((*sockfd)+1,0,&wfds,0,&t);
 				if(iResult>0){
 					int sockerr=get_sockerr(sockfd);
@@ -105,14 +96,8 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 						}
 						break;
 					}
-					else if(same_addr_sock_rebind(sockfd)){
-						numOfTries=0;
-						break;
-					}
-					already_in_progress=0;
-					numOfTries++;
 				}
-				else if(iResult<=0){
+				else{
 					if(iResult){
 						if(errno==EINTR){
 							numOfTries=0;
@@ -127,13 +112,12 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 							fprintf(logstream,"Select timeout reached!!\n");
 						}
 					}
-					if(same_addr_sock_rebind(sockfd)){
-							numOfTries=0;
-							break;
-					}
-					already_in_progress=0;
-					numOfTries++;
 				}
+				if(same_addr_sock_rebind(sockfd)){
+						numOfTries=0;
+						break;
+				}
+				numOfTries++;
 			}
 		}
 		else{
