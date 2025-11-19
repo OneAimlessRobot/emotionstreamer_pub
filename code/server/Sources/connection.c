@@ -1,4 +1,5 @@
 #include "../../Includes/preprocessor.h"
+#include <libgen.h>
 #include "../../extra_funcs/Includes/protocol.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/fileshit.h"
@@ -23,6 +24,26 @@ static int sock_tcp;
 
 int fp=-1;
 int fp_boundary=-1;
+//https://stackoverflow.com/questions/2336242/recursive-mkdir-system-call-on-unix
+static void _mkdir(const char *dir) {
+    char tmp[256];
+    char *p = NULL;
+    size_t len;
+
+    snprintf(tmp, sizeof(tmp),"%s",dir);
+    len = strlen(tmp);
+    if (tmp[len - 1] == '/'){
+        tmp[len - 1] = 0;
+    }
+    for (p = tmp + 1; *p; p++){
+        if (*p == '/') {
+            *p = 0;
+            mkdir(tmp, S_IRWXU);
+            *p = '/';
+        }
+    }
+    mkdir(tmp, S_IRWXU);
+}
 
 static void cleanup(void){
 	close(fp);
@@ -40,7 +61,6 @@ static int open_file(char* filepath){
 		if((fp=open(filepath,O_RDONLY,0777))<0){
 			setNonBlocking(&fp);
 			printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(	server_con_obj.peer_tcp_addr.sin_addr),filepath);
-                       	
 	        }
 		return fp;
 
@@ -50,19 +70,12 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 			if(fd>0){
 				stat(file_path,&file_info);
 				snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%ld %s %hhd",file_info.st_size,server_working_extension,is_wav_mode);
-				con_send_tcp(&server_con_obj,server_data_times_pair);
-				clear_con_data(&server_con_obj);
-				con_read_tcp(&server_con_obj,server_data_times_pair);
-				if(strs_are_strictly_equal((char*)server_con_obj.tcp_data,CON_STRING)){
-
-					printf("Ma resposta do cliente!!!!\n Abortando conexao!\nResposta: |%s|\n",(char*)server_con_obj.tcp_data);
-					cleanup();
-				}
 			}
 			else{
 				snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"-1");
-				con_send_tcp(&server_con_obj,server_data_times_pair);
 			}
+			con_send_tcp(&server_con_obj,server_data_times_pair);
+			con_read_tcp(&server_con_obj,server_data_times_pair);
 }
 //static get_filename_extension
 void con_go(int sockfd_tcp, uint16_t curr_port){
@@ -73,19 +86,19 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 
 				char file_name[PATHSIZE]={0};
 				char file_path[PATHSIZE*3 +4]={0};
+				char req_string_buff[PATHSIZE]={0};
 				char rep_file_path[PATHSIZE*3 +4]={0};
+				char rep_file_path_2[PATHSIZE*3 +4]={0};
 				req_type recvd_type=NA;
 				struct stat file_info={0};
 				init_con(&server_con_obj,sock_tcp,SERVER_C,curr_port,&server_port_mapper_ip_cache_entry);
 
 				con_read_tcp(&server_con_obj,server_data_times_pair);
 
-				sscanf((char*)server_con_obj.tcp_data,"%d %s",(int*)&recvd_type,file_name);
+				sscanf((char*)server_con_obj.tcp_data,"%s %s",req_string_buff,file_name);
 
-				printf("Buff recebido:\n\"%s\"\n",server_con_obj.tcp_data);
-				char req_buff[PATHSIZE]={0};
-				req_type_to_str(recvd_type,req_buff);
-				printf("%s recebido!\n",req_buff);
+				printf("Buff recebido:\n\"%s\"\n%s recebido!\n",server_con_obj.tcp_data,req_string_buff);
+				recvd_type=str_to_req_type(req_string_buff);
 				if(recvd_type==PLAY||recvd_type==DOWN){
 
 					snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,server_working_extension);
@@ -104,9 +117,10 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						case REPORT:
 							snprintf(file_path,sizeof(file_path)-1,"%s%s%s%s",curr_dir,file_name,server_working_extension,BOUNDARY_FILE_EXT);
 							snprintf(rep_file_path,sizeof(rep_file_path)-1,"%s%s%s%s",curr_server_quarantine_dir_buff,file_name,server_working_extension,BOUNDARY_FILE_EXT);
+							snprintf(rep_file_path_2,sizeof(rep_file_path_2),"%s",rep_file_path);
 							break;
 						default:
-							printf(UNKNOWN_REQ,req_buff);
+							printf(UNKNOWN_REQ,req_string_buff);
 							cleanup();
 					}
 				}
@@ -140,8 +154,9 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						uploadtofd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						break;
 					case REPORT:
+						_mkdir(dirname(rep_file_path_2));
 						if(rename(file_path,rep_file_path)){
-							perror("rename");
+							fprintf(stderr,"rename: %s\nPath input: %s\nPath output: %s\n",strerror(errno),file_path,rep_file_path);
 						}
 						break;
 					case PLAY:
