@@ -16,13 +16,14 @@
 static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
 
 
-int init_queue(chunk_queue* que,uint64_t chunk_size,uint64_t max_occupied){
+int init_queue(chunk_queue* que,uint64_t chunk_size,uint64_t max_occupied,uint64_t display_size){
 
 	que->queue_mtx=&mtx;
 	que->play_cursor=0;
 	que->recv_cursor=0;
 	que->n_occupied=0;
 	que->chunk_size=chunk_size;
+	que->display_size=display_size;
 	que->max_occupied=max_occupied;
 	que->total_size=que->max_occupied*que->chunk_size;
 	que->chunk_buff=malloc(que->total_size);

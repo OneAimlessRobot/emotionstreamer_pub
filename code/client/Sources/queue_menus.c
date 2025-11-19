@@ -99,17 +99,17 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 		print_string(buff);
 		return;
 	}
-	char bar[PRINT_SIZE+3];
-	memset(bar,0,PRINT_SIZE+3);
+	char bar[que->display_size+3];
+	memset(bar,0,que->display_size+3);
 	bar[0]='[';
-	memset(bar+1,' ',PRINT_SIZE);
-	bar[PRINT_SIZE+1]=']';
-	uint64_t play_cursor_bar_pos=1+(que->play_cursor*PRINT_SIZE)/que->max_occupied;
-	uint64_t recv_cursor_bar_pos=1+(que->recv_cursor*PRINT_SIZE)/que->max_occupied;
+	memset(bar+1,' ',que->display_size);
+	bar[que->display_size+1]=']';
+	uint64_t play_cursor_bar_pos=1+(que->play_cursor*que->display_size)/que->max_occupied;
+	uint64_t recv_cursor_bar_pos=1+(que->recv_cursor*que->display_size)/que->max_occupied;
 	bar[play_cursor_bar_pos]='P';
 	bar[recv_cursor_bar_pos]='R';
 	uint64_t buff_ms=getQueueBufferedTime(que,result);
-	for(uint64_t i=circular_int_inc(PRINT_SIZE+1,play_cursor_bar_pos);(play_cursor_bar_pos!=recv_cursor_bar_pos)&&(i!=recv_cursor_bar_pos);i=circular_int_inc(PRINT_SIZE+1,i)){
+	for(uint64_t i=circular_int_inc(que->display_size+1,play_cursor_bar_pos);(play_cursor_bar_pos!=recv_cursor_bar_pos)&&(i!=recv_cursor_bar_pos);i=circular_int_inc(que->display_size+1,i)){
 
 		bar[i]='=';
 	}

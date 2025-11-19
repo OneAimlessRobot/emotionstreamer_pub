@@ -1,9 +1,16 @@
 #include "../../Includes/preprocessor.h"
+#include "../../mpg123-1.32.10/src/include/mpg123.h"
+#include <alsa/asoundlib.h>
+#include <pulse/error.h>
+#include <pulse/simple.h>
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../Includes/ripped_code.h"
+#include "../Includes/chunk_queue.h"
+#include "../Includes/queue_menus.h"
 #include "../Includes/terminal_mgmt.h"
 #include "../Includes/configs.h"
 
@@ -23,6 +30,8 @@ char client_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 
 //EM BYTES E HZ!
 u_int64_t cfg_latency_ms=DEF_LATENCY_MS,
+	cfg_show_decoder_queue_length=PRINT_SIZE,
+	cfg_show_player_queue_length=PRINT_SIZE,
 	cfg_stream_decoder_cache_size_chunks=STREAM_DEF_DECODE_CACHE_SIZE_CHUNKS,
 	cfg_stream_player_cache_size_chunks=STREAM_DEF_PLAYER_CACHE_SIZE_CHUNKS,
 	cfg_client_ack_timeout_lim=CLIENT_ACK_TIMEOUT_LIM;
@@ -153,6 +162,22 @@ void read_values_cfg_client(void){
 		fclose(cfg_fp);
 		raise(SIGINT);
 	}
+	sscanf(curr_line_buff,"show_decoder_queue_length: %lu",&cfg_show_decoder_queue_length);
+	cfg_show_decoder_queue_length=min(cfg_stream_decoder_cache_size_chunks,max(MIN_PRINT_SIZE,cfg_show_decoder_queue_length));
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
+	sscanf(curr_line_buff,"show_player_queue_length: %lu",&cfg_show_player_queue_length);
+	cfg_show_player_queue_length=min(cfg_stream_player_cache_size_chunks,max(MIN_PRINT_SIZE,cfg_show_player_queue_length));
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		fclose(cfg_fp);
+		raise(SIGINT);
+	}
 	sscanf(curr_line_buff,"show_decoder_queue: %hhu",&stream_show_decoder_queue);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -250,6 +275,10 @@ void print_values_cfg_client(int fd){
 	dprintf(fd,"cache_almost_full_pct: %hhu\n",cfg_cache_almost_full_pct);
 
 	dprintf(fd,"cache_almost_empty_pct: %hhu\n",cfg_cache_almost_empty_pct);
+
+	dprintf(fd,"show_decoder_queue_length: %lu\n",cfg_show_decoder_queue_length);
+
+	dprintf(fd,"show_player_queue_length: %lu\n",cfg_show_player_queue_length);
 
 	dprintf(fd,"show_decoder_queue: %hhu\n",stream_show_decoder_queue);
 

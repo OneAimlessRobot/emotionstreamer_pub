@@ -1,8 +1,6 @@
 #ifndef QUEUE_ARITHMETIC_H
 #define QUEUE_ARITHMETIC_H
 
-#define PRINT_SIZE 300
-
 
 void zero_chk_cache(chunk_queue* que);
 uint64_t getQueueBufferedTime(chunk_queue* que, decoder_result_struct* result);

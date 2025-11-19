@@ -21,6 +21,9 @@ extern ip_cache_entry server_ip_cache_entry,
 extern u_int64_t
 	cfg_latency_ms,
 	cfg_freq,
+	cfg_show_queue_length,
+	cfg_show_decoder_queue_length,
+	cfg_show_player_queue_length,
 	cfg_stream_decoder_cache_size_chunks,
 	cfg_stream_player_cache_size_chunks;
 
