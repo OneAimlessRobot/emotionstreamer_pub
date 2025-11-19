@@ -140,7 +140,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						uploadtofd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 						break;
 					case REPORT:
-						if(rename(curr_dir,curr_server_quarantine_dir_buff)){
+						if(rename(file_path,rep_file_path)){
 							perror("rename");
 						}
 						break;
