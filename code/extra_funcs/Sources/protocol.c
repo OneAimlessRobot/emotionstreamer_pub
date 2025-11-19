@@ -28,6 +28,11 @@ req_type str_to_req_type(char* str){
 		return DOWN;
 
 	}
+	if(!strs_are_strictly_equal(str,"report")){
+
+		return REPORT;
+
+	}
 
 	return NA;
 
@@ -45,6 +50,9 @@ void req_type_to_str(req_type type,char buff[]){
 		break;
 		case DOWN:
 			snprintf(buff, DEF_DATASIZE, "down");
+		break;
+		case REPORT:
+			snprintf(buff, DEF_DATASIZE, "report");
 		break;
 		case CONF:
 			snprintf(buff, DEF_DATASIZE, "conf");

@@ -241,7 +241,7 @@ int clientStart(char* req_field,char* file_name){
 	setNonBlocking(&client_con_obj.sockfd_tcp);
 	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry);
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
-	snprintf((char*)client_con_obj.tcp_data,2*DEF_DATASIZE-1,"%s %s",req_buff,file_name);
+	snprintf((char*)client_con_obj.tcp_data,2*DEF_DATASIZE-1,"%d %s",the_type,file_name);
 
 	con_send_tcp(&client_con_obj,client_data_times_pair);
 
@@ -260,6 +260,10 @@ int clientStart(char* req_field,char* file_name){
 	case PEEK:
 		peek_func();
 		break;
+	case REPORT:
+		printf(REPORT_SENT_WITH_FILENAME,file_name);
+		clear_ports_and_quit(SIGINT);
+        	break;
 	default:
 		printf(UNKNOWN_REQ,req_buff);
 		clear_ports_and_quit(SIGINT);
