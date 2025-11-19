@@ -85,6 +85,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				unsigned char stream_cache_data[sizeof(mp3_stream_chunk)];
 
 				char file_name[PATHSIZE]={0};
+				char* dir_listing_str=NULL;
 				char file_path[PATHSIZE*3 +4]={0};
 				char req_string_buff[PATHSIZE]={0};
 				char rep_file_path[PATHSIZE*3 +4]={0};
@@ -107,7 +108,7 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 					switch(recvd_type){
 
 						case PEEK:
-							char* dir_listing_str=generateDirListing(file_name);
+							dir_listing_str=generateDirListing(file_name);
 							snprintf(file_path,strnlen(dir_listing_str,PATHSIZE*2+1)+5,"%s",dir_listing_str);
 							break;
 						case CONF:
