@@ -35,6 +35,7 @@ static pthread_cond_t reading_cond=PTHREAD_COND_INITIALIZER,
 	       player_cond=PTHREAD_COND_INITIALIZER,
 	       running_cond=PTHREAD_COND_INITIALIZER,
 	       input_cond=PTHREAD_COND_INITIALIZER,
+	       stats_cond=PTHREAD_COND_INITIALIZER,
 	       decoder_cond=PTHREAD_COND_INITIALIZER;
 
 static pthread_mutex_t reading_mtx=PTHREAD_MUTEX_INITIALIZER,
@@ -42,6 +43,7 @@ static pthread_mutex_t reading_mtx=PTHREAD_MUTEX_INITIALIZER,
 		running_mtx=PTHREAD_MUTEX_INITIALIZER,
 		variable_acess_mtx=PTHREAD_MUTEX_INITIALIZER,
 		input_mtx=PTHREAD_MUTEX_INITIALIZER,
+		stats_mtx=PTHREAD_MUTEX_INITIALIZER,
 		decoder_mtx=PTHREAD_MUTEX_INITIALIZER;
 
 
@@ -55,6 +57,7 @@ static int lost_packet=0,
 		reading=0,
 		decoding=0,
 		playing=0,
+		showing=0,
 		paused=0;
 static int is_first_player_chunk=1;
 
@@ -74,6 +77,7 @@ static void stop_client_stream(void){
 	pthread_cond_signal(&decoder_cond);
 	pthread_cond_signal(&reading_cond);
 	pthread_cond_signal(&input_cond);
+	pthread_cond_signal(&stats_cond);
 	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
 		send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
 		close_con(stream_struct.con_obj,1);
@@ -237,6 +241,10 @@ static void* play_thread_func(void* args){
 	usleep(cfg_latency_ms*1000);
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&playing,1,V_SET);
+		if(!acess_var_mtx(&variable_acess_mtx,&showing,0,V_LOOK)){
+			acess_var_mtx(&variable_acess_mtx,&showing,1,V_SET);
+			pthread_cond_signal(&stats_cond);
+		}
 		while(innited){
 			if(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK)){
 
@@ -272,6 +280,13 @@ static void* play_thread_func(void* args){
 }
 static void* show_stats(void* args){
 
+	pthread_mutex_lock(&stats_mtx);
+	while(!acess_var_mtx(&variable_acess_mtx,&showing,0,V_LOOK)&&innited){
+
+		pthread_cond_wait(&stats_cond,&stats_mtx);
+	}
+	pthread_mutex_unlock(&stats_mtx);
+	print_string("Thread de stats alcançado!\n");
 	if(stream_enable_ncurses){
         	enable_ncurses();
 		clear();
@@ -280,12 +295,13 @@ static void* show_stats(void* args){
 		printf("\033[2J");
 
 	}
+	decoder_result_struct result={0};
+	perform_play_op(stream_struct.player,&result,P_GET_FRAME_DATA);
 	while(innited){
 	        clock_t start, end;
 	        float cpu_time_used;
 	        start = clock();
-	        decoder_result_struct result={0};
-		perform_play_op(stream_struct.player,&result,P_GET_FRAME_DATA);
+		char buff[DEF_DATASIZE+1]={0};
 		int pct_full_decoding=0;
 		int time_ms=perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_GET_TIME,Q_LOOK_NA});
 		int pct_full_playing=perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
@@ -298,8 +314,7 @@ static void* show_stats(void* args){
 		else{
 			printf("\033[H");
 		}
-		char buff[DEF_DATASIZE+1]={0};
-		snprintf(buff,DEF_DATASIZE,"Tempo restante no buffer, atualmente: %d ms\nPercentagem de preenchimento em playing: %d\nPercentagem de preenchimento em decoding: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nAre we yet to receive the WAV header? %s\n\n",
+		snprintf(buff,DEF_DATASIZE,"buffer: %d ms\nplaying pct: %d\ndecoding pct: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nWAV innited? %s\n\n",
 					time_ms,
 					pct_full_playing,
 					pct_full_decoding,
@@ -307,22 +322,21 @@ static void* show_stats(void* args){
 					acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK) ? "DECODING ": "    ",
 					acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK) ? "PLAYING ": "    ",
 					acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK) ? "PAUSED ": "    ",
-					is_wav_mode?(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK) ? "YES! ": "NO..."):"Not in wav mode...");
+					is_wav_mode?(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK) ? "YES! ": "NO..."):"Not in WAV mode...");
 		print_string(buff);
-		if(stream_enable_ncurses){
-			if(stream_show_decoder_queue&&decode&&!is_wav_mode){
-				perform_queue_op(stream_struct.decoder_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
-			}
-			if(stream_show_player_queue){
-				perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
-			}
+		if(stream_show_decoder_queue&&decode&&!is_wav_mode){
+			perform_queue_op(stream_struct.decoder_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
+		}
+		if(stream_show_player_queue){
+			perform_queue_op(stream_struct.player_que,NULL,&result,(q_op){Q_PRINT,Q_LOOK_NA});
 		}
 		if(stream_enable_ncurses){
-			refresh();
+			wrefresh(stdscr);
 		}
 		end = clock();
 	        cpu_time_used = F_S_TO_US(((float) (end - start)) / CLOCKS_PER_SEC);
 		float time_diff=((float)cfg_ui_frame_period_us)-cpu_time_used;
+		char buff_test[DEF_DATASIZE]={0};
 		if(time_diff>0.0){
 			usleep((uint64_t)roundf(time_diff));
 		}
@@ -402,13 +416,13 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	chunk_queue decoder_que={0};
 	chunk_player player={0};
 	decoder_t decoder={0};
-	init_queue(&player_que,(!decode||is_wav_mode)?chunk_size:sizeof(pd_chunk_buff),cfg_stream_player_cache_size_chunks,cfg_show_player_queue_length);
+	init_queue(&player_que,(!decode||is_wav_mode)?chunk_size:sizeof(pd_chunk_buff),cfg_stream_player_cache_size_chunks,cfg_show_player_queue_length,"Player queue");
 	init_chunk_player(&player,(!decode||is_wav_mode)?chunk_size:sizeof(pp_chunk_buff),h_chunk_buff,r_chunk_buff,pp_chunk_buff,which_mode);
 	stream_struct.player_que=&player_que;
 	stream_struct.player=&player;
 	if(decode&&!is_wav_mode){
 		printf("Decoder will be initialized\n");
-		init_queue(&decoder_que,sizeof(d_chunk_buff),cfg_stream_decoder_cache_size_chunks,cfg_show_decoder_queue_length);
+		init_queue(&decoder_que,sizeof(d_chunk_buff),cfg_stream_decoder_cache_size_chunks,cfg_show_decoder_queue_length,"Decoder queue");
 		init_decoder(&decoder,sizeof(d_chunk_buff),sizeof(pd_chunk_buff),r_chunk_buff,d_chunk_buff,pd_chunk_buff);
 		stream_struct.decoder=&decoder;
 		stream_struct.decoder_que=&decoder_que;
@@ -417,17 +431,17 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	
 	stream_struct.con_obj=con_obj;
 	innited=1;
-	if(stream_show_stats){
-		pthread_create(&tid_stats,NULL,show_stats,NULL);
-	}
-	if(input_enabled){
-		pthread_create(&tid_input,NULL,input_thread_func,NULL);
-	}
 	if(decode&&!is_wav_mode){
 		pthread_create(&tid_dec,NULL,dec_thread_func,NULL);
 	}
 	if(play){
 		pthread_create(&tid_play,NULL,play_thread_func,NULL);
+	}
+	if(stream_show_stats){
+		pthread_create(&tid_stats,NULL,show_stats,NULL);
+	}
+	if(input_enabled){
+		pthread_create(&tid_input,NULL,input_thread_func,NULL);
 	}
 	rx_thread_func();
 	while(innited&&(acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)||acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK))){

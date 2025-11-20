@@ -4,7 +4,7 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="tomie_diesel/"
+song_subdirectory="VIVISECTION__EP__by_draft.____previous_Femtanyl_Alias_/"
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0

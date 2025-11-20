@@ -76,7 +76,7 @@ static int look_op(chunk_queue* que,queue_look_op op){
 	return result;
 
 }
-static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*result){
+static void circular_q_visual_print(chunk_queue* que){
 
 	if(!que){
 
@@ -108,24 +108,17 @@ static void circular_q_visual_print(chunk_queue* que,decoder_result_struct*resul
 	uint64_t recv_cursor_bar_pos=1+(que->recv_cursor*que->display_size)/que->max_occupied;
 	bar[play_cursor_bar_pos]='P';
 	bar[recv_cursor_bar_pos]='R';
-	uint64_t buff_ms=getQueueBufferedTime(que,result);
 	for(uint64_t i=circular_int_inc(que->display_size+1,play_cursor_bar_pos);(play_cursor_bar_pos!=recv_cursor_bar_pos)&&(i!=recv_cursor_bar_pos);i=circular_int_inc(que->display_size+1,i)){
 
 		bar[i]='=';
 	}
 	char buff[BUFFSIZE]={0};
-	int inc=snprintf(buff,BUFFSIZE-1,"Queue visual:\nplay cursor: %lu\nrecv cursor: %lu\nCurr occupied: %lu\nMax occupied: %lu\n",que->play_cursor,que->recv_cursor,que->n_occupied,que->max_occupied);
-	inc+=snprintf(buff+inc,BUFFSIZE-1,"Queue esta quase vazia? %s\nQueue esta quase cheia? %s\nQueue esta vazia? %s\nQueue esta cheia? %s\nEstamos no byte %lu\nTemos %lu ms de audio no buffer!\n",
-					que_is_almost_empty(que) ? "SIM":"NAO",
-					que_is_almost_full(que)? "SIM":"NAO",
-					que_is_empty(que) ? "SIM":"NAO",
-					que_is_full(que)? "SIM":"NAO",que->n_occupied*que->chunk_size,buff_ms);
-	snprintf(buff+inc,BUFFSIZE-1,"O buff:\n%s\n",bar);
+	int inc=snprintf(buff,BUFFSIZE-1,"Queue name: %s\n",que->queue_name);
+	snprintf(buff+inc,BUFFSIZE-1,"%s\n",bar);
 	print_string(buff);
 }
 int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, decoder_result_struct* frame_data_struct,q_op op){
 	int result=0;
-	//printf("ptr para mutex: %p\n",que->queue_mtx);
 	pthread_mutex_lock(que->queue_mtx);
 	switch(op.main){
 
@@ -136,7 +129,7 @@ int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, decoder_result_st
 			result=(int)getQueueBufferedTime(que,frame_data_struct);
 			break;
 		case Q_PRINT:
-			circular_q_visual_print(que,frame_data_struct);
+			circular_q_visual_print(que);
 			break;
 		case Q_READ_TO:
 			result=dequeue_chunk(que,buff_if_insert);
