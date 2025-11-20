@@ -1,4 +1,5 @@
 #include "../Includes/preprocessor.h"
+#include <libgen.h>
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <alsa/asoundlib.h>
 #include <pulse/error.h>
@@ -85,10 +86,13 @@ static void down_func(char* file_name){
 		int64_t down_size=down_file_size();
 		int fp=-1;
 		char file_path[PATHSIZE*3-1]={0};
+		char file_path2[PATHSIZE*3-1]={0};
 		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,extension_from_server);
+		snprintf(file_path2,sizeof(file_path2),"%s",file_path);
+		_mkdir(dirname(file_path2));
 		if((fp=creat(file_path,0777))<0){
-				perror("Nao foi possivel transferir ficheiro!!!!\n");
-                		clear_ports_and_quit(SIGINT);
+                		fprintf(stderr,"Nao foi possivel transferir ficheiro: %s!!!!\nPaths:\nPath1: %s\nPath2: %s\n",strerror(errno),file_path,file_path2);
+				clear_ports_and_quit(SIGINT);
                 }
 		if(stream_enable_ncurses){
 			enable_ncurses();
