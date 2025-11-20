@@ -1,4 +1,5 @@
 #include "../Includes/preprocessor.h"
+#include <sys/syscall.h>
 #include <ncurses.h>
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include <alsa/asoundlib.h>
@@ -23,12 +24,12 @@
 
 #include "../Includes/streamer_client.h"
 #include "../Includes/terminal_mgmt.h"
+#include "../Includes/client_aux_funcs.h"
 
 static const int play=1;
 static const int decode=1;
 static const int input_enabled=1;
 static struct sigaction sa;
-
 atomic_int innited=0;
 
 static pthread_cond_t reading_cond=PTHREAD_COND_INITIALIZER,
@@ -47,11 +48,23 @@ static pthread_mutex_t reading_mtx=PTHREAD_MUTEX_INITIALIZER,
 		decoder_mtx=PTHREAD_MUTEX_INITIALIZER;
 
 
-static pthread_t tid_play,
+static pthread_t t_play,
+	  	t_dec,
+	  	t_input,
+	  	t_stats;
+
+static pid_t tid_rx,
+		tid_play,
 	  	tid_dec,
 	  	tid_input,
 	  	tid_stats;
+//thread_names;
 
+static const char* play_thread_name="Filipa",
+	   	*decode_thread_name="Ester",
+		*input_thread_name="Ksun",
+		*stats_thread_name="Adriano",
+		*rx_thread_name="Beatriz";
 
 static int lost_packet=0,
 		reading=0,
@@ -59,6 +72,7 @@ static int lost_packet=0,
 		playing=0,
 		showing=0,
 		paused=0;
+
 static int is_first_player_chunk=1;
 
 static client_stream_t stream_struct={
@@ -123,6 +137,8 @@ static void rx_thread_func(void){
 	int full=0;
 	int result=1;
 	print_string("Thread de reading alcançado!\n");
+	tid_rx=gettid_here();
+	set_this_thread_name(tid_rx, rx_thread_name);
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&reading,1,V_SET);
 		while(innited){
@@ -174,6 +190,8 @@ static void* dec_thread_func(void* args){
 		pthread_cond_wait(&decoder_cond,&decoder_mtx);
 	}
 	pthread_mutex_unlock(&decoder_mtx);
+	tid_dec=gettid_here();
+	set_this_thread_name(tid_dec, decode_thread_name);
 	print_string("Thread de decoding alcançado!\n");
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&decoding,1,V_SET);
@@ -237,8 +255,10 @@ static void* play_thread_func(void* args){
 		pthread_cond_wait(&player_cond,&player_mtx);
 	}
 	pthread_mutex_unlock(&player_mtx);
-	print_string("Thread de play alcançado!\n");
 	usleep(cfg_latency_ms*1000);
+	tid_play=gettid_here();
+	set_this_thread_name(tid_play, play_thread_name);
+	print_string("Thread de play alcançado!\n");
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&playing,1,V_SET);
 		if(!acess_var_mtx(&variable_acess_mtx,&showing,0,V_LOOK)){
@@ -286,6 +306,8 @@ static void* show_stats(void* args){
 		pthread_cond_wait(&stats_cond,&stats_mtx);
 	}
 	pthread_mutex_unlock(&stats_mtx);
+	tid_stats=gettid_here();
+	set_this_thread_name(tid_stats, stats_thread_name);
 	print_string("Thread de stats alcançado!\n");
 	if(stream_enable_ncurses){
         	enable_ncurses();
@@ -309,7 +331,7 @@ static void* show_stats(void* args){
 			pct_full_decoding=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
 		}
 		if(stream_enable_ncurses){
-			move(0,0);
+			clear();
 		}
 		else{
 			printf("\033[H");
@@ -354,6 +376,8 @@ static void* input_thread_func(void* args){
                 pthread_cond_wait(&input_cond,&input_mtx);
         }
 	pthread_mutex_unlock(&input_mtx);
+	tid_input=gettid_here();
+	set_this_thread_name(tid_input, input_thread_name);
 	print_string("Thread de input alcançado!\n");
 	while(innited){
 
@@ -393,7 +417,6 @@ static void* input_thread_func(void* args){
 	return args;
 
 }
-
 static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_mode){
         sa.sa_handler = sigint_handler;
         sigemptyset(&sa.sa_mask);
@@ -415,32 +438,31 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	chunk_queue decoder_que={0};
 	chunk_player player={0};
 	decoder_t decoder={0};
-	init_queue(&player_que,(!decode||is_wav_mode)?chunk_size:sizeof(pd_chunk_buff),cfg_stream_player_cache_size_chunks,cfg_show_player_queue_length,"Player queue");
+	init_queue(&player_que,(!decode||is_wav_mode)?chunk_size:sizeof(pd_chunk_buff),cfg_stream_player_cache_size_chunks,cfg_show_player_queue_length,(char*)play_thread_name);
 	init_chunk_player(&player,(!decode||is_wav_mode)?chunk_size:sizeof(pp_chunk_buff),h_chunk_buff,r_chunk_buff,pp_chunk_buff,which_mode);
 	stream_struct.player_que=&player_que;
 	stream_struct.player=&player;
 	if(decode&&!is_wav_mode){
-		printf("Decoder will be initialized\n");
-		init_queue(&decoder_que,sizeof(d_chunk_buff),cfg_stream_decoder_cache_size_chunks,cfg_show_decoder_queue_length,"Decoder queue");
+		printf("Decoder thread (named %s) will be initialized\n",decode_thread_name);
+		init_queue(&decoder_que,sizeof(d_chunk_buff),cfg_stream_decoder_cache_size_chunks,cfg_show_decoder_queue_length,(char*)decode_thread_name);
 		init_decoder(&decoder,sizeof(d_chunk_buff),sizeof(pd_chunk_buff),r_chunk_buff,d_chunk_buff,pd_chunk_buff);
 		stream_struct.decoder=&decoder;
 		stream_struct.decoder_que=&decoder_que;
 		is_first_player_chunk=0;
 	}
-	
 	stream_struct.con_obj=con_obj;
 	innited=1;
 	if(decode&&!is_wav_mode){
-		pthread_create(&tid_dec,NULL,dec_thread_func,NULL);
+		create_client_thread(&t_dec,dec_thread_func);
 	}
 	if(play){
-		pthread_create(&tid_play,NULL,play_thread_func,NULL);
+		create_client_thread(&t_play,play_thread_func);
 	}
 	if(stream_show_stats){
-		pthread_create(&tid_stats,NULL,show_stats,NULL);
+		create_client_thread(&t_stats,show_stats);
 	}
 	if(input_enabled){
-		pthread_create(&tid_input,NULL,input_thread_func,NULL);
+		create_client_thread(&t_input,input_thread_func);
 	}
 	rx_thread_func();
 	while(innited&&(acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)||acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK))){
@@ -453,24 +475,16 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	}
 	pthread_mutex_unlock(&running_mtx);
 	if(stream_show_stats){
-		printf("Saimos do thread de stats?\n");
-		pthread_join(tid_stats,NULL);
-		printf("Saimos do thread de stats!!!!!!\n");
+		join_client_thread(t_stats,(char*)stats_thread_name);
 	}
 	if(play){
-		printf("Saimos do thread play?\n");
-		pthread_join(tid_play,NULL);
-		printf("Saimos do thread play!!!!!!\n");
+		join_client_thread(t_play,(char*)play_thread_name);
 	}
 	if(decode&&!is_wav_mode){
-		printf("Saimos do thread decoder?\n");
-		pthread_join(tid_dec,NULL);
-		printf("Saimos do thread decoder!!!!!\n");
+		join_client_thread(t_dec,(char*)decode_thread_name);
 	}
 	if(input_enabled){
-		printf("Saimos do thread input?\n");
-		pthread_join(tid_input,NULL);
-		printf("Saimos do thread input!!!!!!\n");
+		join_client_thread(t_input,(char*)input_thread_name);
 		endwin_wrapper();
 	}
 	perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
