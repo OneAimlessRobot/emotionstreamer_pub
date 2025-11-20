@@ -110,7 +110,7 @@ static void circular_q_visual_print(chunk_queue* que){
 	bar[recv_cursor_bar_pos]='R';
 	for(uint64_t i=circular_int_inc(que->display_size+1,play_cursor_bar_pos);(play_cursor_bar_pos!=recv_cursor_bar_pos)&&(i!=recv_cursor_bar_pos);i=circular_int_inc(que->display_size+1,i)){
 
-		if(i&&(i<que->display_size)){
+		if(i&&(i<=que->display_size)){
 			bar[i]='=';
 		}
 	}
