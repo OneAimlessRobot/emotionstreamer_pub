@@ -110,7 +110,9 @@ static void circular_q_visual_print(chunk_queue* que){
 	bar[recv_cursor_bar_pos]='R';
 	for(uint64_t i=circular_int_inc(que->display_size+1,play_cursor_bar_pos);(play_cursor_bar_pos!=recv_cursor_bar_pos)&&(i!=recv_cursor_bar_pos);i=circular_int_inc(que->display_size+1,i)){
 
-		bar[i]='=';
+		if(i&&(i<que->display_size)){
+			bar[i]='=';
+		}
 	}
 	char buff[BUFFSIZE]={0};
 	int inc=snprintf(buff,BUFFSIZE-1,"Queue name: %s\n",que->queue_name);
