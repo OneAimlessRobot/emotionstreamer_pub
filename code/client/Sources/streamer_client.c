@@ -336,7 +336,6 @@ static void* show_stats(void* args){
 		end = clock();
 	        cpu_time_used = F_S_TO_US(((float) (end - start)) / CLOCKS_PER_SEC);
 		float time_diff=((float)cfg_ui_frame_period_us)-cpu_time_used;
-		char buff_test[DEF_DATASIZE]={0};
 		if(time_diff>0.0){
 			usleep((uint64_t)roundf(time_diff));
 		}
