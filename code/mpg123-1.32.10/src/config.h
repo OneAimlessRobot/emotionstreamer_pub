@@ -21,16 +21,16 @@
 /* #undef ASMALIGN_EXP */
 
 /* Define if __attribute__((aligned(16))) shall be used */
-#define CCALIGN 1
+/* #undef CCALIGN */
 
 /* Define if debugging is enabled. */
 /* #undef DEBUG */
 
 /* The default audio output module(s) to use */
-#define DEFAULT_OUTPUT_MODULE "pulse,alsa,oss,sdl,openal"
+#define DEFAULT_OUTPUT_MODULE "pulse"
 
 /* Define if building with dynamcally linked libmpg123 */
-#define DYNAMIC_BUILD 1
+/* #undef DYNAMIC_BUILD */
 
 /* Use EFBIG as substitude for EOVERFLOW, mingw.org may lack the latter */
 /* #undef EOVERFLOW */
@@ -54,10 +54,10 @@
 /* #undef HAVE_ALIB_H */
 
 /* Define to 1 if you have the <AL/alc.h> header file. */
-#define HAVE_AL_ALC_H 1
+/* #undef HAVE_AL_ALC_H */
 
 /* Define to 1 if you have the <AL/al.h> header file. */
-#define HAVE_AL_AL_H 1
+/* #undef HAVE_AL_AL_H */
 
 /* Define to 1 if you have the <al.h> header file. */
 /* #undef HAVE_AL_H */
@@ -99,16 +99,16 @@
 #define HAVE_DIRENT_H 1
 
 /* Define to 1 if you have the `dlclose' function. */
-#define HAVE_DLCLOSE 1
+/* #undef HAVE_DLCLOSE */
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #define HAVE_DLFCN_H 1
 
 /* Define to 1 if you have the `dlopen' function. */
-#define HAVE_DLOPEN 1
+/* #undef HAVE_DLOPEN */
 
 /* Define to 1 if you have the `dlsym' function. */
-#define HAVE_DLSYM 1
+/* #undef HAVE_DLSYM */
 
 /* Define to 1 if you have the `execvp' function. */
 #define HAVE_EXECVP 1
@@ -345,7 +345,7 @@
 /* #undef LFS_SENSITIVE */
 
 /* Define to the extension used for runtime loadable modules, say, ".so". */
-#define LT_MODULE_EXT ".so"
+/* #undef LT_MODULE_EXT */
 
 /* Define to the sub-directory where libtool stores uninstalled libraries. */
 #define LT_OBJDIR ".libs/"
@@ -471,7 +471,7 @@
 /* #undef SYN123_NO_CASES */
 
 /* Define if modules are enabled */
-#define USE_MODULES 1
+/* #undef USE_MODULES */
 
 /* Define for new Huffman decoding scheme. */
 #define USE_NEW_HUFFTABLE 1

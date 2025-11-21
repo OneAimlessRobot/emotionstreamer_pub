@@ -16,20 +16,19 @@ CONVERTER_TOOL_BIN= ./converter_tool/converter_tool.exe
 
 LDLIBS :=  -lm
 
-LDLIBS_SOUND := -lasound -lpulse -lpulse-simple -lmpg123
+LDLIBS_SOUND :=  -lasound -lpulse -lpulse-simple -L./libs -lmpg123
 
 TSAN_FLAGS = -fsanitize=thread -O0 -g -fno-omit-frame-pointer
 
 LDLIBS_PTHREAD= -lpthread
 
-LDLIBS_SQLITE= -lsqlite3
+LDLIBS_SQLITE= -lm -L./libs -lsqlite3
 
-LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) -lncurses
+LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) -lpthread -lncurses
 
 LDLIBS_SERVER += $(LDLIBS_PTHREAD)
 
-
-INCLUDE= ./Includes ./mpg123-1.32.10/src/include ./sqlite-src-3500200/bld ./wav_stuff_i_stole_because_i_am_lazy .
+INCLUDE= ./Includes ./mpg123-1.32.10/src/include ./sqlite-amalgamation-3510000 ./wav_stuff_i_stole_because_i_am_lazy .
 SOURCES= . ./Sources
 
 SERVERINCLUDE= ./server/Includes ./extra_funcs/Includes
@@ -204,28 +203,28 @@ main: $(BINARY)
 
 
 $(BINARY): $(OBJECTS)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(RESOURCEFILES) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^
 
 $(SERVERBIN): $(SERVERSTUFF) $(CONVERTER_TOOL_EXTRA_STUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
 
 $(CLIENTBIN): $(CLIENTSTUFF) $(CONVERTER_TOOL_EXTRA_STUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES) $(LDLIBS_CLIENT) $(LDLIBS) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES) $(LDLIBS) $(LDLIBS_CLIENT) $(LDLIBS_SQLITE)
 
 $(BROWSERBIN): $(BROWSERSTUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(BROWSERRESOURCEFILES) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(BROWSERRESOURCEFILES) $(LDLIBS) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
 
 $(HEARTBEATBIN): $(HEARTBEATSTUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(HEARTBEATRESOURCEFILES) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(HEARTBEATRESOURCEFILES) $(LDLIBS) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
 
 $(MASTERBIN): $(MASTERSTUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(MASTERRESOURCEFILES) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(MASTERRESOURCEFILES) $(LDLIBS) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
 
 $(PORT_MAPPER_BIN): $(PORT_MAPPER_STUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(PORT_MAPPER_RESOURCEFILES) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(PORT_MAPPER_RESOURCEFILES) $(LDLIBS) $(LDLIBS_SQLITE)
 
 $(CONVERTER_TOOL_BIN): $(CONVERTER_TOOL_STUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CONVERTER_TOOL_RESOURCEFILES) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CONVERTER_TOOL_RESOURCEFILES) $(LDLIBS) $(LDLIBS_SQLITE)
 
 
 

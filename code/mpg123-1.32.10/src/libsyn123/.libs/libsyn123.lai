@@ -5,13 +5,13 @@
 # It is necessary for linking the library.
 
 # The name that we can dlopen(3).
-dlname='libsyn123.so.0'
+dlname=''
 
 # Names of this library.
-library_names='libsyn123.so.0.2.3 libsyn123.so.0 libsyn123.so'
+library_names=''
 
 # The name of the static archive.
-old_library=''
+old_library='libsyn123.a'
 
 # Linker flags that cannot go in dependency_libs.
 inherited_linker_flags=''

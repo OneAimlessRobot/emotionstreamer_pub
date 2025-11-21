@@ -1,42 +1,0 @@
-stream_enable_ncurses: Yes
-stream_show_stats: Yes
-stream_show_frames: No
-ui_framerate_fps (frame period in us): 10.000000 (100000 us)
-latency_ms: 1000
-cache_almost_full_pct: 60
-cache_almost_empty_pct: 3
-show_decoder_queue: 0
-show_player_queue: 1
-client_chunk_size: 4608
-client_timeouts_data: 1s 222000 us
-client_timeouts_con: 3s 3 us
-client_timeouts_data: 1s 222000 us
-client_timeouts_ack: 1s 222000 us
-client_ack_period_us: 1000000us
-client_timeouts_holepunching: 1 500000
-client_ack_timeout_lim: 3
-decoder_cache_num_chunks: 1000
-player_cache_num_chunks: 1000
-client_music_folder_path: /songs_out/raw_songs_in/
-logs_file_name: 
-generalized_config_filepath: /../config/
-port_mapper_timeouts_con: 1s 500000 us
-Entry de address <ip>:<port>  192.168.1.2:11001
-Entry de address <ip>:<port>  192.168.1.2:0
-Entry de address <ip>:<port>  192.168.1.2:7777
-Generalized cfg:
-Curr dir: /mnt/FASTstorage/FASTprogs/emotionstreamer/code/client/songs_out/raw_songs_in/
-Bind com sucesso!!!:
-Endereço: 
-192.168.1.2 Porta: 11004
-O endereço desta socket é:
-
-Endereço: 
-192.168.1.2 Porta: 11004
-Recebendo tamanho!!!
-5702004 bytes DO SERVER SERAO SERAM STREAMADOS por TCP!!
-A extensão de ficheiro é .mp3!
-WAV mode? No...
-AGUARDE!
-Decoder will be initialized
-[?1049h[22;0;0t[1;59r(B[m[4l[?7h[?25l[?1h=[H[2JTempo restante no buffer, atualmente: -2147483648 ms[2dPercentagem de preenchimento em playing: 0[3dPercentagem de preenchimento em decoding: 0[4dReading?: READING Decoding?:[35GPlaying?:[50GPaused?:[5dAre we yet to receive the WAV header? Not in wav mode...[7dQueue visual:[8dplay cursor: 0[9drecv cursor: 0[10dCurr occupied: 0[11dMax occupied: 1000[12dQueue esta quase vazia? SIM[13dQueue esta quase cheia? NAO[14dQueue esta vazia? SIM[15dQueue esta cheia? NAO[16dEstamos no byte 0[17dTemos 2147483648 ms de audio no buffer![18dO buff:[19d[R[21;38H][22d[2;42H3[9;14H34[10d34[14d NAO[16;17H161160[19d[P=[8bR[22d[2;42H14[9;14H139[10d139[12;25HNAO[16;17H6588[19;3H[19;12H=[30bR[22dThread de input alcançado![2;42H2[9;14H244[10d244[16;17H1156560[19;3H[19;43H=[31bR[22d[2;42H35[9;14H349[10d349[16d6542[19;3H[19;75H=[30bR[22d[2;42H4[9;14H454[10d454[16;17H21519[19;106H=[25b=[20;1H=====R[22d[2;42H56[9;14H559[10d559[16d6496[20d=[35bR[22d[2;42H63[3d26[9;14H62[10d62[13;25HSIM[16;18H9814[20d[20;37H=[20bR[22d[3;43H100[4;11H   [4P[22d[59;1H[?12l[?25h[?1049l[23;0;0t[?1l>
