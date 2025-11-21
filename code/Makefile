@@ -16,7 +16,7 @@ CONVERTER_TOOL_BIN= ./converter_tool/converter_tool.exe
 
 LDLIBS :=  -lm
 
-LDLIBS_SOUND :=  -lasound -lpulse -lpulse-simple -L./libs -lmpg123
+LDLIBS_SOUND := -lpulse -lpulse-simple -L./libs -lmpg123 -lasound
 
 TSAN_FLAGS = -fsanitize=thread -O0 -g -fno-omit-frame-pointer
 
@@ -24,7 +24,7 @@ LDLIBS_PTHREAD= -lpthread
 
 LDLIBS_SQLITE= -lm -L./libs -lsqlite3
 
-LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) -lpthread -lncurses
+LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) -lpthread -L./libs -lncurses
 
 LDLIBS_SERVER += $(LDLIBS_PTHREAD)
 
