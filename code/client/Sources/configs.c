@@ -26,7 +26,7 @@ ip_cache_entry client_port_mapper_ip_cache_entry={{0},0};//
 char server_ip_address_buff[PATHSIZE+1]={0};
 char client_ip_address_buff[PATHSIZE+1]={0};
 char client_port_mapper_ip_address_buff[PATHSIZE+1]={0};
-
+char cfg_client_device_name_if_alsa[PATHSIZE+1]={0};
 
 //EM BYTES E HZ!
 u_int64_t cfg_latency_ms=DEF_LATENCY_MS,
@@ -34,7 +34,8 @@ u_int64_t cfg_latency_ms=DEF_LATENCY_MS,
 	cfg_show_player_queue_length=PRINT_SIZE,
 	cfg_stream_decoder_cache_size_chunks=STREAM_DEF_DECODE_CACHE_SIZE_CHUNKS,
 	cfg_stream_player_cache_size_chunks=STREAM_DEF_PLAYER_CACHE_SIZE_CHUNKS,
-	cfg_client_ack_timeout_lim=CLIENT_ACK_TIMEOUT_LIM;
+	cfg_client_ack_timeout_lim=CLIENT_ACK_TIMEOUT_LIM,
+	cfg_client_alsa_device_latency_if_alsa_ms=CLIENT_ALSA_LATENCY_MS_DEFAULT;
 
 uint8_t cfg_cache_almost_full_pct=CACHE_ALMOST_FULL_PCT,
 	cfg_cache_almost_empty_pct=CACHE_ALMOST_EMPTY_PCT;
@@ -203,6 +204,18 @@ void read_values_cfg_client(void){
 
 		clean_and_exit();
 	}
+	sscanf(curr_line_buff,"client_device_name_if_alsa: %s",cfg_client_device_name_if_alsa);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"client_alsa_device_latency_if_alsa_ms: %lu",&cfg_client_alsa_device_latency_if_alsa_ms);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
 	sscanf(curr_line_buff,"server_ip_address: %s", server_ip_address_buff);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -270,6 +283,12 @@ void print_values_cfg_client(int fd){
 	dprintf(fd,"client_music_folder_path: %s\n",client_music_folder_path);
 
 	dprintf(fd,"logs_file_name: %s\n",client_logs_file_name);
+
+	dprintf(fd,"client_device_name_if_alsa: %s\n",cfg_client_device_name_if_alsa);
+
+	dprintf(fd,"client_alsa_device_latency_if_alsa_ms: %lu ms (%lu us)\n",
+									cfg_client_alsa_device_latency_if_alsa_ms,
+									MS_TO_US(cfg_client_alsa_device_latency_if_alsa_ms));
 
         dprintf(fd,"generalized_config_filepath: %s\n",generalized_config_filepath_buff);
 

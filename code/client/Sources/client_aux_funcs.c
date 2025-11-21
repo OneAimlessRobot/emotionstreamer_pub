@@ -9,7 +9,7 @@ pid_t gettid_here()
 }
 int set_this_thread_name(pid_t tid,const char * name)
 {
-    char filename[6 + 5 + 5 + 1];
+    char filename[DEF_DATASIZE]={0};
 
     if(strlen(name) > 15)
     {
@@ -18,7 +18,11 @@ int set_this_thread_name(pid_t tid,const char * name)
     }
     snprintf(filename, sizeof(filename), "/proc/%d/comm", tid);
 
-    FILE * comm=fopen(filename, "w");
+    FILE * comm=NULL;
+    if(!(comm=fopen(filename, "w"))){
+	fprintf(stderr,"Erro a extrair nome de thread numero %d!\nErro: %s\nNome de ficheiro: %s\n",tid,strerror(errno),filename);
+	return -1;
+    }
     fprintf(comm, "%s", name);
     fclose(comm);
     return 0;

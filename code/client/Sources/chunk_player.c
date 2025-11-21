@@ -2,7 +2,6 @@
 #include <alsa/asoundlib.h>
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include "../../wav_stuff_i_stole_because_i_am_lazy/wav.h"
-
 #include <pulse/pulseaudio.h>
 #include <pulse/thread-mainloop.h>
 #include <pulse/xmalloc.h>
@@ -86,14 +85,22 @@ static void initALSA(chunk_player* player){
 
 int err;
 if(!innited){
-	if ((err=snd_pcm_open(&player->play_stream_alsa, DEVICE, SND_PCM_STREAM_PLAYBACK, 0)) < 0){
+	if ((err=snd_pcm_open(&player->play_stream_alsa, cfg_client_device_name_if_alsa, SND_PCM_STREAM_PLAYBACK, 0)) < 0){
 	     printf("Playback open error: %s\n", snd_strerror(err));
 	     exit(-1);
 	}
 
 }
-if ((err =snd_pcm_set_params(player->play_stream_alsa,SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED,player->current_result.channels,player->current_result.hz, 1, 1000) ) < 0 ){
-	        printf("Playback open error: %s\n", snd_strerror(err));
+if ((err =snd_pcm_set_params(player->play_stream_alsa,
+					SND_PCM_FORMAT_S16_LE,
+					SND_PCM_ACCESS_RW_INTERLEAVED,
+					player->current_result.channels,
+					player->current_result.hz,
+					1,
+					MS_TO_US(cfg_client_alsa_device_latency_if_alsa_ms)) ) < 0 ){
+
+
+		printf("Playback open error: %s\n", snd_strerror(err));
  		raise(SIGINT);
 		abort();
 	}

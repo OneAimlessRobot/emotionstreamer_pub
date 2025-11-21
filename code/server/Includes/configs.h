@@ -19,19 +19,19 @@ extern char generalized_config_filepath_buff[PATHSIZE+1];
 extern char server_name_buff[PATHSIZE+1];
 extern char curr_server_quarantine_dir_buff[PATHSIZE+1];
 
-extern uint64_t server_chunk_size;
+extern uint64_t cfg_server_ack_period_us,
+		server_ack_timeout_lim,
+		server_chunk_size;
 
 extern int8_t is_wav_mode;
+
+extern uint8_t cfg_server_logging;
 
 extern int_pair server_data_times_pair,
 	server_con_times_pair,
 	server_ack_times_pair,
 	server_drop_chunks_times_pair;
 
-extern uint64_t cfg_server_ack_period_us;
-
-extern uint8_t cfg_server_logging;
-extern uint64_t server_ack_timeout_lim;
 
 void read_values_cfg_server(void);
 void print_values_cfg_server(int fd);
