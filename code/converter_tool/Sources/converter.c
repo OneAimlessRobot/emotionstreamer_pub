@@ -7,32 +7,27 @@
 
 static frame_info_machine_t machine={0};
 static uint16_t get_mp3_frame_size(uint16_t samples,uint32_t bitrate, uint32_t samplerate, uint32_t pad,uint8_t slot_size) {
-	
+
 	if (!bitrate || !samplerate) return 0;
     uint64_t num = (uint64_t)samples * (uint64_t)bitrate;   // e.g., 1152 * 128000
     uint64_t den = (uint64_t)8 * (uint64_t)samplerate;      // 8 bits/byte
-    uint64_t base = num / den;                              
+    uint64_t base = num / den;
     uint64_t total = base + (pad ? slot_size : 0);
     return (total <= 0xFFFF) ? (uint16_t)total : 0;
 }
 
-static void sigint_handler(int signal_arg){
-
-	fprintf(stderr,"Sigint called!!!\n%s\n",strerror(errno+(signal_arg*0)));
-	end_frame_info_machine(&machine);
-	exit(-1);
-
-}
 
 void start_frame_info_machine(const char* file_name_in, const char* file_name_out,int dry_run){
 	if(!file_name_in){
 
 		fprintf(stderr,"Null input file name string!\n%s\n",strerror(errno));
+		end_frame_info_machine(&machine);
 		return;
 	}
 	if(!file_name_out){
 
 		fprintf(stderr,"Null output file name string!\n%s\n",strerror(errno));
+		end_frame_info_machine(&machine);
 		return;
 	}
 
@@ -45,16 +40,16 @@ void start_frame_info_machine(const char* file_name_in, const char* file_name_ou
 	if(machine.fd_in<0){
 
 		fprintf(stderr,"Error at opening frame_info_machine input fd!: %s\nPath: %s\n",strerror(errno),path_buff_in);
+		end_frame_info_machine(&machine);
 		return;
 	}
 	machine.fd_out=(dry_run?0:open(path_buff_out,O_WRONLY|O_TRUNC|O_CREAT,0664));
 	if(machine.fd_out<0){
 
 		fprintf(stderr,"Error at opening frame_info_machine output fd!: %s\nPath: %s\n",strerror(errno),path_buff_out);
-		close(machine.fd_in);
+		end_frame_info_machine(&machine);
 		return;
 	}
-	signal(SIGINT,sigint_handler);
 	int nread=-1;
 	uint64_t frame_id=0;
 	int nwritten=-1;
@@ -87,9 +82,6 @@ void start_frame_info_machine(const char* file_name_in, const char* file_name_ou
 		uint8_t   brx = (hdr[2] & 0xf0) >> 4;   // Bitrate index
 		uint8_t   srx = (hdr[2] & 0x0c) >> 2;   // SampRate index
 		uint8_t   prot = (hdr[1] & 0x01); // 1=no CRC, 0=CRC present
-
-
-	
 
 		if (ver == 1 || brx == 0 || brx == 15 || srx > 2) {
 			lseek(machine.fd_in, start + 1, SEEK_SET);
@@ -176,10 +168,12 @@ void print_frame_info_data(frame_info_t *frame_info){
 void end_frame_info_machine(frame_info_machine_t* machine){
 
 	printf("Exiting from frame machine\n");
-	close(machine->fd_in);
-	close(machine->fd_out);
-
-
+	if(machine->fd_in){
+		close(machine->fd_in);
+	}
+	if(machine->fd_out){
+		close(machine->fd_out);
+	}
 }
 
 
