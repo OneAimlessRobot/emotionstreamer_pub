@@ -35,10 +35,12 @@ static void process_ip_cache_entries(void){
 }
 
 
-static void sigint_handler(int useless){
-
-        printf("Saimos no leitor de cfg. do heartbeat server Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_MASTER);
-        exit(useless);
+static void clean_and_exit(void){
+	if(cfg_fp) {
+		fclose(cfg_fp);
+	}
+	printf("Saimos no leitor de cfg. do master server. Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_MASTER);
+	exit(-1);
 }
 
 static void clean_buff(void){
@@ -49,68 +51,58 @@ static void clean_buff(void){
 
 void read_values_cfg_master(void){
 
-        signal(SIGINT,sigint_handler);
-
         if(!(cfg_fp=fopen(CONFIG_FILE_PATH_MASTER,"r"))){
 
-                raise(SIGINT);
+                clean_and_exit();
         }
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"master_server_logging: %hhu",&cfg_master_server_logging);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"master_timeouts_con: %lu %lu",&master_con_times_pair[0],&master_con_times_pair[1]);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"master_timeouts_data: %lu %lu",&master_data_times_pair[0],&master_data_times_pair[1]);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"master_timeouts_ack: %lu %lu",&master_ack_times_pair[0],&master_ack_times_pair[1]);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"master_ack_period_us: %lu",&cfg_master_ack_period_us);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
 	//master_server_port_mapper_ip_address:
         sscanf(curr_line_buff,"master_server_ip_address: %s",master_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"master_server_port_mapper_ip_address: %s",master_server_port_mapper_ip_address_buff);
         clean_buff();
 
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"generalized_config_filepath: %s",generalized_config_filepath_buff);
         clean_buff();

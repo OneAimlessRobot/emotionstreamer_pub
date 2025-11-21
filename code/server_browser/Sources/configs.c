@@ -28,10 +28,12 @@ uint64_t cfg_browser_ack_period_us=DEF_BROWSER_ACK_PERIOD_US;
 
 char generalized_config_filepath_buff[PATHSIZE+1]={0};
 
-static void sigint_handler(int useless){
-
-        printf("Saimos no leitor de cfg. do heartbeat server Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_BROWSER);
-        exit(useless);
+static void clean_and_exit(void){
+	if(cfg_fp) {
+		fclose(cfg_fp);
+	}
+	printf("Saimos no leitor de cfg. do server_browser. Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_BROWSER);
+	exit(-1);
 }
 
 static void clean_buff(void){
@@ -48,52 +50,50 @@ static void process_ip_cache_entries(void){
 
 void read_values_cfg_browser(void){
 
-        signal(SIGINT,sigint_handler);
-
         if(!(cfg_fp=fopen(CONFIG_FILE_PATH_BROWSER,"r"))){
 
-                raise(SIGINT);
+                clean_and_exit();
         }
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"browser_logging: %hhu",&cfg_server_browser_logging);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"browser_timeouts_con: %lu %lu",&browser_con_times_pair[0],&browser_con_times_pair[1]);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"browser_timeouts_data: %lu %lu",&browser_data_times_pair[0],&browser_data_times_pair[1]);
         clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"server_browser_port_mapper_ip_address: %s",server_browser_port_mapper_ip_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"server_browser_ip_address: %s",server_browser_ip_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"generalized_config_path: %s",generalized_config_filepath_buff);
         clean_buff();

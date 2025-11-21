@@ -54,133 +54,118 @@ static void process_ip_cache_entries(void){
 }
 
 
-static void sigint_handler(int useless){
-
-	printf("Saimos no leitor de cfg. do server Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_SERVER);
-	exit(useless);
+static void clean_and_exit(void){
+	if(cfg_fp) {
+		fclose(cfg_fp);
+	}
+	printf("Saimos no leitor de cfg. do server. Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_SERVER);
+	exit(-1);
 }
 
 void read_values_cfg_server(void){
-	
-	signal(SIGINT,sigint_handler);
+
 
 	if(!(cfg_fp=fopen(CONFIG_FILE_PATH_SERVER,"r"))){
 
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+                clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_logging: %hhu",&cfg_server_logging);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+                clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_chunk_size: %lu",&server_chunk_size);
 	server_chunk_size=max(0,min(MAX_MP3_STREAM_CHUNK_BUFF_SIZE,server_chunk_size));
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+                clean_and_exit();
  	}
 	sscanf(curr_line_buff,"server_timeouts_con: %lu %lu",&server_con_times_pair[0],&server_con_times_pair[1]);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+                clean_and_exit();
  	}
 	sscanf(curr_line_buff,"server_timeouts_data: %lu %lu",&server_data_times_pair[0],&server_data_times_pair[1]);
 	clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+                clean_and_exit();
  	}
 	sscanf(curr_line_buff,"server_timeouts_ack: %lu %lu",&server_ack_times_pair[0],&server_ack_times_pair[1]);
 	clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"server_ack_period_us: %lu",&cfg_server_ack_period_us);
         clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+                clean_and_exit();
  	}
 	sscanf(curr_line_buff,"server_timeouts_drop_chunks: %lu %lu",&server_drop_chunks_times_pair[0],&server_drop_chunks_times_pair[1]);
 	clean_buff();
 
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+                clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_music_folder_path: %s",server_music_folder_path);
 	clean_buff();
 
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+	        clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_music_quarantine_folder_path: %s",server_music_quarantine_folder_path);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+	        clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_working_extension: %s",server_working_extension);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"server_ip_address: %s",server_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"upper_server_ip_address: %s",upper_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"server_port_mapper_ip_address: %s",server_port_mapper_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"generalized_config_filepath: %s",generalized_config_filepath_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"server_name: %s",server_name_buff);
         clean_buff();
         fclose(cfg_fp);
 	server_working_extension[sizeof(server_working_extension)-1]=0;
 	server_music_folder_path[sizeof(server_music_folder_path)-1]=0;
-	
 	process_ip_cache_entries();
 
 

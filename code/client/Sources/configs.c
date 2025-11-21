@@ -70,185 +70,158 @@ static void process_ip_cache_entries(void){
 
 }
 
-static void sigint_handler(int useless){
-	
+static void clean_and_exit(void){
+	if(cfg_fp) {
+		fclose(cfg_fp);
+	}
 	printf("Saimos no leitor de cfg. do client. Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_CLIENT);
-	exit(useless);
+	exit(-1);
 }
 
 void read_values_cfg_client(void){
-	
-	signal(SIGINT,sigint_handler);
 
 	if(!(cfg_fp=fopen(CONFIG_FILE_PATH_CLIENT,"r"))){
 
-		raise(SIGINT);
+		clean_and_exit();
 	}
-	
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
 	}
 	sscanf(curr_line_buff,"client_logging: %hhu",&cfg_client_logging);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"stream_enable_ncurses: %hhu",&stream_enable_ncurses);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"stream_show_stats: %hhu",&stream_show_stats);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"stream_show_frames: %hhu",&stream_show_frames);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"ui_framerate_fps: %f",&cfg_ui_framerate_fps);
 	cfg_ui_frame_period_us=UI_FRAME_PERIOD_US(cfg_ui_framerate_fps);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"latency_ms: %lu",&cfg_latency_ms);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"decoder_cache_num_chunks: %lu",&cfg_stream_decoder_cache_size_chunks);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"player_cache_num_chunks: %lu",&cfg_stream_player_cache_size_chunks);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"cache_almost_full_pct: %hhu",&cfg_cache_almost_full_pct);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"cache_almost_empty_pct: %hhu",&cfg_cache_almost_empty_pct);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"show_decoder_queue_length: %lu",&cfg_show_decoder_queue_length);
 	cfg_show_decoder_queue_length=min(cfg_stream_decoder_cache_size_chunks,max(MIN_PRINT_SIZE,cfg_show_decoder_queue_length));
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+	clean_and_exit();
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"show_player_queue_length: %lu",&cfg_show_player_queue_length);
 	cfg_show_player_queue_length=min(cfg_stream_player_cache_size_chunks,max(MIN_PRINT_SIZE,cfg_show_player_queue_length));
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"show_decoder_queue: %hhu",&stream_show_decoder_queue);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"show_player_queue: %hhu",&stream_show_player_queue);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_chunk_size: %hu",&cfg_client_chunk_size);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_timeouts_con: %lu %lu",&client_con_times_pair[0],&client_con_times_pair[1]);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_timeouts_data: %lu %lu",&client_data_times_pair[0],&client_data_times_pair[1]);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_music_folder_path: %s",client_music_folder_path);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"log_file_name: %s",client_logs_file_name);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_ip_address: %s", server_ip_address_buff);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 //client_port_mapper_ip_address:
 	sscanf(curr_line_buff,"client_ip_address: %s", client_ip_address_buff);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+		clean_and_exit();
 	}
 //
 	sscanf(curr_line_buff,"client_port_mapper_ip_address: %s", client_port_mapper_ip_address_buff);
 	clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"generalized_config_filepath: %s",generalized_config_filepath_buff);
         clean_buff();

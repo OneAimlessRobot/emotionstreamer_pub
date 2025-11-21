@@ -24,12 +24,15 @@ static void clean_buff(void){
 
 }
 
-static void sigint_handler(int useless){
 
-        printf("Saimos no leitor de cfg. do port mapper Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_PORT_MAPPER);
-        exit(useless);
+
+static void clean_and_exit(void){
+	if(cfg_fp) {
+		fclose(cfg_fp);
+	}
+	printf("Saimos no leitor de cfg. do port_mapper. Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_PORT_MAPPER);
+	exit(-1);
 }
-
 
 
 static void process_ip_cache_entries(void){
@@ -43,45 +46,44 @@ static void process_ip_cache_entries(void){
 
 void read_values_cfg_port_mapper(void){
 
-	signal(SIGINT,sigint_handler);
 
         if(!(cfg_fp=fopen(CONFIG_FILE_PATH_PORT_MAPPER,"r"))){
 
-                raise(SIGINT);
+                clean_and_exit();
         }
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"port_mapper_logging: %hhu",&cfg_port_mapper_logging);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"port_mapper_init_port: %hu",&cfg_init_port);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"port_mapper_num_ports: %hu",&cfg_num_ports);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"port_mapper_ip_address: %s",port_mapper_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+
+                clean_and_exit();
         }
         sscanf(curr_line_buff,"port_mapper_generalized_config_path: %s",generalized_config_filepath_buff);
         clean_buff();

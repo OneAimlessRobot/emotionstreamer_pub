@@ -42,10 +42,13 @@ static void process_ip_cache_entries(void){
 
 }
 
-static void sigint_handler(int useless){
 
-        printf("Saimos no leitor de cfg. do heartbeat server Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_HB);
-        exit(useless);
+static void clean_and_exit(void){
+	if(cfg_fp) {
+		fclose(cfg_fp);
+	}
+	printf("Saimos no leitor de cfg. do heartbeat server. Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_HB);
+	exit(-1);
 }
 
 static void clean_buff(void){
@@ -56,80 +59,78 @@ static void clean_buff(void){
 
 void read_values_cfg_hb(void){
 
-        signal(SIGINT,sigint_handler);
-
         if(!(cfg_fp=fopen(CONFIG_FILE_PATH_HB,"r"))){
 
-                raise(SIGINT);
+                clean_and_exit();
         }
 	clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
+
         }
         sscanf(curr_line_buff,"hb_server_logging: %hhu",&cfg_hb_server_logging);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
+
         }
         sscanf(curr_line_buff,"hb_timeouts_con: %lu %lu",&hb_con_times_pair[0],&hb_con_times_pair[1]);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
+
         }
         sscanf(curr_line_buff,"hb_timeouts_data: %lu %lu",&hb_data_times_pair[0],&hb_data_times_pair[1]);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
+
         }
         sscanf(curr_line_buff,"hb_timeouts_ack: %lu %lu",&hb_ack_times_pair[0],&hb_ack_times_pair[1]);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-		fclose(cfg_fp);
-		raise(SIGINT);
+                clean_and_exit();
+
 	}
 	sscanf(curr_line_buff,"hb_ack_period_us: %lu",&cfg_hb_ack_period_us);
 	clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
+
         }
         sscanf(curr_line_buff,"heartbeat_ip_address: %s",heartbeat_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
+
         }
         sscanf(curr_line_buff,"upper_server_ip_address: %s",upper_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
+
         }
         sscanf(curr_line_buff,"heartbeat_port_mapper_ip_address: %s",heartbeat_port_mapper_ip_address_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
+
         }
         sscanf(curr_line_buff,"generalized_config_filepath: %s",generalized_config_filepath_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                fclose(cfg_fp);
-                raise(SIGINT);
+                clean_and_exit();
+
         }
         sscanf(curr_line_buff,"hb_server_name: %s",hb_server_name_buff);
         clean_buff();
