@@ -14,8 +14,6 @@ PORT_MAPPER_BIN= ./port_mapper/port_mapper.exe
 
 CONVERTER_TOOL_BIN= ./converter_tool/converter_tool.exe
 
-GLDIR= ./player
-
 LDLIBS :=  -lm
 
 LDLIBS_SOUND := -lasound -lpulse -lpulse-simple -lmpg123
