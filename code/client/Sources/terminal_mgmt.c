@@ -1,5 +1,6 @@
 #include "../../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include <ao/ao.h>
 #include <ncurses.h>
 #include <pulse/error.h>
 #include <pulse/simple.h>

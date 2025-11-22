@@ -1,6 +1,6 @@
 #ifndef CHUNK_PLAYER_H
 #define CHUNK_PLAYER_H
-typedef enum method{PLAY_PA,PLAY_ALSA}method;
+typedef enum method{PLAY_PA,PLAY_ALSA,PLAY_AO}method;
 
 typedef enum play_op{P_REAL_PLAY,P_DRY_PLAY,P_PLAY_NA,P_GET_FRAME_DATA,P_INSERT_FRAME_DATA,P_PRINT_FRAME_DATA, P_INIT_LIBS,P_CLEAN,P_PARSE_WAV_HEADER_INTO_PLAYER_RESULT}play_op;
 
@@ -8,6 +8,7 @@ typedef struct chunk_player{
 	pthread_mutex_t* mtx;
 	snd_pcm_t*  play_stream_alsa;
 	pa_simple* play_stream_pa;
+	ao_device *play_stream_ao;
 	method which_mode;
 	uint8_t* h_chunk;
 	uint8_t* p_chunk;

@@ -2,6 +2,7 @@
 #include <alsa/asoundlib.h>
 #include "../../mpg123-1.32.10/src/include/mpg123.h"
 #include "../../wav_stuff_i_stole_because_i_am_lazy/wav.h"
+#include <ao/ao.h>
 #include <pulse/pulseaudio.h>
 #include <pulse/thread-mainloop.h>
 #include <pulse/xmalloc.h>
@@ -27,10 +28,13 @@ struct pa_simple {
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/configs.h"
 #include "../Includes/ripped_code.h"
 #include "../Includes/mp3module.h"
 #include "../Includes/chunk_player.h"
+#include "../Includes/chunk_queue.h"
+#include "../Includes/streamer_client.h"
 
 static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
 static int wav_header_received=0;
@@ -64,6 +68,18 @@ static void cleanPA(chunk_player* player){
 	}
 
 }
+
+static void cleanAO(chunk_player* player){
+
+	if(player->play_stream_ao){
+
+	    ao_close(player->play_stream_ao);
+	    ao_shutdown();
+
+	}
+
+
+}
 static void clean_player(chunk_player* player){
 		switch(player->which_mode){
 
@@ -72,6 +88,9 @@ static void clean_player(chunk_player* player){
 				break;
 			case PLAY_PA:
 				cleanPA(player);
+				break;
+			case PLAY_AO:
+				cleanAO(player);
 				break;
 			default:
 				break;
@@ -84,9 +103,13 @@ static void clean_player(chunk_player* player){
 static void initALSA(chunk_player* player){
 
 int err;
+char tmp_dev_string[DEF_DATASIZE]={0};
+
+snprintf(tmp_dev_string,strlen(cfg_client_device_name_if_alsa)+strlen(cfg_client_device_output_if_alsa)+10,"%s,%s",cfg_client_device_name_if_alsa,cfg_client_device_output_if_alsa);
+
 if(!innited){
-	if ((err=snd_pcm_open(&player->play_stream_alsa, cfg_client_device_name_if_alsa, SND_PCM_STREAM_PLAYBACK, 0)) < 0){
-	     printf("Playback open error: %s\n", snd_strerror(err));
+	if ((err=snd_pcm_open(&player->play_stream_alsa, tmp_dev_string, SND_PCM_STREAM_PLAYBACK, 0)) < 0){
+	     printf("Playback open error: device name obtained: %s\nError: %s\n",tmp_dev_string, snd_strerror(err));
 	     exit(-1);
 	}
 
@@ -102,25 +125,53 @@ if ((err =snd_pcm_set_params(player->play_stream_alsa,
 
 		printf("Playback open error: %s\n", snd_strerror(err));
  		raise(SIGINT);
-		abort();
+		player_stop_stream();
+		return;
 	}
 	else{
 		printf("ALSA initialized successfully!!!!\n");
 	}
 
 }
+static void print_driver_infos(void){
 
+	int count=0;
+	ao_info**infos=ao_driver_info_list(&count);
+	for(int i=0;i<count;i++){
+		printf("We found %d drivers.\n"
+					"Those are the following:\n\n\n"
+					"%d:	Name: %s\n\n"
+					"	Type: %s\n\n"
+					"	short_name: %s\n\n"
+					"	comment: %s\n\n"
+					"	prefered_byte_format: %d\n\n"
+					"	priority: %d\n\n",
+					count,
+					i,
+					infos[i]->name,
+					(infos[i]->type==AO_TYPE_LIVE)?"Live!":"Output...",
+					infos[i]->short_name,
+					infos[i]->comment,
+					infos[i]->preferred_byte_format,
+					infos[i]->priority);
+		printf("\n\n\nThis driver has %d options.\nThey are the following:\n",infos[i]->option_count);
+		for(int j=0;j<infos[i]->option_count;j++){
+			printf("Option %d: %s\n",j,infos[i]->options[j]);
+		}
+	}
+
+}
 static void initPA(chunk_player*player){
      pa_sample_spec ss = {
          .format = PA_SAMPLE_S16LE,
          .rate = player->current_result.hz,
          .channels = player->current_result.channels
      };
-
      if (!(player->play_stream_pa = pa_simple_new(NULL, "client.exe", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &errno))) {
          fprintf(stderr, "pa_simple_new() failed: %s\n", pa_strerror(errno));
-         raise(SIGINT);
-	 abort();
+        raise(SIGINT);
+	player_stop_stream();
+	return;
 	}
 	else{
 
@@ -145,6 +196,40 @@ static void changePA(chunk_player*player){
      }
 }
 
+static void initAO(chunk_player*player){
+	ao_sample_format format = {
+	 .byte_format = AO_FMT_NATIVE,
+	 .rate = player->current_result.hz,
+	 .bits = 16
+	};
+	ao_option* options=NULL;
+//	int default_driver = ao_driver_id("ao_alsa");
+	print_driver_infos();
+//	int default_driver = ao_driver_id("pulse");
+	int default_driver = ao_default_driver_id();
+	if(default_driver<0){
+		printf("Error opening libao sound driver.\n");
+		raise(SIGINT);
+		player_stop_stream();
+		return;
+	}
+	/*ao_append_option(&options, "dev", cfg_client_device_name_if_alsa);
+	ao_append_option(&options, "matrix", "L,R");
+	ao_append_option(&options, "client_name", play_dev_name);
+	*/
+	player->play_stream_ao = ao_open_live(default_driver, &format, options);
+	if (player->play_stream_ao == NULL) {
+		printf("Error opening libao sound device.\n");
+		raise(SIGINT);
+		player_stop_stream();
+		return;
+	}
+	else{
+
+		printf("libao initialized successfully!!!!\n");
+
+	}
+}
 static void init_player_lib(chunk_player* player){
 
 	int should_initialize=0;
@@ -162,7 +247,9 @@ static void init_player_lib(chunk_player* player){
 		switch(player->which_mode){
 
 			case PLAY_ALSA:
-				initALSA(player);
+				if(!innited){
+					initALSA(player);
+				}
 				break;
 			case PLAY_PA:
 				if(!innited){
@@ -170,6 +257,11 @@ static void init_player_lib(chunk_player* player){
 				}
 				else{
 					changePA(player);
+				}
+				break;
+			case PLAY_AO:
+				if(!innited){
+					initAO(player);
 				}
 				break;
 			default:
@@ -186,6 +278,10 @@ static void play_chunk_pa(chunk_player* player){
 	play_from_sound_device_pa(player->play_stream_pa,player->p_chunk+(wav_header_received?0:(4+sizeof(decoder_result_struct))),&player->current_result);
 }
 
+static void play_chunk_ao(chunk_player* player){
+	play_from_sound_device_ao(player->play_stream_ao,player->p_chunk+(wav_header_received?0:(4+sizeof(decoder_result_struct))),&player->current_result);
+}
+
 static void play_chunk(chunk_player* player,int dry){
 
 		if(!dry){
@@ -198,6 +294,9 @@ static void play_chunk(chunk_player* player,int dry){
 				break;
 			case PLAY_PA:
 				play_chunk_pa(player);
+				break;
+			case PLAY_AO:
+				play_chunk_ao(player);
 				break;
 			default:
 				break;

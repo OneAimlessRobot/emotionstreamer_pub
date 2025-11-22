@@ -8,6 +8,7 @@
 #include <pulse/simple.h>
 #include <sys/ioctl.h> //for ioctl()
 #include <linux/soundcard.h> //SOUND_PCM*
+#include <ao/ao.h>
 #include <alsa/asoundlib.h>
 #include "../Includes/configs.h"
 #include "../Includes/terminal_mgmt.h"

@@ -1,5 +1,6 @@
 #include "../../Includes/preprocessor.h"
 #include <alsa/asoundlib.h>
+#include <ao/ao.h>
 #define MPG123_ENUM_API
 #include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"

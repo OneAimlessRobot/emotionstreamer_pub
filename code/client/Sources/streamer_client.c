@@ -5,6 +5,7 @@
 #include <alsa/asoundlib.h>
 #include <pulse/error.h>
 #include <pulse/simple.h>
+#include <ao/ao.h>
 #include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
@@ -59,13 +60,6 @@ static pid_t tid_rx,
 	  	tid_input,
 	  	tid_stats;
 //thread_names;
-
-static const char* play_thread_name="Filipa",
-	   	*decode_thread_name="Ester",
-		*input_thread_name="Ksun",
-		*stats_thread_name="Adriano",
-		*rx_thread_name="Beatriz";
-
 static int lost_packet=0,
 		reading=0,
 		decoding=0,
@@ -438,13 +432,13 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	chunk_queue decoder_que={0};
 	chunk_player player={0};
 	decoder_t decoder={0};
-	init_queue(&player_que,(!decode||is_wav_mode)?chunk_size:sizeof(pd_chunk_buff),cfg_stream_player_cache_size_chunks,cfg_show_player_queue_length,(char*)play_thread_name);
+	init_queue(&player_que,(!decode||is_wav_mode)?chunk_size:sizeof(pd_chunk_buff),cfg_stream_player_cache_size_chunks,cfg_show_player_queue_length,(char*)play_queue_name);
 	init_chunk_player(&player,(!decode||is_wav_mode)?chunk_size:sizeof(pp_chunk_buff),h_chunk_buff,r_chunk_buff,pp_chunk_buff,which_mode);
 	stream_struct.player_que=&player_que;
 	stream_struct.player=&player;
 	if(decode&&!is_wav_mode){
 		printf("Decoder thread (named %s) will be initialized\n",decode_thread_name);
-		init_queue(&decoder_que,sizeof(d_chunk_buff),cfg_stream_decoder_cache_size_chunks,cfg_show_decoder_queue_length,(char*)decode_thread_name);
+		init_queue(&decoder_que,sizeof(d_chunk_buff),cfg_stream_decoder_cache_size_chunks,cfg_show_decoder_queue_length,(char*)decode_queue_name);
 		init_decoder(&decoder,sizeof(d_chunk_buff),sizeof(pd_chunk_buff),r_chunk_buff,d_chunk_buff,pd_chunk_buff);
 		stream_struct.decoder=&decoder;
 		stream_struct.decoder_que=&decoder_que;

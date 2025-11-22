@@ -16,7 +16,7 @@ CONVERTER_TOOL_BIN= ./converter_tool/converter_tool.exe
 
 LDLIBS :=  -lm
 
-LDLIBS_SOUND := -lpulse -lpulse-simple -L./libs -lmpg123 -lasound
+LDLIBS_SOUND := -lpulse -lao -lpulse-simple -L./libs -lmpg123 -lasound -lalsa -loss
 
 TSAN_FLAGS = -fsanitize=thread -O0 -g -fno-omit-frame-pointer
 
@@ -28,7 +28,7 @@ LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) -lpthread -L./libs -lncurses
 
 LDLIBS_SERVER += $(LDLIBS_PTHREAD)
 
-INCLUDE= ./Includes ./mpg123-1.32.10/src/include ./sqlite-amalgamation-3510000 ./wav_stuff_i_stole_because_i_am_lazy .
+INCLUDE= ./Includes ./mpg123-1.32.10/src/include ./sqlite-amalgamation-3510000 ./wav_stuff_i_stole_because_i_am_lazy /libao-1.2.0/include/ao .
 SOURCES= . ./Sources
 
 SERVERINCLUDE= ./server/Includes ./extra_funcs/Includes

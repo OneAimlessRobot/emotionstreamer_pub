@@ -30,6 +30,15 @@ extern u_int64_t
 	cfg_stream_decoder_cache_size_chunks,
 	cfg_stream_player_cache_size_chunks;
 
+extern const char * play_thread_name,
+		  * play_queue_name,
+		  * play_dev_name,
+		  * decode_thread_name,
+		  * decode_queue_name,
+		  * input_thread_name,
+		  * stats_thread_name,
+		  * rx_thread_name;
+
 extern uint8_t
 	cfg_client_logging,
 	stream_enable_ncurses,
@@ -49,14 +58,14 @@ extern float cfg_ui_framerate_fps;
 extern int8_t is_wav_mode;
 extern char generalized_config_filepath_buff[PATHSIZE+1],
 	cfg_client_device_name_if_alsa[PATHSIZE+1],
+	cfg_client_device_output_if_alsa[PATHSIZE+1],
 	server_ip_address_buff[PATHSIZE+1],
 	client_ip_address_buff[PATHSIZE+1],
 	client_music_folder_path[PATHSIZE],
 	client_logs_file_name[PATHSIZE];
 
 extern int_pair client_data_times_pair,
-		client_con_times_pair,
-		client_ack_times_pair;
+		client_con_times_pair;
 
 void read_values_cfg_client(void);
 void print_values_cfg_client(int fd);

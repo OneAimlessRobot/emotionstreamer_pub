@@ -3,6 +3,7 @@
 #include <alsa/asoundlib.h>
 #include <pulse/error.h>
 #include <pulse/simple.h>
+#include <ao/ao.h>
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../converter_tool/Includes/converter.h"
@@ -27,6 +28,7 @@ char server_ip_address_buff[PATHSIZE+1]={0};
 char client_ip_address_buff[PATHSIZE+1]={0};
 char client_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 char cfg_client_device_name_if_alsa[PATHSIZE+1]={0};
+char cfg_client_device_output_if_alsa[PATHSIZE+1]={0};
 
 //EM BYTES E HZ!
 u_int64_t cfg_latency_ms=DEF_LATENCY_MS,
@@ -44,6 +46,16 @@ uint64_t cfg_client_ack_period_us=DEF_CLIENT_ACK_PERIOD_US;
 
 uint8_t cfg_client_logging=0;
 
+const char	* play_thread_name="player.Filipa",
+		* play_queue_name="player.que.Filipa",
+	   	* play_dev_name="player.dev.Filipa",
+	   	* decode_thread_name="decoder.Ester",
+	   	* decode_queue_name="decode.que.Ester",
+		* input_thread_name="input.Ksun",
+		* stats_thread_name="stats.Adriano",
+		* rx_thread_name="main.Beatriz";
+
+
 uint16_t cfg_client_chunk_size=CLIENT_DEF_CHUNK_SIZE;
 float cfg_ui_framerate_fps=UI_DEF_FRAMERATE_FPS;
 uint64_t cfg_ui_frame_period_us=UI_DEF_FRAME_PERIOD_US;
@@ -55,8 +67,6 @@ uint8_t stream_show_frames=1;
 int8_t is_wav_mode=0;
 int_pair client_data_times_pair=(int_pair){CLIENT_TIMEOUT_DATA_SEC,CLIENT_TIMEOUT_DATA_USEC};
 int_pair client_con_times_pair=(int_pair){CLIENT_TIMEOUT_CON_SEC,CLIENT_TIMEOUT_CON_USEC};
-int_pair client_ack_times_pair=(int_pair){CLIENT_TIMEOUT_ACK_SEC,CLIENT_TIMEOUT_ACK_USEC};
-int_pair client_holepunching_times_pair=(int_pair){HOLE_PUNCHING_TIMEOUT_SEC,HOLE_PUNCHING_TIMEOUT_USEC};
 
 static void clean_buff(void){
 
@@ -210,6 +220,12 @@ void read_values_cfg_client(void){
 
 		clean_and_exit();
 	}
+	sscanf(curr_line_buff,"client_device_output_if_alsa: %s",cfg_client_device_output_if_alsa);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
 	sscanf(curr_line_buff,"client_alsa_device_latency_if_alsa_ms: %lu",&cfg_client_alsa_device_latency_if_alsa_ms);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -285,6 +301,8 @@ void print_values_cfg_client(int fd){
 	dprintf(fd,"logs_file_name: %s\n",client_logs_file_name);
 
 	dprintf(fd,"client_device_name_if_alsa: %s\n",cfg_client_device_name_if_alsa);
+
+	dprintf(fd,"client_device_output_if_alsa: %s\n",cfg_client_device_output_if_alsa);
 
 	dprintf(fd,"client_alsa_device_latency_if_alsa_ms: %lu ms (%lu us)\n",
 									cfg_client_alsa_device_latency_if_alsa_ms,

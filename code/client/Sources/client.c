@@ -4,6 +4,7 @@
 #include <alsa/asoundlib.h>
 #include <pulse/error.h>
 #include <pulse/simple.h>
+#include <ao/ao.h>
 #include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
@@ -149,6 +150,13 @@ int clientStart(char* req_field,char* file_name){
 
 		fprintf(logstream,"Playing with pulse_audio library!\n");
 		play_way=PLAY_PA;
+
+	}
+	else if(!strs_are_strictly_equal(method_buff,"ao")){
+
+		fprintf(logstream,"Playing with libao library!\n");
+		ao_initialize();
+    		play_way=PLAY_AO;
 
 	}
 	else{

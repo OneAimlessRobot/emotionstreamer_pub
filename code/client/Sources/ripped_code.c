@@ -8,6 +8,7 @@
 #include <linux/soundcard.h> //SOUND_PCM*
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include <ao/ao.h>
 #include "../Includes/configs.h"
 #include <alsa/asoundlib.h>
 #include "../../extra_funcs/Includes/streamer_const.h"
@@ -161,4 +162,18 @@ int play_from_sound_device_pa(pa_simple* handle,uint8_t* sound_buff_to_play,deco
     }
 
     return 0;
+}
+int play_from_sound_device_ao(ao_device *handle,uint8_t* buff_to_play,decoder_result_struct*result){
+
+    //if (pa_simple_write(handle, sound_buff_to_play, result->nsamples*result->channels*SIZE, NULL) < 0) {
+    if (ao_play(handle, (char*) buff_to_play, result->total_bytes_in_chunk) < 0) {
+        fprintf(stderr, "ao_play() failed to play %d bytes:\nerrno: %d\nerror string: %s\n",result->nsamples*result->sample_size*result->channels,errno,strerror(errno));
+	print_decoder_frame_result(result,1);
+	return 1;
+    }
+
+    return 0;
+
+
+
 }
