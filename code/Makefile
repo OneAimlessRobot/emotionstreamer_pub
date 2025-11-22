@@ -16,7 +16,9 @@ CONVERTER_TOOL_BIN= ./converter_tool/converter_tool.exe
 
 LDLIBS :=  -lm
 
-LDLIBS_SOUND := -lpulse -lao -lpulse-simple -L./libs -lmpg123 -lasound -lalsa -loss
+LDLIBS_SOUND_PLUGINS :=  -lalsa -loss
+
+LDLIBS_SOUND := -lpulse -lao -lpulse-simple -L./libs -lmpg123 -lasound
 
 TSAN_FLAGS = -fsanitize=thread -O0 -g -fno-omit-frame-pointer
 

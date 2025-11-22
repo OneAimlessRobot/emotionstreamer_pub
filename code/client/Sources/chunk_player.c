@@ -144,7 +144,9 @@ snprintf(tmp_dev_string,strlen(cfg_client_device_name_if_alsa)+strlen(cfg_client
 if(!innited){
 	if ((err=snd_pcm_open(&player->play_stream_alsa, tmp_dev_string, SND_PCM_STREAM_PLAYBACK, 0)) < 0){
 	     printf("Playback open error: device name obtained: %s\nError: %s\n",tmp_dev_string, snd_strerror(err));
-	     exit(-1);
+	     raise(SIGINT);
+	     player_stop_stream();
+	     return;
 	}
 
 }
