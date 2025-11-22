@@ -98,10 +98,36 @@ static void clean_player(chunk_player* player){
 
 }
 
+static void list_alsa_devices(void){
 
+char **hints;
+/* Enumerate sound devices */
+int err = snd_device_name_hint(-1, "pcm", (void***)&hints);
+if (err != 0)
+   return;//Error! Just return
+
+char** n = hints;
+while (*n != NULL) {
+
+    char *name = snd_device_name_get_hint(*n, "NAME");
+
+    if (name != NULL && 0 != strcmp("null", name)) {
+        //Copy name to another buffer and then free it
+        free(name);
+    }
+    n++;
+}//End of while
+
+//Free hint buffer too
+snd_device_name_free_hint((void**)hints);
+
+
+
+}
 
 static void initALSA(chunk_player* player){
 
+list_alsa_devices();
 int err;
 char tmp_dev_string[DEF_DATASIZE]={0};
 
