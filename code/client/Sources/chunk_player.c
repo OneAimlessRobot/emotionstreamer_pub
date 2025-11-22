@@ -206,8 +206,14 @@ static void initAO(chunk_player*player){
 //	int default_driver = ao_driver_id("ao_alsa");
 	print_driver_infos();
 //	int default_driver = ao_driver_id("pulse");
-	int default_driver = ao_default_driver_id();
-	if(default_driver<0){
+	int driver_id = ao_default_driver_id();
+	/*AO_ENODRIVER - No driver corresponds to driver_id.
+AO_ENOTLIVE - This driver is not a live output device.
+AO_EBADOPTION - A valid option key has an invalid value.
+AO_EOPENDEVICE - Cannot open the device (for example, if /dev/dsp cannot be opened for writing).
+AO_EFAIL - Any other cause of failure.
+		*/
+	if(driver_id<0){
 		printf("Error opening libao sound driver.\n");
 		raise(SIGINT);
 		player_stop_stream();
@@ -217,9 +223,29 @@ static void initAO(chunk_player*player){
 	ao_append_option(&options, "matrix", "L,R");
 	ao_append_option(&options, "client_name", play_dev_name);
 	*/
-	player->play_stream_ao = ao_open_live(default_driver, &format, options);
+	player->play_stream_ao = ao_open_live(driver_id, &format, options);
 	if (player->play_stream_ao == NULL) {
-		printf("Error opening libao sound device.\n");
+		fprintf(stderr, "Error opening libao sound device from driver id %d\nError number: %d\nError string:\n",driver_id, errno);
+		switch(errno){
+			case AO_ENODRIVER:
+				fprintf(stderr,"No driver corresponds to driver_id.\n");
+				break;
+			case AO_ENOTLIVE:
+				fprintf(stderr,"This driver is not a live output device.\n");
+				break;
+			case AO_EBADOPTION:
+				fprintf(stderr,"A valid option key has an invalid value.\n");
+				break;
+			case AO_EOPENDEVICE:
+				fprintf(stderr,"Cannot open the device\n");
+				break;
+			case AO_EFAIL:
+				fprintf(stderr,"Unspecified error.\n");
+				break;
+			default:
+				break;
+
+		}
 		raise(SIGINT);
 		player_stop_stream();
 		return;
