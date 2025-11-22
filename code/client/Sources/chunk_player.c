@@ -97,6 +97,7 @@ static void clean_player(chunk_player* player){
 		}
 
 }
+//https://stackoverflow.com/questions/6866103/finding-all-the-devices-i-can-use-to-play-pcm-with-alsa
 
 static void list_alsa_devices(void){
 
@@ -106,14 +107,21 @@ int err = snd_device_name_hint(-1, "pcm", (void***)&hints);
 if (err != 0)
    return;//Error! Just return
 
-char** n = hints;
+char** n = hints,
+	first_buff[DEF_DATASIZE]={0},
+	buff[DEF_DATASIZE]={0};
+snprintf(first_buff,sizeof(first_buff)-1,"Behold... Device names for ALSA!\n(For ALSA use only configs not included)\n\n");
+print_string(first_buff);
+int count=0;
 while (*n != NULL) {
 
     char *name = snd_device_name_get_hint(*n, "NAME");
 
     if (name != NULL && 0 != strcmp("null", name)) {
-        //Copy name to another buffer and then free it
-        free(name);
+	snprintf(buff,sizeof(buff)-1,"\n%d- Device name: %s\n",count,name);
+	count++;
+	print_string(buff);
+	free(name);
     }
     n++;
 }//End of while
