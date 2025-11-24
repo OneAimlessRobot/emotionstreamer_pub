@@ -36,7 +36,6 @@ struct pa_simple {
 #include "../Includes/chunk_queue.h"
 #include "../Includes/streamer_client.h"
 #include <linux/soundcard.h>
-#include <sys/soundcard.h>
 #include <sys/ioctl.h>
 
 // frag <- ((upper_sixteen_bits << 16) | lower_sixteen_bits)
