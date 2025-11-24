@@ -35,6 +35,7 @@ struct pa_simple {
 #include "../Includes/chunk_player.h"
 #include "../Includes/chunk_queue.h"
 #include "../Includes/streamer_client.h"
+#include <linux/soundcard.h>
 #include <sys/soundcard.h>
 #include <sys/ioctl.h>
 
