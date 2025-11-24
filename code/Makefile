@@ -18,7 +18,7 @@ LDLIBS :=  -lm
 
 LDLIBS_SOUND_PLUGINS :=  -lalsa -loss
 
-LDLIBS_SOUND := -lpulse -lao -lpulse-simple -L./libs -lmpg123 -lasound
+LDLIBS_SOUND := -lpulse -lao -lpulse-simple -lasound -L./libs -lmpg123
 
 TSAN_FLAGS = -fsanitize=thread -O0 -g -fno-omit-frame-pointer
 
@@ -26,11 +26,11 @@ LDLIBS_PTHREAD= -lpthread
 
 LDLIBS_SQLITE= -lm -L./libs -lsqlite3
 
-LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND) -lpthread -L./libs -lncurses
+LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND)  -lpthread -L./libs -lncurses
 
 LDLIBS_SERVER += $(LDLIBS_PTHREAD)
 
-INCLUDE= ./Includes ./mpg123-1.32.10/src/include ./sqlite-amalgamation-3510000 ./wav_stuff_i_stole_because_i_am_lazy /libao-1.2.0/include/ao .
+INCLUDE= ./Includes ./mpg123-1.32.10/src/include ./sqlite-amalgamation-3510000 ./wav_stuff_i_stole_because_i_am_lazy .
 SOURCES= . ./Sources
 
 SERVERINCLUDE= ./server/Includes ./extra_funcs/Includes
@@ -68,7 +68,7 @@ RESDIR= ./resources
 
 CURRDIR=echo `pwd`
 
-CC= cc
+CC= gcc
 #CC=clang
 DEPFLAGS= -MP -MD
 
@@ -211,7 +211,7 @@ $(SERVERBIN): $(SERVERSTUFF) $(CONVERTER_TOOL_EXTRA_STUFF)
 	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
 
 $(CLIENTBIN): $(CLIENTSTUFF) $(CONVERTER_TOOL_EXTRA_STUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES) $(LDLIBS) $(LDLIBS_CLIENT) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES) $(LDLIBS_CLIENT) $(LDLIBS) $(LDLIBS_SQLITE)
 
 $(BROWSERBIN): $(BROWSERSTUFF)
 	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(BROWSERRESOURCEFILES) $(LDLIBS) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)

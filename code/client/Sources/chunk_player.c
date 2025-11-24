@@ -52,13 +52,22 @@ static oss_frag_params main_oss_params={7,12,0,5};
 
 #define FRAG_PARAM_FOR_OSS ((main_oss_params.upper_sixteen_bits << 16) | main_oss_params.lower_sixteen_bits)
 
+#define OSS_DEVICE_NAME "/dev/dsp"
+
 static pa_sample_spec ss={0};
+
 static ao_sample_format format={0};
-static char tmp_dev_string[DEF_DATASIZE]={0};
-static char alsa_device_print_buff[DEF_DATASIZE]={0};
+
+static char tmp_dev_string[DEF_DATASIZE]={0},
+	/*number_string_for_oss_ao_plugin_buffer_time[DEF_DATASIZE]={0},*/
+	alsa_device_print_buff[DEF_DATASIZE]={0};
+
 static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
-static int wav_header_received=0;
-static int innited=0;
+
+static int wav_header_received=0,
+	driver_id=-1,
+	innited=0;
+
 static void parse_wav_header_into_player_result(chunk_player* player){
 
 
@@ -138,7 +147,7 @@ if(player->oss_sound_fd>0){
 	close(player->oss_sound_fd);
 	player->oss_sound_fd=-1;
 }
-player->oss_sound_fd = open("/dev/dsp", O_WRONLY);
+player->oss_sound_fd = open(OSS_DEVICE_NAME, O_WRONLY);
 if (player->oss_sound_fd < 0) {
     fprintf(stderr,"Could not open OSS sound file descriptor!!!\nError: %s\n",strerror(errno));
     	raise(SIGINT);
@@ -191,7 +200,6 @@ char** n = hints;
 char* curr_ptr_in_buff=alsa_device_print_buff;
 memset(alsa_device_print_buff,0,sizeof(alsa_device_print_buff));
 curr_ptr_in_buff+=snprintf(alsa_device_print_buff,sizeof(alsa_device_print_buff)-1,"Behold... Device names for ALSA!\n(For ALSA use only configs not included)\n\n");
-print_string(alsa_device_print_buff);
 int count=0;
 while (*n != NULL) {
 
@@ -315,26 +323,22 @@ static void initAO(chunk_player*player){
 	format.rate = player->current_result.hz;
 	format.bits = 16;
         ao_option* options=NULL;
-//	int default_driver = ao_driver_id("ao_alsa");
+
 	print_driver_infos();
-//	int default_driver = ao_driver_id("pulse");
-	int driver_id = ao_default_driver_id();
-	/*AO_ENODRIVER - No driver corresponds to driver_id.
-AO_ENOTLIVE - This driver is not a live output device.
-AO_EBADOPTION - A valid option key has an invalid value.
-AO_EOPENDEVICE - Cannot open the device (for example, if /dev/dsp cannot be opened for writing).
-AO_EFAIL - Any other cause of failure.
-		*/
+	driver_id = ao_driver_id("pulse");
 	if(driver_id<0){
 		printf("Error opening libao sound driver.\n");
 		raise(SIGINT);
 		stop_client_stream();
 		return;
 	}
-	/*ao_append_option(&options, "dev", cfg_client_device_name_if_alsa);
-	ao_append_option(&options, "matrix", "L,R");
-	ao_append_option(&options, "client_name", play_dev_name);
-	*/
+	//ao_append_option(&options, "dev", cfg_client_device_name_if_alsa);
+	//ao_append_option(&options, "id", "0");
+	//ao_append_option(&options, "dsp", OSS_DEVICE_NAME);
+	//ao_append_option(&options, "matrix", "L,R");
+	//snprintf(number_string_for_oss_ao_plugin_buffer_time,sizeof(number_string_for_oss_ao_plugin_buffer_time)-1,"%ld",cfg_client_alsa_device_latency_if_alsa_ms);
+	//ao_append_option(&options, "buffer_time", number_string_for_oss_ao_plugin_buffer_time);
+	//ao_append_option(&options, "client_name", play_dev_name);
 	player->play_stream_ao = ao_open_live(driver_id, &format, options);
 	if (player->play_stream_ao == NULL) {
 		fprintf(stderr, "Error opening libao sound device from driver id %d\nError number: %d\nError string:\n",driver_id, errno);
@@ -364,7 +368,7 @@ AO_EFAIL - Any other cause of failure.
 	}
 	else{
 
-		printf("libao initialized successfully!!!!\n");
+		printf("libao initialized successfully!!!!\nThe driver id is %d\n",driver_id);
 
 	}
 }
