@@ -158,6 +158,13 @@ int clientStart(char* req_field,char* file_name){
     		play_way=PLAY_AO;
 
 	}
+	else if(!strs_are_strictly_equal(method_buff,"oss")){
+
+		fprintf(logstream,"Playing using bare file descriptors!\n(AKA rawest shit you've ever seen, my man)\n");
+		ao_initialize();
+    		play_way=PLAY_BARE;
+
+	}
 	else{
 		fprintf(logstream,"Unknown media library!\n");
 		fclose(logstream);
