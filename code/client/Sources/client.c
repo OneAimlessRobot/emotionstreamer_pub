@@ -37,8 +37,12 @@ static int forceful_teardown=0;
 static struct sigaction sa;
 static uint16_t port=0;
 static char extension_from_server[PATHSIZE]={0};
-static struct sockaddr_in server_ip_address;
-static struct sockaddr_in client_ip_address;
+static	char method_buff[PATHSIZE]={0},
+	req_buff[PATHSIZE/4]={0},
+	file_path[PATHSIZE*3-1]={0},
+	file_path2[PATHSIZE*3-1]={0};
+static struct sockaddr_in server_ip_address,
+	client_ip_address;
 ip_cache_t cache=(ip_cache_t){NULL,0};
 static con_t client_con_obj;
 static method play_way=PLAY_PA;
@@ -86,8 +90,6 @@ static void down_func(char* file_name){
 
 		int64_t down_size=down_file_size();
 		int fp=-1;
-		char file_path[PATHSIZE*3-1]={0};
-		char file_path2[PATHSIZE*3-1]={0};
 		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,extension_from_server);
 		snprintf(file_path2,sizeof(file_path2),"%s",file_path);
 		_mkdir(dirname(file_path2));
@@ -131,9 +133,6 @@ int clientStart(char* req_field,char* file_name){
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
 
-
-	char method_buff[PATHSIZE]={0};
-	char req_buff[PATHSIZE/4]={0};
 
 	sscanf(req_field,"%[^:]:%s",req_buff,method_buff);
 

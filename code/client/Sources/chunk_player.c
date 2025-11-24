@@ -35,7 +35,10 @@ struct pa_simple {
 #include "../Includes/chunk_player.h"
 #include "../Includes/chunk_queue.h"
 #include "../Includes/streamer_client.h"
-
+static pa_sample_spec ss={0};
+static ao_sample_format format={0};
+static char tmp_dev_string[DEF_DATASIZE]={0};
+static char alsa_device_print_buff[DEF_DATASIZE]={0};
 static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
 static int wav_header_received=0;
 static int innited=0;
@@ -107,20 +110,19 @@ int err = snd_device_name_hint(-1, "pcm", (void***)&hints);
 if (err != 0)
    return;//Error! Just return
 
-char** n = hints,
-	first_buff[DEF_DATASIZE]={0},
-	buff[DEF_DATASIZE]={0};
-snprintf(first_buff,sizeof(first_buff)-1,"Behold... Device names for ALSA!\n(For ALSA use only configs not included)\n\n");
-print_string(first_buff);
+char** n = hints;
+char* curr_ptr_in_buff=alsa_device_print_buff;
+memset(alsa_device_print_buff,0,sizeof(alsa_device_print_buff));
+curr_ptr_in_buff+=snprintf(alsa_device_print_buff,sizeof(alsa_device_print_buff)-1,"Behold... Device names for ALSA!\n(For ALSA use only configs not included)\n\n");
+print_string(alsa_device_print_buff);
 int count=0;
 while (*n != NULL) {
 
     char *name = snd_device_name_get_hint(*n, "NAME");
 
     if (name != NULL && 0 != strcmp("null", name)) {
-	snprintf(buff,sizeof(buff)-1,"\n%d- Device name: %s\n",count,name);
+	curr_ptr_in_buff+=snprintf(curr_ptr_in_buff,sizeof(alsa_device_print_buff)-1,"\n%d- Device name: %s\n",count,name);
 	count++;
-	print_string(buff);
 	free(name);
     }
     n++;
@@ -128,7 +130,7 @@ while (*n != NULL) {
 
 //Free hint buffer too
 snd_device_name_free_hint((void**)hints);
-
+print_string(alsa_device_print_buff);
 
 
 }
@@ -137,8 +139,7 @@ static void initALSA(chunk_player* player){
 
 list_alsa_devices();
 int err;
-char tmp_dev_string[DEF_DATASIZE]={0};
-
+memset(tmp_dev_string,0,sizeof(tmp_dev_string));
 snprintf(tmp_dev_string,strlen(cfg_client_device_name_if_alsa)+strlen(cfg_client_device_output_if_alsa)+10,"%s,%s",cfg_client_device_name_if_alsa,cfg_client_device_output_if_alsa);
 
 if(!innited){
@@ -198,11 +199,10 @@ static void print_driver_infos(void){
 
 }
 static void initPA(chunk_player*player){
-     pa_sample_spec ss = {
-         .format = PA_SAMPLE_S16LE,
-         .rate = player->current_result.hz,
-         .channels = player->current_result.channels
-     };
+     memset(&ss,0,sizeof(pa_sample_spec));
+     ss.format =PA_SAMPLE_S16LE;
+     ss.rate = player->current_result.hz;
+     ss.channels = player->current_result.channels;
      if (!(player->play_stream_pa = pa_simple_new(NULL, "client.exe", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &errno))) {
          fprintf(stderr, "pa_simple_new() failed: %s\n", pa_strerror(errno));
         raise(SIGINT);
@@ -216,11 +216,10 @@ static void initPA(chunk_player*player){
 	}
 }
 static void changePA(chunk_player*player){
-     pa_sample_spec ss = {
-         .format = PA_SAMPLE_S16LE,
-         .rate = player->current_result.hz,
-         .channels = player->current_result.channels
-     };
+     memset(&ss,0,sizeof(pa_sample_spec));
+     ss.format =PA_SAMPLE_S16LE;
+     ss.rate = player->current_result.hz;
+     ss.channels = player->current_result.channels;
      if(player->play_stream_pa->stream){
 
 	pa_proplist* proplist=pa_proplist_new();;
@@ -233,12 +232,11 @@ static void changePA(chunk_player*player){
 }
 
 static void initAO(chunk_player*player){
-	ao_sample_format format = {
-	 .byte_format = AO_FMT_NATIVE,
-	 .rate = player->current_result.hz,
-	 .bits = 16
-	};
-	ao_option* options=NULL;
+	memset(&format,0,sizeof(ao_sample_format));
+	format.byte_format = AO_FMT_NATIVE;
+	format.rate = player->current_result.hz;
+	format.bits = 16;
+        ao_option* options=NULL;
 //	int default_driver = ao_driver_id("ao_alsa");
 	print_driver_infos();
 //	int default_driver = ao_driver_id("pulse");
