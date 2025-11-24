@@ -142,7 +142,7 @@ player->oss_sound_fd = open("/dev/dsp", O_WRONLY);
 if (player->oss_sound_fd < 0) {
     fprintf(stderr,"Could not open OSS sound file descriptor!!!\nError: %s\n",strerror(errno));
     	raise(SIGINT);
-	player_stop_stream();
+	stop_client_stream();
 	return;
 }
 
@@ -171,7 +171,7 @@ static void play_to_sound_device_oss(chunk_player* player){
 if(write(player->oss_sound_fd, player->p_chunk,player->current_result.total_bytes_in_chunk)<0){
 	fprintf(stderr,"There was an error writing to OSS sound device!!!\nAttempted to write %ld bytes to fd %d\nError: %s\n",player->current_result.total_bytes_in_chunk,player->oss_sound_fd,strerror(errno));
 	raise(SIGINT);
-	player_stop_stream();
+	stop_client_stream();
 	return;
 }
 
@@ -223,7 +223,7 @@ if(!innited){
 	if ((err=snd_pcm_open(&player->play_stream_alsa, tmp_dev_string, SND_PCM_STREAM_PLAYBACK, 0)) < 0){
 	     printf("Playback open error: device name obtained: %s\nError: %s\n",tmp_dev_string, snd_strerror(err));
 	     raise(SIGINT);
-	     player_stop_stream();
+	     stop_client_stream();
 	     return;
 	}
 
@@ -239,7 +239,7 @@ if ((err =snd_pcm_set_params(player->play_stream_alsa,
 
 		printf("Playback open error: %s\n", snd_strerror(err));
  		raise(SIGINT);
-		player_stop_stream();
+		stop_client_stream();
 		return;
 	}
 	else{
@@ -283,7 +283,7 @@ static void initPA(chunk_player*player){
      if (!(player->play_stream_pa = pa_simple_new(NULL, "client.exe", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &errno))) {
          fprintf(stderr, "pa_simple_new() failed: %s\n", pa_strerror(errno));
         raise(SIGINT);
-	player_stop_stream();
+	stop_client_stream();
 	return;
 	}
 	else{
@@ -328,7 +328,7 @@ AO_EFAIL - Any other cause of failure.
 	if(driver_id<0){
 		printf("Error opening libao sound driver.\n");
 		raise(SIGINT);
-		player_stop_stream();
+		stop_client_stream();
 		return;
 	}
 	/*ao_append_option(&options, "dev", cfg_client_device_name_if_alsa);
@@ -359,7 +359,7 @@ AO_EFAIL - Any other cause of failure.
 
 		}
 		raise(SIGINT);
-		player_stop_stream();
+		stop_client_stream();
 		return;
 	}
 	else{

@@ -105,7 +105,7 @@ static client_stream_t stream_struct={
                                         NULL
                                         };
 
-static void stop_client_stream(void){
+void stop_client_stream(void){
 
 	pthread_cond_signal(&running_cond);
 	pthread_cond_signal(&player_cond);
@@ -500,9 +500,6 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 
 
 
-void player_stop_stream(void){
-	raise(SIGINT);
-}
 
 void player_init_stream(con_t* con_obj,uint64_t chunk_size,method which_mode){
 

@@ -18,6 +18,6 @@ typedef struct client_stream_t{
 //con_obj is innited
 
 void player_init_stream(con_t* con_obj, uint64_t chunk_size, method which_mode);
-void player_stop_stream(void);
+void stop_client_stream(void);
 
 #endif
