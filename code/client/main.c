@@ -14,6 +14,8 @@ int main(int argc, char ** argv){
 	print_values_cfg_client(1);
         memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
+        memset(curr_client_upload_dir_buff,0,PATHSIZE);
+        getcwd(curr_client_upload_dir_buff,PATHSIZE-1);
         printf("Generalized cfg:\n");
         parse_generalized_cfg(generalized_config_filepath_buff);
         print_values_generalized_cfg(1);
@@ -50,6 +52,15 @@ int main(int argc, char ** argv){
                  snprintf(curr_dir+strlen(curr_dir),PATHSIZE,"%s",client_music_folder_path);
 	}
 	
+	result= strnlen(client_music_upload_folder_path,PATHSIZE-1);
+        if(!result){
+
+                snprintf(curr_client_upload_dir_buff+strlen(curr_client_upload_dir_buff),PATHSIZE,"%s",MUSIC_CLIENT_UPLOAD_PATH);
+        }
+        else{
+                 snprintf(curr_client_upload_dir_buff+strlen(curr_client_upload_dir_buff),PATHSIZE,"%s",client_music_upload_folder_path);
+	}
+
 	printf("Curr dir: %s\n", curr_dir);
 	clientStart(argv[1],argv[2]);
 

@@ -4,12 +4,14 @@
 #define CONFIG_FILE_PATH_SERVER "./configs/sizes.cfg"
 #define MUSIC_SERVER_INPUT_PATH "/raw_songs/"
 #define MUSIC_SERVER_QUARANTINE_PATH "/quarantine_songs/"
+#define MUSIC_SERVER_UPLOAD_PATH "/raw_songs/"
 #define SERVER_ACK_TIMEOUT_LIM 8
 #define SERVER_CHUNK_SIZE 1024
 #define WAV_MODE_EXTENSION ".wav"
 
 extern int child_pid;
 extern char server_music_folder_path[PATHSIZE+1];
+extern char server_music_upload_folder_path[PATHSIZE+1];
 extern char server_music_quarantine_folder_path[PATHSIZE+1];
 extern char server_working_extension[EXTENSION_SIZE];
 extern ip_cache_entry server_ip_cache_entry;
@@ -18,6 +20,7 @@ extern ip_cache_entry server_port_mapper_ip_cache_entry;
 extern char generalized_config_filepath_buff[PATHSIZE+1];
 extern char server_name_buff[PATHSIZE+1];
 extern char curr_server_quarantine_dir_buff[PATHSIZE+1];
+extern char curr_server_upload_dir_buff[PATHSIZE+1];
 
 extern uint64_t cfg_server_ack_period_us,
 		server_ack_timeout_lim,

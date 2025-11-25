@@ -18,7 +18,7 @@ typedef struct con_t{
 	 uint8_t tcp_data[DEF_DATASIZE+1];
 	 uint16_t tcp_data_local_port;
 	 uint16_t tcp_data_peer_port;
-	uint16_t listen_port; //if launched within a server of some variety;
+         uint16_t listen_port; //if launched within a server of some variety;
 	 ip_cache_entry port_mapper_entry;
 	 con_type type;
 }con_t;

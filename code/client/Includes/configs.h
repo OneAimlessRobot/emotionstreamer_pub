@@ -10,6 +10,7 @@
 #define CONFIG_FILE_PATH_CLIENT "./configs/sizes.cfg"
 #define LOG_FILE_NAME_CLIENT "./logs.log"
 #define MUSIC_CLIENT_INPUT_PATH "./songs_out/raw_songs/"
+#define MUSIC_CLIENT_UPLOAD_PATH "./songs_out/raw_songs/"
 #define CACHE_ALMOST_EMPTY_PCT 5
 #define CACHE_ALMOST_FULL_PCT 60
 #define CLIENT_ACK_TIMEOUT_LIM 8
@@ -51,7 +52,8 @@ extern uint8_t
 	stream_show_player_queue;
 
 
-extern uint16_t cfg_client_chunk_size;
+extern uint16_t cfg_client_chunk_size,
+		server_chunk_size;
 
 extern float cfg_ui_framerate_fps;
 
@@ -62,6 +64,8 @@ extern char generalized_config_filepath_buff[PATHSIZE+1],
 	server_ip_address_buff[PATHSIZE+1],
 	client_ip_address_buff[PATHSIZE+1],
 	client_music_folder_path[PATHSIZE],
+	curr_client_upload_dir_buff[PATHSIZE+1],
+	client_music_upload_folder_path[PATHSIZE],
 	client_logs_file_name[PATHSIZE];
 
 extern int_pair client_data_times_pair,

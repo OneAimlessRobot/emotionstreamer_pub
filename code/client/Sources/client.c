@@ -30,10 +30,13 @@
 #include "../Includes/download_func.h"
 #include "../Includes/ip_cache_file_ops.h"
 #include "../Includes/terminal_mgmt.h"
+#include "../Includes/upload_to_server_funcs.h"
 
-atomic_int started=0;
-atomic_int is_on=0;
+struct stat file_info={0};
+static atomic_int started=0;
+static atomic_int is_on=0;
 static int forceful_teardown=0;
+static int fp=-1;
 static struct sigaction sa;
 static uint16_t port=0;
 static char extension_from_server[PATHSIZE]={0};
@@ -51,11 +54,52 @@ static void clear_ports_and_quit(int signal){
 	send_port_back(port,&client_port_mapper_ip_cache_entry);
 	close_con(&client_con_obj,0);
 	fclose(logstream);
+	close(fp);
 	exit(signal);
 }
 static void useless_handler(int useless){
 
 	started=is_on=useless;
+}
+static void send_download_sizes(int fd,char* file_path){
+                clear_con_data(&client_con_obj);
+                if(fd>0){
+                        stat(file_path,&file_info);
+                        snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE,"%ld",file_info.st_size);
+                }
+                else{
+                        snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE,"-1");
+                }
+                con_send_tcp(&client_con_obj,client_data_times_pair);
+}
+
+static int open_file(char* filepath){
+
+	int fp_here=-1;
+        if((fp_here=open(filepath,O_RDONLY,0777))<0){
+                setNonBlocking(&fp_here);
+                printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(server_ip_address.sin_addr),filepath);
+        }
+        return fp_here;
+
+}
+
+static void upload_func(char* file_name){
+	snprintf(file_path,sizeof(file_path)-1,"%s%s",curr_client_upload_dir_buff,file_name);
+	if((fp=open_file(file_path))<0){
+		clear_ports_and_quit(SIGINT);
+        }
+	send_download_sizes(fp,file_path);
+	printf("Uploading song to server! It will be %ld bytes in total!\n",file_info.st_size);
+	if(stream_enable_ncurses){
+		enable_ncurses();
+	}
+	upload_to_server_func(client_con_obj.sockfd_tcp,fp,file_info.st_size,client_data_times_pair);
+	if(stream_enable_ncurses){
+		endwin_wrapper();
+	}
+	clear_ports_and_quit(SIGINT);
+
 }
 static int64_t down_file_size(void){
 
@@ -71,10 +115,7 @@ static int64_t down_file_size(void){
 			clear_ports_and_quit(SIGINT);
 		}
 		clear_con_data(&client_con_obj);
-		snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE,"%s",CON_STRING);
-		con_send_tcp(&client_con_obj,client_data_times_pair);
 		printf(CONTENT_DOWNLOAD_INCOMMING,down_size,extension_from_server);
-		clear_con_data(&client_con_obj);
 		return down_size;
 
 }
@@ -89,7 +130,6 @@ static void play_func(void){
 static void down_func(char* file_name){
 
 		int64_t down_size=down_file_size();
-		int fp=-1;
 		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,extension_from_server);
 		snprintf(file_path2,sizeof(file_path2),"%s",file_path);
 		_mkdir(dirname(file_path2));
@@ -282,6 +322,9 @@ int clientStart(char* req_field,char* file_name){
 		printf(REPORT_SENT_WITH_FILENAME,file_name);
 		clear_ports_and_quit(SIGINT);
         	break;
+	case UPLOAD:
+		upload_func(file_name);
+		break;
 	default:
 		printf(UNKNOWN_REQ,req_buff);
 		clear_ports_and_quit(SIGINT);
