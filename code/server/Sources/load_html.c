@@ -32,7 +32,7 @@ static void generateDirListingPrimitive(char* pattern){
 	//One of these has to work, damn it
 
 	snprintf(cmd,PATHSIZE*10-1,"bash -c \"pushd %s "
-					"&& find .  -type f -iname '*%s*%s%s*'  > %s "
+					"&& find .  -type f -iwholename '*%s*%s%s*'  > %s "
 					"&& echo \"%s\" >> %s "
 					"&& popd "
 					"&& exit\" ",
