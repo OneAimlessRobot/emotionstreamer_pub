@@ -1,3 +1,4 @@
+```
 EmotionStreamer.
 
 This is meant to be a personal project
@@ -902,3 +903,5 @@ feel free to create an issue
 and Ill make sure to reply!
 
 Cya!
+
+```
