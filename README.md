@@ -754,3 +754,8 @@ its been one year of work.
 
 but its here.
 And it works.
+
+Oh!
+and the compilation command is contained in the makeAll.sh shell script!
+
+Anyways, BYEEE!!!!
