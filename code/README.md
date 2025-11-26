@@ -1,4 +1,5 @@
-```EmotionStreamer.
+```
+EmotionStreamer.
 
 This is meant to be a personal project
 With a somewhat straightforward process of installing.
@@ -902,4 +903,5 @@ feel free to create an issue
 and Ill make sure to reply!
 
 Cya!
+
 ```
