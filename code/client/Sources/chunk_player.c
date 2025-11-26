@@ -48,7 +48,7 @@ typedef struct oss_frag_params{
 
 }oss_frag_params;
 
-static oss_frag_params main_oss_params={2,13,0,5};
+static oss_frag_params main_oss_params={1,13,0,5};
 
 #define FRAG_PARAM_FOR_OSS ((main_oss_params.upper_sixteen_bits << 16) | main_oss_params.lower_sixteen_bits)
 
