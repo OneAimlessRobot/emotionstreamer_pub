@@ -472,9 +472,17 @@ static void safe_play_wrapper(chunk_player* player,int dry){
 
 	}
 }
+static void safe_decoder_buff_load(chunk_player* player){
+
+	memcpy(player->pr_chunk,player->p_chunk+sizeof(decoder_result_struct)+4,((mp3_processed_chunk*)player->p_chunk)->result_struct.total_bytes_in_chunk);
+
+}
 void perform_play_op(chunk_player* player,decoder_result_struct* result,play_op op){
 	pthread_mutex_lock(&mtx);
 	switch(op){
+		case P_SAFE_DECODER_BUFF_LOAD:
+			safe_decoder_buff_load(player);
+			break;
 		case P_REAL_PLAY:
 			safe_play_wrapper(player,0);
 			break;

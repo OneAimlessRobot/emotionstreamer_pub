@@ -293,7 +293,7 @@ static void* play_thread_func(void* args){
 			}
 			perform_queue_op(stream_struct.player_que,is_wav_compat_mode()?stream_struct.player->pr_chunk:stream_struct.player->p_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
 			if(!is_wav_compat_mode()){
-				memcpy(stream_struct.player->pr_chunk,stream_struct.player->p_chunk+sizeof(decoder_result_struct)+4,((mp3_processed_chunk*)stream_struct.player->p_chunk)->result_struct.total_bytes_in_chunk);
+				perform_play_op(stream_struct.player,NULL,P_SAFE_DECODER_BUFF_LOAD);
 				pthread_cond_signal(&decoder_cond);
 			}
 			else{
