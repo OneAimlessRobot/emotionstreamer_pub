@@ -759,3 +759,100 @@ Oh!
 and the compilation command is contained in the makeAll.sh shell script!
 
 Anyways, BYEEE!!!!
+
+
+Oh.
+And you absolutely can just use "localhost" if you mean to use this locally.
+everything here works locally.
+You could literally use it as a personal mp3 player if you so desired.
+
+First:
+You set the port mapper address
+in its config
+to "localhost".
+the port is whatever is available.
+anything from 0 to 65535 will do.
+
+second,
+you launch a master_server.
+it must also be in localhost,
+as the port mapper also is.
+
+it will launch.
+pay attention to the port it got from the port mapper.
+it will display repeatedly along with its address in a loop.
+
+then,
+you can just skip the heartbeat server.
+as those are only meant for connection speed management.
+
+you set the server upper address 
+
+in its config
+to "localhost:<master_server_port>"
+(or "127.0.0.1:<master_server_port>" if you really want to)
+
+the port mapper address will be the same as the one from the master
+and the bound address is,
+well...
+localhost!
+
+Then
+you launch it with no command line parameters
+(Remember that the master server and port mapper
+also do not need command line parameters) 
+
+
+And it will periodically print a line containing its address as well.
+Then,
+you do the same steps with the client,
+port mapper and all,
+
+and then you're ready to launch some commands!
+
+Oh.
+Just a heads up.
+
+the port mapper is always required to be on.
+it is required to be on when launching to a remote server
+and locally, too.
+
+but if you're just connecting
+and not hosting,
+that is all you will need.
+
+After the configs are set,
+these are the steps you should follow
+to host 
+and play in localhost:
+
+1- change directory to code/port_mapper
+2- ./port_mapper.exe
+3- change to code/master_server
+4- ./master.exe
+5- ... to code/server
+6- ./server.exe
+7- change to the client folder
+8- ./client.exe <client command> <parameter>
+
+
+If you only want to connect remotely,
+make sure to set the server address adequately,
+and bind both the client
+and port mappers to addresses which can see the server.
+
+So,
+after setting the configs,
+in that case you simply do:
+
+1- repeat steps one and two in the previous step list
+2- skip and do steps 7 and 8.
+
+
+And you're done!
+
+If you have any issues or doubts,
+feel free to create an issue
+and Ill make sure to reply!
+
+Cya!
