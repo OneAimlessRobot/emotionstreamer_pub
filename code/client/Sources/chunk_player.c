@@ -168,7 +168,7 @@ ioctl(player->oss_sound_fd, SNDCTL_DSP_CHANNELS, &player->current_result.channel
 
 ioctl(player->oss_sound_fd, SNDCTL_DSP_SPEED, &player->current_result.hz);
 
-printf("... Which we just did!...\n[thumbs up]\nWe're done we play sound wedoeht!");
+printf("... Which we just did!...\n[thumbs up]\nWe're done we play sound wedoeht!\n");
 
 
 
@@ -196,9 +196,11 @@ while (*n != NULL) {
     if (name != NULL && 0 != strcmp("null", name)) {
 	curr_ptr_in_buff+=snprintf(curr_ptr_in_buff,sizeof(alsa_device_print_buff)-1,"\n%d- Device name: %s\n",count,name);
 	count++;
-	free(name);
     }
     n++;
+    if(name){
+	free(name);
+    }
 }//End of while
 
 //Free hint buffer too
@@ -399,7 +401,6 @@ static void init_player_lib(chunk_player* player){
 	}
 }
 static void play_chunk_oss(chunk_player* player){
-	//play_from_sound_device_oss(player->oss_sound_fd,player->pr_chunk+(wav_header_received?0:(4+sizeof(decoder_result_struct))),&player->current_result);
 	play_from_sound_device_oss(player->oss_sound_fd,player->pr_chunk,&player->current_result);
 }
 static void play_chunk_alsa(chunk_player* player){

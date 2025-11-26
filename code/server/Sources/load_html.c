@@ -57,6 +57,7 @@ char *get_file_extension(const char *path) {
 	char *extension = strrchr(path, '.');
 	char* extension2=NULL;
 	if (extension != NULL) {
+		*(extension)=0;
 		if(is_wav_mode){
 
 			return extension+1;

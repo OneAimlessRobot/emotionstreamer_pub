@@ -46,8 +46,7 @@ static void cleanup(int useless){
 }
 static int send_chunk_tcp(server_stream_t* strm,int_pair pair){
 
-	return sendsome(strm->con_obj->sockfd_tcp,(char*)strm->chunk_data_cache,sizeof(frame_info_t)+4+strm->chunk_size,pair);
-        
+	return sendsome(strm->con_obj->sockfd_tcp,(char*)strm->chunk_data_cache,strm->chunk_size+(is_wav_mode?0:sizeof(frame_info_t)+4),pair);
 
 }
 
