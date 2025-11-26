@@ -904,4 +904,67 @@ and Ill make sure to reply!
 
 Cya!
 
+Other notes:
+
+1- it avoids using malloc as much as humanly possible.
+
+I only intentionally use malloc for the queue buffers in the client
+As I meant their sizes to be user modifiable at run time through configs.
+
+2- the threads in the client have names.
+
+The main thread is called main.Beatriz
+the decoder is called decoder.Ester
+the stats UI thread is called stats.Adriano
+the player thread is called player.Filipa
+the input thread is called input.Ksun.
+
+These names are written at run time to their COMM strings
+on thread startup
+
+You are able to see them in htop if you enable the COMM column.
+
+and is basically what you use to force kill the client if it jams.
+
+If the client jams,
+and you dont care about ports being left
+erroneously allocated in the port mapper
+(Which [will] happen.
+Im sorry.
+Im already safely terminating using atomic ints,
+cleanup functions
+and sigaction structs.
+but I cannot protect against a KILL signal
+if it really is required, okay?)
+You do:
+
+username@pcname:/(... some/path/..../...here)$ killall -KILL main.Beatriz [ENTER]
+
+It will then kill the main thread of the client,
+which will,
+in turn,
+force the rest to shut down
+with no chance for any masks to catch the signal.
+
+basically:
+"I dont care about cleanup.
+Kill it."
+
+
+Anyways.
+
+3- It is very light on resources.
+
+In my macbookpro with a 4 core intel i5 processor in it,
+8 gb of ram
+and with the OS running on an SSD,
+
+it consumes:
+at the configs that were provided:
+
+peak 3% of total CPU capacity
+and 60MB of ram
+
+
+
 ```
