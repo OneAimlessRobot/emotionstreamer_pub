@@ -26,6 +26,8 @@
 #include "../Includes/streamer_client.h"
 #include "../Includes/terminal_mgmt.h"
 #include "../Includes/client_aux_funcs.h"
+
+
 static int read_tcp_result=-1;
 static uint8_t read_tcp_chk[sizeof(mp3_stream_chunk)]={0};
 static int decode_queue_full=0,
@@ -281,12 +283,12 @@ static void* play_thread_func(void* args){
 
 				continue;
 			}
-			perform_queue_op(stream_struct.player_que,stream_struct.player->p_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
-			perform_play_op(stream_struct.player,NULL,P_REAL_PLAY);
 			if(acess_var_mtx(&variable_acess_mtx,&paused,1,V_LOOK)){
 
 				break;
 			}
+			perform_queue_op(stream_struct.player_que,stream_struct.player->p_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
+			memcpy(stream_struct.player->pr_chunk,stream_struct.player->p_chunk+sizeof(decoder_result_struct)+4,((mp3_processed_chunk*)stream_struct.player->p_chunk)->result_struct.total_bytes_in_chunk);
 			if(!is_wav_mode){
 				pthread_cond_signal(&decoder_cond);
 			}
@@ -298,6 +300,8 @@ static void* play_thread_func(void* args){
 			if(play_queue_empty){
 				break;
 			}
+			perform_play_op(stream_struct.player,NULL,P_REAL_PLAY);
+			
 	}
 	pthread_mutex_lock(&player_mtx);
 	while(innited&&(acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK)||perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_ALMOST_EMPTY}))){
@@ -438,8 +442,10 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	memset(pd_chunk_buff,0,sizeof(pd_chunk_buff));
 	uint8_t pp_chunk_buff[(!decode||is_wav_mode)?chunk_size:sizeof(decoder_result_struct)+4+cfg_client_chunk_size];
 	memset(pp_chunk_buff,0,sizeof(pd_chunk_buff));
+	uint8_t pr_chunk_buff[((!decode||is_wav_mode)?chunk_size:cfg_client_chunk_size)];
+	memset(pr_chunk_buff,0,sizeof(pr_chunk_buff));
 	init_queue(&player_que,(!decode||is_wav_mode)?chunk_size:sizeof(pd_chunk_buff),cfg_stream_player_cache_size_chunks,cfg_show_player_queue_length,(char*)play_queue_name);
-	init_chunk_player(&player,(!decode||is_wav_mode)?chunk_size:sizeof(pp_chunk_buff),h_chunk_buff,r_chunk_buff,pp_chunk_buff,which_mode);
+	init_chunk_player(&player,(!decode||is_wav_mode)?chunk_size:sizeof(pp_chunk_buff),sizeof(pr_chunk_buff),h_chunk_buff,r_chunk_buff,pp_chunk_buff,pr_chunk_buff,which_mode);
 	stream_struct.player_que=&player_que;
 	stream_struct.player=&player;
 	if(decode&&!is_wav_mode){

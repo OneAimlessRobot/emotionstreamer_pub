@@ -40,6 +40,7 @@ typedef struct chunk_size_helper{
 void print_string(const char* str);
 int should_switch(decoder_result_struct* before_result,decoder_result_struct* current_result);
 uint32_t getChunkTimeMilliseconds(chunk_size_helper* helper);
+int play_from_sound_device_oss(int fd, uint8_t* buff, decoder_result_struct*result);
 int play_from_sound_device_alsa(snd_pcm_t* handle,uint8_t* buff_to_play,decoder_result_struct* result);
 int play_from_sound_device_pa(pa_simple* handle,uint8_t* buff_to_play,decoder_result_struct*result);
 int play_from_sound_device_ao(ao_device *handle,uint8_t* buff_to_play,decoder_result_struct*result);

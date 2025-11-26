@@ -13,13 +13,15 @@ typedef struct chunk_player{
 	int oss_sound_fd;
 	uint8_t* h_chunk;
 	uint8_t* p_chunk;
+	uint8_t* pr_chunk;
 	uint8_t* r_chunk;
 	uint64_t chunk_size;
+	uint64_t pr_chunk_size;
 	decoder_result_struct current_result;
 }chunk_player;
 
 
-int init_chunk_player(chunk_player* player,uint64_t chunk_size,uint8_t* h_buff,uint8_t*r_buff,uint8_t* p_buff,method the_way);
+int init_chunk_player(chunk_player* player,uint64_t chunk_size,uint64_t pr_chunk_size,uint8_t* h_buff,uint8_t*r_buff,uint8_t* p_buff,uint8_t* pr_buff,method the_way);
 void perform_play_op(chunk_player* player,decoder_result_struct* result,play_op op);
 
 #endif

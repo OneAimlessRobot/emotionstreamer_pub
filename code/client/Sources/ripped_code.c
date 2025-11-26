@@ -135,7 +135,7 @@ double frames = 0.0;
   data file and write it to the sound device to be played.
   The program uses the ALSA library.
   Use option -lasound on compile line.*/
- 
+
 int play_from_sound_device_alsa(snd_pcm_t* handle,uint8_t* sound_buff_to_play,decoder_result_struct* result)
 {
   int err;
@@ -150,6 +150,17 @@ int play_from_sound_device_alsa(snd_pcm_t* handle,uint8_t* sound_buff_to_play,de
 	return 1;
   }
   return 0;
+}
+
+int play_from_sound_device_oss(int oss_fd, uint8_t* buff,decoder_result_struct*result){
+
+// Write PCM data to play audio
+int written=-1;
+if((written=write(oss_fd, buff, result->total_bytes_in_chunk))<0){
+	fprintf(stderr,"There was an error writing to OSS sound device!!!\nAttempted to write %ld bytes to fd %d\nError: %s\n",result->total_bytes_in_chunk,oss_fd,strerror(errno));
+
+}
+return written;
 }
 
 int play_from_sound_device_pa(pa_simple* handle,uint8_t* sound_buff_to_play,decoder_result_struct* result)

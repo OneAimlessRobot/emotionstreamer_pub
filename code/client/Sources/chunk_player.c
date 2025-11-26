@@ -48,7 +48,7 @@ typedef struct oss_frag_params{
 
 }oss_frag_params;
 
-static oss_frag_params main_oss_params={7,12,0,5};
+static oss_frag_params main_oss_params={2,13,0,5};
 
 #define FRAG_PARAM_FOR_OSS ((main_oss_params.upper_sixteen_bits << 16) | main_oss_params.lower_sixteen_bits)
 
@@ -171,18 +171,6 @@ ioctl(player->oss_sound_fd, SNDCTL_DSP_SPEED, &player->current_result.hz);
 printf("... Which we just did!...\n[thumbs up]\nWe're done we play sound wedoeht!");
 
 
-
-}
-
-static void play_to_sound_device_oss(chunk_player* player){
-
-// Write PCM data to play audio
-if(write(player->oss_sound_fd, player->p_chunk,player->current_result.total_bytes_in_chunk)<0){
-	fprintf(stderr,"There was an error writing to OSS sound device!!!\nAttempted to write %ld bytes to fd %d\nError: %s\n",player->current_result.total_bytes_in_chunk,player->oss_sound_fd,strerror(errno));
-	raise(SIGINT);
-	stop_client_stream();
-	return;
-}
 
 }
 
@@ -332,13 +320,6 @@ static void initAO(chunk_player*player){
 		stop_client_stream();
 		return;
 	}
-	//ao_append_option(&options, "dev", cfg_client_device_name_if_alsa);
-	//ao_append_option(&options, "id", "0");
-	//ao_append_option(&options, "dsp", OSS_DEVICE_NAME);
-	//ao_append_option(&options, "matrix", "L,R");
-	//snprintf(number_string_for_oss_ao_plugin_buffer_time,sizeof(number_string_for_oss_ao_plugin_buffer_time)-1,"%ld",cfg_client_alsa_device_latency_if_alsa_ms);
-	//ao_append_option(&options, "buffer_time", number_string_for_oss_ao_plugin_buffer_time);
-	//ao_append_option(&options, "client_name", play_dev_name);
 	player->play_stream_ao = ao_open_live(driver_id, &format, options);
 	if (player->play_stream_ao == NULL) {
 		fprintf(stderr, "Error opening libao sound device from driver id %d\nError number: %d\nError string:\n",driver_id, errno);
@@ -409,13 +390,6 @@ static void init_player_lib(chunk_player* player){
 			case PLAY_BARE:
 				if(!innited){
 					initOSS(player);
-					if(!main_oss_params.is_priming_set){
-						printf("Priming oss buffer!!\nI hope it does something xd\n");
-						main_oss_params.is_priming_set=1;
-						for(uint32_t i=0;i<main_oss_params.priming_chunks;i++){
-							play_to_sound_device_oss(player);
-						}
-					}
 				}
 				break;
 			default:
@@ -424,16 +398,20 @@ static void init_player_lib(chunk_player* player){
 		}
 	}
 }
+static void play_chunk_oss(chunk_player* player){
+	//play_from_sound_device_oss(player->oss_sound_fd,player->pr_chunk+(wav_header_received?0:(4+sizeof(decoder_result_struct))),&player->current_result);
+	play_from_sound_device_oss(player->oss_sound_fd,player->pr_chunk,&player->current_result);
+}
 static void play_chunk_alsa(chunk_player* player){
-	play_from_sound_device_alsa(player->play_stream_alsa,player->p_chunk+(wav_header_received?0:(4+sizeof(decoder_result_struct))),&player->current_result);
+	play_from_sound_device_alsa(player->play_stream_alsa,player->pr_chunk,&player->current_result);
 
 }
 static void play_chunk_pa(chunk_player* player){
-	play_from_sound_device_pa(player->play_stream_pa,player->p_chunk+(wav_header_received?0:(4+sizeof(decoder_result_struct))),&player->current_result);
+	play_from_sound_device_pa(player->play_stream_pa,player->pr_chunk,&player->current_result);
 }
 
 static void play_chunk_ao(chunk_player* player){
-	play_from_sound_device_ao(player->play_stream_ao,player->p_chunk+(wav_header_received?0:(4+sizeof(decoder_result_struct))),&player->current_result);
+	play_from_sound_device_ao(player->play_stream_ao,player->pr_chunk,&player->current_result);
 }
 
 static void play_chunk(chunk_player* player,int dry){
@@ -453,7 +431,7 @@ static void play_chunk(chunk_player* player,int dry){
 				play_chunk_ao(player);
 				break;
 			case PLAY_BARE:
-				play_to_sound_device_oss(player);
+				play_chunk_oss(player);
 				break;
 			default:
 				break;
@@ -528,12 +506,14 @@ void perform_play_op(chunk_player* player,decoder_result_struct* result,play_op 
 	pthread_mutex_unlock(&mtx);
 }
 
-int init_chunk_player(chunk_player* player,uint64_t chunk_size,uint8_t* h_buff,uint8_t* r_buff,uint8_t* p_buff,method the_way){
+int init_chunk_player(chunk_player* player,uint64_t chunk_size,uint64_t pr_chunk_size,uint8_t* h_buff,uint8_t* r_buff,uint8_t* p_buff,uint8_t* pr_chunk,method the_way){
 	player->mtx=&mtx;
 	player->chunk_size=chunk_size;
+	player->pr_chunk_size=pr_chunk_size;
 	player->p_chunk=p_buff;
 	player->r_chunk=r_buff;
 	player->h_chunk=h_buff;
+	player->pr_chunk=pr_chunk;
 	player->which_mode=the_way;
 	memset(&player->current_result,0,sizeof(decoder_result_struct));
 	return 0;
