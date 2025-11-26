@@ -677,6 +677,51 @@ one can just input two quotes.
 expect to use this command quite often.
 its really useful
 
+the filenames in the play, download and report commands take filenames
+exactly as expressed in this command.
+no extension required.
+
+(If you cannot copy paste...
+it will be a bit harder, I am afraid)
+
+
+As an example
+Imagine that you want to launch a peek command
+with "singles" as the argument
+(with quotes, of course)
+
+and it outputs the following result:
+
+(Possible peek result incomming)
+"
+Recebendo tamanho!!!
+546 bytes DO SERVER SERAO TRANFERIDOS!!
+A extensão de ficheiro é .mp3!
+AGUARDE!
+CONTEUDOS DO SERVER SERAO IMPRIMIDOS! AGUARDE!
+Conteudos do server:
+./SinglesHemaAndDante/Dante___Hema_the_Maids_-_Inbijiburuch__n_netto
+./SinglesHemaAndDante/Dante___Hema_the_Maids_-_Naite.iru.Akito
+./SinglesHemaAndDante/Dante___Hema_the_Maids_-_Reform_for_a_pale_drops_of_a_sepulchral_dream
+./SinglesHemaAndDante/Dante___Hema_the_Maids_-_ridia_n-in-B
+./SinglesHemaAndDante/Dante___Hema_the_Maids_-_Tsukareta
+./SinglesHemaAndDante/Dante___Hema_the_Maids_-____________________________________________________________________
+end_of_contents.
+
+Server contents successfully retrieved in full."
+
+You would then have to copy paste the title of a song exactly
+as presented in one of the lines
+into the argument of a "play" command.
+
+Example:
+
+./client.exe play:oss ./SinglesHemaAndDante/Dante___Hema_the_Maids_-_Inbijiburuch__n_netto
+
+(aka, the first song)
+
+As you can see,
+no extension is required.
 
 
 And...
@@ -825,14 +870,15 @@ After the configs are set,
 these are the steps you should follow
 to host 
 and play in localhost:
+from the root of the repository:
 
-1- change directory to code/port_mapper
+1- launch a new terminal and directory to code/port_mapper
 2- ./port_mapper.exe
-3- change to code/master_server
+3- launch a new terminal and change to code/master_server
 4- ./master.exe
-5- ... to code/server
+5- launch a new terminal and change to code/server
 6- ./server.exe
-7- change to the client folder
+7- launch a new terminal and change to code/client
 8- ./client.exe <client command> <parameter>
 
 
