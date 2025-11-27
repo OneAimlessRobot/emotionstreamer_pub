@@ -33,12 +33,6 @@ req_type str_to_req_type(char* str){
 		return REPORT;
 
 	}
-	if(!strs_are_strictly_equal(str,"upload")){
-
-		return UPLOAD;
-
-	}
-
 	return NA;
 
 }
@@ -58,9 +52,6 @@ void req_type_to_str(req_type type,char buff[]){
 		break;
 		case REPORT:
 			snprintf(buff, DEF_DATASIZE, "report");
-		break;
-		case UPLOAD:
-			snprintf(buff, DEF_DATASIZE, "upload");
 		break;
 		case CONF:
 			snprintf(buff, DEF_DATASIZE, "conf");

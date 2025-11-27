@@ -30,7 +30,6 @@
 #include "../Includes/download_func.h"
 #include "../Includes/ip_cache_file_ops.h"
 #include "../Includes/terminal_mgmt.h"
-#include "../Includes/upload_to_server_funcs.h"
 
 struct stat file_info={0};
 static atomic_int started=0;
@@ -61,46 +60,8 @@ static void useless_handler(int useless){
 
 	started=is_on=useless;
 }
-static void send_download_sizes(int fd,char* file_path){
-                clear_con_data(&client_con_obj);
-                if(fd>0){
-                        stat(file_path,&file_info);
-                        snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE,"%ld",file_info.st_size);
-                }
-                else{
-                        snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE,"-1");
-                }
-                con_send_tcp(&client_con_obj,client_data_times_pair);
-}
 
-static int open_file(char* filepath){
 
-	int fp_here=-1;
-        if((fp_here=open(filepath,O_RDONLY,0777))<0){
-                setNonBlocking(&fp_here);
-                printf("Accepted connection from %s, mas ficheiro %s e invalido. Conexao sera largada...\n",inet_ntoa(server_ip_address.sin_addr),filepath);
-        }
-        return fp_here;
-
-}
-
-static void upload_func(char* file_name){
-	snprintf(file_path,sizeof(file_path)-1,"%s%s",curr_client_upload_dir_buff,file_name);
-	if((fp=open_file(file_path))<0){
-		clear_ports_and_quit(SIGINT);
-        }
-	send_download_sizes(fp,file_path);
-	printf("Uploading song to server! It will be %ld bytes in total!\n",file_info.st_size);
-	if(stream_enable_ncurses){
-		enable_ncurses();
-	}
-	upload_to_server_func(client_con_obj.sockfd_tcp,fp,file_info.st_size,client_data_times_pair);
-	if(stream_enable_ncurses){
-		endwin_wrapper();
-	}
-	clear_ports_and_quit(SIGINT);
-
-}
 static int64_t down_file_size(void){
 
 		int64_t down_size=-1;
@@ -322,9 +283,6 @@ int clientStart(char* req_field,char* file_name){
 		printf(REPORT_SENT_WITH_FILENAME,file_name);
 		clear_ports_and_quit(SIGINT);
         	break;
-	case UPLOAD:
-		upload_func(file_name);
-		break;
 	default:
 		printf(UNKNOWN_REQ,req_buff);
 		clear_ports_and_quit(SIGINT);

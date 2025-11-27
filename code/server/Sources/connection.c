@@ -17,7 +17,6 @@
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../Includes/streamer_server.h"
 #include "../Includes/upload_func.h"
-#include "../Includes/download_to_server.h"
 
 static con_t server_con_obj;
 static int sock_tcp;
@@ -67,36 +66,6 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 			}
 			con_send_tcp(&server_con_obj,server_data_times_pair);
 }
-static int64_t down_file_size(void){
-
-                int64_t down_size=-1;
-                clear_con_data(&server_con_obj);
-                con_read_tcp(&server_con_obj,server_data_times_pair);
-                sscanf((char*)server_con_obj.tcp_data,"%ld",&down_size);
-                if(down_size<=0){
-
-                	cleanup();
-		}
-                clear_con_data(&server_con_obj);
-                return down_size;
-
-}
-
-static void down_func(char* file_name){
-
-                int64_t down_size=down_file_size();
-                snprintf(rep_file_path,sizeof(rep_file_path)-1,"%s%s",curr_server_upload_dir_buff,file_name);
-                snprintf(rep_file_path_2,sizeof(rep_file_path_2),"%s",rep_file_path);
-                _mkdir(dirname(rep_file_path_2));
-                if((fp=creat(rep_file_path,0777))<0){
-                                fprintf(stderr,"Nao foi possivel transferir ficheiro: %s!!!!\nPaths:\nPath1: %s\nPath2: %s\n",strerror(errno),rep_file_path,rep_file_path_2);
-                                cleanup();
-                }
-                download_to_server_func(server_con_obj.sockfd_tcp,fp,down_size,server_data_times_pair);
-                printf("A musica foi guardada em: %s\n",rep_file_path);
-		cleanup();
-
-}
 
 //static get_filename_extension
 void con_go(int sockfd_tcp, uint16_t curr_port){
@@ -133,10 +102,6 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						snprintf(rep_file_path,sizeof(rep_file_path)-1,"%s%s%s%s",curr_server_quarantine_dir_buff,file_name,server_working_extension,BOUNDARY_FILE_EXT);
 						snprintf(rep_file_path_2,sizeof(rep_file_path_2),"%s",rep_file_path);
 						break;
-					case UPLOAD:
-						down_func(file_name);
-						cleanup();
-						return;
 					default:
 						printf(UNKNOWN_REQ,req_string_buff);
 						cleanup();

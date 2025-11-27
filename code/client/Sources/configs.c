@@ -19,7 +19,6 @@ static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 char client_logs_file_name[PATHSIZE]={0};
 char client_music_folder_path[PATHSIZE]={0};
-char client_music_upload_folder_path[PATHSIZE]={0};
 char generalized_config_filepath_buff[PATHSIZE+1]={0};
 ip_cache_entry server_ip_cache_entry={{0},0};
 ip_cache_entry client_ip_cache_entry={{0},0};
@@ -30,8 +29,6 @@ char client_ip_address_buff[PATHSIZE+1]={0};
 char client_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 char cfg_client_device_name_if_alsa[PATHSIZE+1]={0};
 char cfg_client_device_output_if_alsa[PATHSIZE+1]={0};
-
-char curr_client_upload_dir_buff[PATHSIZE+1]={0};
 
 //EM BYTES E HZ!
 u_int64_t cfg_latency_ms=DEF_LATENCY_MS,
@@ -212,12 +209,6 @@ void read_values_cfg_client(void){
 
 		clean_and_exit();
 	}
-	sscanf(curr_line_buff,"client_music_upload_folder_path: %s",client_music_upload_folder_path);
-	clean_buff();
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		clean_and_exit();
-	}
 	sscanf(curr_line_buff,"log_file_name: %s",client_logs_file_name);
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -307,8 +298,6 @@ void print_values_cfg_client(int fd){
 	dprintf(fd,"player_cache_num_chunks: %lu\n",cfg_stream_player_cache_size_chunks);
 
 	dprintf(fd,"client_music_folder_path: %s\n",client_music_folder_path);
-
-	dprintf(fd,"client_music_upload_folder_path: %s\n",client_music_upload_folder_path);
 
 	dprintf(fd,"logs_file_name: %s\n",client_logs_file_name);
 

@@ -362,7 +362,6 @@ server_timeouts_ack: 3 5
 server_ack_period_us: 1000000
 server_timeouts_drop_chunks:  3 0
 server_music_folder_path: /raw_songs/
-server_music_upload_folder_path: /raw_songs/
 server_music_quarantine_folder_path: /quarantine_songs/
 server_working_extension: .mp3
 server_ip_address: 192.168.1.2:0
@@ -430,7 +429,6 @@ as to control cpu usage.
 
 the server has paths to which "quarantined" files
 (reported by report commands)
-uploaded files
 and served files are.
 
 The repo comes with some symbolic links
@@ -487,7 +485,6 @@ But not in the actual config)
 16 client_timeouts_con: 3 3
 17 client_timeouts_data: 1 222000
 18 client_music_folder_path: /songs_out/raw_songs_in/
-19 client_music_upload_folder_path: /songs_out/raw_songs_in/
 20 log_file_name:
 21 client_device_name_if_alsa: plughw:1
 22 client_device_output_if_alsa: 0 
@@ -524,10 +521,7 @@ the timeouts are self explanatory
 "what is the tolerance for connection latency?
 what is the tolerance for data latency?"
 then,
-we have,
-respectively,
-the output folder for songs which are downloaded,
-and the input folder from which songs are uploaded to the server.
+we have the output folder for songs which are downloaded
 
 the "almost full/empty" parameters control cpu usage.
 (its better to only fill up the player when it gets below a certain percentage
@@ -550,7 +544,7 @@ the song wont play!
 
 
 the cosmetics are options like,
-enabling ncurses (for the upload, download and,
+enabling ncurses (for the download and,
 of course
 the play commands)
 
@@ -612,27 +606,12 @@ play.
 Alright.
 The next commands are a bit more friendly.
 
-2- upload.
-it takes a filename
-relative to the upload directory.
-
 (also.
 the client in this codebase also comes with symbolic links.
 Feel free to erase them and make your own if you wish to do so)
 
-Now.
-this one may be a bit dangerous.
-As the server does not really...
-filter what files can be uploaded to it, at the moment.
-not even by extension.
-But it is convenient in this early stage of this project.
-(its been a year...
-"early"
 
-But ive also been the sole developer
-so I have an excuse to take a long time, okay? >[] )
-
-3- report.
+2- report.
 
 What this command simply does is:
 
@@ -647,11 +626,11 @@ it takes a file_name as argument.
 with full path.
 
 Also:
-for the download and upload commands,
+for the download command,
 at either side,
 directories get recursively created if they dont exist.
 
-4- conf.
+3- conf.
 
 simple.
 it fetches the configuration file from the server.
@@ -661,7 +640,7 @@ it can be just two quotes.
 Its just that the whole program only runs commands with two parameters.)
 
 
-5- peek.
+4- peek.
 
 this command takes a second argument
 which can be a regular expression

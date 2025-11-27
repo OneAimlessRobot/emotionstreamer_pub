@@ -2,7 +2,7 @@
 #define PROTOCOL_H
 
 
-typedef enum req_type{PLAY,CONF,PEEK,DOWN,REPORT,UPLOAD,NA}req_type;
+typedef enum req_type{PLAY,CONF,PEEK,DOWN,REPORT,NA}req_type;
 
 //todas as strings sao terminadas a 0
 req_type str_to_req_type(char* str);
@@ -13,7 +13,7 @@ void req_type_to_str(req_type type,char buff[]);
 
 
 
-#define UNKNOWN_REQ "Request desconhecido: \"%s\"\nRequests válidos são:\npeek- Ver musicas no server.\nplay- tocar um ficheiro do server.\ndown- transferir um ficheiro do server\nreport- denunciar um ficheiro defeituoso do server\nupload- enviar um ficheiro ao server!\n"
+#define UNKNOWN_REQ "Request desconhecido: \"%s\"\nRequests válidos são:\npeek- Ver musicas no server.\nplay- tocar um ficheiro do server.\ndown- transferir um ficheiro do server\nreport- denunciar um ficheiro defeituoso do server\n"
 
 
 

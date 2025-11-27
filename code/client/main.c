@@ -14,8 +14,6 @@ int main(int argc, char ** argv){
 	print_values_cfg_client(1);
         memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
-        memset(curr_client_upload_dir_buff,0,PATHSIZE);
-        getcwd(curr_client_upload_dir_buff,PATHSIZE-1);
         printf("Generalized cfg:\n");
         parse_generalized_cfg(generalized_config_filepath_buff);
         print_values_generalized_cfg(1);
@@ -37,7 +35,7 @@ int main(int argc, char ** argv){
 	logstream=fdopen(fd,"w");
 	if(argc!=3){
 
-		printf("Utilizacao correta:\narg1: tipo de pedido (play ou peek. Tocar uma musica ou consultar musicas. Com Peek, Sai logo e a musica fornecida é ignorada).\narg2: Nome da musica a tocar\n arg3: <ip>:<port> do server\n");
+		printf("Utilizacao correta:\n- arg1: tipo de pedido (consulta o README para mais info)\n- arg2: Argumento para pedido\n");
 		fclose(logstream);
 		exit(-1);
 	}
@@ -51,16 +49,6 @@ int main(int argc, char ** argv){
         else{
                  snprintf(curr_dir+strlen(curr_dir),PATHSIZE,"%s",client_music_folder_path);
 	}
-	
-	result= strnlen(client_music_upload_folder_path,PATHSIZE-1);
-        if(!result){
-
-                snprintf(curr_client_upload_dir_buff+strlen(curr_client_upload_dir_buff),PATHSIZE,"%s",MUSIC_CLIENT_UPLOAD_PATH);
-        }
-        else{
-                 snprintf(curr_client_upload_dir_buff+strlen(curr_client_upload_dir_buff),PATHSIZE,"%s",client_music_upload_folder_path);
-	}
-
 	printf("Curr dir: %s\n", curr_dir);
 	clientStart(argv[1],argv[2]);
 

@@ -14,10 +14,8 @@ int main(void){
         print_values_cfg_server(1);
 	memset(curr_dir,0,PATHSIZE);
 	memset(curr_server_quarantine_dir_buff,0,PATHSIZE+1);
-	memset(curr_server_upload_dir_buff,0,PATHSIZE+1);
 	getcwd(curr_dir,PATHSIZE);
 	getcwd(curr_server_quarantine_dir_buff,PATHSIZE);
-	getcwd(curr_server_upload_dir_buff,PATHSIZE);
 	printf("Generalized cfg:\n");
 	parse_generalized_cfg(generalized_config_filepath_buff);
 	print_values_generalized_cfg(1);
@@ -41,17 +39,6 @@ int main(void){
 	else{
 
 		snprintf(curr_server_quarantine_dir_buff+strlen(curr_server_quarantine_dir_buff),PATHSIZE+1,"%s",server_music_quarantine_folder_path);
-
-	}
-	result= strnlen(server_music_upload_folder_path,PATHSIZE);
-	if(!result){
-
-		snprintf(curr_server_upload_dir_buff+strlen(curr_server_upload_dir_buff),PATHSIZE+1,"%s",MUSIC_SERVER_UPLOAD_PATH);
-
-	}
-	else{
-
-		snprintf(curr_server_upload_dir_buff+strlen(curr_server_upload_dir_buff),PATHSIZE+1,"%s",server_music_upload_folder_path);
 
 	}
 	printf("Curr dir: %s\n", curr_dir);
