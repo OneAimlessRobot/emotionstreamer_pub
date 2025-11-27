@@ -965,6 +965,58 @@ at the configs that were provided:
 peak 3% of total CPU capacity
 and 60MB of ram
 
+4-  this is important.
+So.
+If you are only launching the client and port_mapper
+to connect to a server,
+this is what goes on:
+1- the client asks for a port
+2- it is given.
+3- the client closes the socket
+AND returns the port to the port mapper.
 
+But the world is not perfect,
+and sometimes,
+addresses get stuck in an annoying LAST_ACK state
+where there are no CLOSE_WAIT sockets anywhere
+But it does not let me use it to connect, for some reason.
+
+So,
+if,
+with the portmapper still on,
+you try to get the same port back that you just returned,
+You will have to wait about 5 minutes until "last ack" goes away.
+
+What I suggest you do, in that situation,
+is to close the port mapper,
+
+edit the the option in the config
+which specifies the range
+at which ports start getting served
+(which would be the one that you are getting, in this situation,
+as you are only using the client,
+so that you can connect again more quickly.
+Im sorry.
+its very awkward and clumsy,
+but I dont know another workaround.
+Ive tried several ways to close the socket:
+using shutdown,
+setting the socket's linger to zero
+right before closing it...
+etc, etc, etc.
+
+It does not work.
+You will have to change the port, sometimes.
+its frustrating,
+So I'm sorry.
+
+I feel rather guilty
+for making my system so complicated for people to use.
+"What do you mean I need to relaunch your stupid port mapper?"
+But,
+I need the port mapper.
+Sorry...
+its how it works
+)
 
 ```
