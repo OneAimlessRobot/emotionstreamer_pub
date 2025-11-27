@@ -172,8 +172,9 @@ void init_browser(char* hostname, char* req,uint16_t port){
 			break;
 		default:
 			printf("Request desconhecido: |%s|\n",req);
-			return;
-	}
+			raise(SIGINT);
+			cleanup_and_send_ports_back(SIGINT);
+        }
 
 	snprintf((char*)con_obj.tcp_data,DEF_DATASIZE-1,"%s",string_to_send);
         int result=con_send_tcp(&con_obj,browser_con_times_pair);
