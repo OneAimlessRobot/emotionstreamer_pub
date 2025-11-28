@@ -315,7 +315,16 @@ void produce_rotation_file(void){
 		perror("Nao foi possivel abrir ficheiro de rotations do server");
 		return;
 	}
-	dprintf(tmp_rotation_fd,"This server is currently: %s auto mode.\nCurrently: \"%u\" songs in rotation\nRotation time: \"%u\" seconds\n",is_auto_mode?"in":"not in",is_auto_mode?curr_num_songs_rotation:0,is_auto_mode?rotation_period_secs:0);
+	dprintf(tmp_rotation_fd,"This server is currently: %s auto mode.\n"
+					"Currently: \"%u\" songs in rotation\n"
+					"Rotation time: \"%u\" seconds\n"
+					"The current song in the rotation is: %s\n"
+					"Which is song number %u\n\n",
+					is_auto_mode?"in":"not in",
+					is_auto_mode?curr_num_songs_rotation:0,
+					is_auto_mode?rotation_period_secs:0,
+					is_auto_mode?server_auto_mode_rotation[curr_song_index_rotation]:"None.",
+					is_auto_mode?curr_song_index_rotation:0);
 	for(uint32_t i=0;i<curr_num_songs_rotation;i++){
 		dprintf(tmp_rotation_fd,"Song %d: %s\n",i,server_auto_mode_rotation[i]);
 	}
