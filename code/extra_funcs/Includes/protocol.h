@@ -13,7 +13,7 @@ void req_type_to_str(req_type type,char buff[]);
 
 
 
-#define UNKNOWN_REQ "Request desconhecido: \"%s\"\nRequests válidos são:\npeek- Ver musicas no server.\nplay- tocar um ficheiro do server.\ndown- transferir um ficheiro do server\nreport- denunciar um ficheiro defeituoso do server\n"
+#define UNKNOWN_REQ "Request desconhecido: \"%s\"\nRequests válidos são:\npeek- Ver musicas no server.\nplay- tocar um ficheiro do server.\ndown- transferir um ficheiro do server\nreport- denunciar um ficheiro defeituoso do server\nrotation- consultar informacao de rotaçao de musicas para auto mode!\n"
 
 
 
