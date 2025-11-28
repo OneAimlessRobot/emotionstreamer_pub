@@ -276,6 +276,9 @@ int clientStart(char* req_field,char* file_name){
 	case CONF:
 		conf_func();
 		break;
+	case ROTATION:
+		conf_func();
+		break;
 	case PEEK:
 		peek_func();
 		break;

@@ -23,6 +23,11 @@ req_type str_to_req_type(char* str){
 		return CONF;
 
 	}
+	if(!strs_are_strictly_equal(str,"rotation")){
+
+		return ROTATION;
+
+	}
 	if(!strs_are_strictly_equal(str,"down")){
 
 		return DOWN;
@@ -55,6 +60,9 @@ void req_type_to_str(req_type type,char buff[]){
 		break;
 		case CONF:
 			snprintf(buff, DEF_DATASIZE, "conf");
+		break;
+		case ROTATION:
+			snprintf(buff, DEF_DATASIZE, "rotation");
 		break;
 		default:
 			snprintf(buff, DEF_DATASIZE, "NONE");

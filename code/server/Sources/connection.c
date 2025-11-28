@@ -100,6 +100,10 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 						produce_config_file();
 						snprintf(file_path,sizeof(file_path)-1,"%s",TMP_CONFIG_FILE_PATH);
 						break;
+					case ROTATION:
+						produce_rotation_file();
+						snprintf(file_path,sizeof(file_path)-1,"%s",TMP_ROTATION_FILE_PATH);
+						break;
 					case REPORT:
 						snprintf(file_path,sizeof(file_path)-1,"%s%s%s%s",curr_dir,file_name,server_working_extension,BOUNDARY_FILE_EXT);
 						snprintf(rep_file_path,sizeof(rep_file_path)-1,"%s%s%s%s",curr_server_quarantine_dir_buff,file_name,server_working_extension,BOUNDARY_FILE_EXT);
@@ -157,6 +161,12 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 				case CONF:
 					sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 					remove(TMP_CONFIG_FILE_PATH);
+					snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"\n\n\nServer contents successfully retrieved in full.\n\n");
+					con_send_tcp(&server_con_obj,server_data_times_pair);
+					break;
+				case ROTATION:
+					sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
+					remove(TMP_ROTATION_FILE_PATH);
 					snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"\n\n\nServer contents successfully retrieved in full.\n\n");
 					con_send_tcp(&server_con_obj,server_data_times_pair);
 					break;

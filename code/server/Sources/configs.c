@@ -10,6 +10,7 @@
 static FILE* cfg_fp=NULL;
 static FILE* rotation_file_stream=NULL;
 static int tmp_cfg_fd=-1;
+static int tmp_rotation_fd=-1;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
 static char server_ip_address_buff[PATHSIZE+1]={0};
@@ -304,6 +305,21 @@ void produce_config_file(void){
 	}
 	print_values_cfg_server(tmp_cfg_fd);
 	close(tmp_cfg_fd);
+
+}
+
+
+void produce_rotation_file(void){
+	tmp_rotation_fd=open(TMP_ROTATION_FILE_PATH,O_WRONLY|O_CREAT|O_TRUNC,0777);
+	if(tmp_rotation_fd<0){
+		perror("Nao foi possivel abrir ficheiro de rotations do server");
+		return;
+	}
+	dprintf(tmp_rotation_fd,"This server is currently: %s auto mode.\nCurrently: \"%u\" songs in rotation\nRotation time: \"%u\" seconds\n",is_auto_mode?"in":"not in",is_auto_mode?curr_num_songs_rotation:0,is_auto_mode?rotation_period_secs:0);
+	for(uint32_t i=0;i<curr_num_songs_rotation;i++){
+		dprintf(tmp_rotation_fd,"Song %d: %s\n",i,server_auto_mode_rotation[i]);
+	}
+	close(tmp_rotation_fd);
 
 }
 

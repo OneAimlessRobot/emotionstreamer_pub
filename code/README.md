@@ -1079,4 +1079,26 @@ Thats it for updates
 
 See you later!
 
+
+UPDATE!
+
+"rotation" command in the client!
+
+Similar to the "conf" command,
+it will print out information related to the server's rotation.
+whether it is in auto mode,
+the song rotation duration,
+Along with the number of songs
+which will both be "0"
+in case of auto mode not being enabled
+and,
+if auto mode is enabled,
+the song circulation list
+
+
+
+thats it for now.
+cya!
+
+
 ```

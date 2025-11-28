@@ -1,6 +1,7 @@
 #ifndef CONFIGS__SERVER_H
 #define CONFIGS__SERVER_H
 #define TMP_CONFIG_FILE_PATH "./configs/.tmp_sizes.cfg"
+#define TMP_ROTATION_FILE_PATH "./configs/.tmp_rotation.cfg"
 #define CONFIG_FILE_PATH_SERVER "./configs/sizes.cfg"
 #define ROTATION_FILE_PATH_SERVER "./configs/rotation.ini"
 #define ROTATION_LENGTH_LIMIT 100
@@ -48,6 +49,7 @@ extern int_pair server_data_times_pair,
 void read_values_cfg_server(void);
 void print_values_cfg_server(int fd);
 void produce_config_file(void);
+void produce_rotation_file(void);
 
 
 
