@@ -169,8 +169,9 @@ static void prepare_nightmare_blunt_rotation(void){
 			printf("Attempted to run auto_mode without any valid songs! Exiting...\n");
 			clean_and_exit();
         	}
-	}
 	fclose(rotation_file_stream);
+
+	}
 
 }
 void read_values_cfg_server(void){
