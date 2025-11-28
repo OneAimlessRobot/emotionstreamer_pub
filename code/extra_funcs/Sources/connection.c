@@ -379,9 +379,9 @@ static void greet_server(con_t* con_obj, int_pair pair){
 	char client_data[DEF_DATASIZE+1];
 	memset(client_data,0,DEF_DATASIZE+1);
 	con_read_tcp(con_obj,pair);
-	sscanf((char*)con_obj->tcp_data,"%s %hu",(char*)client_data,&con_obj->tcp_data_peer_port);
+	sscanf((char*)con_obj->tcp_data,"%s",(char*)client_data);
 	if(logging){
-		fprintf(logstream,"tuplo recebido: (string, port) = (%s, %hu)\n",client_data,con_obj->tcp_data_peer_port);
+		fprintf(logstream,"tuplo recebido: (string) = (%s)\n",client_data);
 	}
 	clear_con_data(con_obj);
 	
@@ -395,24 +395,11 @@ static void greet_server(con_t* con_obj, int_pair pair){
 		}
 		raise(SIGINT);
 	}
-	else{
-		snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%hu",(uint16_t)(con_obj->tcp_data_local_port));
-
-		if(logging){
-			fprintf(logstream,"Portas enviadas: %s\n",(char*)con_obj->tcp_data);
-		}
-		con_send_tcp(con_obj,pair);
-
-		clear_con_data(con_obj);
-
-
-
-	}
 }
 
 static void greet_client(con_t* con_obj,int_pair pair){
 
-	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%s %hu",CON_STRING,(uint16_t)(con_obj->tcp_data_local_port));
+	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%s",CON_STRING);
 	if(logging){
 		fprintf(logstream,"String enviada %s\n",(char*)con_obj->tcp_data);
 	}
@@ -420,15 +407,6 @@ static void greet_client(con_t* con_obj,int_pair pair){
 
 	clear_con_data(con_obj);
 
-	con_read_tcp(con_obj,pair);
-
-	if(logging){
-		fprintf(logstream,"String recebida (portas do server) %s\n",(char*)con_obj->tcp_data);
-	}
-	sscanf((char*)con_obj->tcp_data,"%hu",&con_obj->tcp_data_peer_port);
-	if(logging){
-		fprintf(logstream,"Portas do client agora: %hu\n",con_obj->tcp_data_local_port);
-	}
 }
 
 

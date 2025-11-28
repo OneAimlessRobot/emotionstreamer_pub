@@ -4,9 +4,11 @@
 #include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../Includes/load_html.h"
 #include "../Includes/configs.h"
 
 static FILE* cfg_fp=NULL;
+static FILE* rotation_file_stream=NULL;
 static int tmp_cfg_fd=-1;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
@@ -27,6 +29,13 @@ char server_working_extension[EXTENSION_SIZE]={0};
 
 uint8_t cfg_server_logging=0;
 
+char server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILENAME_LENGTH]={{0}};
+char server_auto_mode_rotation_filename[CONFIG_READ_LINE_BUFF_SIZE]={0};
+atomic_uint is_auto_mode=0,
+           curr_num_songs_rotation=0,
+           rotation_period_secs=DEFAULT_ROTATION_PERIOD,
+           curr_song_index_rotation=0;
+
 //EM BYTES E HZ!
 
 int_pair server_data_times_pair=(int_pair){SERVER_TIMEOUT_DATA_SEC,SERVER_TIMEOUT_DATA_USEC};
@@ -38,7 +47,7 @@ uint64_t cfg_server_ack_period_us=DEF_SERVER_ACK_PERIOD_US;
 
 
 uint64_t server_chunk_size=SERVER_CHUNK_SIZE;
-int8_t is_wav_mode=0;
+int8_t is_wav_mode=1;
 static void clean_buff(void){
 
 	memset(&curr_line_buff,0,CONFIG_READ_LINE_BUFF_SIZE);
@@ -58,10 +67,112 @@ static void clean_and_exit(void){
 	if(cfg_fp) {
 		fclose(cfg_fp);
 	}
+	if(rotation_file_stream) {
+		fclose(rotation_file_stream);
+	}
 	printf("Saimos no leitor de cfg. do server. Erro: %s\nPath para config: %s\n",strerror(errno),CONFIG_FILE_PATH_SERVER);
 	exit(-1);
 }
+static void prepare_nightmare_blunt_rotation(void){
 
+	if(is_auto_mode){
+		printf("The server was launched in auto mode!\nPreparing rotation...\n");
+	        if(!(rotation_file_stream=fopen(server_auto_mode_rotation_filename,"r"))){
+			if(!(rotation_file_stream=fopen(ROTATION_FILE_PATH_SERVER,"r"))){
+				fprintf(stderr,"Could not even open rotation file"
+						"from compile time constant!!!\n"
+						"Config value was not valid!\n"
+						"Error: %s\n",
+						strerror(errno));
+				clean_and_exit();
+			}
+			fprintf(stderr,"Opened rotation file from compile time constant!!!\n"
+					"Config value was not valid!\n"
+					"Error: %s\n",
+					strerror(errno));
+		}
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,rotation_file_stream))){
+                	clean_and_exit();
+        	}
+        	sscanf(curr_line_buff,"%u",&rotation_period_secs);
+		printf("The rotation period will be %d seconds!\n",rotation_period_secs);
+	        if(rotation_period_secs<=(server_con_times_pair[0]+1)){
+			fprintf(stderr,"The rotation time is equal or less\nThan the ammount of connection timeout seconds +1!\n(which is: %lu +1)!\nIllegal value: Exiting...\n",server_con_times_pair[0]);
+			clean_and_exit();
+
+		}
+		clean_buff();
+		char curr_auto_dir[PATHSIZE]={0};
+		memset(curr_auto_dir,0,PATHSIZE);
+		getcwd(curr_auto_dir,PATHSIZE);
+		int result= strnlen(server_music_folder_path,PATHSIZE);
+		if(!result){
+
+			snprintf(curr_auto_dir+strlen(curr_auto_dir),PATHSIZE+1,"%s",MUSIC_SERVER_INPUT_PATH);
+
+		}
+		else{
+
+			snprintf(curr_auto_dir+strlen(curr_auto_dir),PATHSIZE+1,"%s",server_music_folder_path);
+
+		}
+		char curr_rotation_buff[ROTATION_SONG_FILENAME_LENGTH]={0};
+		curr_num_songs_rotation=0;
+		curr_song_index_rotation=0;
+		for(int i=0;i<ROTATION_LENGTH_LIMIT;i++){
+			memset(curr_rotation_buff,0,sizeof(curr_rotation_buff));
+			fgets(curr_rotation_buff,sizeof(curr_rotation_buff)-2,rotation_file_stream);
+			curr_rotation_buff[strlen(curr_rotation_buff)-1]=0;
+			if(!strnlen(curr_rotation_buff,ROTATION_SONG_FILENAME_LENGTH)){
+				printf("There are no more songs in the rotation!\n");
+				break;
+			}
+			FILE* tmp_auto=NULL;
+			char test_filepath_auto[PATHSIZE*2+3]={0};
+			snprintf(test_filepath_auto,sizeof(test_filepath_auto)-1,"%s%s",curr_auto_dir,curr_rotation_buff);
+
+			if(!(tmp_auto=fopen(test_filepath_auto,"r"))){
+				fprintf(stderr,"Could not open the file:"
+						"\n%s\n"
+						"from rotation!\n"
+						"Error: %s\n",
+						test_filepath_auto,
+						strerror(errno));
+				continue;
+			}
+			else{
+				printf("Maybe adding song %s!\nThe current number of songs is: %d\n",
+					test_filepath_auto,
+					curr_num_songs_rotation);
+				fclose(tmp_auto);
+			}
+			char* ext_ptr=get_file_extension(curr_rotation_buff);
+			if(!strs_are_strictly_equal(ext_ptr,server_working_extension+1)){
+				memcpy(server_auto_mode_rotation[curr_num_songs_rotation],curr_rotation_buff,sizeof(curr_rotation_buff)-1);
+				curr_num_songs_rotation++;
+				printf("Adding song %s!\nThe current number of songs is: %d\n",
+					&(server_auto_mode_rotation[curr_num_songs_rotation-1][0]),
+					curr_num_songs_rotation);
+			}
+			else{
+				printf("Skipping song %s!\n"
+					"The file extension does not match the servers'\n"
+					"The server's working extension is: %s\n"
+					"But the extracted extension was: %s\n",
+					curr_rotation_buff,
+					server_working_extension,
+					ext_ptr);
+
+			}
+		}
+		if(!curr_num_songs_rotation){
+			printf("Attempted to run auto_mode without any valid songs! Exiting...\n");
+			clean_and_exit();
+        	}
+	}
+	fclose(rotation_file_stream);
+
+}
 void read_values_cfg_server(void){
 
 
@@ -160,9 +271,22 @@ void read_values_cfg_server(void){
 
                 clean_and_exit();
         }
+        sscanf(curr_line_buff,"server_is_auto_mode: %u",&is_auto_mode);
+        clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                clean_and_exit();
+        }
+        sscanf(curr_line_buff,"rotation_filepath_if_auto: %s",server_auto_mode_rotation_filename);
+	prepare_nightmare_blunt_rotation();
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                clean_and_exit();
+        }
         sscanf(curr_line_buff,"server_name: %s",server_name_buff);
         clean_buff();
-        fclose(cfg_fp);
+	fclose(cfg_fp);
 	server_working_extension[sizeof(server_working_extension)-1]=0;
 	server_music_folder_path[sizeof(server_music_folder_path)-1]=0;
 	process_ip_cache_entries();
@@ -205,6 +329,10 @@ void print_values_cfg_server(int fd){
 	dprintf(fd,"server_working_extension: %s\n",server_working_extension);
 
         dprintf(fd,"generalized_config_filepath: %s\n",generalized_config_filepath_buff);
+
+	dprintf(fd,"server_is_auto_mode: %u\n",is_auto_mode);
+
+        dprintf(fd,"rotation_filepath_if_auto: %s\n",server_auto_mode_rotation_filename);
 
         dprintf(fd,"server_name: %s\n",server_name_buff);
 

@@ -28,6 +28,8 @@ contact me
 and we will help you sort it out.
 Publish an issue)
 
+(BTW:
+All filepaths here are relative to the locations of the executables)
 
 Now.
 
@@ -997,5 +999,84 @@ I need the port mapper.
 Sorry...
 its how it works
 )
+
+NEWS!
+
+AUTOMODE WAS ADDED!
+
+Essentials:
+1- its kind of lame,
+but the client still needs the parameter to play a song.
+BUT
+the specific string given is ignored!
+2- the server will be given a rotation file
+structured like this:
+"
+time (seconds)
+song1.[server_extension]
+song2.[server_extension]
+....
+
+
+And at every [time] in seconds+-1 second,
+the next song will be chosen in a round robin fashion.
+
+The new server config file looks like this, now:
+"
+
+server_logging: 1
+server_chunk_size:  1152
+server_timeouts_con: 3 3
+server_timeouts_data: 3 5
+server_timeouts_ack: 3 5
+server_ack_period_us: 1000000
+server_timeouts_drop_chunks:  3 0
+server_music_folder_path: /raw_songs/
+server_music_quarantine_folder_path: /quarantine_songs/
+server_working_extension: .mp3
+server_ip_address: 192.168.1.2:0
+upper_server_ip_address: 192.168.1.2:11006
+server_port_mapper_ip_address: 192.168.1.2:7777
+generalized_config_filepath: /../config/
+server_is_auto_mode: 1
+rotation_filepath_if_auto: ./configs/rotation.ini
+server_name: "ola-bom-dia-como-estas"
+
+"
+The server_is_auto_mode parameter enables/disables automode, of course
+(0 for off, 1 for on)
+And the filepath that follows tells it where to find the rotation configuration file.
+
+A default one could be:
+
+"30
+Tijuana_Bass_-_Nortec_Collective__Official_Music_Video_.m3
+Resilience.p3
+tfaosd/Piedras_vs._tanques.mp3
+Stardust.mp3
+"
+
+Time is 30 seconds
+and all the filepaths are relative to the absolute song path of the server
+(
+(Server executable pwd)+(server_music_folder_path)+(song_filepath)
+)
+
+In this case,
+because the working extension is .mp3,
+the first two songs would be ignored
+and the rotation would only include the last two.
+
+if the file is empty,
+the server wont launch
+and if only the time is specified
+or if it is equal or less to the amount
+of server connection waiting timeout seconds plus one,
+
+the server will crash, as well.
+
+Thats it for updates
+
+See you later!
 
 ```

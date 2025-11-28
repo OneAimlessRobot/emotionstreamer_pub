@@ -13,8 +13,8 @@ int main(void){
 	read_values_cfg_server();
         print_values_cfg_server(1);
 	memset(curr_dir,0,PATHSIZE);
-	memset(curr_server_quarantine_dir_buff,0,PATHSIZE+1);
 	getcwd(curr_dir,PATHSIZE);
+	memset(curr_server_quarantine_dir_buff,0,PATHSIZE+1);
 	getcwd(curr_server_quarantine_dir_buff,PATHSIZE);
 	printf("Generalized cfg:\n");
 	parse_generalized_cfg(generalized_config_filepath_buff);

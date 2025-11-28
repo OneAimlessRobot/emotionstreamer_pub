@@ -25,7 +25,11 @@ static pthread_mutex_t eng_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t eng_cond=PTHREAD_COND_INITIALIZER;
 atomic_int started=0;
 atomic_int is_on=0;
+static struct timeval curr_tv_init={0},
+			 curr_tv_end={0};
 static struct sigaction sa;
+
+static atomic_uint curr_seconds=0;
 static struct sigaction sa_chld;
 int child_pid=-1;
 
@@ -63,7 +67,24 @@ static void conStop(int useless){
 	is_on=0*useless;
 	started=1;
 }
+static void pick_next_song(void){
+	if(is_auto_mode){
+		curr_seconds+=(curr_tv_end.tv_sec-curr_tv_init.tv_sec);
+		if(curr_seconds>rotation_period_secs){
+			curr_song_index_rotation=((curr_song_index_rotation+1)%curr_num_songs_rotation);
+			curr_seconds=0;
+		}
+	}
 
+}
+//https://stackoverflow.com/questions/1442116/how-can-i-get-the-date-and-time-values-in-a-c-program
+static void print_current_date(void){
+
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	printf("now: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+}
 static int con_accepting_loop(void){
 
 		printf("Chegamos ao loop de conexoes!\n");
@@ -83,18 +104,14 @@ static int con_accepting_loop(void){
 	                struct timeval tv;
 	                tv.tv_sec=SERVER_TIMEOUT_CON_SEC;
 	                tv.tv_usec=SERVER_TIMEOUT_CON_USEC;
-		
+			gettimeofday(&curr_tv_init,NULL);
 
 	                FD_ZERO(&state.rdfds);
 	                FD_SET(state.server_sock_tcp,&state.rdfds);
-			
 	                iResult=select(state.server_sock_tcp+1,&state.rdfds,(fd_set*)0,(fd_set*)0,&tv);
-	                
 			if(iResult>0){
-			
 				sock= accept(state.server_sock_tcp,NULL,NULL);
 				if(sock>=0){
-					
 					printf("Connection accepted!\n");
 					pid=1;
 					child_pid=pid=fork();
@@ -122,7 +139,6 @@ static int con_accepting_loop(void){
 				}
 				else{
 					perror("Rejected connection!");
-					
 				}
 			}
 		else if(iResult<0){
@@ -136,11 +152,16 @@ static int con_accepting_loop(void){
 			}
 		}
 		else{
-			
 			printf("Timed out! ( more that %lus waiting 4 udp). Trying again...\n",server_con_times_pair[0]);
 			printf("Nome do server atual: %s\n",state.name);
 			print_addr_aux("Endereço de server atual:",&state.server_tcp_addr);
-               		
+			if(is_auto_mode){
+               			gettimeofday(&curr_tv_end,NULL);
+				printf("We are in auto mode!\n"
+					"Current song: %s\nCurrent rotation time: %d out of %d\n",server_auto_mode_rotation[curr_song_index_rotation],curr_seconds,rotation_period_secs);
+				pick_next_song();
+			}
+			print_current_date();
 		}
 	}
 	printf("Fechou a loja!!!\n");

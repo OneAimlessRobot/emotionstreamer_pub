@@ -30,7 +30,6 @@ static char file_name[PATHSIZE]={0},
 static req_type recvd_type=NA;
 static struct stat file_info={0};
 
-
 static int fp=-1;
 static int fp_boundary=-1;
 //https://stackoverflow.com/questions/2336242/recursive-mkdir-system-call-on-unix
@@ -83,8 +82,12 @@ void con_go(int sockfd_tcp, uint16_t curr_port){
 			printf("Buff recebido:\n\"%s\"\n%s recebido!\n",server_con_obj.tcp_data,req_string_buff);
 			recvd_type=str_to_req_type(req_string_buff);
 			if(recvd_type==PLAY||recvd_type==DOWN){
-
-				snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,server_working_extension);
+				if(is_auto_mode){
+					printf("Musica ignorada! Escolhendo a proxima da rotation!\n");
+				}
+				snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,
+										is_auto_mode?server_auto_mode_rotation[curr_song_index_rotation]:file_name,
+										server_working_extension);
 			}
 			else{
 				switch(recvd_type){
