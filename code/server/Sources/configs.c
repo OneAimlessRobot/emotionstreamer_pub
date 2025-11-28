@@ -31,7 +31,7 @@ uint8_t cfg_server_logging=0;
 
 char server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILENAME_LENGTH]={{0}};
 char server_auto_mode_rotation_filename[CONFIG_READ_LINE_BUFF_SIZE]={0};
-atomic_uint is_auto_mode=0,
+unsigned int is_auto_mode=0,
            curr_num_songs_rotation=0,
            rotation_period_secs=DEFAULT_ROTATION_PERIOD,
            curr_song_index_rotation=0;

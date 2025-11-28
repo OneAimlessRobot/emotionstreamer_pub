@@ -29,7 +29,7 @@ static struct timeval curr_tv_init={0},
 			 curr_tv_end={0};
 static struct sigaction sa;
 
-static atomic_uint curr_seconds=0;
+static unsigned int curr_seconds=0;
 static struct sigaction sa_chld;
 int child_pid=-1;
 
