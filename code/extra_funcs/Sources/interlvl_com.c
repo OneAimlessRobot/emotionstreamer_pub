@@ -45,13 +45,8 @@ static void do_indexed_slave_con_op(slave_args* arg_s,int is_reply,int reply_res
         }
 }
 
-
-
 void* slave_thread(void* args){
-	
 	slave_args* arg_struct= (slave_args*)args;
-
-	
         arg_struct->con_obj->sockfd_tcp= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
 
@@ -116,7 +111,6 @@ void* slave_thread(void* args){
         	print_addr_aux("Addr atual do server:",&arg_struct->this_addr);
 	}
         setNonBlocking(&(arg_struct->con_obj->sockfd_tcp));
-	init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,arg_struct->this_con_addr.sin_port,&arg_struct->slave_port_mapper_ip_cache_entry);
 
 	char ent_addr[PATHSIZE/8]={0};
 
