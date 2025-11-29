@@ -89,6 +89,7 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 
 	}
 	else{
+		printf("Portas enviadas e coiso!!!!!!\nA porta enviada foi %d\n",port);
 		close(tmp_socket);
 	}
 
