@@ -1119,4 +1119,18 @@ and neutral results require a waited time update)
 as values are "Photographed" between forked processes)
 
 
+BUGFIXES!!!!!
+
+I FIXED THE PORT MAPPER ISSUE!!!!
+I made it so that both:
+1- the client
+2- the server browser (which now binds to the correct address)
+
+ask for a new port if the first one is jammed!!!
+And all the attempted ports are returned at the end!
+(hopefully)
+
+FUCK YOU LAST ACK!
+YOURE GOD AWFUL
+
 ```
