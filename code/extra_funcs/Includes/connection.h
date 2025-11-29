@@ -46,6 +46,8 @@ void send_port_back(uint16_t port,ip_cache_entry* ent);
 
 void send_ports_back(char string_to_send[DEF_DATASIZE],ip_cache_entry* ent);
 
+void free_attempted_ports(int success,ip_cache_entry* ent);
+
 void reserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry *ent);
 
 void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry*ent);

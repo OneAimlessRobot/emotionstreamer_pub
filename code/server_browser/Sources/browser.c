@@ -10,11 +10,7 @@
 #include "../../extra_funcs/Includes/interlvl_proto.h"
 #include "../Includes/browser.h"
 #include "../../port_mapper/Includes/mapper.h"
-static port_array attempted_port_arr={0};
 
-static int num_attempted_ports=0;
-
-static char string_to_send[DEF_DATASIZE]={0};
 static struct sockaddr_in hb_server_addr;
 static struct sockaddr_in our_addr;
 static int forceful_teardown=0;
@@ -22,26 +18,10 @@ static int fd=1;
 static con_t con_obj={0};
 static struct sigaction sa;
 static atomic_int innited=0;
-static void free_attempted_ports(int success){
-
-	memset(string_to_send,0,sizeof(string_to_send));
-	char* ptr=string_to_send;
-        for(int i=0;i<(num_attempted_ports)-(success!=0);i++){
-                if(!i){
-                        ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",num_attempted_ports-(success!=0));
-                }
-                if(attempted_port_arr[i]){
-                        ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",attempted_port_arr[i]);
-                }
-        }
-	fprintf(logstream,"Portas devolvidas: %d delas\nLista: %s\n",(num_attempted_ports)-(success!=0),string_to_send);
-	send_ports_back(string_to_send,&server_browser_port_mapper_ip_cache_entry);
-
-}
 
 static void cleanup_and_send_ports_back(int useless){
 
-	free_attempted_ports(0);
+	free_attempted_ports(0,&server_browser_port_mapper_ip_cache_entry);
 	close_con(&con_obj,0,1);
 	exit(useless);
 
@@ -179,7 +159,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	        	cleanup_and_send_ports_back(SIGINT);
 		}
                 else if(result_con>0){
-                        free_attempted_ports(1);
+                        free_attempted_ports(1,&server_browser_port_mapper_ip_cache_entry);
                         break;
                 }
 		close(con_obj.sockfd_tcp);

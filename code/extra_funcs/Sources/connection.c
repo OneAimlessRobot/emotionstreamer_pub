@@ -498,3 +498,19 @@ void greet(con_t*con_obj,int_pair times_pair){
 
 }
 
+void free_attempted_ports(int success,ip_cache_entry*ent){
+
+        memset(string_to_send,0,sizeof(string_to_send));
+        char* ptr=string_to_send;
+        for(int i=0;i<(num_attempted_ports)-(success!=0);i++){
+                if(!i){
+                        ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",num_attempted_ports-(success!=0));
+                }
+                if(attempted_port_arr[i]){
+                        ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",attempted_port_arr[i]);
+                }
+        }
+        fprintf(logstream,"Portas devolvidas: %d delas\nLista: %s\n",(num_attempted_ports)-(success!=0),string_to_send);
+        send_ports_back(string_to_send,ent);
+
+}

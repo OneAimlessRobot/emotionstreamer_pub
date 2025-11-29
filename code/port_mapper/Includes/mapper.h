@@ -14,8 +14,6 @@
 #define NUM_PORTS_TO_REMOVE (DEF_DATASIZE)
 #define NUM_PORTS_TO_GIVE 2
 
-typedef int port_array[NUM_PORTS_TO_GIVE];
-
 typedef enum command_char{CHECK_PORT='c',
 				PRINT_STUFF='p',
 				STOP_MAPPER='s',

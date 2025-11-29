@@ -2,6 +2,10 @@
 #include "../Includes/fileshit.h"
 
 FILE* logstream=NULL;
+port_array attempted_port_arr={0};
+
+int num_attempted_ports=0;
+char string_to_send[DEF_DATASIZE]={0};
 
 u_int8_t logging=0;
 

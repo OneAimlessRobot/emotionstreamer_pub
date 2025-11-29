@@ -32,10 +32,6 @@
 #include "../Includes/terminal_mgmt.h"
 #include "../../port_mapper/Includes/mapper.h"
 
-static port_array attempted_port_arr={0};
-
-static int num_attempted_ports=0;
-static char string_to_send[DEF_DATASIZE]={0};
 
 struct stat file_info={0};
 static atomic_int started=0;
@@ -55,25 +51,9 @@ ip_cache_t cache=(ip_cache_t){NULL,0};
 static con_t client_con_obj;
 static method play_way=PLAY_PA;
 
-static void free_attempted_ports(int success){
-
-	memset(string_to_send,0,sizeof(string_to_send));
-	char* ptr=string_to_send;
-	for(int i=0;i<(num_attempted_ports)-(success!=0);i++){
-		if(!i){
-			ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",num_attempted_ports-(success!=0));
-		}
-		if(attempted_port_arr[i]){
-			ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",attempted_port_arr[i]);
-		}
-	}
-	fprintf(logstream,"Portas devolvidas: %d delas\nLista: %s\n",(num_attempted_ports)-(success!=0),string_to_send);
-	send_ports_back(string_to_send,&client_port_mapper_ip_cache_entry);
-
-}
 static void clear_ports_and_quit(int signal){
 
-	free_attempted_ports(0);
+	free_attempted_ports(0,&client_port_mapper_ip_cache_entry);
 	close_con(&client_con_obj,0,1);
 	fclose(logstream);
 	close(fp);
@@ -264,7 +244,7 @@ int clientStart(char* req_field,char* file_name){
 			clear_ports_and_quit(SIGINT);
 	       	}
 		else if(result_con>0){
-			free_attempted_ports((the_type==PLAY));
+			free_attempted_ports((the_type==PLAY),&client_port_mapper_ip_cache_entry);
 			break;
 		}
 		close(client_con_obj.sockfd_tcp);
