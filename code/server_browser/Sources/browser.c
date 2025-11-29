@@ -34,6 +34,7 @@ static void free_attempted_ports(int success){
                         ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",attempted_port_arr[i]);
                 }
         }
+	fprintf(logstream,"Portas devolvidas: %d delas\nLista: %s\n",(num_attempted_ports)-(success!=0),string_to_send);
 	send_ports_back(string_to_send,&server_browser_port_mapper_ip_cache_entry);
 
 }
@@ -181,8 +182,8 @@ void init_browser(char* hostname, char* req,uint16_t port){
                         free_attempted_ports(1);
                         break;
                 }
-		close_con(&con_obj,0,0);
-        }
+		close(con_obj.sockfd_tcp);
+	}
 
         getsockname(con_obj.sockfd_tcp,(struct sockaddr*)&our_addr,&socklenvar[1]);
 
