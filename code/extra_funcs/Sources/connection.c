@@ -93,17 +93,84 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 	}
 
 }
+void send_ports_back(char string_to_send[DEF_DATASIZE],ip_cache_entry* ent){
+	struct sockaddr_in addr={0};
+	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
-void close_con(con_t* con_obj,int RIGHT_NOW){
+	if(tmp_socket<0){
+		perror("Criação de socket para conectar ao port mapper para devolver portas mal sucedida. Abortando\n");
+		raise(SIGINT);
+		return;
+	}
+
+	if(init_addr(&addr, ent->hostname,ent->port)){
+
+		perror("Iniciacao de address para conectar ao port mapper para devolver portas mal sucedida. Abortando\n");
+		close(tmp_socket);
+		raise(SIGINT);
+		return;
+	}
+	int result=-1;
+	char buff_for_ports[DEF_DATASIZE+1]={0};
+	int result_con=0;
+	if((result_con=tryConnect(&tmp_socket,port_mapper_times_pair,&addr))<=0){
+		perror("Conexão ao port mapper para devolver portas mal sucedida! Abortando\n");
+		socket_close(&tmp_socket,result_con!=0);
+		raise(SIGINT);
+		return;
+	}
+
 	
+	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_LEAVE_STRING);
+	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+	if(result<=0){
+		perror("O port mapper nâo recebeu o nosso request!!!\n");
+		close(tmp_socket);
+		raise(SIGINT);
+		return;
+
+	}
+	memset(buff_for_ports,0,DEF_DATASIZE+1);
+	result=readsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+	if(result<=0){
+		perror("Não conseguimos enviar o request de fecho de portas ao port mapper!!!!!!\n");
+		close(tmp_socket);
+		raise(SIGINT);
+		return;
+
+	}
+	result=sendsome(tmp_socket,string_to_send,DEF_DATASIZE,port_mapper_times_pair);
+	if(result<=0){
+		perror("Não conseguimos enviar as portas para fechar portas ao port mapper!!!!!!\n");
+		close(tmp_socket);
+		raise(SIGINT);
+		return;
+
+	}
+	else{
+		close(tmp_socket);
+	}
+
+}
+
+void close_con(con_t* con_obj,int RIGHT_NOW,int close_for_good){
 	if(con_obj->is_on){
 		if(con_obj->sockfd_tcp>=0){
+			if(logging){
+				fprintf(logstream,"Fechamos socket numero %d!!!!\n",con_obj->sockfd_tcp);
+			}
 			socket_close(&(con_obj->sockfd_tcp),RIGHT_NOW);
 		}
 		con_obj->sockfd_tcp=-1;
-		con_obj->is_on=0;
+		con_obj->is_on=(0||(close_for_good!=0));
 		if(logging){
 			fprintf(logstream,"Fechamos conexão!!!!\n");
+		}
+	}
+	else{
+
+		if(logging){
+			fprintf(logstream,"Conexão nao aberta. portanto, fechar não será tentado\n");
 		}
 	}
 }
@@ -424,8 +491,6 @@ void greet(con_t*con_obj,int_pair times_pair){
 	}
 
 	if(logging){
-		print_addr_aux("Addresss tcp do peer:",&con_obj->peer_tcp_addr);
-
 		print_addr_aux("Addresss tcp de nos:",&con_obj->this_tcp_addr);
 	}
 

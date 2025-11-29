@@ -117,7 +117,7 @@ void stop_client_stream(void){
 	pthread_cond_signal(&stats_cond);
 	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
 		send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
-		close_con(stream_struct.con_obj,1);
+		close_con(stream_struct.con_obj,1,1);
 	}
 
 

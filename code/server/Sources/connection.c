@@ -40,7 +40,7 @@ static void cleanup(void){
 		close(fp_boundary);
 	}
 	close(sock_tcp);
-	close_con(&server_con_obj,0);
+	close_con(&server_con_obj,0,1);
 	printf("Sent ports after minor server operation!\n");
 	raise(SIGTERM);
 }

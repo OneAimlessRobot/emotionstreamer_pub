@@ -3,7 +3,6 @@
 
 typedef enum con_type{SERVER_C,CLIENT_C} con_type;
 
-
 #define CONNECTION_ESTABLISHED_MSG "Conectado a %s!!!!!!\n"
 #define PORT_ADVANCE_CONSTANT 5000
 
@@ -30,7 +29,7 @@ typedef struct con_t{
 
 void init_con(con_t* con_obj, int sockfd_tcp,con_type type,uint16_t listen_port,ip_cache_entry* ent);
 
-void close_con(con_t* con_obj, int RIGHT_NOW);
+void close_con(con_t* con_obj, int RIGHT_NOW,int close_for_good);
 
 void close_udp_of_con(con_t* con_obj);
 
@@ -44,6 +43,8 @@ void clear_con_data(con_t* con_obj);
 void ask_for_port(uint16_t* port,ip_cache_entry* ent);
 
 void send_port_back(uint16_t port,ip_cache_entry* ent);
+
+void send_ports_back(char string_to_send[DEF_DATASIZE],ip_cache_entry* ent);
 
 void reserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry *ent);
 

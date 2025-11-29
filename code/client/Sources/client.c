@@ -30,8 +30,12 @@
 #include "../Includes/download_func.h"
 #include "../Includes/ip_cache_file_ops.h"
 #include "../Includes/terminal_mgmt.h"
-static int attempted_port_arr[DEF_DATASIZE]={0},
-	num_attempted_ports=0;
+#include "../../port_mapper/Includes/mapper.h"
+
+static port_array attempted_port_arr={0};
+
+static int num_attempted_ports=0;
+static char string_to_send[DEF_DATASIZE]={0};
 
 struct stat file_info={0};
 static atomic_int started=0;
@@ -53,20 +57,23 @@ static method play_way=PLAY_PA;
 
 static void free_attempted_ports(int success){
 
+	memset(string_to_send,0,sizeof(string_to_send));
+	char* ptr=string_to_send;
 	for(int i=0;i<(num_attempted_ports)-(success!=0);i++){
+		if(!i){
+			ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",num_attempted_ports-(success!=0));
+		}
 		if(attempted_port_arr[i]){
-			send_port_back(attempted_port_arr[i],&client_port_mapper_ip_cache_entry);
+			ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",attempted_port_arr[i]);
 		}
 	}
+	send_ports_back(string_to_send,&client_port_mapper_ip_cache_entry);
 
 }
 static void clear_ports_and_quit(int signal){
 
 	free_attempted_ports(0);
-	close_con(&client_con_obj,0);
-	if(client_con_obj.sockfd_tcp>=0){
-                close(client_con_obj.sockfd_tcp);
-	}
+	close_con(&client_con_obj,0,1);
 	fclose(logstream);
 	close(fp);
 	exit(signal);
@@ -217,6 +224,7 @@ int clientStart(char* req_field,char* file_name){
 		clear_ports_and_quit(SIGINT);
 
 	}
+	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry);
 	int result_con=0;
 	while(num_attempted_ports<DEF_DATASIZE){
 		client_con_obj.sockfd_tcp= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
@@ -249,19 +257,16 @@ int clientStart(char* req_field,char* file_name){
 		if(!(result_con=tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address))){
 			if(logging){
 
-				fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n",result_con);
+				fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n\nSocket fd; %d\n",result_con,client_con_obj.sockfd_tcp);
 			}
 			forceful_teardown=1;
 			clear_ports_and_quit(SIGINT);
 	       	}
-		else if(result_con<0){
-			close(client_con_obj.sockfd_tcp);
-			continue;
-	        }
-		else{
+		else if(result_con>0){
 			free_attempted_ports(1);
 			break;
 		}
+		close_con(&client_con_obj,0,0);
 	}
 	if(is_new<0){
 
@@ -279,7 +284,6 @@ int clientStart(char* req_field,char* file_name){
 	}
 	print_sock_addr(client_con_obj.sockfd_tcp);
 	setNonBlocking(&client_con_obj.sockfd_tcp);
-	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry);
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	snprintf((char*)client_con_obj.tcp_data,2*DEF_DATASIZE-1,"%s %s",req_buff,file_name);
 

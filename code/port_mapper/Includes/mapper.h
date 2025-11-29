@@ -11,7 +11,11 @@
 #define PORT_MAPPER_UNRESERVE_STRING "It_was_a_pleasure!"
 #define PORT_MAPPER_RESERVE_DID_YOU_GET_IT_STRING "\"It_will_be_a_pleasure_to_have_you_and_we_hope_to_help_you_feel_at_home\""
 #define PORT_MAPPER_RESERVE_GOT_IT_STRING "\"Thanks_for_having_me,_sir.\""
+#define NUM_PORTS_TO_REMOVE (DEF_DATASIZE)
 #define NUM_PORTS_TO_GIVE 2
+
+typedef int port_array[NUM_PORTS_TO_GIVE];
+
 typedef enum command_char{CHECK_PORT='c',
 				PRINT_STUFF='p',
 				STOP_MAPPER='s',

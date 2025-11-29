@@ -9,9 +9,12 @@
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/interlvl_proto.h"
 #include "../Includes/browser.h"
-static int attempted_port_arr[DEF_DATASIZE]={0},
-         num_attempted_ports=0;
+#include "../../port_mapper/Includes/mapper.h"
+static port_array attempted_port_arr={0};
 
+static int num_attempted_ports=0;
+
+static char string_to_send[DEF_DATASIZE]={0};
 static struct sockaddr_in hb_server_addr;
 static struct sockaddr_in our_addr;
 static int forceful_teardown=0;
@@ -19,24 +22,26 @@ static int fd=1;
 static con_t con_obj={0};
 static struct sigaction sa;
 static atomic_int innited=0;
-
 static void free_attempted_ports(int success){
 
+	memset(string_to_send,0,sizeof(string_to_send));
+	char* ptr=string_to_send;
         for(int i=0;i<(num_attempted_ports)-(success!=0);i++){
+                if(!i){
+                        ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",num_attempted_ports-(success!=0));
+                }
                 if(attempted_port_arr[i]){
-                        send_port_back(attempted_port_arr[i],&server_browser_port_mapper_ip_cache_entry);
+                        ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",attempted_port_arr[i]);
                 }
         }
+	send_ports_back(string_to_send,&server_browser_port_mapper_ip_cache_entry);
 
 }
 
 static void cleanup_and_send_ports_back(int useless){
 
 	free_attempted_ports(0);
-	close_con(&con_obj,0);
-	if(con_obj.sockfd_tcp>=0){
-		close(con_obj.sockfd_tcp);
-	}
+	close_con(&con_obj,0,1);
 	exit(useless);
 
 }
@@ -127,7 +132,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	    raise(SIGINT);
 	    cleanup_and_send_ports_back(SIGINT);
 	}
-
+	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry);
 	int result_con=0;
         uint16_t port_for_us=0;
 	while(num_attempted_ports<DEF_DATASIZE){
@@ -172,18 +177,12 @@ void init_browser(char* hostname, char* req,uint16_t port){
 			forceful_teardown=(result_con!=0);
 	        	cleanup_and_send_ports_back(SIGINT);
 		}
-                else if(result_con<0){
-                        close(con_obj.sockfd_tcp);
-                        continue;
-                }
-                else{
+                else if(result_con>0){
                         free_attempted_ports(1);
                         break;
                 }
-
+		close_con(&con_obj,0,0);
         }
-	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry);
-
 
         getsockname(con_obj.sockfd_tcp,(struct sockaddr*)&our_addr,&socklenvar[1]);
 

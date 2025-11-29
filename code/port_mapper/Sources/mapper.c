@@ -259,7 +259,7 @@ static void send_ports_to_client(int sock,int port_arr[NUM_PORTS_TO_GIVE+1]){
 
 }
 
-static void close_ports_from_client(int sock,char* ports_and_info_buff,int port_arr[NUM_PORTS_TO_GIVE+1]){
+static void close_ports_from_client(int sock,char* ports_and_info_buff,int port_arr[NUM_PORTS_TO_REMOVE+1]){
 
 	int result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
@@ -276,9 +276,19 @@ static void close_ports_from_client(int sock,char* ports_and_info_buff,int port_
 		close(sock);
 		return;
 	}
-	port_arr[0]=2;
-	sscanf(ports_and_info_buff,"%d %d",&port_arr[1],&port_arr[2]);
-	printf("Recebemos estas portas para fechar!!!\n%d e %d\n",port_arr[1],port_arr[2]);
+	int num_bytes_consumed=sscanf(ports_and_info_buff,"%d",&port_arr[0]);
+	for(int i=1;i<=port_arr[0];i++){
+		num_bytes_consumed+=sscanf(ports_and_info_buff+num_bytes_consumed,"%d",&port_arr[i]);
+
+	}
+	printf("Recebemos estas portas para fechar!!\n%d delas!\n",port_arr[0]);
+	char notification[DEF_DATASIZE]={0};
+	char* ptr=notification;
+	for(int i=0;i<port_arr[0];i++){
+		ptr+=snprintf(ptr,DEF_DATASIZE- (ptr-notification),"Porta %d: %d\n",i+1, port_arr[i+1]);
+
+	}
+	printf("%s\n",notification);
 	close_ports(port_arr);
 	close(sock);
 
@@ -482,7 +492,7 @@ static void* accepted_connection_thread(void* args){
 	setNonBlocking(&(((int*)(args))[0]));
 	char request_buff[4096]={0};
 	char ports_and_info_buff[4096]={0};
-	int ports_to_work_with[NUM_PORTS_TO_GIVE+1]={0};
+	int ports_to_work_with[NUM_PORTS_TO_REMOVE+1]={0};
 	int port_to_work_with[1]={0};
 	readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
 	sscanf(ports_and_info_buff,"%s",request_buff);
