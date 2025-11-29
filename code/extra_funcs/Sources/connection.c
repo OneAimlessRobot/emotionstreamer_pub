@@ -459,7 +459,7 @@ static void greet_server(con_t* con_obj, int_pair pair){
 
 		if(logging){
 
-			fprintf(logstream,"String de conexão errada recebida! Recebemos \"%s\" do cliente!",client_data);
+			fprintf(logstream,"String de conexão errada recebida!\nRecebemos \"%s\" do cliente!\n",client_data);
 		}
 		raise(SIGINT);
 	}
@@ -530,14 +530,15 @@ void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handl
                 if((*socket_fd)<0){
 
                         quit_handler(SIGINT,ptr);
-                }
+                	break;
+		}
                 set_sock_reuseaddr(socket_fd,1);
                 setNonBlocking(socket_fd);
                 ask_for_port(port,port_mapper_ent);
                 if(!(*port)||init_addr(src_address,src_ent->hostname,(*port))){
                         perror("Não conseguimos inicializar address no client!!!\n");
                         quit_handler(SIGINT,ptr);
-
+			break;
                 }
                 attempted_port_arr[num_attempted_ports]=(*port);
                 num_attempted_ports++;
@@ -546,7 +547,8 @@ void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handl
                         perror("Não conseguimos dar bind na socket_fd do client!!!\n");
                         print_addr_aux("Este é o address:",src_address);
                         quit_handler(SIGINT,ptr);
-                }
+                	break;
+		}
                 else{
 
                         print_addr_aux("Bind com sucesso!!!:",src_address);
@@ -559,6 +561,7 @@ void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handl
                                 fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n\nsocket_fd fd; %d\n",result_con,(*socket_fd));
                         }
                         quit_handler(SIGINT,ptr);
+			break;
                 }
                 else if(result_con>0){
                         free_attempted_ports(success_interpretation,port_mapper_ent);

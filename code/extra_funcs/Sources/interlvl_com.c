@@ -47,9 +47,10 @@ static void do_indexed_slave_con_op(slave_args* arg_s,int is_reply,int reply_res
 void slave_thread_exit_func(int useless,void* ptr){
 
 	if(ptr){
+		printf("Slave quit function called!!!\n");
 		slave_args*arg_struct= (slave_args*)ptr;
 		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-		(*arg_struct->start_trigger)=1+(0*((uint64_t)ptr));
+		(*arg_struct->start_trigger)=1;
 	        pthread_cond_signal(arg_struct->trg_cond);
 		arg_struct->sig_func(useless);
 		arg_struct->clean_func();
@@ -60,6 +61,7 @@ void slave_thread_exit_func(int useless,void* ptr){
 void* slave_thread(void* args){
 	slave_args* arg_struct= (slave_args*)args;
         print_addr_aux("Addr atual do server de heartbeat:",&arg_struct->master_addr);
+	init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,arg_struct->this_con_addr.sin_port,&arg_struct->slave_port_mapper_ip_cache_entry);
 	uint16_t port=0;
 	connection_attempt_circuit(&arg_struct->con_obj->sockfd_tcp, &port,slave_thread_exit_func,&arg_struct->this_con_addr,
                                 &arg_struct->master_addr,
@@ -67,11 +69,10 @@ void* slave_thread(void* args){
 					&arg_struct->slave_port_mapper_ip_cache_entry,
 					arg_struct->con_times_pair,
 					1,
-					(void*)(&arg_struct));
+					(void*)(arg_struct));
 
 
         setNonBlocking(&(arg_struct->con_obj->sockfd_tcp));
-
 	char ent_addr[PATHSIZE/8]={0};
 
 	char mod_type[PATHSIZE/8]={0};
