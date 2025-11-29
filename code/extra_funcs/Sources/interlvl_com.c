@@ -59,19 +59,6 @@ void slave_thread_exit_func(int useless,void* ptr){
 }
 void* slave_thread(void* args){
 	slave_args* arg_struct= (slave_args*)args;
-        arg_struct->con_obj->sockfd_tcp= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-
-
-        if(arg_struct->con_obj->sockfd_tcp<0){
-                perror("Socket nao criada no hb thread!!!\n");
-        	(*arg_struct->start_trigger)=1;
-        	pthread_cond_signal(arg_struct->trg_cond);
-		arg_struct->sig_func(SIGINT);
-		arg_struct->clean_func();
-		return args;
-        }
-
-
         print_addr_aux("Addr atual do server de heartbeat:",&arg_struct->master_addr);
 	uint16_t port=0;
 	connection_attempt_circuit(&arg_struct->con_obj->sockfd_tcp, &port,slave_thread_exit_func,&arg_struct->this_con_addr,
