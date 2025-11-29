@@ -515,7 +515,14 @@ void free_attempted_ports(int success,ip_cache_entry*ent){
 
 }
 
-void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handler)(int, void*),struct sockaddr_in* src_address,struct sockaddr_in* dst_address,ip_cache_entry* src_ent,ip_cache_entry* port_mapper_ent,int_pair con_times_pair,int success_interpretation,void* ptr){
+void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handler)(int, void*),
+					struct sockaddr_in* src_address,
+					struct sockaddr_in* dst_address,
+					ip_cache_entry* src_ent,
+					ip_cache_entry* port_mapper_ent,
+					int_pair con_times_pair,
+					int success_interpretation,
+					void* ptr){
 
         int result_con=0;
         while(num_attempted_ports<DEF_DATASIZE){

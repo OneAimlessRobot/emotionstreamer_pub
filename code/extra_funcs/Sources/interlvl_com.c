@@ -63,7 +63,13 @@ void* slave_thread(void* args){
 	uint16_t port=0;
 	connection_attempt_circuit(&arg_struct->con_obj->sockfd_tcp, &port,slave_thread_exit_func,&arg_struct->this_con_addr,
                                 &arg_struct->master_addr,
-                                        &arg_struct->slave_ip_cache_entry,&arg_struct->slave_port_mapper_ip_cache_entry,arg_struct->con_times_pair,0,(void*)(&arg_struct));
+                                        &arg_struct->slave_ip_cache_entry,
+					&arg_struct->slave_port_mapper_ip_cache_entry,
+					arg_struct->con_times_pair,
+					1,
+					(void*)(&arg_struct));
+
+
         setNonBlocking(&(arg_struct->con_obj->sockfd_tcp));
 
 	char ent_addr[PATHSIZE/8]={0};
