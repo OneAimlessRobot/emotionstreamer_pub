@@ -244,15 +244,15 @@ int clientStart(char* req_field,char* file_name){
 		}
 
 		if(!(result_con=tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address))){
-			continue;
-	        }
-		else if(result_con<0){
 			if(logging){
 
 				fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n",result_con);
 			}
 			forceful_teardown=1;
 			clear_ports_and_quit(SIGINT);
+	       	}
+		else if(result_con<0){
+			continue;
 	        }
 		else{
 			free_attempted_ports(1);
