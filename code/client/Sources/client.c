@@ -267,7 +267,7 @@ int clientStart(char* req_field,char* file_name){
 			free_attempted_ports((the_type==PLAY));
 			break;
 		}
-		close_con(&client_con_obj,0,0);
+		close(client_con_obj.sockfd_tcp);
 	}
 	if(is_new<0){
 
