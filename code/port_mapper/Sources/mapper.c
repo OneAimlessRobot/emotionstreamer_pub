@@ -276,10 +276,11 @@ static void close_ports_from_client(int sock,char* ports_and_info_buff,int port_
 		close(sock);
 		return;
 	}
-	int num_bytes_consumed=sscanf(ports_and_info_buff,"%d",&port_arr[0]);
-	for(int i=1;i<=port_arr[0];i++){
-		num_bytes_consumed+=sscanf(ports_and_info_buff+num_bytes_consumed,"%d",&port_arr[i]);
-
+	int num_bytes_consumed = 0;
+	int bytes_now=0;
+	for(int i=0;i<=port_arr[0];i++){
+		sscanf(ports_and_info_buff+num_bytes_consumed,"%d%n",&port_arr[i],&bytes_now);
+		num_bytes_consumed+=bytes_now;
 	}
 	printf("Recebemos estas portas para fechar!!\n%d delas!\n",port_arr[0]);
 	char notification[DEF_DATASIZE]={0};
