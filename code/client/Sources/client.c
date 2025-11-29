@@ -263,7 +263,7 @@ int clientStart(char* req_field,char* file_name){
 			clear_ports_and_quit(SIGINT);
 	       	}
 		else if(result_con>0){
-			free_attempted_ports((the_type==PLAY));
+			free_attempted_ports((the_type!=PLAY));
 			break;
 		}
 		close_con(&client_con_obj,0,0);
