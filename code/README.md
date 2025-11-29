@@ -1101,4 +1101,22 @@ thats it for now.
 cya!
 
 
+
+BUGFIXES:
+
+Fixed a bug where the waited time would only update on full server
+timeouts
+(for example,
+the ~3 seconds of connection waiting period on the config)
+which made it so that requests would stall it,
+making the song never change.
+Now the ending timespec is calculated independently of the result of select
+(As it will quit if it is strictly negative anyway
+And both positive
+and neutral results require a waited time update)
+
+(no mutexes are necessary
+as values are "Photographed" between forked processes)
+
+
 ```

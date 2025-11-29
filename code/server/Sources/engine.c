@@ -26,10 +26,10 @@ static pthread_cond_t eng_cond=PTHREAD_COND_INITIALIZER;
 atomic_int started=0;
 atomic_int is_on=0;
 static struct timeval curr_tv_init={0},
-			 curr_tv_end={0};
+			 curr_tv_end={0},
+			 curr_tv_result={0};
 static struct sigaction sa;
 
-static unsigned int curr_seconds=0;
 static struct sigaction sa_chld;
 int child_pid=-1;
 
@@ -67,22 +67,26 @@ static void conStop(int useless){
 	is_on=0*useless;
 	started=1;
 }
+/*
+
+//these assume the timeval structs are not null!!!
+void time_spec_sum_function(struct timeval* time_one,struct timeval* time_two,struct timeval* time_out);
+void time_spec_sub_function(struct timeval* time_one,struct timeval* time_two,struct timeval* time_out);
+//time_one bigger (1), smaller(-1) or equal (0) to time_two?
+int time_spec_compare_function(struct timeval* time_one,struct timeval* time_two);
+void time_spec_print_function(int fd, const char* timeval_name, struct timeval* time_printed);
+
+*/
 static void pick_next_song(void){
 	if(is_auto_mode){
-		curr_seconds+=(curr_tv_end.tv_sec-curr_tv_init.tv_sec);
-		if(curr_seconds>rotation_period_secs){
+		time_spec_sub_function(&curr_tv_init,&curr_tv_end,&curr_tv_result);
+		time_spec_sum_function(&curr_song_waited_time,&curr_tv_result,&curr_song_waited_time);
+		if(time_spec_compare_function(&curr_song_waited_time,&rotation_period)>0){
 			curr_song_index_rotation=((curr_song_index_rotation+1)%curr_num_songs_rotation);
-			curr_seconds=0;
+			curr_song_waited_time.tv_sec=0;
+			curr_song_waited_time.tv_usec=0;
 		}
 	}
-
-}
-//https://stackoverflow.com/questions/1442116/how-can-i-get-the-date-and-time-values-in-a-c-program
-static void print_current_date(void){
-
-	time_t t = time(NULL);
-	struct tm tm = *localtime(&t);
-	printf("now: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
 }
 static int con_accepting_loop(void){
@@ -155,14 +159,17 @@ static int con_accepting_loop(void){
 			printf("Timed out! ( more that %lus waiting 4 udp). Trying again...\n",server_con_times_pair[0]);
 			printf("Nome do server atual: %s\n",state.name);
 			print_addr_aux("Endereço de server atual:",&state.server_tcp_addr);
-			if(is_auto_mode){
-               			gettimeofday(&curr_tv_end,NULL);
-				printf("We are in auto mode!\n"
-					"Current song: %s\nCurrent rotation time: %d out of %d\n",server_auto_mode_rotation[curr_song_index_rotation],curr_seconds,rotation_period_secs);
-				pick_next_song();
-			}
 			print_current_date();
 		}
+		if(is_auto_mode){
+       			gettimeofday(&curr_tv_end,NULL);
+			printf("We are in auto mode!\n"
+				"Current song: %s\n",server_auto_mode_rotation[curr_song_index_rotation]);
+			time_spec_print_function(1, "Current rotation time: ", &curr_song_waited_time);
+			time_spec_print_function(1, "\n\nOut of: ", &rotation_period);
+			pick_next_song();
+		}
+		
 	}
 	printf("Fechou a loja!!!\n");
 	return 1;

@@ -34,9 +34,10 @@ char server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILENAME_LEN
 char server_auto_mode_rotation_filename[CONFIG_READ_LINE_BUFF_SIZE]={0};
 unsigned int is_auto_mode=0,
            curr_num_songs_rotation=0,
-           rotation_period_secs=DEFAULT_ROTATION_PERIOD,
            curr_song_index_rotation=0;
 
+struct timeval rotation_period={DEFAULT_ROTATION_PERIOD,0},
+		curr_song_waited_time={0,0};
 //EM BYTES E HZ!
 
 int_pair server_data_times_pair=(int_pair){SERVER_TIMEOUT_DATA_SEC,SERVER_TIMEOUT_DATA_USEC};
@@ -95,9 +96,9 @@ static void prepare_nightmare_blunt_rotation(void){
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,rotation_file_stream))){
                 	clean_and_exit();
         	}
-        	sscanf(curr_line_buff,"%u",&rotation_period_secs);
-		printf("The rotation period will be %d seconds!\n",rotation_period_secs);
-	        if(rotation_period_secs<=(server_con_times_pair[0]+1)){
+        	sscanf(curr_line_buff,"%lu",&(rotation_period.tv_sec));
+		printf("The rotation period will be %lu seconds!\n",(rotation_period.tv_sec));
+	        if(((uint32_t)(rotation_period.tv_sec))<=(server_con_times_pair[0]+1)){
 			fprintf(stderr,"The rotation time is equal or less\nThan the ammount of connection timeout seconds +1!\n(which is: %lu +1)!\nIllegal value: Exiting...\n",server_con_times_pair[0]);
 			clean_and_exit();
 
@@ -317,14 +318,16 @@ void produce_rotation_file(void){
 	}
 	dprintf(tmp_rotation_fd,"This server is currently: %s auto mode.\n"
 					"Currently: \"%u\" songs in rotation\n"
-					"Rotation time: \"%u\" seconds\n"
+					"Rotation time: \"%lu\" seconds\n"
 					"The current song in the rotation is: %s\n"
 					"Which is song number %u\n\n",
 					is_auto_mode?"in":"not in",
 					is_auto_mode?curr_num_songs_rotation:0,
-					is_auto_mode?rotation_period_secs:0,
+					is_auto_mode?(rotation_period.tv_sec):0,
 					is_auto_mode?server_auto_mode_rotation[curr_song_index_rotation]:"None.",
 					is_auto_mode?curr_song_index_rotation:0);
+
+	time_spec_print_function(tmp_rotation_fd, "\nCurrent waited time: ", &curr_song_waited_time);
 	for(uint32_t i=0;i<curr_num_songs_rotation;i++){
 		dprintf(tmp_rotation_fd,"Song %d: %s\n",i,server_auto_mode_rotation[i]);
 	}

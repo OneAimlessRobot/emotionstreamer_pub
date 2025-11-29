@@ -24,6 +24,7 @@
 
 typedef enum var_op{V_LOOK,V_SET}var_op;
 
+
 int acess_var_mtx(pthread_mutex_t* mtx,int* var,int value_if_change,var_op op);
 //All strings are null terminated
 int strs_are_strictly_equal(char* str1, char* str2);
@@ -39,6 +40,15 @@ int randInteger(int min, int max);
 char* randStr(int size, char* buff);
 void snprint_addr_aux(char* dst,uint32_t size,struct sockaddr_in* addr);
 int proto_is_tcp(int proto);
-
+void print_current_date(void);
+//these assume the timeval structs are not null!!!
+void time_spec_sum_function(struct timeval* time_one,struct timeval* time_two,struct timeval* time_out);
+//we assume time two is bigger!!!
+//it is two  minus one!
+//order matters!
+void time_spec_sub_function(struct timeval* time_one,struct timeval* time_two,struct timeval* time_out);
+//time_one bigger (1), smaller(-1) or equal (0) to time_two?
+int time_spec_compare_function(struct timeval* time_one,struct timeval* time_two);
+void time_spec_print_function(int fd, const char* timeval_name, struct timeval* time_printed);
 
 #endif

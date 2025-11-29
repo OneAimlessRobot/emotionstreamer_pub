@@ -29,8 +29,12 @@ extern char server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILEN
 extern char server_auto_mode_rotation_filename[PATHSIZE+1];
 extern unsigned int is_auto_mode,
 		curr_num_songs_rotation,
-		rotation_period_secs,
 		curr_song_index_rotation;
+
+extern struct timeval rotation_period,
+                	curr_song_waited_time;
+
+
 
 extern uint64_t cfg_server_ack_period_us,
 		server_ack_timeout_lim,
