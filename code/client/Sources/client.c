@@ -64,6 +64,9 @@ static void clear_ports_and_quit(int signal){
 
 	free_attempted_ports(0);
 	close_con(&client_con_obj,0);
+	if(client_con_obj.sockfd_tcp>=0){
+                close(client_con_obj.sockfd_tcp);
+	}
 	fclose(logstream);
 	close(fp);
 	exit(signal);
@@ -249,7 +252,6 @@ int clientStart(char* req_field,char* file_name){
 				fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n",result_con);
 			}
 			forceful_teardown=1;
-			close(client_con_obj.sockfd_tcp);
 			clear_ports_and_quit(SIGINT);
 	       	}
 		else if(result_con<0){

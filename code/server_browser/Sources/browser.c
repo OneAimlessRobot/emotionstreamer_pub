@@ -34,6 +34,9 @@ static void cleanup_and_send_ports_back(int useless){
 
 	free_attempted_ports(0);
 	close_con(&con_obj,0);
+	if(con_obj.sockfd_tcp>=0){
+		close(con_obj.sockfd_tcp);
+	}
 	exit(useless);
 
 }
@@ -137,7 +140,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 
 		set_sock_reuseaddr(&con_obj.sockfd_tcp,1);
 		ask_for_port(&port_for_us,&server_browser_port_mapper_ip_cache_entry);
-		if(!port_for_us||init_addr(&our_addr,server_browser_port_mapper_ip_cache_entry.hostname,port_for_us)){
+		if(!port_for_us||init_addr(&our_addr,server_browser_ip_cache_entry.hostname,port_for_us)){
 
 		    perror("Não conseguimos inicializar address em server_browser!!!\n");
 		    raise(SIGINT);
