@@ -67,6 +67,7 @@ static void free_attempted_ports(int success){
 			ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",attempted_port_arr[i]);
 		}
 	}
+	fprintf(logstream,"Portas devolvidas: %d delas\nLista: %s\n",(num_attempted_ports)-(success!=0),string_to_send);
 	send_ports_back(string_to_send,&client_port_mapper_ip_cache_entry);
 
 }
