@@ -49,7 +49,7 @@ void slave_thread_exit_func(int useless,void* ptr){
 	if(ptr){
 		slave_args*arg_struct= (slave_args*)ptr;
 		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-		(*arg_struct->start_trigger)=1;
+		(*arg_struct->start_trigger)=1+(0*((uint64_t)ptr));
 	        pthread_cond_signal(arg_struct->trg_cond);
 		arg_struct->sig_func(useless);
 		arg_struct->clean_func();

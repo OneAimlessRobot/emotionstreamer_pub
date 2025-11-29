@@ -56,7 +56,7 @@ static void clear_ports_and_quit(int signal,void* ptr){
 	close_con(&client_con_obj,0,1);
 	fclose(logstream);
 	close(fp);
-	exit(signal);
+	exit(signal+(0*((uint64_t)ptr)));
 }
 static void useless_handler(int useless){
 

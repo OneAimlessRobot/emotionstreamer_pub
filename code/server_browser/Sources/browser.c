@@ -22,7 +22,7 @@ static void cleanup_and_send_ports_back(int useless,void*ptr){
 	raise(useless);
 	free_attempted_ports(0,&server_browser_port_mapper_ip_cache_entry);
 	close_con(&con_obj,0,1);
-	exit(useless);
+	exit(useless+(0*((uint64_t)ptr)));
 
 }
 static void sigint_handler(int useless){
