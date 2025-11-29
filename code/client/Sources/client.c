@@ -36,7 +36,6 @@
 struct stat file_info={0};
 static atomic_int started=0;
 static atomic_int is_on=0;
-static int forceful_teardown=0;
 static int fp=-1;
 static struct sigaction sa;
 static uint16_t port=0;
@@ -112,6 +111,7 @@ static void down_func(char* file_name){
 		clear_ports_and_quit(SIGINT);
 
 }
+
 static void peek_func(void){
 
 
@@ -206,49 +206,9 @@ int clientStart(char* req_field,char* file_name){
 
 	}
 	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry);
-	int result_con=0;
-	while(num_attempted_ports<DEF_DATASIZE){
-		client_con_obj.sockfd_tcp= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-		if(client_con_obj.sockfd_tcp<0){
-
-			clear_ports_and_quit(SIGINT);
-	        }
-		set_sock_reuseaddr(&client_con_obj.sockfd_tcp,1);
-		setNonBlocking(&client_con_obj.sockfd_tcp);
-		ask_for_port(&port,&client_port_mapper_ip_cache_entry);
-		if(!port||init_addr(&client_ip_address,client_ip_cache_entry.hostname,port)){
-			perror("Não conseguimos inicializar address no client!!!\n");
-			clear_ports_and_quit(SIGINT);
-
-		}
-		attempted_port_arr[num_attempted_ports]=port;
-		num_attempted_ports++;
-
-		if(bind(client_con_obj.sockfd_tcp,(struct sockaddr *)&client_ip_address,socklenvar[1])){
-			perror("Não conseguimos dar bind na socket do client!!!\n");
-			print_addr_aux("Este é o address:",&client_ip_address);
-			clear_ports_and_quit(SIGINT);
-		}
-		else{
-
-			print_addr_aux("Bind com sucesso!!!:",&client_ip_address);
-			setLinger(&client_con_obj.sockfd_tcp,1,1);
-		}
-
-		if(!(result_con=tryConnect(&client_con_obj.sockfd_tcp,client_con_times_pair,&server_ip_address))){
-			if(logging){
-
-				fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n\nSocket fd; %d\n",result_con,client_con_obj.sockfd_tcp);
-			}
-			forceful_teardown=1;
-			clear_ports_and_quit(SIGINT);
-	       	}
-		else if(result_con>0){
-			free_attempted_ports((the_type==PLAY),&client_port_mapper_ip_cache_entry);
-			break;
-		}
-		close(client_con_obj.sockfd_tcp);
-	}
+	connection_attempt_circuit(&client_con_obj.sockfd_tcp, &port,clear_ports_and_quit,&client_ip_address,
+                                &server_ip_address,
+                                        &client_ip_cache_entry,&client_port_mapper_ip_cache_entry,client_con_times_pair,(the_type==PLAY));
 	if(is_new<0){
 
 		insert_ip_addr_entry(&server_ip_cache_entry,&cache);
@@ -259,7 +219,6 @@ int clientStart(char* req_field,char* file_name){
 		print_ip_cache(stdout,&cache);
 		int result_con=0;
 		if((result_con=try_cache_connect(&client_con_obj.sockfd_tcp,client_con_times_pair,&cache))<=0){
-			forceful_teardown=(result_con!=0);
 			clear_ports_and_quit(SIGINT);
         	}
 	}

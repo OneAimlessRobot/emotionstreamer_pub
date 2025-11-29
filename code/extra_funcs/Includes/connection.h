@@ -47,6 +47,11 @@ void send_port_back(uint16_t port,ip_cache_entry* ent);
 void send_ports_back(char string_to_send[DEF_DATASIZE],ip_cache_entry* ent);
 
 void free_attempted_ports(int success,ip_cache_entry* ent);
+void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handler)(int),struct sockaddr_in* src_address,
+				struct sockaddr_in* dst_address,
+					ip_cache_entry* src_ent,ip_cache_entry* port_mapper_ent,
+					int_pair con_times_pair,
+					int success_interpretation);
 
 void reserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry *ent);
 

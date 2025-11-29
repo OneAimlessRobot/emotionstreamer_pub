@@ -514,3 +514,49 @@ void free_attempted_ports(int success,ip_cache_entry*ent){
         send_ports_back(string_to_send,ent);
 
 }
+
+void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handler)(int),struct sockaddr_in* src_address,struct sockaddr_in* dst_address,ip_cache_entry* src_ent,ip_cache_entry* port_mapper_ent,int_pair con_times_pair,int success_interpretation){
+
+        int result_con=0;
+        while(num_attempted_ports<DEF_DATASIZE){
+                (*socket_fd)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+                if((*socket_fd)<0){
+
+                        quit_handler(SIGINT);
+                }
+                set_sock_reuseaddr(socket_fd,1);
+                setNonBlocking(socket_fd);
+                ask_for_port(port,port_mapper_ent);
+                if(!(*port)||init_addr(src_address,src_ent->hostname,(*port))){
+                        perror("Não conseguimos inicializar address no client!!!\n");
+                        quit_handler(SIGINT);
+
+                }
+                attempted_port_arr[num_attempted_ports]=(*port);
+                num_attempted_ports++;
+
+                if(bind((*socket_fd),(struct sockaddr *)src_address,socklenvar[1])){
+                        perror("Não conseguimos dar bind na socket_fd do client!!!\n");
+                        print_addr_aux("Este é o address:",src_address);
+                        quit_handler(SIGINT);
+                }
+                else{
+
+                        print_addr_aux("Bind com sucesso!!!:",src_address);
+                        setLinger(socket_fd,1,1);
+                }
+
+                if(!(result_con=tryConnect(socket_fd,con_times_pair,dst_address))){
+                        if(logging){
+
+                                fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n\nsocket_fd fd; %d\n",result_con,(*socket_fd));
+                        }
+                        quit_handler(SIGINT);
+                }
+                else if(result_con>0){
+                        free_attempted_ports(success_interpretation,port_mapper_ent);
+                        break;
+                }
+                close((*socket_fd));
+        }
+}
