@@ -164,7 +164,7 @@ void close_con(con_t* con_obj,int RIGHT_NOW,int close_for_good){
 		con_obj->sockfd_tcp=-1;
 		con_obj->is_on=(0||(close_for_good!=0));
 		if(logging){
-			fprintf(logstream,"Fechamos conexão!!!!\n");
+			fprintf(logstream,"Fechamos conexão!!!!\nDe vez? %s\n",close_for_good?"Yes!":"No...");
 		}
 	}
 	else{
