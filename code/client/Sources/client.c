@@ -249,6 +249,7 @@ int clientStart(char* req_field,char* file_name){
 				fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n",result_con);
 			}
 			forceful_teardown=1;
+			close(client_con_obj.sockfd_tcp);
 			clear_ports_and_quit(SIGINT);
 	       	}
 		else if(result_con<0){
