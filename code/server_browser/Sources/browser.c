@@ -9,6 +9,8 @@
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/interlvl_proto.h"
 #include "../Includes/browser.h"
+static int attempted_port_arr[DEF_DATASIZE]={0},
+         num_attempted_ports=0;
 
 static struct sockaddr_in hb_server_addr;
 static struct sockaddr_in our_addr;
@@ -16,12 +18,21 @@ static int forceful_teardown=0;
 static int fd=1;
 static con_t con_obj={0};
 static struct sigaction sa;
+static atomic_int innited=0;
 
-atomic_int innited=0;
+static void free_attempted_ports(int success){
+
+        for(int i=0;i<(num_attempted_ports)-(success!=0);i++){
+                if(attempted_port_arr[i]){
+                        send_port_back(attempted_port_arr[i],&server_browser_port_mapper_ip_cache_entry);
+                }
+        }
+
+}
 
 static void cleanup_and_send_ports_back(int useless){
 
-	send_port_back(htons(our_addr.sin_port),&server_browser_port_mapper_ip_cache_entry);
+	free_attempted_ports(0);
 	close_con(&con_obj,0);
 	exit(useless);
 
@@ -107,14 +118,6 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	logging=cfg_server_browser_logging;
 	logstream=stdout;
 
-        con_obj.sockfd_tcp=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-	if(con_obj.sockfd_tcp<0){
-                perror("Socket nao criada no hb thread!!!\n");
-		raise(SIGINT);
-        	cleanup_and_send_ports_back(SIGINT);
-        }
-
-	set_sock_reuseaddr(&con_obj.sockfd_tcp,1);
         if(init_addr(&hb_server_addr,hostname,port)){
 
 	    perror("Não conseguimos inicializar address do peer em server_browser!!!\n");
@@ -122,38 +125,61 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	    cleanup_and_send_ports_back(SIGINT);
 	}
 
-	uint16_t port_for_us=0;
-	ask_for_port(&port_for_us,&server_browser_port_mapper_ip_cache_entry);
-	if(!port_for_us||init_addr(&our_addr,server_browser_port_mapper_ip_cache_entry.hostname,port_for_us)){
-
-	    perror("Não conseguimos inicializar address em server_browser!!!\n");
-	    raise(SIGINT);
-	    cleanup_and_send_ports_back(SIGINT);
-	}
-
-	if(bind(con_obj.sockfd_tcp,(struct sockaddr *)&our_addr,socklenvar[1])){
-
-	    perror("Não conseguimos dar bind na socket do server browser!!!\n");
-	    print_addr_aux("Este é o address:",&our_addr);
-	    raise(SIGINT);
-	    cleanup_and_send_ports_back(SIGINT);
-	}
-	else{
-
-	    print_addr_aux("Bind com sucesso!!!:",&our_addr);
-	}
-
-	print_addr_aux("Addr atual do server de heartbeat:",&hb_server_addr);
 	int result_con=0;
-        if((result_con=tryConnect(&con_obj.sockfd_tcp,browser_con_times_pair,&hb_server_addr))<=0){
+        uint16_t port_for_us=0;
+	while(num_attempted_ports<DEF_DATASIZE){
+	        con_obj.sockfd_tcp=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+		if(con_obj.sockfd_tcp<0){
+	                perror("Socket nao criada no hb thread!!!\n");
+			raise(SIGINT);
+	        	cleanup_and_send_ports_back(SIGINT);
+	        }
 
-                perror("Nao deu para contactar server de heartbeats!!!!\n");
-		raise(SIGINT);
-		forceful_teardown=(result_con!=0);
-        	cleanup_and_send_ports_back(SIGINT);
-	}
+		set_sock_reuseaddr(&con_obj.sockfd_tcp,1);
+		ask_for_port(&port_for_us,&server_browser_port_mapper_ip_cache_entry);
+		if(!port_for_us||init_addr(&our_addr,server_browser_port_mapper_ip_cache_entry.hostname,port_for_us)){
 
-        init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry);
+		    perror("Não conseguimos inicializar address em server_browser!!!\n");
+		    raise(SIGINT);
+		    cleanup_and_send_ports_back(SIGINT);
+		}
+		attempted_port_arr[num_attempted_ports]=port_for_us;
+		num_attempted_ports++;
+		if(bind(con_obj.sockfd_tcp,(struct sockaddr *)&our_addr,socklenvar[1])){
+
+		    perror("Não conseguimos dar bind na socket do server browser!!!\n");
+		    print_addr_aux("Este é o address:",&our_addr);
+		    raise(SIGINT);
+		    cleanup_and_send_ports_back(SIGINT);
+		}
+		else{
+
+		    print_addr_aux("Bind com sucesso!!!:",&our_addr);
+		}
+
+		print_addr_aux("Addr atual do server de heartbeat:",&hb_server_addr);
+		if(!(result_con=tryConnect(&con_obj.sockfd_tcp,browser_con_times_pair,&hb_server_addr))){
+	        	if(logging){
+
+                                fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n",result_con);
+                        }
+                        forceful_teardown=1;
+                        perror("Nao deu para contactar server de heartbeats!!!!\n");
+			raise(SIGINT);
+			forceful_teardown=(result_con!=0);
+	        	cleanup_and_send_ports_back(SIGINT);
+		}
+                else if(result_con<0){
+                        close(con_obj.sockfd_tcp);
+                        continue;
+                }
+                else{
+                        free_attempted_ports(1);
+                        break;
+                }
+
+        }
+	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry);
 
 
         getsockname(con_obj.sockfd_tcp,(struct sockaddr*)&our_addr,&socklenvar[1]);
