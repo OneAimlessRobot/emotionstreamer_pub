@@ -44,7 +44,19 @@ static void do_indexed_slave_con_op(slave_args* arg_s,int is_reply,int reply_res
         pthread_mutex_unlock(arg_s->con_mtx);
         }
 }
+void slave_thread_exit_func(int useless,void* ptr){
 
+	if(ptr){
+		slave_args*arg_struct= (slave_args*)ptr;
+		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
+		(*arg_struct->start_trigger)=1;
+	        pthread_cond_signal(arg_struct->trg_cond);
+		arg_struct->sig_func(useless);
+		arg_struct->clean_func();
+	}
+
+
+}
 void* slave_thread(void* args){
 	slave_args* arg_struct= (slave_args*)args;
         arg_struct->con_obj->sockfd_tcp= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
@@ -61,55 +73,10 @@ void* slave_thread(void* args){
 
 
         print_addr_aux("Addr atual do server de heartbeat:",&arg_struct->master_addr);
-
-
-        int ptr=1;
-        setsockopt(arg_struct->con_obj->sockfd_tcp,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
-        uint16_t port=0;
-        ask_for_port(&port,&arg_struct->slave_port_mapper_ip_cache_entry);
-	if(!port||init_addr(&arg_struct->this_con_addr,arg_struct->slave_ip_cache_entry.hostname,port)){
-
-	        perror("Não conseguimos inicializar address principal deste slave thread!!!\n");
-		(*arg_struct->start_trigger)=1;
-        	pthread_cond_signal(arg_struct->trg_cond);
-		arg_struct->sig_func(SIGINT);
-		arg_struct->clean_func();
-		return args;
-	}
-
-        if(bind(arg_struct->con_obj->sockfd_tcp,(struct sockaddr *)&arg_struct->this_con_addr,socklenvar[0])){
-
-                perror("Não conseguimos dar bind na socket deste slave thread!!!\n");
-                if(logging){
-			print_addr_aux("Este é o address:",&arg_struct->this_con_addr);
-		}
-		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-		(*arg_struct->start_trigger)=1;
-        	pthread_cond_signal(arg_struct->trg_cond);
-		arg_struct->sig_func(SIGINT);
-		arg_struct->clean_func();
-		return args;
-        }
-	else{
-
-	     	if(logging){
-			print_addr_aux("Bind com sucesso!!!:",&arg_struct->this_con_addr);
-		}
-	}
-	int result_con=0;
-        if((result_con=tryConnect(&arg_struct->con_obj->sockfd_tcp,arg_struct->con_times_pair,&arg_struct->master_addr))<=0){
-
-                perror("Nao deu para contactar server de heartbeats!!!!\n");
-        	send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-		(*arg_struct->start_trigger)=1;
-        	pthread_cond_signal(arg_struct->trg_cond);
-		arg_struct->sig_func(SIGINT);
-		arg_struct->clean_func();
-		return args;
-        }
-	if(logging){
-        	print_addr_aux("Addr atual do server:",&arg_struct->this_addr);
-	}
+	uint16_t port=0;
+	connection_attempt_circuit(&arg_struct->con_obj->sockfd_tcp, &port,slave_thread_exit_func,&arg_struct->this_con_addr,
+                                &arg_struct->master_addr,
+                                        &arg_struct->slave_ip_cache_entry,&arg_struct->slave_port_mapper_ip_cache_entry,arg_struct->con_times_pair,0,(void*)(&arg_struct));
         setNonBlocking(&(arg_struct->con_obj->sockfd_tcp));
 
 	char ent_addr[PATHSIZE/8]={0};

@@ -50,7 +50,7 @@ ip_cache_t cache=(ip_cache_t){NULL,0};
 static con_t client_con_obj;
 static method play_way=PLAY_PA;
 
-static void clear_ports_and_quit(int signal){
+static void clear_ports_and_quit(int signal,void* ptr){
 
 	free_attempted_ports(0,&client_port_mapper_ip_cache_entry);
 	close_con(&client_con_obj,0,1);
@@ -75,7 +75,7 @@ static int64_t down_file_size(void){
 
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
 			printf(UNSUCESSFUL_DOWNLOAD,reason);
-			clear_ports_and_quit(SIGINT);
+			clear_ports_and_quit(SIGINT,NULL);
 		}
 		clear_con_data(&client_con_obj);
 		printf(CONTENT_DOWNLOAD_INCOMMING,down_size,extension_from_server);
@@ -98,7 +98,7 @@ static void down_func(char* file_name){
 		_mkdir(dirname(file_path2));
 		if((fp=creat(file_path,0777))<0){
                 		fprintf(stderr,"Nao foi possivel transferir ficheiro: %s!!!!\nPaths:\nPath1: %s\nPath2: %s\n",strerror(errno),file_path,file_path2);
-				clear_ports_and_quit(SIGINT);
+				clear_ports_and_quit(SIGINT,NULL);
                 }
 		if(stream_enable_ncurses){
 			enable_ncurses();
@@ -108,7 +108,7 @@ static void down_func(char* file_name){
 			endwin_wrapper();
 		}
 		printf("A musica foi guardada em: %s\n",file_path);
-		clear_ports_and_quit(SIGINT);
+		clear_ports_and_quit(SIGINT,NULL);
 
 }
 
@@ -118,7 +118,7 @@ static void peek_func(void){
 		int down_size=down_file_size();
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
-		clear_ports_and_quit(SIGINT);
+		clear_ports_and_quit(SIGINT,NULL);
 
 }
 static void conf_func(void){
@@ -126,7 +126,7 @@ static void conf_func(void){
 		int down_size=down_file_size();
 		printf(CONTENT_PEEK_INCOMMING);
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
-		clear_ports_and_quit(SIGINT);
+		clear_ports_and_quit(SIGINT,NULL);
 }
 
 
@@ -186,7 +186,7 @@ int clientStart(char* req_field,char* file_name){
 
 	if(init_ip_addr_cache(&cache,buff)){
 
-	      clear_ports_and_quit(SIGINT);
+	      clear_ports_and_quit(SIGINT,NULL);
 	}
 	int cache_asked= !strs_are_strictly_equal(server_ip_address_buff,PREV_ADDR_STRING);
 	int is_new=-1;
@@ -202,13 +202,13 @@ int clientStart(char* req_field,char* file_name){
 	if(!cache_asked){
 	if(init_addr(&server_ip_address,server_ip_cache_entry.hostname,server_ip_cache_entry.port)){
 		perror("Não conseguimos inicializar address de server no client!!!\n");
-		clear_ports_and_quit(SIGINT);
+		clear_ports_and_quit(SIGINT,NULL);
 
 	}
 	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry);
 	connection_attempt_circuit(&client_con_obj.sockfd_tcp, &port,clear_ports_and_quit,&client_ip_address,
                                 &server_ip_address,
-                                        &client_ip_cache_entry,&client_port_mapper_ip_cache_entry,client_con_times_pair,(the_type==PLAY));
+                                        &client_ip_cache_entry,&client_port_mapper_ip_cache_entry,client_con_times_pair,(the_type==PLAY),NULL);
 	if(is_new<0){
 
 		insert_ip_addr_entry(&server_ip_cache_entry,&cache);
@@ -219,7 +219,7 @@ int clientStart(char* req_field,char* file_name){
 		print_ip_cache(stdout,&cache);
 		int result_con=0;
 		if((result_con=try_cache_connect(&client_con_obj.sockfd_tcp,client_con_times_pair,&cache))<=0){
-			clear_ports_and_quit(SIGINT);
+			clear_ports_and_quit(SIGINT,NULL);
         	}
 	}
 	print_sock_addr(client_con_obj.sockfd_tcp);
@@ -249,11 +249,11 @@ int clientStart(char* req_field,char* file_name){
 		break;
 	case REPORT:
 		printf(REPORT_SENT_WITH_FILENAME,file_name);
-		clear_ports_and_quit(SIGINT);
+		clear_ports_and_quit(SIGINT,NULL);
         	break;
 	default:
 		printf(UNKNOWN_REQ,req_buff);
-		clear_ports_and_quit(SIGINT);
+		clear_ports_and_quit(SIGINT,NULL);
         	break;
 	}
 	return 0;

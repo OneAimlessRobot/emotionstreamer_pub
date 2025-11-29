@@ -515,21 +515,21 @@ void free_attempted_ports(int success,ip_cache_entry*ent){
 
 }
 
-void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handler)(int),struct sockaddr_in* src_address,struct sockaddr_in* dst_address,ip_cache_entry* src_ent,ip_cache_entry* port_mapper_ent,int_pair con_times_pair,int success_interpretation){
+void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handler)(int, void*),struct sockaddr_in* src_address,struct sockaddr_in* dst_address,ip_cache_entry* src_ent,ip_cache_entry* port_mapper_ent,int_pair con_times_pair,int success_interpretation,void* ptr){
 
         int result_con=0;
         while(num_attempted_ports<DEF_DATASIZE){
                 (*socket_fd)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
                 if((*socket_fd)<0){
 
-                        quit_handler(SIGINT);
+                        quit_handler(SIGINT,ptr);
                 }
                 set_sock_reuseaddr(socket_fd,1);
                 setNonBlocking(socket_fd);
                 ask_for_port(port,port_mapper_ent);
                 if(!(*port)||init_addr(src_address,src_ent->hostname,(*port))){
                         perror("Não conseguimos inicializar address no client!!!\n");
-                        quit_handler(SIGINT);
+                        quit_handler(SIGINT,ptr);
 
                 }
                 attempted_port_arr[num_attempted_ports]=(*port);
@@ -538,7 +538,7 @@ void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handl
                 if(bind((*socket_fd),(struct sockaddr *)src_address,socklenvar[1])){
                         perror("Não conseguimos dar bind na socket_fd do client!!!\n");
                         print_addr_aux("Este é o address:",src_address);
-                        quit_handler(SIGINT);
+                        quit_handler(SIGINT,ptr);
                 }
                 else{
 
@@ -551,7 +551,7 @@ void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handl
 
                                 fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n\nsocket_fd fd; %d\n",result_con,(*socket_fd));
                         }
-                        quit_handler(SIGINT);
+                        quit_handler(SIGINT,ptr);
                 }
                 else if(result_con>0){
                         free_attempted_ports(success_interpretation,port_mapper_ent);

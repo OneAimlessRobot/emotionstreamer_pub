@@ -18,8 +18,8 @@ static con_t con_obj={0};
 static struct sigaction sa;
 static atomic_int innited=0;
 
-static void cleanup_and_send_ports_back(int useless){
-	raise(SIGINT);
+static void cleanup_and_send_ports_back(int useless,void*ptr){
+	raise(useless);
 	free_attempted_ports(0,&server_browser_port_mapper_ip_cache_entry);
 	close_con(&con_obj,0,1);
 	exit(useless);
@@ -45,7 +45,7 @@ static void recv_servers(void){
 			}
 			else{
 				perror("erro 1!!!\n");
-				cleanup_and_send_ports_back(SIGINT);
+				cleanup_and_send_ports_back(SIGINT,NULL);
 			}
 
 	}
@@ -58,7 +58,7 @@ static void recv_servers(void){
 			}
 			else{
 				perror("erro 2!!!\n");
-				cleanup_and_send_ports_back(SIGINT);
+				cleanup_and_send_ports_back(SIGINT,NULL);
 			}
 
 	}
@@ -88,7 +88,7 @@ static void recv_servers(void){
 			}
 		}
 	}
-	cleanup_and_send_ports_back(SIGINT);
+	cleanup_and_send_ports_back(SIGINT,NULL);
 
 
 }
@@ -106,13 +106,13 @@ void init_browser(char* hostname, char* req,uint16_t port){
         if(init_addr(&hb_server_addr,hostname,port)){
 
 	    perror("Não conseguimos inicializar address do peer em server_browser!!!\n");
-	    cleanup_and_send_ports_back(SIGINT);
+	    cleanup_and_send_ports_back(SIGINT,NULL);
 	}
 	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry);
         uint16_t port_for_us=0;
 	connection_attempt_circuit(&con_obj.sockfd_tcp, &port_for_us,cleanup_and_send_ports_back,&our_addr,
                                 &hb_server_addr,
-                                       &server_browser_ip_cache_entry,&server_browser_port_mapper_ip_cache_entry,browser_con_times_pair,1);
+                                       &server_browser_ip_cache_entry,&server_browser_port_mapper_ip_cache_entry,browser_con_times_pair,1,NULL);
         clear_con_data(&con_obj);
 	char string_to_send[PATHSIZE/2]={0};
 	interlvl_cmd cmd= str_to_interlvl_cmd_type(req);
@@ -127,7 +127,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 			break;
 		default:
 			printf("Request desconhecido: |%s|\n",req);
-			cleanup_and_send_ports_back(SIGINT);
+			cleanup_and_send_ports_back(SIGINT,NULL);
         }
 
 	snprintf((char*)con_obj.tcp_data,DEF_DATASIZE-1,"%s",string_to_send);
@@ -136,7 +136,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 
 
                 perror("Nao deu para contactar server de heartbeats!!!! Nao recebeu pedido de login\n");
-		cleanup_and_send_ports_back(SIGINT);
+		cleanup_and_send_ports_back(SIGINT,NULL);
         }
 	innited=1;
 	recv_servers();
