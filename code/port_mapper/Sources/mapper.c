@@ -258,7 +258,6 @@ static void send_ports_to_client(int sock,int port_arr[NUM_PORTS_TO_GIVE+1]){
 
 
 }
-
 static void close_ports_from_client(int sock,char* ports_and_info_buff,int port_arr[NUM_PORTS_TO_REMOVE+1]){
 
 	int result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
@@ -276,6 +275,7 @@ static void close_ports_from_client(int sock,char* ports_and_info_buff,int port_
 		close(sock);
 		return;
 	}
+	//https://stackoverflow.com/questions/10826953/sscanf-doesnt-move-scanning-same-integer-everytime
 	int num_bytes_consumed = 0;
 	int bytes_now=0;
 	for(int i=0;i<=port_arr[0];i++){
