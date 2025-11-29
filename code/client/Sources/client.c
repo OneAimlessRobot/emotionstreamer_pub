@@ -209,13 +209,6 @@ int clientStart(char* req_field,char* file_name){
 	}
 
 	if(!cache_asked){
-	client_con_obj.sockfd_tcp= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-	if(client_con_obj.sockfd_tcp<0){
-
-		clear_ports_and_quit(SIGINT);
-        }
-	set_sock_reuseaddr(&client_con_obj.sockfd_tcp,1);
-	setNonBlocking(&client_con_obj.sockfd_tcp);
 	if(init_addr(&server_ip_address,server_ip_cache_entry.hostname,server_ip_cache_entry.port)){
 		perror("Não conseguimos inicializar address de server no client!!!\n");
 		clear_ports_and_quit(SIGINT);
@@ -223,6 +216,13 @@ int clientStart(char* req_field,char* file_name){
 	}
 	int result_con=0;
 	while(num_attempted_ports<DEF_DATASIZE){
+		client_con_obj.sockfd_tcp= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+		if(client_con_obj.sockfd_tcp<0){
+
+			clear_ports_and_quit(SIGINT);
+	        }
+		set_sock_reuseaddr(&client_con_obj.sockfd_tcp,1);
+		setNonBlocking(&client_con_obj.sockfd_tcp);
 		ask_for_port(&port,&client_port_mapper_ip_cache_entry);
 		if(!port||init_addr(&client_ip_address,client_ip_cache_entry.hostname,port)){
 			perror("Não conseguimos inicializar address no client!!!\n");
@@ -252,6 +252,7 @@ int clientStart(char* req_field,char* file_name){
 			clear_ports_and_quit(SIGINT);
 	       	}
 		else if(result_con<0){
+			close(client_con_obj.sockfd_tcp);
 			continue;
 	        }
 		else{
