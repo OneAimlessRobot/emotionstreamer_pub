@@ -23,7 +23,7 @@ static pthread_cond_t running_cond=PTHREAD_COND_INITIALIZER,
 static pthread_t input_tid=0,
 		main_tid=0;
 
-static int input_enabled=0;
+static uint16_t input_enabled=0;
 atomic_int running=0;
 static struct sigaction sa;
 
@@ -44,7 +44,7 @@ static void cleanup(void){
 
 
 }
-static int port_in_range(int port){
+static int port_in_range(uint16_t port){
 
 	return (port>=cfg_init_port)&&(port<=(cfg_init_port+cfg_num_ports));
 
@@ -53,25 +53,25 @@ static int port_in_range(int port){
 static int is_no_more_room(void){
 
 	
-	return (acess_var_mtx(&running_mtx,&mapper.curr_num_ports,0,V_LOOK)>=cfg_num_ports);
+	return (acess_var_mtx_uint16(&running_mtx,&mapper.curr_num_ports,0,V_LOOK)>=cfg_num_ports);
 
 
 }
 static int is_empty(void){
 
 	
-	return !acess_var_mtx(&running_mtx,&mapper.curr_num_ports,0,V_LOOK);
+	return !acess_var_mtx_uint16(&running_mtx,&mapper.curr_num_ports,0,V_LOOK);
 
 
 }
 
-static void close_ports(int arr[NUM_PORTS_TO_GIVE+1]){
+static void close_ports(port_array arr){
 
 	if(!is_empty()){
-		for(int i=0;i<arr[0];i++){
+		for(uint16_t i=0;i<arr[0];i++){
 			if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[arr[i+1]-cfg_init_port]),0,V_LOOK)==PORT_ALLOCATED){
 				acess_var_mtx(&variable_mtx,&(mapper.port_arr[arr[i+1]-cfg_init_port]),0,V_SET);
-				acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)-1,V_SET);
+				acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)-1,V_SET);
 			}
 
 		}
@@ -84,7 +84,7 @@ static int close_single_port(int port){
 	if(!is_empty()){
 		if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_LOOK)==PORT_ALLOCATED){
 			acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_SET);
-			acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)-1,V_SET);
+			acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)-1,V_SET);
 			return 1;
 		}
 	}
@@ -92,7 +92,7 @@ static int close_single_port(int port){
 
 
 }
-static int fetch_ports_to_give(int arr[NUM_PORTS_TO_GIVE+1],int actually_change){
+static int fetch_ports_to_give(port_array arr,int actually_change){
 
 	int init=cfg_init_port;
 	int curr=cfg_init_port;
@@ -102,7 +102,7 @@ static int fetch_ports_to_give(int arr[NUM_PORTS_TO_GIVE+1],int actually_change)
 			if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[curr-init]),0,V_LOOK)==PORT_FREE){
 				arr[arr[0]+1]=(uint16_t)curr;
 				acess_var_mtx(&variable_mtx,&(mapper.port_arr[curr-init]),1*actually_change,actually_change?V_SET:V_LOOK);
-				acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)+(1*actually_change),actually_change?V_SET:V_LOOK);
+				acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)+(1*actually_change),actually_change?V_SET:V_LOOK);
 				arr[0]++;
 			}
 
@@ -119,7 +119,7 @@ static int fetch_ports_to_give(int arr[NUM_PORTS_TO_GIVE+1],int actually_change)
 
 
 }
-static int fetch_single_port_to_give(int* port,int actually_change){
+static int fetch_single_port_to_give(uint16_t* port,int actually_change){
 
 	int init=cfg_init_port;
 	int curr=cfg_init_port;
@@ -129,7 +129,7 @@ static int fetch_single_port_to_give(int* port,int actually_change){
 			if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[curr-init]),0,V_LOOK)==PORT_FREE){
 				port[0]=(uint16_t)curr;
 				acess_var_mtx(&variable_mtx,&(mapper.port_arr[curr-init]),1*actually_change,actually_change?V_SET:V_LOOK);
-				acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)+(1*actually_change),actually_change?V_SET:V_LOOK);
+				acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)+(1*actually_change),actually_change?V_SET:V_LOOK);
 				return 1;
 			}
 
@@ -145,7 +145,7 @@ static int reserve_port(int port){
 		if(!is_no_more_room()){
 			if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_LOOK)!=PORT_ALLOCATED){
 				acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),PORT_RESERVED,V_SET);
-				acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)+1,V_SET);
+				acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)+1,V_SET);
 				return 1;
 			}
 
@@ -160,7 +160,7 @@ static int unreserve_port(int port){
 		if(!is_empty()){
 			if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_LOOK)<0){
 				acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),PORT_FREE,V_SET);
-				acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)-1,V_SET);
+				acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)-1,V_SET);
 				return 1;
 			}
 
@@ -185,7 +185,7 @@ static void port_mapper_print(int fd){
 
 	}
 	prev_ptr=ptr+=cfg_num_ports;
-	int arr[NUM_PORTS_TO_GIVE+1]={0};
+	port_array arr={0};
 	fetch_ports_to_give(arr,0);
 	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%s]\n\nAqui estão as portas que seriam entregues a seguir:\nSeriam entregues %d portas!\n",prev_ptr,arr[0]);
 
@@ -202,7 +202,7 @@ static void port_mapper_print(int fd){
 						running?"Yes!":"No...",
 						is_no_more_room()?"Yes!":"No....",
 						is_empty()?"Yes!":"No....",
-						acess_var_mtx(&running_mtx,&mapper.curr_num_ports,0,V_LOOK));
+						acess_var_mtx_uint16(&running_mtx,&mapper.curr_num_ports,0,V_LOOK));
 	
 	dprintf(fd,"%s",buff);
 
@@ -217,48 +217,7 @@ static void print_help(void){
 
 
 }
-static void send_ports_to_client(int sock,int port_arr[NUM_PORTS_TO_GIVE+1]){
-
-	char buff_with_the_ports[4096]={0};
-	char* ptr= buff_with_the_ports,*prev_ptr;
-	prev_ptr=ptr;
-
-	for(int i=1;i<NUM_PORTS_TO_GIVE+1;i++){
-	
-
-		prev_ptr=ptr+=snprintf(ptr,sizeof(buff_with_the_ports)-1,"%s %d",prev_ptr,port_arr[i]);
-
-
-	}
-	int result=sendsome(sock,buff_with_the_ports,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-
-		printf("Portas não enviadas!!! %s\n",buff_with_the_ports);
-		
-
-	}
-	else{
-
-		printf("Portas enviadas!!! %s\n",buff_with_the_ports);
-
-
-	}
-	memset(buff_with_the_ports,0,4096);
-        result=readsome(sock,buff_with_the_ports,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-                 fprintf(stderr,"Não conseguimos receber portas no port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",buff_with_the_ports,strerror(errno));
-		 close(sock);
-                 raise(SIGTERM);
-
-        }
-	else{
-	         fprintf(stdout,"Conseguimos receber portas no mapper!!!!!!\nString que recebemos: \"%s\"\n",buff_with_the_ports);
-        }
-	close(sock);
-
-
-}
-static void close_ports_from_client(int sock,char* ports_and_info_buff,int port_arr[NUM_PORTS_TO_REMOVE+1]){
+static void close_ports_from_client(int sock,char* ports_and_info_buff,port_array port_arr){
 
 	int result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
@@ -267,26 +226,20 @@ static void close_ports_from_client(int sock,char* ports_and_info_buff,int port_
 		close(sock);
 		return;
 	}
-	memset(ports_and_info_buff,0,4096);
-	result=readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
+	
+	memset(port_arr,0,sizeof(port_array));
+	result=readsome(sock,(char*)port_arr,sizeof(port_array),port_mapper_times_pair);
 	if(result<=0){
 
 		printf("timeout no port mapper");
 		close(sock);
 		return;
 	}
-	//https://stackoverflow.com/questions/10826953/sscanf-doesnt-move-scanning-same-integer-everytime
-	int num_bytes_consumed = 0;
-	int bytes_now=0;
-	for(int i=0;i<=port_arr[0];i++){
-		sscanf(ports_and_info_buff+num_bytes_consumed,"%d%n",&port_arr[i],&bytes_now);
-		num_bytes_consumed+=bytes_now;
-	}
 	printf("Recebemos estas portas para fechar!!\n%d delas!\n",port_arr[0]);
 	char notification[DEF_DATASIZE]={0};
 	char* ptr=notification;
 	for(int i=0;i<port_arr[0];i++){
-		ptr+=snprintf(ptr,DEF_DATASIZE- (ptr-notification),"Porta %d: %d\n",i+1, port_arr[i+1]);
+		ptr+=snprintf(ptr,DEF_DATASIZE- (ptr-notification),"Porta %d: %hu\n",i+1, port_arr[i+1]);
 
 	}
 	printf("%s\n",notification);
@@ -312,60 +265,21 @@ static void check_port_func(uint16_t port_to_check){
 
 
 }
-static void reserve_client_port(int sock,char* ports_and_info_buff){
-	int result=-1;
-	memset(ports_and_info_buff,0,4096);
-	result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
+static void send_single_client_port(int sock,uint16_t* port){
+
+	int result=sendsome(sock,(char*)port,sizeof((*port)),port_mapper_times_pair);
 	if(result<=0){
 
-		printf("timeout no mapper a avisar ao cliente que estamos prontos para reservar portas!!!\n");
-		close(sock);
-	}
-	memset(ports_and_info_buff,0,4096);
-	result=readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		printf("Timeout no port mapper a reservar portas do cliente?!!!!\n");
-		close(sock);
-	}
-	int reserved_port=0;
-	sscanf(ports_and_info_buff,"%d",&reserved_port);
-	printf("Eles querem reservar a porta %d\n",reserved_port);
-	memset(ports_and_info_buff,0,4096);
-	int result_of_reserve=reserve_port(reserved_port);
-	snprintf(ports_and_info_buff,DEF_DATASIZE,"%d",result_of_reserve);
-	result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		printf("Cliente não apanhou o nosso aviso!!!\n");
-	}
-	else if(!result_of_reserve){
-		printf("Não foi possivel reservar porta!\n");
+		printf("Portas não enviadas!!! %hu\n",*port);
+
 	}
 	else{
-		printf("Reserva feita!\n");
-	}
-	close(sock);
 
-}
-static void send_single_client_port(int sock,int* port){
-	
+		printf("Porta enviada!!! %hu\n",*port);
+
+
+	}
 	char buff_with_the_ports[4096]={0};
-
-	snprintf(buff_with_the_ports,sizeof(buff_with_the_ports)-1,"%d",port[0]);
-
-	int result=sendsome(sock,buff_with_the_ports,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-
-		printf("Portas não enviadas!!! %s\n",buff_with_the_ports);
-		
-
-	}
-	else{
-
-		printf("Porta enviada!!! %s\n",buff_with_the_ports);
-
-
-	}
-	memset(buff_with_the_ports,0,4096);
         result=readsome(sock,buff_with_the_ports,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
                  fprintf(stderr,"Não conseguimos receber porta do port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",buff_with_the_ports,strerror(errno));
@@ -375,11 +289,10 @@ static void send_single_client_port(int sock,int* port){
         }
 	else{
 		fprintf(stdout,"conseguimos receber porta do port mapper!!!!!!\nString que recebemos: \"%s\"\n",buff_with_the_ports);
-                 
 	}
 
 }
-static void close_single_port_from_client(int sock,char* ports_and_info_buff,int* port){
+static void close_single_port_from_client(int sock,char* ports_and_info_buff,uint16_t* port){
 
 	int result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
@@ -389,58 +302,22 @@ static void close_single_port_from_client(int sock,char* ports_and_info_buff,int
 		return;
 	}
 	memset(ports_and_info_buff,0,4096);
-	result=readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
+	result=readsome(sock,(char*)port,sizeof((*port)),port_mapper_times_pair);
 	if(result<=0){
 
 		printf("timeout no port mapper");
 		close(sock);
 		return;
 	}
-	sscanf(ports_and_info_buff,"%d",port);
 	printf("Recebemos esta porta para fechar!!!\n%d\n",port[0]);
 	close_single_port(port[0]);
 	close(sock);
 
 }
-static void unreserve_client_port(int sock,char* ports_and_info_buff){
-	int result=-1;
-	memset(ports_and_info_buff,0,4096);
-	result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-
-		printf("timeout no mapper a avisar ao cliente que estamos prontos para desreservar portas!!!\n");
-		close(sock);
-	}
-	memset(ports_and_info_buff,0,4096);
-	result=readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		printf("Timeout no port mapper a desreservar portas do cliente?!!!!\n");
-		close(sock);
-	}
-	int reserved_port=0;
-	sscanf(ports_and_info_buff,"%d",&reserved_port);
-	printf("Eles querem desreservar a porta %d\n",reserved_port);
-	memset(ports_and_info_buff,0,4096);
-	int result_of_reserve=unreserve_port(reserved_port);
-	snprintf(ports_and_info_buff,DEF_DATASIZE,"%d",result_of_reserve);
-	result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		printf("Cliente não apanhou o nosso aviso!!!\n");
-	}
-	else if(!result_of_reserve){
-		printf("Não foi possivel desreservar porta!\n");
-	}
-	else{
-		printf("Desreserva feita!\n");
-	}
-	close(sock);
-
-}
 void* port_mapper_input_loop(void* args){
 
-	
         pthread_mutex_lock(&input_mtx);
-        while(running&&!acess_var_mtx(&variable_mtx,&input_enabled,0,V_LOOK)){
+        while(running&&!acess_var_mtx_uint16(&variable_mtx,&input_enabled,0,V_LOOK)){
 
                 pthread_cond_wait(&input_cond,&input_mtx);
         }
@@ -493,26 +370,16 @@ static void* accepted_connection_thread(void* args){
 	setNonBlocking(&(((int*)(args))[0]));
 	char request_buff[4096]={0};
 	char ports_and_info_buff[4096]={0};
-	int ports_to_work_with[NUM_PORTS_TO_REMOVE+1]={0};
-	int port_to_work_with[1]={0};
+	port_array ports_to_work_with={0};
+	uint16_t port_to_work_with[1]={0};
 	readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
 	sscanf(ports_and_info_buff,"%s",request_buff);
 	fflush(stdout);
 	printf("Recebemos esta string de request: '%s'\n",request_buff);
-	if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_JOIN_STRING)){
-
-		fetch_ports_to_give(ports_to_work_with,1);
-		send_ports_to_client(sock,ports_to_work_with);
-		close(sock);
-	}
-	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_AWKWARD_JOIN_STRING)){
+	if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_AWKWARD_JOIN_STRING)){
 
 		fetch_single_port_to_give(port_to_work_with,1);
 		send_single_client_port(sock,port_to_work_with);
-		close(sock);
-	}
-	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_RESERVE_STRING)){
-		reserve_client_port(sock,ports_and_info_buff);
 		close(sock);
 	}
 	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_LEAVE_STRING)){
@@ -521,10 +388,6 @@ static void* accepted_connection_thread(void* args){
 	}
 	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_AWKWARD_LEAVE_STRING)){
 		close_single_port_from_client(sock,ports_and_info_buff,port_to_work_with);
-		close(sock);
-	}
-	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_UNRESERVE_STRING)){
-		unreserve_client_port(sock,ports_and_info_buff);
 		close(sock);
 	}
 	else{
@@ -552,12 +415,7 @@ void* port_mapper_main_loop(void* args){
 				printf("Connection accepted!\n");
                         	int arg[1]={0};
 				arg[0]=sock;
-				/*pthread_t tid_con=-1;
-				pthread_create(&tid_con,NULL,accepted_connection_thread,(void*)arg);
-				pthread_detach(tid_con);
-				*/
 				accepted_connection_thread((void*)arg);
-				
 			}
 		}
 		else if(!iResult)
@@ -596,7 +454,7 @@ void port_mapper_init(ip_cache_entry* ent){
 	logging=cfg_port_mapper_logging;
 	logstream=stdout;
 	int32_t port_arr[cfg_num_ports];
-	memset(port_arr,0,sizeof(int32_t)*cfg_num_ports);
+	memset(port_arr,0,sizeof(port_arr));
 	mapper.port_arr=port_arr;
 
 

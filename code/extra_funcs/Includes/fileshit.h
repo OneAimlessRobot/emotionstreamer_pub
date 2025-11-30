@@ -1,9 +1,7 @@
 #ifndef FILESHIT_H
 #define FILESHIT_H
-typedef int port_array[DEF_DATASIZE];
+typedef uint16_t port_array[DEF_DATASIZE+1];
 extern port_array attempted_port_arr;
-extern int num_attempted_ports;
-extern char string_to_send[DEF_DATASIZE];
 
 extern FILE* logstream;
 

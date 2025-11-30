@@ -4,7 +4,7 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="super_music_come_with_me_come_with_me/"
+song_subdirectory="ugly_witchery/"
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0

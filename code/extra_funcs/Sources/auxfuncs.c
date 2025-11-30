@@ -22,6 +22,28 @@ int acess_var_mtx(pthread_mutex_t* mtx,int* var,int value_if_change,var_op op){
 
 
 }
+
+uint16_t acess_var_mtx_uint16(pthread_mutex_t* mtx,uint16_t* var,uint16_t value_if_change,var_op op){
+
+
+          uint16_t result=0;
+          pthread_mutex_lock(mtx);
+          switch(op){
+                  case V_LOOK:
+                  result=(*var);
+                  break;
+                  case V_SET:
+                  (*var)=value_if_change;
+                  break;
+                  default:
+                  break;
+          }
+          pthread_mutex_unlock(mtx);
+          return result;
+
+
+
+}
 int strs_are_strictly_equal(char* str1, char* str2){
 
 	int max_size= max(strlen(str1),strlen(str2));

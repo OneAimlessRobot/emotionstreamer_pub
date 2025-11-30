@@ -78,9 +78,7 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 		return;
 
 	}
-	memset(buff_for_ports,0,DEF_DATASIZE+1);
-	snprintf(buff_for_ports,DEF_DATASIZE,"%hu",port);
-	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+	result=sendsome(tmp_socket,(char*)&port,sizeof(port),port_mapper_times_pair);
 	if(result<=0){
 		perror("Não conseguimos enviar a porta para fechar portas ao port mapper!!!!!!\n");
 		close(tmp_socket);
@@ -94,7 +92,7 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 	}
 
 }
-void send_ports_back(char string_to_send[DEF_DATASIZE],ip_cache_entry* ent){
+void send_ports_back(ip_cache_entry* ent){
 	struct sockaddr_in addr={0};
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
@@ -140,7 +138,7 @@ void send_ports_back(char string_to_send[DEF_DATASIZE],ip_cache_entry* ent){
 		return;
 
 	}
-	result=sendsome(tmp_socket,string_to_send,DEF_DATASIZE,port_mapper_times_pair);
+	result=sendsome(tmp_socket,(char*)attempted_port_arr,sizeof(port_array),port_mapper_times_pair);
 	if(result<=0){
 		perror("Não conseguimos enviar as portas para fechar portas ao port mapper!!!!!!\n");
 		close(tmp_socket);
@@ -245,8 +243,7 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 		return;
 
 	}
-	memset(buff_for_ports,0,DEF_DATASIZE+1);
-	result=readsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+	result=readsome(tmp_socket,(char*)port,sizeof((*port)),port_mapper_times_pair);
 	if(result<=0){
 		perror("Não conseguimos receber porta do port mapper!!!!!!\n");
 		close(tmp_socket);
@@ -254,7 +251,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 		return;
 
 	}
-	sscanf(buff_for_ports,"%hu",port);
 	if(logging){
 		fprintf(logstream,"Recebemos porta do port_mapper!!!\n"
 						"%hu\n",
@@ -276,169 +272,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 		fprintf(logstream,"Aviso de que já temos a porta enviado!!!\nMensagem que foi enviada:\n%s\n",buff_for_ports);
 	}
 	close(tmp_socket);
-}
-
-void reserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* ent){
-	struct sockaddr_in addr={0};
-	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-
-        if(tmp_socket<0){
-		perror("Conexão ao port mapper para reservar unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
-		raise(SIGINT);
-		return;
-	}
-
-	if(init_addr(&addr, ent->hostname,ent->port)){
-		perror("Iniciaçao de address para conexão ao port mapper para reservar unica porta mal sucedida! Abortando\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-
-	}
-	int result=-1;
-	char buff_for_ports[DEF_DATASIZE+1]={0};
-	int result_con=0;
-	if((result_con=tryConnect(&tmp_socket,port_mapper_times_pair,&addr))<=0){
-		perror("Conexão ao port mapper para reservar unica porta mal sucedida! Abortando\n");
-		socket_close(&tmp_socket,result_con!=0);
-		raise(SIGINT);
-		return;
-
-	}
-	
-	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_RESERVE_STRING);
-	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		perror("O port mapper nâo recebeu o nosso request!!!\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-
-	}
-	memset(buff_for_ports,0,DEF_DATASIZE+1);
-	result=readsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		perror("Não conseguimos receber resultado do nosso pedido de reserva no  mapper!!!!!!\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-
-	}
-	memset(buff_for_ports,0,DEF_DATASIZE+1);
-	snprintf(buff_for_ports,DEF_DATASIZE,"%hu",port_to_allocate);
-	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		perror("O port mapper nâo recebeu a nossa porta!!!\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-	}
-	memset(buff_for_ports,0,DEF_DATASIZE+1);
-	result=readsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		perror("Não conseguimos receber resultado de reserva da nossa porta no port mapper!!!!!!\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-	}
-	int result_of_reserve=-1;
-	sscanf(buff_for_ports,"%d",&result_of_reserve);
-	if(!result_of_reserve){
-		perror("Não foi possivel reservar porta de listening no port mapper!!!!!!\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-
-
-	}
-	if(logging){
-		fprintf(logstream,"Reserva feita!!!\n");
-	}
-	close(tmp_socket);
-
-
-}
-void unreserve_local_listening_port(uint16_t port_to_allocate,ip_cache_entry* ent){
-	if(!port_to_allocate){
-		if(logging){
-			fprintf(logstream,"Refusing to send back null port at send_port_back!\n");
-		}
-		return;
-	}
-	struct sockaddr_in addr={0};
-	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-
-        if(tmp_socket<0){
-		perror("Conexão ao port mapper para desreservar unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
-		raise(SIGINT);
-	}
-
-	if(init_addr(&addr, ent->hostname,ent->port)){
-		perror("Iniciaçao de address para conexão ao port mapper para desreservar unica porta mal sucedida! Abortando\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-
-	}
-	int result=-1;
-	char buff_for_ports[DEF_DATASIZE+1]={0};
-	int result_con=0;
-	if((result_con=tryConnect(&tmp_socket,port_mapper_times_pair,&addr))<=0){
-		perror("Conexão ao port mapper para desreservar unica porta mal sucedida! Abortando\n");
-		socket_close(&tmp_socket,result_con!=0);
-		raise(SIGINT);
-		return;
-	}
-	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_UNRESERVE_STRING);
-	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		perror("O port mapper nâo recebeu o nosso request!!!\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-	}
-	memset(buff_for_ports,0,DEF_DATASIZE+1);
-	result=readsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		perror("Não conseguimos receber resultado do nosso pedido de desreserva no  mapper!!!!!!\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-	}
-	memset(buff_for_ports,0,DEF_DATASIZE+1);
-	snprintf(buff_for_ports,DEF_DATASIZE,"%hu",port_to_allocate);
-	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		perror("O port mapper nâo recebeu a nossa porta!!!\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-	}
-	memset(buff_for_ports,0,DEF_DATASIZE+1);
-	result=readsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
-	if(result<=0){
-		perror("Não conseguimos receber resultado de desreserva da nossa porta no port mapper!!!!!!\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-
-	}
-	int result_of_reserve=-1;
-	sscanf(buff_for_ports,"%d",&result_of_reserve);
-	if(!result_of_reserve){
-		perror("Não foi possivel desreservar porta de listening no port mapper!!!!!!\n");
-		close(tmp_socket);
-		raise(SIGINT);
-		return;
-
-
-
-	}
-	if(logging){
-		fprintf(logstream,"Desreserva feita!!!\n");
-	}
-	close(tmp_socket);
-
 }
 
 
@@ -500,18 +333,8 @@ void greet(con_t*con_obj,int_pair times_pair){
 
 void free_attempted_ports(int success,ip_cache_entry*ent){
 
-        memset(string_to_send,0,sizeof(string_to_send));
-        char* ptr=string_to_send;
-        for(int i=0;i<(num_attempted_ports)-(success!=0);i++){
-                if(!i){
-                        ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",num_attempted_ports-(success!=0));
-                }
-                if(attempted_port_arr[i]){
-                        ptr+=snprintf(ptr,sizeof(string_to_send)-(ptr-string_to_send),"%d ",attempted_port_arr[i]);
-                }
-        }
-        fprintf(logstream,"Portas devolvidas: %d delas\nLista: %s\n",(num_attempted_ports)-(success!=0),string_to_send);
-        send_ports_back(string_to_send,ent);
+        attempted_port_arr[0]-=(success!=0);
+	send_ports_back(ent);
 
 }
 
@@ -525,7 +348,7 @@ void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handl
 					void* ptr){
 
         int result_con=0;
-        while(num_attempted_ports<DEF_DATASIZE){
+        while(attempted_port_arr[0]<DEF_DATASIZE){
                 (*socket_fd)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
                 if((*socket_fd)<0){
 
@@ -540,8 +363,8 @@ void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handl
                         quit_handler(SIGINT,ptr);
 			break;
                 }
-                attempted_port_arr[num_attempted_ports]=(*port);
-                num_attempted_ports++;
+                attempted_port_arr[attempted_port_arr[0]+1]=(*port);
+                attempted_port_arr[0]++;
 
                 if(bind((*socket_fd),(struct sockaddr *)src_address,socklenvar[1])){
                         perror("Não conseguimos dar bind na socket_fd do client!!!\n");

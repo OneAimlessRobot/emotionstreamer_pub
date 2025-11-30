@@ -24,8 +24,10 @@
 
 typedef enum var_op{V_LOOK,V_SET}var_op;
 
-
 int acess_var_mtx(pthread_mutex_t* mtx,int* var,int value_if_change,var_op op);
+
+uint16_t acess_var_mtx_uint16(pthread_mutex_t* mtx,uint16_t* var,uint16_t value_if_change,var_op op);
+
 //All strings are null terminated
 int strs_are_strictly_equal(char* str1, char* str2);
 
