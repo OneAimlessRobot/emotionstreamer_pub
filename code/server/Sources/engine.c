@@ -17,7 +17,6 @@
 
 
 static server_state state;
-static uint16_t curr_port=0;
 static pthread_t hb_tid;
 static pthread_mutex_t hb_mtx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t con_mtx=PTHREAD_MUTEX_INITIALIZER;
@@ -129,7 +128,7 @@ static int con_accepting_loop(void){
 						        sigaction(SIGPIPE, &sa, NULL);
 						        sigaction(SIGTERM, &sa, NULL);
 
-							con_go(sock,curr_port);
+							con_go(sock);
 							call_sigint_sub_connection();
 							return 0;
 						case -1:
@@ -208,7 +207,6 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	}
 
 	slave_args arg_s={0};
-	curr_port=ent_this->port;
 	logstream=stderr;
 	memset(&state,0,sizeof(server_state));
 	state.name=buff;

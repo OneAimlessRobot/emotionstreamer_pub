@@ -110,7 +110,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	    perror("Não conseguimos inicializar address do peer em server_browser!!!\n");
 	    cleanup_and_send_ports_back(SIGINT,NULL);
 	}
-	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,our_addr.sin_port,&server_browser_port_mapper_ip_cache_entry);
+	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,&server_browser_port_mapper_ip_cache_entry);
 	connection_attempt_circuit(&con_obj.sockfd_tcp,cleanup_and_send_ports_back,&our_addr,
                                 &hb_server_addr,
                                        &server_browser_ip_cache_entry,&server_browser_port_mapper_ip_cache_entry,browser_con_times_pair,NULL);

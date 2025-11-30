@@ -107,12 +107,14 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 
 }
 void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
+	if(attempted_port_arr[0]<=0){
+		if(logging){
+			fprintf(logstream,"Attempt was made to send back zero ports at send_ports_back!\nIgnoring...\n");
+		}
+		return;
+	}
 	struct sockaddr_in addr={0};
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-	if(logging){
-		fprintf(logstream,"Init port array state!\n");
-		print_port_arr();
-	}
 	if(tmp_socket<0){
 		perror("Criação de socket para conectar ao port mapper para devolver portas mal sucedida. Abortando\n");
 		raise(SIGINT);
@@ -154,6 +156,10 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 		return;
 
 	}
+	if(logging){
+		fprintf(logstream,"Init port array state!\n");
+		print_port_arr();
+	}
 	attempted_port_arr[0]-=(port_that_works!=0);
 	if(port_that_works){
 		if(logging){
@@ -163,6 +169,7 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 		memmove(&attempted_port_arr[port_that_works],&attempted_port_arr[port_that_works+1],(attempted_port_arr[0]-(port_that_works)+1)*sizeof(attempted_port_arr[0]));
 	}
 	result=sendsome(tmp_socket,(char*)attempted_port_arr,sizeof(port_array),port_mapper_times_pair);
+	memset(attempted_port_arr,0,sizeof(port_array));
 	if(result<=0){
 		perror("Não conseguimos enviar as portas para fechar portas ao port mapper!!!!!!\n");
 		close(tmp_socket);
@@ -201,7 +208,7 @@ void close_con(con_t* con_obj,int RIGHT_NOW,int close_for_good){
 		}
 	}
 }
-void init_con(con_t* con_obj,int sockfd_tcp,con_type type,uint16_t listen_port,ip_cache_entry *ent){
+void init_con(con_t* con_obj,int sockfd_tcp,con_type type,ip_cache_entry *ent){
 
 				prep_con(con_obj);
 				con_obj->is_on=1;
@@ -221,7 +228,6 @@ void init_con(con_t* con_obj,int sockfd_tcp,con_type type,uint16_t listen_port,i
 				memcpy(&con_obj->port_mapper_entry,ent,sizeof(ip_cache_entry));
 				init_addr(&con_obj->port_mapper_addr, con_obj->port_mapper_entry.hostname,con_obj->port_mapper_entry.port);
 
-				con_obj->tcp_data_local_port=con_obj->listen_port=listen_port;
 				memset(con_obj->tcp_data,0,DEF_DATASIZE+1);
 
 

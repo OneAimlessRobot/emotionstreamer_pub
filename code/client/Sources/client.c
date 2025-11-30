@@ -34,8 +34,8 @@
 
 
 struct stat file_info={0};
-static atomic_int started=0;
-static atomic_int is_on=0;
+static atomic_int started=1;
+static atomic_int is_on=1;
 static int fp=-1;
 static struct sigaction sa;
 static char extension_from_server[PATHSIZE]={0};
@@ -86,7 +86,7 @@ static void play_func(void){
 		down_file_size();
 		uint64_t chunk_size=0;
 		con_read_tcp(&client_con_obj,client_data_times_pair);
-		sscanf((char*)client_con_obj.tcp_data,"%luï",&chunk_size);
+		sscanf((char*)client_con_obj.tcp_data,"%lu",&chunk_size);
 		greet(&client_con_obj,client_con_times_pair);
 		player_init_stream(&client_con_obj,chunk_size,play_way);
 }
@@ -205,7 +205,7 @@ int clientStart(char* req_field,char* file_name){
 		clear_ports_and_quit(SIGINT,NULL);
 
 	}
-	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry);
+	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,&client_port_mapper_ip_cache_entry);
 	connection_attempt_circuit(&client_con_obj.sockfd_tcp,clear_ports_and_quit,&client_ip_address,
                                 &server_ip_address,
                                         &client_ip_cache_entry,&client_port_mapper_ip_cache_entry,client_con_times_pair,NULL);

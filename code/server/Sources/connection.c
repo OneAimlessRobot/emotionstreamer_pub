@@ -67,13 +67,13 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 }
 
 //static get_filename_extension
-void con_go(int sockfd_tcp, uint16_t curr_port){
+void con_go(int sockfd_tcp){
 
 
 			sock_tcp=sockfd_tcp;
 			unsigned char stream_cache_data[sizeof(mp3_stream_chunk)];
 
-			init_con(&server_con_obj,sock_tcp,SERVER_C,curr_port,&server_port_mapper_ip_cache_entry);
+			init_con(&server_con_obj,sock_tcp,SERVER_C,&server_port_mapper_ip_cache_entry);
 
 			con_read_tcp(&server_con_obj,server_data_times_pair);
 

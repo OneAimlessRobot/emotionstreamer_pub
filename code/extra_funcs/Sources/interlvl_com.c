@@ -51,7 +51,9 @@ void slave_thread_exit_func(int useless,void* ptr){
 		slave_args* arg_struct=(slave_args*)ptr;
 		pthread_mutex_lock(arg_struct->con_mtx);
 		send_port_back(htons(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-		free_attempted_ports(0,&arg_struct->slave_port_mapper_ip_cache_entry);
+		if((*arg_struct->loop_var)){
+			free_attempted_ports(0,&arg_struct->slave_port_mapper_ip_cache_entry);
+		}
 		close_con(arg_struct->con_obj,0,1);
 		pthread_mutex_unlock(arg_struct->con_mtx);
         	(*arg_struct->start_trigger)=1;
@@ -65,7 +67,7 @@ void slave_thread_exit_func(int useless,void* ptr){
 void* slave_thread(void* args){
 	slave_args* arg_struct= (slave_args*)args;
         print_addr_aux("Addr atual do server de heartbeat:",&arg_struct->master_addr);
-	init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,arg_struct->this_con_addr.sin_port,&arg_struct->slave_port_mapper_ip_cache_entry);
+	init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,&arg_struct->slave_port_mapper_ip_cache_entry);
 	connection_attempt_circuit(&arg_struct->con_obj->sockfd_tcp,slave_thread_exit_func,&arg_struct->this_con_addr,
                                 &arg_struct->master_addr,
                                         &arg_struct->slave_ip_cache_entry,
@@ -131,7 +133,8 @@ void* slave_thread(void* args){
 	}
 	usleep(arg_struct->ack_period_us);
 	}
-	slave_thread_exit_func(SIGINT,(void*)(arg_struct));
+	(*arg_struct->start_trigger)=2;
+        slave_thread_exit_func(SIGINT,(void*)(arg_struct));
 	printf("Saimos do lower thread\n");
         return args;
 
@@ -153,7 +156,6 @@ void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct so
 	struct sockaddr_in sockaddr_buff_local={0};
         if(!is_port_mapper){
  		ask_for_port(&port,port_mapper_cache_entry);
-        	
 	}
 	if(!port||init_addr(&sockaddr_buff_local,addr,port)){
 		perror("Erro a inicalizar address bind em bootstrapper de listening!!!\n");
@@ -166,6 +168,7 @@ void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct so
 			perror("Erro a dar bind em socket de listening!!!\n");
 			print_addr_aux("Address em questão:",&sockaddr_buff_local);
 		}
+		send_port_back(port,port_mapper_cache_entry);
 		close(*sockptr);
 		raise(exit_signal);
 		exit(-1);
@@ -345,7 +348,6 @@ void* acceptor_func(void* args){
         char name_buff[PATHSIZE/4]={0};
         char type_buff[PATHSIZE/4]={0};
         char big_buff[PATHSIZE*6]={0};
-	int curr_port=htons(arg_a->accept_addr.sin_port);
         int result=0;
         int iResult,
                sock=-1;
@@ -375,17 +377,8 @@ void* acceptor_func(void* args){
 			sock= accept(arg_a->accept_sockfd,NULL,NULL);
                         if(sock>=0){
 
-			      struct sockaddr_in tmp_addr={0};
-			      socklen_t socklen_in=sizeof(struct sockaddr_in);
-			      //socklen_t socklen=sizeof(struct sockaddr);
-			      getsockname(sock,(struct sockaddr*)&tmp_addr,&socklen_in);
-
-                              printf("Connection accepted!\nA nossa port de accept é: %d\n",curr_port);
-
-                              print_addr_aux("O address que nos calhou nesta socket que nos calhou é:",&tmp_addr);
-
 			      setNonBlocking(&sock);
-                              init_con(&con,sock,SERVER_C,curr_port,&arg_a->acceptor_port_mapper_ip_cache_entry);
+                              init_con(&con,sock,SERVER_C,&arg_a->acceptor_port_mapper_ip_cache_entry);
                               result=con_read_tcp(&con,arg_a->con_times_pair);
                               if(result<=0){
                                         perror("Nao sabemos o que querem....\n");
@@ -471,7 +464,7 @@ void* acceptor_func(void* args){
 
 
         }
-        send_port_back(curr_port,&arg_a->acceptor_port_mapper_ip_cache_entry);
+        send_port_back(htons(arg_a->accept_addr.sin_port),&arg_a->acceptor_port_mapper_ip_cache_entry);
         printf("Saimos do thread de heart_beat_master!!!!\n");
 
 	arg_a->sig_func(SIGINT);

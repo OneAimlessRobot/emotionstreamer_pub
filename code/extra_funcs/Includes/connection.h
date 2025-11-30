@@ -15,9 +15,6 @@ typedef struct con_t{
        	 int is_on,
          sockfd_tcp;
 	 uint8_t tcp_data[DEF_DATASIZE+1];
-	 uint16_t tcp_data_local_port;
-	 uint16_t tcp_data_peer_port;
-         uint16_t listen_port; //if launched within a server of some variety;
 	 ip_cache_entry port_mapper_entry;
 	 con_type type;
 }con_t;
@@ -27,7 +24,7 @@ typedef struct con_t{
 
 //DOES NOT FREE OR INITIALIZE THE BUFFS YOU GIVE IT!
 
-void init_con(con_t* con_obj, int sockfd_tcp,con_type type,uint16_t listen_port,ip_cache_entry* ent);
+void init_con(con_t* con_obj, int sockfd_tcp,con_type type,ip_cache_entry* ent);
 
 void close_con(con_t* con_obj, int RIGHT_NOW,int close_for_good);
 
