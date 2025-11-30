@@ -99,7 +99,9 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 
 	}
 	else{
-		printf("Portas enviadas e coiso!!!!!!\nA porta enviada foi %d\n",port);
+		if(logging){
+			fprintf(logstream,"Portas enviadas e coiso!!!!!!\nA porta enviada foi %d\n",port);
+		}
 		close(tmp_socket);
 	}
 
@@ -107,8 +109,10 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 	struct sockaddr_in addr={0};
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-	printf("Init port array state!\n");
-	print_port_arr();
+	if(logging){
+		fprintf(logstream,"Init port array state!\n");
+		print_port_arr();
+	}
 	if(tmp_socket<0){
 		perror("Criação de socket para conectar ao port mapper para devolver portas mal sucedida. Abortando\n");
 		raise(SIGINT);
@@ -152,8 +156,10 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 	}
 	attempted_port_arr[0]-=(port_that_works!=0);
 	if(port_that_works){
-		printf("port array state\nWe are about to move anything beyond slot %hu back 1 position towards slot %hu\nWe will move %hu items of size %lu\nThere are %hu ports to free right now\n",port_that_works+1,port_that_works,attempted_port_arr[0]-(port_that_works)+1,sizeof(attempted_port_arr[0]),attempted_port_arr[0]);
-		print_port_arr();
+		if(logging){
+			fprintf(logstream,"port array state\nWe are about to move anything beyond slot %hu back 1 position towards slot %hu\nWe will move %hu items of size %lu\nThere are %hu ports to free right now\n",port_that_works+1,port_that_works,attempted_port_arr[0]-(port_that_works)+1,sizeof(attempted_port_arr[0]),attempted_port_arr[0]);
+			print_port_arr();
+		}
 		memmove(&attempted_port_arr[port_that_works],&attempted_port_arr[port_that_works+1],(attempted_port_arr[0]-(port_that_works)+1)*sizeof(attempted_port_arr[0]));
 	}
 	result=sendsome(tmp_socket,(char*)attempted_port_arr,sizeof(port_array),port_mapper_times_pair);
@@ -165,8 +171,10 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 
 	}
 	else{
-		printf("Init port array state\nWe sent all the ports!!!\n");
-		print_port_arr();
+		if(logging){
+			fprintf(logstream,"End port array state\nWe sent all the ports!!!\n");
+			print_port_arr();
+		}
 		close(tmp_socket);
 	}
 
