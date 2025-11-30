@@ -38,7 +38,6 @@ static atomic_int started=0;
 static atomic_int is_on=0;
 static int fp=-1;
 static struct sigaction sa;
-static uint16_t port=0;
 static char extension_from_server[PATHSIZE]={0};
 static	char method_buff[PATHSIZE]={0},
 	req_buff[PATHSIZE/4]={0},
@@ -52,6 +51,7 @@ static method play_way=PLAY_PA;
 
 static void clear_ports_and_quit(int signal,void* ptr){
 
+	send_port_back(htons(client_con_obj.this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
 	free_attempted_ports(0,&client_port_mapper_ip_cache_entry);
 	close_con(&client_con_obj,0,1);
 	fclose(logstream);
@@ -206,9 +206,9 @@ int clientStart(char* req_field,char* file_name){
 
 	}
 	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,client_con_obj.this_tcp_addr.sin_port,&client_port_mapper_ip_cache_entry);
-	connection_attempt_circuit(&client_con_obj.sockfd_tcp, &port,clear_ports_and_quit,&client_ip_address,
+	connection_attempt_circuit(&client_con_obj.sockfd_tcp,clear_ports_and_quit,&client_ip_address,
                                 &server_ip_address,
-                                        &client_ip_cache_entry,&client_port_mapper_ip_cache_entry,client_con_times_pair,(the_type==PLAY),NULL);
+                                        &client_ip_cache_entry,&client_port_mapper_ip_cache_entry,client_con_times_pair,NULL);
 	if(is_new<0){
 
 		insert_ip_addr_entry(&server_ip_cache_entry,&cache);

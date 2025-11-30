@@ -26,6 +26,19 @@ static void prep_con(con_t* con_obj){
 }
 
 
+void print_port_arr(void){
+
+	char printed_buff[DEF_DATASIZE]={0};
+	char* ptr=printed_buff;
+	ptr+=snprintf(ptr,sizeof(printed_buff)-(ptr-printed_buff),"this is the state of the port array currently! There are %hu ports!\n\n",attempted_port_arr[0]);
+	for(uint16_t i=0;i<attempted_port_arr[0];i++){
+		ptr+=snprintf(ptr,sizeof(printed_buff)-(ptr-printed_buff),"port number %hu: %hu\n",i+1,attempted_port_arr[i+1]);
+	}
+	ptr+=snprintf(ptr,sizeof(printed_buff)-(ptr-printed_buff),"\nEnd of port array state\n\n");
+	printf("%s\n",printed_buff);
+
+}
+
 void send_port_back(uint16_t port,ip_cache_entry* ent){
 	if(!port){
 		if(logging){
@@ -59,7 +72,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 		return;
 	}
 
-	
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_AWKWARD_LEAVE_STRING);
 	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
@@ -92,10 +104,11 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 	}
 
 }
-void send_ports_back(ip_cache_entry* ent){
+void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 	struct sockaddr_in addr={0};
 	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-
+	printf("Init port array state!\n");
+	print_port_arr();
 	if(tmp_socket<0){
 		perror("Criação de socket para conectar ao port mapper para devolver portas mal sucedida. Abortando\n");
 		raise(SIGINT);
@@ -119,7 +132,6 @@ void send_ports_back(ip_cache_entry* ent){
 		return;
 	}
 
-	
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_LEAVE_STRING);
 	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
@@ -138,6 +150,12 @@ void send_ports_back(ip_cache_entry* ent){
 		return;
 
 	}
+	attempted_port_arr[0]-=(port_that_works!=0);
+	if(port_that_works){
+		printf("port array state\nWe are about to move anything beyond slot %hu back 1 position towards slot %hu\nWe will move %hu items of size %lu\nThere are %hu ports to free right now\n",port_that_works+1,port_that_works,attempted_port_arr[0]-(port_that_works)+1,sizeof(attempted_port_arr[0]),attempted_port_arr[0]);
+		print_port_arr();
+		memmove(&attempted_port_arr[port_that_works],&attempted_port_arr[port_that_works+1],(attempted_port_arr[0]-(port_that_works)+1)*sizeof(attempted_port_arr[0]));
+	}
 	result=sendsome(tmp_socket,(char*)attempted_port_arr,sizeof(port_array),port_mapper_times_pair);
 	if(result<=0){
 		perror("Não conseguimos enviar as portas para fechar portas ao port mapper!!!!!!\n");
@@ -147,6 +165,8 @@ void send_ports_back(ip_cache_entry* ent){
 
 	}
 	else{
+		printf("Init port array state\nWe sent all the ports!!!\n");
+		print_port_arr();
 		close(tmp_socket);
 	}
 
@@ -274,6 +294,70 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 	close(tmp_socket);
 }
 
+void ask_for_ports(ip_cache_entry* ent){
+	struct sockaddr_in addr={0};
+	int tmp_socket= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+        if(tmp_socket<0){
+		perror("Conexão ao port mapper para pedir unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
+		raise(SIGINT);
+		return;
+	}
+	if(init_addr(&addr, ent->hostname,ent->port)){
+		perror("Iniciacao de address para conectar ao port mapper para pedir unica porta unica mal sucedida. Abortando\n");
+		close(tmp_socket);
+		raise(SIGINT);
+		return;
+	}
+	int result=-1;
+	char buff_for_ports[DEF_DATASIZE+1]={0};
+	int result_con=0;
+	if((result_con=tryConnect(&tmp_socket,port_mapper_times_pair,&addr))<=0){
+		perror("Conexão ao port mapper para pedir unica porta mal sucedida! Abortando\n");
+		socket_close(&tmp_socket,result_con!=0);
+		raise(SIGINT);
+		return;
+	}
+
+	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_JOIN_STRING);
+	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+	if(result<=0){
+		perror("O port mapper nâo recebeu o nosso request!!!\n");
+		close(tmp_socket);
+		raise(SIGINT);
+		return;
+
+	}
+	result=readsome(tmp_socket,(char*)attempted_port_arr,sizeof(port_array),port_mapper_times_pair);
+	if(result<=0){
+		perror("Não conseguimos receber portas do port mapper!!!!!!\n");
+		close(tmp_socket);
+		raise(SIGINT);
+		return;
+
+	}
+	if(logging){
+		fprintf(logstream,"Recebemos portas do port_mapper!!!\n"
+						"%hu Delas!\n",
+						attempted_port_arr[0]);
+	}
+	memset(buff_for_ports,0,DEF_DATASIZE+1);
+        snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_JOIN_GOT_IT_STRING);
+        result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+        if(result<=0){
+
+                if(logging){
+			fprintf(logstream,"Aviso de que já temos as portas não enviado!!!\nMensagem que devia ter sido enviada:\n%s\n",buff_for_ports);
+		}
+		close(tmp_socket);
+		raise(SIGINT);
+		return;
+        }
+        if(logging){
+		fprintf(logstream,"Aviso de que já temos a porta enviado!!!\nMensagem que foi enviada:\n%s\n",buff_for_ports);
+	}
+	close(tmp_socket);
+}
+
 
 static void greet_server(con_t* con_obj, int_pair pair){
 
@@ -331,46 +415,44 @@ void greet(con_t*con_obj,int_pair times_pair){
 
 }
 
-void free_attempted_ports(int success,ip_cache_entry*ent){
+void free_attempted_ports(uint16_t port_that_works,ip_cache_entry*ent){
 
-        attempted_port_arr[0]-=(success!=0);
-	send_ports_back(ent);
+	send_ports_back(ent,port_that_works);
 
 }
 
-void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handler)(int, void*),
+void connection_attempt_circuit(int* socket_fd, void (*quit_handler)(int, void*),
 					struct sockaddr_in* src_address,
 					struct sockaddr_in* dst_address,
 					ip_cache_entry* src_ent,
 					ip_cache_entry* port_mapper_ent,
 					int_pair con_times_pair,
-					int success_interpretation,
 					void* ptr){
 
+        ask_for_ports(port_mapper_ent);
         int result_con=0;
-        while(attempted_port_arr[0]<DEF_DATASIZE){
+	uint16_t curr_attempts=0;
+        uint16_t limit_of_attempts=attempted_port_arr[0];
+        while(curr_attempts<limit_of_attempts){
                 (*socket_fd)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
                 if((*socket_fd)<0){
 
                         quit_handler(SIGINT,ptr);
-                	break;
+                	return;
 		}
                 set_sock_reuseaddr(socket_fd,1);
                 setNonBlocking(socket_fd);
-                ask_for_port(port,port_mapper_ent);
-                if(!(*port)||init_addr(src_address,src_ent->hostname,(*port))){
+                if(!attempted_port_arr[curr_attempts+1]||init_addr(src_address,src_ent->hostname,(attempted_port_arr[curr_attempts+1]))){
                         perror("Não conseguimos inicializar address no client!!!\n");
                         quit_handler(SIGINT,ptr);
-			break;
+			return;
                 }
-                attempted_port_arr[attempted_port_arr[0]+1]=(*port);
-                attempted_port_arr[0]++;
-
+		curr_attempts++;
                 if(bind((*socket_fd),(struct sockaddr *)src_address,socklenvar[1])){
                         perror("Não conseguimos dar bind na socket_fd do client!!!\n");
                         print_addr_aux("Este é o address:",src_address);
                         quit_handler(SIGINT,ptr);
-                	break;
+                	return;
 		}
                 else{
 
@@ -384,12 +466,15 @@ void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handl
                                 fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n\nsocket_fd fd; %d\n",result_con,(*socket_fd));
                         }
                         quit_handler(SIGINT,ptr);
-			break;
+			return;
                 }
                 else if(result_con>0){
-                        free_attempted_ports(success_interpretation,port_mapper_ent);
-                        break;
+                        free_attempted_ports(curr_attempts,port_mapper_ent);
+                        return;
                 }
                 close((*socket_fd));
         }
+	perror("We tried all the ports that were given to us. None of them worked. Exiting...\n");
+       	quit_handler(SIGINT,ptr);
+	return;
 }

@@ -48,10 +48,14 @@ void slave_thread_exit_func(int useless,void* ptr){
 
 	if(ptr){
 		printf("Slave quit function called!!!\n");
-		slave_args*arg_struct= (slave_args*)ptr;
-		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-		(*arg_struct->start_trigger)=1;
-	        pthread_cond_signal(arg_struct->trg_cond);
+		slave_args* arg_struct=(slave_args*)ptr;
+		pthread_mutex_lock(arg_struct->con_mtx);
+		send_port_back(htons(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
+		free_attempted_ports(0,&arg_struct->slave_port_mapper_ip_cache_entry);
+		close_con(arg_struct->con_obj,0,1);
+		pthread_mutex_unlock(arg_struct->con_mtx);
+        	(*arg_struct->start_trigger)=1;
+        	pthread_cond_signal(arg_struct->trg_cond);
 		arg_struct->sig_func(useless);
 		arg_struct->clean_func();
 	}
@@ -62,13 +66,11 @@ void* slave_thread(void* args){
 	slave_args* arg_struct= (slave_args*)args;
         print_addr_aux("Addr atual do server de heartbeat:",&arg_struct->master_addr);
 	init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,arg_struct->this_con_addr.sin_port,&arg_struct->slave_port_mapper_ip_cache_entry);
-	uint16_t port=0;
-	connection_attempt_circuit(&arg_struct->con_obj->sockfd_tcp, &port,slave_thread_exit_func,&arg_struct->this_con_addr,
+	connection_attempt_circuit(&arg_struct->con_obj->sockfd_tcp,slave_thread_exit_func,&arg_struct->this_con_addr,
                                 &arg_struct->master_addr,
                                         &arg_struct->slave_ip_cache_entry,
 					&arg_struct->slave_port_mapper_ip_cache_entry,
 					arg_struct->con_times_pair,
-					1,
 					(void*)(arg_struct));
 
 
@@ -93,14 +95,7 @@ void* slave_thread(void* args){
 
 
                 perror("Nao deu para contactar server acima!!!!\nNao recebeu o que mandamos!!!\nNao recebeu pedido de login\n");
-                pthread_mutex_lock(arg_struct->con_mtx);
-		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-		close_con(arg_struct->con_obj,0,1);
-		pthread_mutex_unlock(arg_struct->con_mtx);
-        	(*arg_struct->start_trigger)=1;
-        	pthread_cond_signal(arg_struct->trg_cond);
-		arg_struct->sig_func(SIGINT);
-		arg_struct->clean_func();
+                slave_thread_exit_func(SIGINT,(void*)(arg_struct));
 		return args;
         }
         result=con_read_tcp(arg_struct->con_obj,arg_struct->ack_times_pair);
@@ -108,14 +103,7 @@ void* slave_thread(void* args){
 
 
                 perror("Nao deu para contactar server acima!!!!\nNao recebemos deles!!!\nNao recebeu pedido de login\n");
-                pthread_mutex_lock(arg_struct->con_mtx);
-		send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-		close_con(arg_struct->con_obj,0,1);
-		pthread_mutex_unlock(arg_struct->con_mtx);
-        	(*arg_struct->start_trigger)=1;
-        	pthread_cond_signal(arg_struct->trg_cond);
-		arg_struct->sig_func(SIGINT);
-		arg_struct->clean_func();
+                slave_thread_exit_func(SIGINT,(void*)(arg_struct));
 		return args;
 
         }
@@ -143,12 +131,7 @@ void* slave_thread(void* args){
 	}
 	usleep(arg_struct->ack_period_us);
 	}
-	pthread_mutex_lock(arg_struct->con_mtx);
-	send_port_back(ntohs(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);
-	close_con(arg_struct->con_obj,0,1);
-	pthread_mutex_unlock(arg_struct->con_mtx);
-        arg_struct->sig_func(SIGINT);
-	arg_struct->clean_func();
+	slave_thread_exit_func(SIGINT,(void*)(arg_struct));
 	printf("Saimos do lower thread\n");
         return args;
 

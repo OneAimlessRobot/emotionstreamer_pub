@@ -44,14 +44,16 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent);
 
 void send_port_back(uint16_t port,ip_cache_entry* ent);
 
-void send_ports_back(ip_cache_entry* ent);
+void ask_for_ports(ip_cache_entry* ent);
 
-void free_attempted_ports(int success,ip_cache_entry* ent);
-void connection_attempt_circuit(int* socket_fd, uint16_t* port,void (*quit_handler)(int, void*),struct sockaddr_in* src_address,
+void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works);
+
+void free_attempted_ports(uint16_t port_that_works,ip_cache_entry* ent);
+void connection_attempt_circuit(int* socket_fd,void (*quit_handler)(int, void*),struct sockaddr_in* src_address,
 				struct sockaddr_in* dst_address,
 					ip_cache_entry* src_ent,ip_cache_entry* port_mapper_ent,
 					int_pair con_times_pair,
-					int success_interpretation,void*ptr);
+					void*ptr);
 
 void greet(con_t*con_obj,int_pair times_pair);
 #endif

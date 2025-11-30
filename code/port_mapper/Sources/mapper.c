@@ -265,12 +265,12 @@ static void check_port_func(uint16_t port_to_check){
 
 
 }
-static void send_single_client_port(int sock,uint16_t* port){
+static void send_single_client_port(int sock,char* ports_and_info_buff,uint16_t* port){
 
 	int result=sendsome(sock,(char*)port,sizeof((*port)),port_mapper_times_pair);
 	if(result<=0){
 
-		printf("Portas não enviadas!!! %hu\n",*port);
+		printf("Portas não enviada!!! %hu\n",*port);
 
 	}
 	else{
@@ -279,16 +279,42 @@ static void send_single_client_port(int sock,uint16_t* port){
 
 
 	}
-	char buff_with_the_ports[4096]={0};
-        result=readsome(sock,buff_with_the_ports,DEF_DATASIZE,port_mapper_times_pair);
+	result=readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
 	if(result<=0){
-                 fprintf(stderr,"Não conseguimos receber porta do port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",buff_with_the_ports,strerror(errno));
+                 fprintf(stderr,"Não conseguimos receber porta do port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",ports_and_info_buff,strerror(errno));
 		 close(sock);
                  raise(SIGTERM);
 
         }
 	else{
-		fprintf(stdout,"conseguimos receber porta do port mapper!!!!!!\nString que recebemos: \"%s\"\n",buff_with_the_ports);
+		fprintf(stdout,"conseguimos receber porta do port mapper!!!!!!\nString que recebemos: \"%s\"\n",ports_and_info_buff);
+	}
+
+}
+static void send_client_ports(int sock,char* ports_and_info_buff,port_array port_arr){
+
+	
+	int result=sendsome(sock,(char*)port_arr,sizeof(port_array),port_mapper_times_pair);
+	if(result<=0){
+
+		printf("Portas não enviadas!!! %hu delas!\n",port_arr[0]);
+
+	}
+	else{
+
+		printf("Porta enviadas!!! %hu delas!\n",port_arr[0]);
+
+
+	}
+        result=readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
+	if(result<=0){
+                 fprintf(stderr,"Não conseguimos enviar portas do port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",ports_and_info_buff,strerror(errno));
+		 close(sock);
+                 raise(SIGTERM);
+
+        }
+	else{
+		fprintf(stdout,"conseguimos enviar portas do port mapper!!!!!!\nString que recebemos: \"%s\"\n",ports_and_info_buff);
 	}
 
 }
@@ -379,7 +405,13 @@ static void* accepted_connection_thread(void* args){
 	if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_AWKWARD_JOIN_STRING)){
 
 		fetch_single_port_to_give(port_to_work_with,1);
-		send_single_client_port(sock,port_to_work_with);
+		send_single_client_port(sock,ports_and_info_buff,port_to_work_with);
+		close(sock);
+	}
+	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_JOIN_STRING)){
+
+		fetch_ports_to_give(ports_to_work_with,1);
+		send_client_ports(sock,ports_and_info_buff,ports_to_work_with);
 		close(sock);
 	}
 	else if(!strs_are_strictly_equal(request_buff,PORT_MAPPER_LEAVE_STRING)){
