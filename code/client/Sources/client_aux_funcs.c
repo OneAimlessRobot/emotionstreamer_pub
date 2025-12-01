@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include "../Includes/preprocessor.h"
 #include <sys/syscall.h>
 #include "../Includes/client_aux_funcs.h"
