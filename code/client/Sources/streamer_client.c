@@ -487,7 +487,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		join_client_thread(t_stats,(char*)stats_thread_name);
 	}
 	if(play){
-		join_client_thread(t_play,(char*)play_thread_name);
+		join_client_thread_with_timeout(t_play,(char*)play_thread_name);
 	}
 	if(decode&&!is_wav_mode){
 		join_client_thread(t_dec,(char*)decode_thread_name);
