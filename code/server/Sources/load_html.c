@@ -6,7 +6,7 @@
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../Includes/load_html.h"
-
+#include <sys/wait.h>
 
 
 static char* close_keyword = "end_of_contents.";
@@ -17,8 +17,7 @@ static char tmpDir[PATHSIZE*2]={0},tmpDir2[PATHSIZE*2]={0},currSearchedDir[PATHS
 static void generateDirListingPrimitive(char* pattern){
 
         int outfd= open(tmpDir,O_TRUNC|O_WRONLY|O_CREAT,0777);
-        char cmd[PATHSIZE*10]={0};
-	snprintf(currSearchedDir,PATHSIZE*2-1,"%s",curr_dir);
+        snprintf(currSearchedDir,PATHSIZE*2-1,"%s",curr_dir);
 	//THIS LINE HAS RIPPED CODE! FIND ALL BASEFILENAMES WITH EXTENSION '.WAV', but dont show the extension! (IMPORTANT FOR SECURITY)
 	//https://www.baeldung.com/linux/find-filenames-no-extension
 	//https://stackoverflow.com/questions/1447625/list-files-with-certain-extensions-with-ls-and-grep
@@ -30,23 +29,55 @@ static void generateDirListingPrimitive(char* pattern){
 	//find .  -type f -iname "*.ipynb" -exec sh -c 'f=$(basename $1 .ipynb);d=$(dirname $1);echo "$d/$f"' sh {} \;
 	//"&& find . -iname '*%s*%s%s*' -exec sh -c 'printf \"%%s\\n\" \"${0%%.*}\"' {} ';' > %s "
 	//One of these has to work, damn it
+	//I was not proud of how I got this final solutiuon.
+	//AT ALL.
+	//(Ahem chatgpt solution ahem)
+	//(Ahem I wish system() did not even exist so I would not be tempted to use it ahem)
 
-	snprintf(cmd,PATHSIZE*10-1,"bash -c \"pushd %s "
-					"&& find .  -type f -iwholename '*%s*%s%s*'  > %s "
-					"&& echo \"%s\" >> %s "
-					"&& popd "
-					"&& exit\" ",
-					currSearchedDir,
-					strlen(pattern)?pattern:"",
-					server_working_extension,
-					is_wav_mode?"":BOUNDARY_FILE_EXT,
-					tmpDir,
-					close_keyword,
-					tmpDir);
-	printf("%s\n",cmd);
-	//END OF RIPPEDD CODE
-	system(cmd);
+	char buff[DEF_DATASIZE+5]={0};
+	snprintf(buff,sizeof(buff)-3,".%s",server_music_folder_path);
+	chdir(buff);
+	memset(buff,0,sizeof(buff));
+	char* pattern_arg= (strlen(pattern)?pattern:"");
+	char* extension_arg1=(server_working_extension);
+	char* extension_arg2=(is_wav_mode?"":BOUNDARY_FILE_EXT);
+	snprintf(buff,sizeof(buff)-3,"*%s*%s*%s*",pattern_arg,extension_arg1,extension_arg2);
+	char* args_cmd[]={"find",".", "-type","f","-iwholename", buff,NULL};
+	pid_t pid_fork_find_cmd=fork();
+	switch(pid_fork_find_cmd){
+
+		case -1:
+			close(outfd);
+			exit(-1);
+		break;
+		case 0:
+			dup2(outfd,STDOUT_FILENO);
+			close(outfd);
+			execvp(args_cmd[0],args_cmd);
+		break;
+		default:
+			wait(NULL);
+			dprintf(outfd,"%s\n",close_keyword);
+		break;
+
+	}
+	chdir("..");
         /*
+	my god I hate how easy it is to do just this instead of execvp
+	fuck.
+	you.
+	system().
+	I was about to go to bed, too.
+	Fuck you.
+	Die.
+	Piece of shit.
+	Monstro.
+	Negro.
+	Urso.
+	besta.
+	Carraça
+	Cão.
+	Camelo.
 	memset(cmd,0,PATHSIZE*10);
 	snprintf(cmd,PATHSIZE*10-1,"echo \"%s\" >> %s",close_keyword,tmpDir);
         system(cmd);
