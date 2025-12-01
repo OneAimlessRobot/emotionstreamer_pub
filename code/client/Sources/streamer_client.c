@@ -486,15 +486,15 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	if(stream_show_stats){
 		join_client_thread(t_stats,(char*)stats_thread_name);
 	}
-	if(play){
-		join_client_thread_with_timeout(t_play,(char*)play_thread_name);
+	if(input_enabled){
+		join_client_thread(t_input,(char*)input_thread_name);
+		endwin_wrapper();
 	}
 	if(decode&&!is_wav_mode){
 		join_client_thread(t_dec,(char*)decode_thread_name);
 	}
-	if(input_enabled){
-		join_client_thread(t_input,(char*)input_thread_name);
-		endwin_wrapper();
+	if(play){
+		join_client_thread(t_play,(char*)play_thread_name);
 	}
 	perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
 	if(!is_wav_compat_mode()){

@@ -142,8 +142,80 @@ defecate on the floor on which I sob,
 wrapped in myself like a piece of dogcrap after hardening to the air.
 
 FUCK me, im USELESS.
-*/
+-----------------------------------------------------------------------------------------------------------
+Wow.
+I went to check, yea?
+And its not.
+Even.
+Portable.
 
+Android literally does not have it on its libaries.
+I would have to implement it with a cond variable.
+...
+For a thread that cant even start
+
+(It was meant to prevent rare situations
+(Not so rare)
+Of when programs like the Mitos.is game executable
+(Agario clone distributed for free as a handrolled standalone version)
+Made the audio in my program block.
+So the whole thing stalls.
+And,
+because the signal handlers do not do anything for some reason,
+as the other threads die for the exception of the player, apparently
+
+the whole program stays hung up without audio.
+
+
+At least its what I think, like--
+
+I have no clue why this happens, honestly.
+
+But its driving me insane.
+I want to forget about it,
+i Dont want to care about this issue,
+but my super ego is forcing my hand!
+
+My ego tells me that this is complicated to solve in practice,
+a portable version would require condition variables and all of that,
+and then prevent locking using detach and all of that
+
+
+and my subconscious just feels,
+
+completely ravaged by erasure.
+
+I know this is not clinical.
+I know I know nothing about psychology
+and should just stick to mediocre programming like a good boy,
+go back to college,
+and forget writing and anything analytical that is not strictly pattern seeking like the autistic bran fart that I am
+
+
+
+
+
+
+
+
+
+
+well,
+
+better luck next time, I guess.
+*/
+/*
+
+Im sorry.
+You are just code.
+
+
+
+
+
+
+But I dont like you.
+I dont want to like you
 static int join_with_timeout(pthread_t t, int seconds)
 {
     struct timespec ts;
@@ -169,3 +241,4 @@ void join_client_thread_with_timeout(pthread_t t,char* thread_name_buff){
 	}
 }
 
+*/
