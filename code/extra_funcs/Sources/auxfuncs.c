@@ -1,6 +1,43 @@
 #include "../../Includes/preprocessor.h"
 #include "../Includes/auxfuncs.h"
 
+void print_out_logo(void){
+	FILE* logo_fp=NULL;
+	char line_buff[DEF_DATASIZE];
+	if(!(logo_fp=fopen(LOGO_ASCII_ART_FILE_PATH,"r"))){
+
+		fprintf(stderr,"Could not display logo!\nError: %s\n",strerror(errno));
+		return;
+	}
+        printf(ANSI_BACKGROUND_WHITE ANSI_COLOR_BLUE ANSI_STYLE_BOLD);
+	while(1){
+
+
+		memset(line_buff,0,sizeof(line_buff));
+		char* result=fgets(line_buff,sizeof(line_buff)-1,logo_fp);
+                if(result){
+			line_buff[strlen(line_buff)-1]=0;
+			usleep(MS_TO_US(LOGO_ASCII_ART_FILE_SLEEP_PRINT_TIME_MS));
+	        	printf("%s\n",line_buff);
+		}
+		else{
+			if(feof(logo_fp)){
+
+				fprintf(stdout,"We reached the end of the logo file and stopped printing!\n");
+			}
+			else{
+				fprintf(stderr,"We stopped printing due to some error!!!!\nError: %s\n",strerror(errno));
+			}
+			fclose(logo_fp);
+			logo_fp=NULL;
+			break;
+		}
+	}
+	printf(ANSI_RESET_ALL ANSI_BACKGROUND_BLACK ANSI_COLOR_WHITE);
+
+
+
+}
 int acess_var_mtx(pthread_mutex_t* mtx,int* var,int value_if_change,var_op op){
 
 
@@ -22,7 +59,6 @@ int acess_var_mtx(pthread_mutex_t* mtx,int* var,int value_if_change,var_op op){
 
 
 }
-
 uint16_t acess_var_mtx_uint16(pthread_mutex_t* mtx,uint16_t* var,uint16_t value_if_change,var_op op){
 
 

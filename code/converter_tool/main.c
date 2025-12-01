@@ -1,10 +1,12 @@
 #include "../Includes/preprocessor.h"
+#include "../extra_funcs/Includes/auxfuncs.h"
 #include "Includes/converter.h"
 #include "../extra_funcs/Includes/fileshit.h"
 #include "Includes/configs.h"
 
 int main(int argc, char ** argv){
 
+	print_out_logo();
 	if(argc!=3){
 
 		printf("Usage:\n"

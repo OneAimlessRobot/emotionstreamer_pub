@@ -1,4 +1,5 @@
 #include "../Includes/preprocessor.h"
+#include "../extra_funcs/Includes/auxfuncs.h"
 #include "../extra_funcs/Includes/fileshit.h"
 #include "../extra_funcs/Includes/sockio.h"
 #include "../extra_funcs/Includes/ip_cache_file.h"
@@ -9,7 +10,7 @@
 #include "Includes/configs.h"
 
 int main(void){
-
+	print_out_logo();
 	read_values_cfg_server();
         print_values_cfg_server(1);
 	memset(curr_dir,0,PATHSIZE);

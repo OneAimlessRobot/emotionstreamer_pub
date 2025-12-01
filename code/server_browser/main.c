@@ -1,4 +1,5 @@
 #include "../Includes/preprocessor.h"
+#include "../extra_funcs/Includes/auxfuncs.h"
 #include "../extra_funcs/Includes/fileshit.h"
 #include "../extra_funcs/Includes/sockio.h"
 #include "../extra_funcs/Includes/ip_cache_file.h"
@@ -9,7 +10,8 @@
 
 int main(int argc, char ** argv){
 
-        read_values_cfg_browser();
+        print_out_logo();
+	read_values_cfg_browser();
         print_values_cfg_browser(1);
         if(argc!=3){
 

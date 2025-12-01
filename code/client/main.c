@@ -1,4 +1,5 @@
 #include "../Includes/preprocessor.h"
+#include "../extra_funcs/Includes/auxfuncs.h"
 #include "Includes/client.h"
 #include "../extra_funcs/Includes/fileshit.h"
 #include "../extra_funcs/Includes/sockio.h"
@@ -10,6 +11,7 @@
 int main(int argc, char ** argv){
 
 
+	print_out_logo();
 	read_values_cfg_client();
 	print_values_cfg_client(1);
         memset(curr_dir,0,PATHSIZE);

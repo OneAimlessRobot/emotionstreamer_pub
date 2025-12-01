@@ -1,4 +1,5 @@
 #include "../Includes/preprocessor.h"
+#include "../extra_funcs/Includes/auxfuncs.h"
 #include "../extra_funcs/Includes/fileshit.h"
 #include "../extra_funcs/Includes/sockio.h"
 #include "../extra_funcs/Includes/ip_cache_file.h"
@@ -12,8 +13,8 @@
 int main(void){
 
 
-	
-        read_values_cfg_hb();
+	print_out_logo();
+	read_values_cfg_hb();
         print_values_cfg_hb(1);
         memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
@@ -28,7 +29,6 @@ int main(void){
 	printf("Saimos do server!!!!!!\n");
 
 	printf("Hello world!!!!\n");
-	
 	return 0;
 
 }
