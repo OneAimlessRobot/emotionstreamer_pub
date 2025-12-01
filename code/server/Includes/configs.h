@@ -13,6 +13,7 @@
 #define SERVER_CHUNK_SIZE 1024
 #define WAV_MODE_EXTENSION ".wav"
 
+extern const uint8_t server_display_splash;
 
 extern int child_pid;
 extern char server_music_folder_path[PATHSIZE+1];

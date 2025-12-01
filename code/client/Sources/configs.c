@@ -30,6 +30,8 @@ char client_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 char cfg_client_device_name_if_alsa[PATHSIZE+1]={0};
 char cfg_client_device_output_if_alsa[PATHSIZE+1]={0};
 
+const uint8_t client_display_splash=1;
+
 //EM BYTES E HZ!
 u_int64_t cfg_latency_ms=DEF_LATENCY_MS,
 	cfg_show_decoder_queue_length=PRINT_SIZE,

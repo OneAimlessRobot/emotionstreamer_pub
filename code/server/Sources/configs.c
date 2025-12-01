@@ -27,6 +27,7 @@ char server_music_quarantine_folder_path[PATHSIZE+1]={0};
 char curr_server_quarantine_dir_buff[PATHSIZE+1]={0};
 
 char server_working_extension[EXTENSION_SIZE]={0};
+const uint8_t server_display_splash=1;
 
 uint8_t cfg_server_logging=0;
 

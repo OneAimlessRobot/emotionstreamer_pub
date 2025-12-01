@@ -10,7 +10,9 @@
 
 int main(int argc, char ** argv){
 
-        print_out_logo();
+	if(browser_display_splash){
+        	print_out_logo();
+	}
 	read_values_cfg_browser();
         print_values_cfg_browser(1);
         if(argc!=3){
@@ -23,8 +25,6 @@ int main(int argc, char ** argv){
         printf("Generalized cfg:\n");
         parse_generalized_cfg(generalized_config_filepath_buff);
         print_values_generalized_cfg(1);
-
-        
 
         printf("Curr dir: %s\n", curr_dir);
         ip_cache_entry ent={{0},0};

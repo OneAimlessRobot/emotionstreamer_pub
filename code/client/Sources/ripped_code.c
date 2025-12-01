@@ -17,7 +17,6 @@
 static pthread_mutex_t ncurses_mtx=PTHREAD_MUTEX_INITIALIZER;
 
 static const char* frame_print_format="Estes sao os dados deste frame:\n"
-							"\nValor de MAXIMUM_SIZE_OGG_OUTPUT_BUFFER: %lu"
 							"\nresult->metadata_block_type: %hu"
 							"\nresult->chunk_id: %lu"
 							"\nresult->decoder_state: %d"
@@ -43,7 +42,6 @@ static const char* frame_print_format="Estes sao os dados deste frame:\n"
 
 
 #define FRAME_PRINT_PARAMETERS \
-				MAXIMUM_SIZE_OGG_OUTPUT_BUFFER,\
 							result->metadata_block_type,\
 							result->chunk_id,\
 							result->decoder_state,\

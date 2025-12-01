@@ -10,7 +10,9 @@
 
 int main(void){
 
-	print_out_logo();
+	if(port_mapper_display_splash){
+		print_out_logo();
+	}
 	read_values_cfg_port_mapper();
         print_values_cfg_port_mapper(1);
         memset(curr_dir,0,PATHSIZE);

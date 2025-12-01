@@ -12,8 +12,9 @@
 
 int main(void){
 
-
-	print_out_logo();
+	if(hb_display_splash){
+		print_out_logo();
+	}
 	read_values_cfg_hb();
         print_values_cfg_hb(1);
         memset(curr_dir,0,PATHSIZE);

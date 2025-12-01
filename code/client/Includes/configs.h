@@ -1,12 +1,6 @@
 #ifndef CONFIGS__CLIENT_H
 #define CONFIGS__CLIENT_H
-#define TYPE int32_t
-#define SIZE sizeof(TYPE)
-#define SAMPLE_MAX (pow(2,SIZE*8 - 1) - 1)
 
-#define CHANNELS 2
-#define SAMPLES 16384
-#define DEVICE "plughw:0,0"
 #define CONFIG_FILE_PATH_CLIENT "./configs/sizes.cfg"
 #define LOG_FILE_NAME_CLIENT "./logs.log"
 #define MUSIC_CLIENT_INPUT_PATH "./songs_out/raw_songs/"
@@ -14,6 +8,9 @@
 #define CACHE_ALMOST_FULL_PCT 60
 #define CLIENT_ACK_TIMEOUT_LIM 8
 #define CLIENT_ALSA_LATENCY_MS_DEFAULT 200
+
+
+extern const uint8_t client_display_splash;
 
 extern ip_cache_entry server_ip_cache_entry,
 		client_port_mapper_ip_cache_entry,

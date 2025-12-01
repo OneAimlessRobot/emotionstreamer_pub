@@ -6,6 +6,9 @@
 
 int main(int argc, char ** argv){
 
+	if(converter_tool_display_splash){
+		print_out_logo();
+	}
 	if(argc!=3){
 
 		printf("Usage:\n"

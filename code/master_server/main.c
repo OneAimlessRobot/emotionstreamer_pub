@@ -12,7 +12,9 @@
 
 int main(void){
 
-	print_out_logo();
+	if(master_display_splash){
+		print_out_logo();
+	}
 	read_values_cfg_master();
         print_values_cfg_master(1);
 

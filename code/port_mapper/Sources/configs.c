@@ -15,6 +15,8 @@ char generalized_config_filepath_buff[PATHSIZE+1]={0};
 ip_cache_entry port_mapper_ip_cache_entry={{0},0};
 uint8_t cfg_port_mapper_logging=0;
 
+const uint8_t port_mapper_display_splash=0;
+
 uint16_t cfg_init_port=10000;
 uint16_t cfg_num_ports=1;
 

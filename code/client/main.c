@@ -11,7 +11,9 @@
 int main(int argc, char ** argv){
 
 
-	print_out_logo();
+	if(client_display_splash){
+		print_out_logo();
+	}
 	read_values_cfg_client();
 	print_values_cfg_client(1);
         memset(curr_dir,0,PATHSIZE);

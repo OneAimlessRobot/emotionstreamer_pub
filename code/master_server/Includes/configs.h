@@ -4,6 +4,7 @@
 #define CONFIG_FILE_PATH_MASTER "./configs/sizes.cfg"
 #define MASTER_ACK_TIMEOUT_LIM 8
 
+extern const uint8_t master_display_splash;
 
 extern ip_cache_entry master_ip_cache_entry;
 extern ip_cache_entry master_server_port_mapper_ip_cache_entry;

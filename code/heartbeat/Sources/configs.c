@@ -21,6 +21,8 @@ char generalized_config_filepath_buff[PATHSIZE+1]={0};
 char hb_server_name_buff[PATHSIZE+1]={0};
 int8_t hb_heartbeat_protocol;
 
+const uint8_t hb_display_splash=0;
+
 ip_cache_entry heartbeat_ip_cache_entry={{0},0};
 ip_cache_entry upper_ip_cache_entry={{0},0};
 ip_cache_entry heartbeat_port_mapper_ip_entry={{0},0};

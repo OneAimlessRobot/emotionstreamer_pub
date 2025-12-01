@@ -3,6 +3,7 @@
 
 #define CONFIG_FILE_PATH_CONVERTER "./configs/config.cfg"
 
+extern const uint8_t converter_tool_display_splash;
 
 extern char converter_in_dir[PATHSIZE];
 

@@ -16,6 +16,8 @@ char generalized_config_filepath_buff[PATHSIZE+1]={0};
 static char master_ip_address_buff[PATHSIZE+1]={0};
 static char master_server_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 
+const uint8_t master_display_splash=1;
+
 ip_cache_entry master_ip_cache_entry={{0},0};
 ip_cache_entry master_server_port_mapper_ip_cache_entry={{0},0};
 //EM BYTES E HZ!

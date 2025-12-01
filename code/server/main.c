@@ -10,7 +10,10 @@
 #include "Includes/configs.h"
 
 int main(void){
-	print_out_logo();
+
+	if(server_display_splash){
+		print_out_logo();
+	}
 	read_values_cfg_server();
         print_values_cfg_server(1);
 	memset(curr_dir,0,PATHSIZE);

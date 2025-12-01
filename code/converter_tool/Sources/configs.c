@@ -13,6 +13,7 @@ char converter_in_dir[PATHSIZE]={0};
 
 char converter_out_dir[PATHSIZE]={0};
 
+const uint8_t converter_tool_display_splash=0;
 
 
 

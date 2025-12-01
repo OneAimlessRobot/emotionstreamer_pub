@@ -4,6 +4,8 @@
 #define CONFIG_FILE_PATH_HB "./configs/sizes.cfg"
 #define HB_ACK_TIMEOUT_LIM 8
 
+extern const uint8_t hb_display_splash;
+
 
 extern ip_cache_entry heartbeat_ip_cache_entry;
 extern ip_cache_entry upper_ip_cache_entry;
