@@ -24,11 +24,21 @@ void start_frame_info_machine(const char* file_name_in, const char* file_name_ou
 		end_frame_info_machine(&machine);
 		return;
 	}
+	else{
+			
+		fprintf(stdout,"Input file name string:\n%s\n",file_name_in);
+		
+	}
 	if(!file_name_out){
 
 		fprintf(stderr,"Null output file name string!\n%s\n",strerror(errno));
 		end_frame_info_machine(&machine);
 		return;
+	}
+	else{
+			
+		fprintf(stdout,"Output file name string:\n%s\n",file_name_out);
+		
 	}
 
 	char path_buff_in[PATHSIZE*2]={0};
