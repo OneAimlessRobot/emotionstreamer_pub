@@ -26,6 +26,7 @@ typedef struct ip_cache_t{
 
 
 //num_addr e o numero absoluto de endereços contidos em buff!!!!!
+void print_ip_cache_entry_fd(int fd,ip_cache_entry* ent);
 void print_ip_cache_entry(FILE* stream,ip_cache_entry* ent);
 void encode_ip_cache_entry(FILE* stream,ip_cache_entry* ent);
 int insert_ip_addr_entry(ip_cache_entry* ent,ip_cache_t* cache);

@@ -31,6 +31,7 @@ const uint8_t server_display_splash=1;
 
 uint8_t cfg_server_logging=0;
 
+uint8_t cfg_server_slave_mode=1;
 char server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILENAME_LENGTH]={{0}};
 char server_auto_mode_rotation_filename[CONFIG_READ_LINE_BUFF_SIZE]={0};
 unsigned int is_auto_mode=0,
@@ -290,6 +291,12 @@ void read_values_cfg_server(void){
         }
         sscanf(curr_line_buff,"server_name: %s",server_name_buff);
         clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                clean_and_exit();
+        }
+        sscanf(curr_line_buff,"server_is_slave_mode: %hhu",&cfg_server_slave_mode);
+        clean_buff();
 	fclose(cfg_fp);
 	server_working_extension[sizeof(server_working_extension)-1]=0;
 	server_music_folder_path[sizeof(server_music_folder_path)-1]=0;
@@ -366,11 +373,13 @@ void print_values_cfg_server(int fd){
 
         dprintf(fd,"server_name: %s\n",server_name_buff);
 
-	print_ip_cache_entry(stdout,&server_ip_cache_entry);
+        dprintf(fd,"server_is_slave_mode: %hhu\n",cfg_server_slave_mode);
 
-	print_ip_cache_entry(stdout,&upper_ip_cache_entry);
+	print_ip_cache_entry_fd(fd,&server_ip_cache_entry);
 
-	print_ip_cache_entry(stdout,&server_port_mapper_ip_cache_entry);
+	print_ip_cache_entry_fd(fd,&upper_ip_cache_entry);
+
+	print_ip_cache_entry_fd(fd,&server_port_mapper_ip_cache_entry);
 
 
 

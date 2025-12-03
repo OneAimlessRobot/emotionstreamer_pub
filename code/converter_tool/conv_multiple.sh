@@ -4,8 +4,8 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="YAKUITHEMAID_-_R_4_11_5/"
-expression_to_search="*"
+song_subdirectory="/"
+expression_to_search="when_the_problem_isnt_silence_the_problem_is_noise"
 song_basenames=()
 num_of_songs=0
 

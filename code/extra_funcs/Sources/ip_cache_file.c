@@ -5,6 +5,13 @@
 #include "../Includes/auxfuncs.h"
 #include "../Includes/ip_cache_file.h"
 
+void print_ip_cache_entry_fd(int fd,ip_cache_entry* ent){
+
+	dprintf(fd,PRINT_IP_CACHE_FILE,ent->hostname,ent->port);
+
+
+}
+
 void print_ip_cache_entry(FILE* stream,ip_cache_entry* ent){
 
 	fprintf(stream,PRINT_IP_CACHE_FILE,ent->hostname,ent->port);

@@ -28,6 +28,9 @@ extern char curr_server_quarantine_dir_buff[PATHSIZE+1];
 
 extern char server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILENAME_LENGTH];
 extern char server_auto_mode_rotation_filename[PATHSIZE+1];
+
+extern uint8_t cfg_server_slave_mode;
+
 extern unsigned int is_auto_mode,
 		curr_num_songs_rotation,
 		curr_song_index_rotation;

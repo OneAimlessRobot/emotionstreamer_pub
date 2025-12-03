@@ -38,7 +38,9 @@ static void call_sigint(void){
 	perror("Sinal de parar server\n");
 	pthread_mutex_lock(&con_mtx);
 	send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
-	close_con(&state.hb_con,0,1);
+	if(cfg_server_slave_mode){
+		close_con(&state.hb_con,0,1);
+	}
 	pthread_mutex_unlock(&con_mtx);
 
 }
@@ -47,7 +49,9 @@ static void call_sigint_sub_connection(void){
 	close(state.server_sock_tcp);
 	perror("Sinal de parar sub conexão server\n");
 	pthread_mutex_lock(&con_mtx);
-	close_con(&state.hb_con,0,1);
+	if(cfg_server_slave_mode){
+		close_con(&state.hb_con,0,1);
+	}
 	pthread_mutex_unlock(&con_mtx);
 
 }
@@ -66,16 +70,6 @@ static void conStop(int useless){
 	is_on=0*useless;
 	started=1;
 }
-/*
-
-//these assume the timeval structs are not null!!!
-void time_spec_sum_function(struct timeval* time_one,struct timeval* time_two,struct timeval* time_out);
-void time_spec_sub_function(struct timeval* time_one,struct timeval* time_two,struct timeval* time_out);
-//time_one bigger (1), smaller(-1) or equal (0) to time_two?
-int time_spec_compare_function(struct timeval* time_one,struct timeval* time_two);
-void time_spec_print_function(int fd, const char* timeval_name, struct timeval* time_printed);
-
-*/
 static void pick_next_song(void){
 	if(is_auto_mode){
 		time_spec_sub_function(&curr_tv_init,&curr_tv_end,&curr_tv_result);
@@ -205,7 +199,8 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	if(is_wav_mode){
 		printf("Launched in '.wav' mode!!!\n");
 	}
-
+	is_on=1;
+	started=!cfg_server_slave_mode;
 	slave_args arg_s={0};
 	logstream=stderr;
 	memset(&state,0,sizeof(server_state));
@@ -213,49 +208,48 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	memcpy(&arg_s.slave_port_mapper_ip_cache_entry,&server_port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
 	memcpy(&arg_s.slave_ip_cache_entry,ent_this,sizeof(ip_cache_entry));
 	init_module_tcp_stuff(&state.server_sock_tcp,ent_this->hostname,ent_this->port,&state.server_tcp_addr,SIGTERM,MAX_CLIENTS_HARD_LIMIT,0,&arg_s.slave_port_mapper_ip_cache_entry);
+	if(cfg_server_slave_mode){
 
+		arg_s.lower_name=buff;
+		arg_s.exit_signal=SIGTERM;
+		arg_s.con_obj=&state.hb_con;
+		arg_s.clean_func=call_sigint;
+		arg_s.ack_period_us=cfg_server_ack_period_us;
+		arg_s.sig_func=serverStop;
+		arg_s.start_trigger=&started;
+		arg_s.loop_var=&is_on;
+		arg_s.var_mtx=&hb_mtx;
+		arg_s.con_mtx=&con_mtx;
+		arg_s.trg_cond=&eng_cond;
+		arg_s.type=SERVER;
+		arg_s.extension_buff=extension_buff;
+		if(init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port)){
+			perror("Erro a inicializar address de master em server!!!\n");
+	                raise(SIGINT);
+	                call_sigint();
+			return 1;
+		}
+		if(init_addr(&arg_s.this_addr,ent_this->hostname, ntohs(state.server_tcp_addr.sin_port))){
 
-	arg_s.lower_name=buff;
-	arg_s.exit_signal=SIGTERM;
-	arg_s.con_obj=&state.hb_con;
-	arg_s.clean_func=call_sigint;
-	arg_s.ack_period_us=cfg_server_ack_period_us;
-	arg_s.sig_func=serverStop;
-	arg_s.start_trigger=&started;
-	arg_s.loop_var=&is_on;
-	arg_s.var_mtx=&hb_mtx;
-	arg_s.con_mtx=&con_mtx;
-	arg_s.trg_cond=&eng_cond;
-	arg_s.type=SERVER;
-	arg_s.extension_buff=extension_buff;
-	if(init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port)){
-		perror("Erro a inicializar address de master em server!!!\n");
-                raise(SIGINT);
-                call_sigint();
-		return 1;
+			perror("Erro a inicializar address de slave em server!!!\n");
+	                raise(SIGINT);
+	                call_sigint();
+			return 1;
+		}
+		memcpy(&arg_s.con_times_pair,&server_con_times_pair,sizeof(int_pair));
+		memcpy(&arg_s.data_times_pair,&server_data_times_pair,sizeof(int_pair));
+		memcpy(&arg_s.ack_times_pair,&server_ack_times_pair,sizeof(int_pair));
+		pthread_create(&hb_tid,NULL,slave_thread,(void*)&arg_s);
 	}
-	if(init_addr(&arg_s.this_addr,ent_this->hostname, ntohs(state.server_tcp_addr.sin_port))){
 
-		perror("Erro a inicializar address de slave em server!!!\n");
-                raise(SIGINT);
-                call_sigint();
-		return 1;
-	}
-	memcpy(&arg_s.con_times_pair,&server_con_times_pair,sizeof(int_pair));
-	memcpy(&arg_s.data_times_pair,&server_data_times_pair,sizeof(int_pair));
-	memcpy(&arg_s.ack_times_pair,&server_ack_times_pair,sizeof(int_pair));
-	
-
-	is_on=1;
-	started=0;
-	
-	pthread_create(&hb_tid,NULL,slave_thread,(void*)&arg_s);
 	int result=con_accepting_loop();
 	if(result){
-	pthread_join(hb_tid,NULL);
-	printf("Juntamos o thread hb_tid\n");
+		if(cfg_server_slave_mode){
+			pthread_join(hb_tid,NULL);
+			printf("Juntamos o thread hb_tid\n");
+			close_con(&state.hb_con,0,1);
+		}
 	call_sigint();
-	close_con(&state.hb_con,0,1);
 	}
 	else{
 	printf("Exiting child in server!!\n");
