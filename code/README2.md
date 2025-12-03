@@ -397,4 +397,28 @@ everything is attempted to be built.
 But you can change that.
 
 
-``
+
+IMPROVEMENTS:
+
+the content servers now have a "slave mode" option.
+with it on,
+the server will require a master server to be on for it to initiate.
+otherwise,
+no.
+
+its useful if you just want to stream on your own device conveniently through localhost
+
+
+Bye!
+
+Also:
+ive increased the default number of ports given per connection attempt
+(compile time define constant in port_mapper/Includes/mapper.h)
+
+from 2 to 9.
+
+BYE!
+
+
+
+```
