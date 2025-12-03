@@ -407,6 +407,11 @@ otherwise,
 no.
 
 its useful if you just want to stream on your own device conveniently through localhost
+But it also means that,
+if hosted on a public address,
+it wont be discoverable by server browsers,
+as this feature requires a master server to connect to
+to which our to-be-discovered content server would be bound to
 
 
 Bye!
