@@ -216,6 +216,9 @@ You are just code.
 
 But I dont like you.
 I dont want to like you
+
+*/
+#if !EMSTREAM_ON_TERMUX
 static int join_with_timeout(pthread_t t, int seconds)
 {
     struct timespec ts;
@@ -240,5 +243,12 @@ void join_client_thread_with_timeout(pthread_t t,char* thread_name_buff){
         	printf("Sim!\nSaimos de \"%s\"!!!!!!\n",thread_name_buff);
 	}
 }
+#else
+static void join_with_timeout(pthread_t t,char* thread_name_buff){
+	fprintf(stderr,"Error! join with timeout not implemented on termux!\nThread: %ld\nThread name: %s\n",t,thread_name_buff);
+}
 
-*/
+void join_client_thread_with_timeout(pthread_t t,char* thread_name_buff){
+	join_with_timeout(t,thread_name_buff);
+}
+#endif

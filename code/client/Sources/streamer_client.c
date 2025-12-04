@@ -494,7 +494,11 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		join_client_thread(t_dec,(char*)decode_thread_name);
 	}
 	if(play){
+#if EMSTREAM_ON_TERMUX
 		join_client_thread(t_play,(char*)play_thread_name);
+#else
+		join_client_thread_with_timeout(t_play,(char*)play_thread_name);
+#endif
 	}
 	perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
 	if(!is_wav_compat_mode()){

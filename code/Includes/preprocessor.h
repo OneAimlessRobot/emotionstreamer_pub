@@ -1,6 +1,12 @@
 #ifndef PRE_H
 #define PRE_H
 #define _GNU_SOURCE
+#if defined(__ANDROID__) && defined(__linux__)
+    #define EMSTREAM_ON_TERMUX 1
+#else
+    #define EMSTREAM_ON_TERMUX 0
+#endif
+
 #include <stdio.h>
 #include <errno.h>
 #include <arpa/inet.h>

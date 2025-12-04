@@ -4,8 +4,8 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="/"
-expression_to_search="when_the_problem_isnt_silence_the_problem_is_noise"
+song_subdirectory="Femtanyl_REACTOR/"
+expression_to_search="*"
 song_basenames=()
 num_of_songs=0
 

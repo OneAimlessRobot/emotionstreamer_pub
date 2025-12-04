@@ -14,7 +14,9 @@ void join_client_thread(pthread_t t,char* thread_name_buff);
 
 /*
 the gate to my nightmares rn
-
+*/
+void join_client_thread_with_timeout(pthread_t t,char* thread_name_buff);
+/*
 I dont care.
 I dont want to care.
 I dont want care if the audio locks.
@@ -42,7 +44,6 @@ LEAVE ME ALONE!
 Please...
 just let me exist.
 
-void join_client_thread_with_timeout(pthread_t t,char* thread_name_buff);
 
 Im sorry if whole rant this sounds pathetic.
 
