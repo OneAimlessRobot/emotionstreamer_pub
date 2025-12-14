@@ -9,6 +9,7 @@
 #include "../../extra_funcs/Includes/interlvl_com.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/mapper.h"
+#include "../Includes/port_mapper_file.h"
 #include "../Includes/configs.h"
 
 static pthread_mutex_t running_mtx=PTHREAD_MUTEX_INITIALIZER,
@@ -489,7 +490,7 @@ void port_mapper_init(ip_cache_entry* ent){
 	memset(port_arr,0,sizeof(port_arr));
 	mapper.port_arr=port_arr;
 
-
+	fetch_port_mapper_file(&mapper);
 
 	init_addr(&mapper.addr_struct, ent->hostname,ent->port);
 	init_module_tcp_stuff(&mapper.socket,ent->hostname,ent->port,&mapper.addr_struct,SIGINT,cfg_num_ports,1,NULL);
@@ -509,6 +510,7 @@ void port_mapper_init(ip_cache_entry* ent){
 	printf("Saimos do thread de input!\n");
 	pthread_join(main_tid ,NULL);
 	printf("Saimos do main thread!\n");
+	save_port_mapper_file(&mapper);
 	exit(0);
 
 }

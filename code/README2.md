@@ -456,4 +456,14 @@ content server in the case of client and heartbeat/master server
 in the case of heartbeat servers and content servers (in slave mode)
 
 
+
+
+UPDATE!
+
+Now the port mapper remembers which ports were open and closed
+between launches,
+assuming that between those launches:
+The initial port and number of ports in the configuration file
+remains the same!
+
 ```

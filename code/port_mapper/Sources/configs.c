@@ -9,7 +9,7 @@
 static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 uint8_t cfg_port_mapper_logging=0;
-
+char port_mapper_filepath[PATHSIZE+1]= {0};
 const uint8_t port_mapper_display_splash=0;
 
 uint16_t cfg_init_port=10000;

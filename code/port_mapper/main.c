@@ -6,6 +6,7 @@
 #include "../extra_funcs/Includes/connection.h"
 #include "../extra_funcs/Includes/generalized_config.h"
 #include "Includes/mapper.h"
+#include "Includes/port_mapper_file.h"
 #include "Includes/configs.h"
 
 int main(void){

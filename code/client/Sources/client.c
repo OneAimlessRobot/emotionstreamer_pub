@@ -37,6 +37,7 @@
 struct stat file_info={0};
 static atomic_int started=1;
 static atomic_int is_on=1;
+static int libao_initialized=0;
 static int fp=-1;
 static struct sigaction sa;
 static char extension_from_server[PATHSIZE]={0};
@@ -52,6 +53,12 @@ static method play_way=PLAY_PA;
 
 static void clear_ports_and_quit(int signal,void* ptr){
 
+	if(libao_initialized){
+
+		ao_shutdown();
+		libao_initialized=0;
+
+	}
 	send_port_back(htons(client_con_obj.this_tcp_addr.sin_port),&port_mapper_ip_cache_entry);
 	free_attempted_ports(0,&port_mapper_ip_cache_entry);
 	close_con(&client_con_obj,0,1);
@@ -98,8 +105,8 @@ static void down_func(char* file_name){
 		snprintf(file_path2,sizeof(file_path2),"%s",file_path);
 		_mkdir(dirname(file_path2));
 		if((fp=creat(file_path,0777))<0){
-                		fprintf(stderr,"Nao foi possivel transferir ficheiro: %s!!!!\nPaths:\nPath1: %s\nPath2: %s\n",strerror(errno),file_path,file_path2);
-				clear_ports_and_quit(SIGINT,NULL);
+                	fprintf(stderr,"Nao foi possivel transferir ficheiro: %s!!!!\nPaths:\nPath1: %s\nPath2: %s\n",strerror(errno),file_path,file_path2);
+			clear_ports_and_quit(SIGINT,NULL);
                 }
 		if(stream_enable_ncurses){
 			enable_ncurses();
@@ -159,14 +166,14 @@ int clientStart(char* req_field,char* file_name){
 
 		fprintf(logstream,"Playing with libao library!\n");
 		ao_initialize();
-    		play_way=PLAY_AO;
+    		libao_initialized=1;
+		play_way=PLAY_AO;
 
 	}
 	else if(!strs_are_strictly_equal(method_buff,"oss")){
 
 		fprintf(logstream,"Playing using bare file descriptors!\n(AKA rawest shit you've ever seen, my man)\n");
-		ao_initialize();
-    		play_way=PLAY_BARE;
+		play_way=PLAY_BARE;
 
 	}
 	else{
