@@ -203,7 +203,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	is_on=1;
 	started=!cfg_server_slave_mode;
 	slave_args arg_s={0};
-	logstream=stderr;
+	logstream=stdout;
 	memset(&state,0,sizeof(server_state));
 	state.name=buff;
 	memcpy(&arg_s.slave_port_mapper_ip_cache_entry,&port_mapper_ip_cache_entry,sizeof(ip_cache_entry));

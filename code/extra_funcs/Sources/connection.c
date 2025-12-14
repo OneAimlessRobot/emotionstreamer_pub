@@ -462,7 +462,15 @@ void connection_attempt_circuit(int* socket_fd, void (*quit_handler)(int, void*)
 			return;
                 }
 		curr_attempts++;
-                if(bind((*socket_fd),(struct sockaddr *)src_address,socklenvar[1])){
+		if(!memcmp(src_address,dst_address,sizeof(struct sockaddr_in))){
+			if(logging){
+
+                                fprintf(logstream,"addresses src e dst iguais!\n");
+                        }
+			print_addr_aux("Este é o address:",src_address);
+                        quit_handler(SIGINT,ptr);
+		}
+		if(bind((*socket_fd),(struct sockaddr *)src_address,socklenvar[1])){
                         perror("Não conseguimos dar bind na socket_fd do client!!!\n");
                         print_addr_aux("Este é o address:",src_address);
                         quit_handler(SIGINT,ptr);
@@ -473,7 +481,6 @@ void connection_attempt_circuit(int* socket_fd, void (*quit_handler)(int, void*)
                         print_addr_aux("Bind com sucesso!!!:",src_address);
                         setLinger(socket_fd,1,1);
                 }
-
                 if(!(result_con=tryConnect(socket_fd,con_times_pair,dst_address))){
                         if(logging){
 
