@@ -14,15 +14,14 @@ int main(void){
 	if(server_display_splash){
 		print_out_logo();
 	}
-	read_values_cfg_server();
-        print_values_cfg_server(1);
 	memset(curr_dir,0,PATHSIZE);
 	getcwd(curr_dir,PATHSIZE);
+	parse_generalized_cfg();
+        print_values_generalized_cfg(1);
+	read_values_cfg_server();
+        print_values_cfg_server(1);
 	memset(curr_server_quarantine_dir_buff,0,PATHSIZE+1);
 	getcwd(curr_server_quarantine_dir_buff,PATHSIZE);
-	printf("Generalized cfg:\n");
-	parse_generalized_cfg(generalized_config_filepath_buff);
-	print_values_generalized_cfg(1);
 	int result= strnlen(server_music_folder_path,PATHSIZE);
 	if(!result){
 

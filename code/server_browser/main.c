@@ -13,6 +13,10 @@ int main(int argc, char ** argv){
 	if(browser_display_splash){
         	print_out_logo();
 	}
+        memset(curr_dir,0,PATHSIZE);
+        getcwd(curr_dir,PATHSIZE-1);
+	parse_generalized_cfg();
+        print_values_generalized_cfg(1);
 	read_values_cfg_browser();
         print_values_cfg_browser(1);
         if(argc!=3){
@@ -20,12 +24,6 @@ int main(int argc, char ** argv){
                 printf("Precisas de:1- especificar se estas a browsar...1- master server (master) ou...\n2- heartbeat server\n2- address de server para scannear: <ip>:<port> \n");
                 exit(-1);
         }
-        memset(curr_dir,0,PATHSIZE);
-        getcwd(curr_dir,PATHSIZE-1);
-        printf("Generalized cfg:\n");
-        parse_generalized_cfg(generalized_config_filepath_buff);
-        print_values_generalized_cfg(1);
-
         printf("Curr dir: %s\n", curr_dir);
         ip_cache_entry ent={{0},0};
         parse_ip_cache_entry(argv[2],&ent);

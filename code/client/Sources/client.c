@@ -9,6 +9,7 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/more_socket_ops.h"
@@ -51,8 +52,8 @@ static method play_way=PLAY_PA;
 
 static void clear_ports_and_quit(int signal,void* ptr){
 
-	send_port_back(htons(client_con_obj.this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
-	free_attempted_ports(0,&client_port_mapper_ip_cache_entry);
+	send_port_back(htons(client_con_obj.this_tcp_addr.sin_port),&port_mapper_ip_cache_entry);
+	free_attempted_ports(0,&port_mapper_ip_cache_entry);
 	close_con(&client_con_obj,0,1);
 	fclose(logstream);
 	close(fp);
@@ -205,10 +206,10 @@ int clientStart(char* req_field,char* file_name){
 		clear_ports_and_quit(SIGINT,NULL);
 
 	}
-	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,&client_port_mapper_ip_cache_entry);
+	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,&port_mapper_ip_cache_entry);
 	connection_attempt_circuit(&client_con_obj.sockfd_tcp,clear_ports_and_quit,&client_ip_address,
                                 &server_ip_address,
-                                        &client_ip_cache_entry,&client_port_mapper_ip_cache_entry,client_con_times_pair,NULL);
+                                        &client_ip_cache_entry,&port_mapper_ip_cache_entry,client_con_times_pair,NULL);
 	if(is_new<0){
 
 		insert_ip_addr_entry(&server_ip_cache_entry,&cache);

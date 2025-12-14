@@ -5,6 +5,7 @@
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
@@ -37,7 +38,7 @@ static void call_sigint(void){
 	close(state.server_sock_tcp);
 	perror("Sinal de parar server\n");
 	pthread_mutex_lock(&con_mtx);
-	send_port_back(htons(state.server_tcp_addr.sin_port),&server_port_mapper_ip_cache_entry);
+	send_port_back(htons(state.server_tcp_addr.sin_port),&port_mapper_ip_cache_entry);
 	if(cfg_server_slave_mode){
 		close_con(&state.hb_con,0,1);
 	}
@@ -205,7 +206,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	logstream=stderr;
 	memset(&state,0,sizeof(server_state));
 	state.name=buff;
-	memcpy(&arg_s.slave_port_mapper_ip_cache_entry,&server_port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
+	memcpy(&arg_s.slave_port_mapper_ip_cache_entry,&port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
 	memcpy(&arg_s.slave_ip_cache_entry,ent_this,sizeof(ip_cache_entry));
 	init_module_tcp_stuff(&state.server_sock_tcp,ent_this->hostname,ent_this->port,&state.server_tcp_addr,SIGTERM,MAX_CLIENTS_HARD_LIMIT,0,&arg_s.slave_port_mapper_ip_cache_entry);
 	if(cfg_server_slave_mode){

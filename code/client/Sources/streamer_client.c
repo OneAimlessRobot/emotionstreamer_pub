@@ -11,6 +11,7 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
@@ -116,7 +117,7 @@ void stop_client_stream(void){
 	pthread_cond_signal(&input_cond);
 	pthread_cond_signal(&stats_cond);
 	if(acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){
-		send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&client_port_mapper_ip_cache_entry);
+		send_port_back(htons(stream_struct.con_obj->this_tcp_addr.sin_port),&port_mapper_ip_cache_entry);
 		close_con(stream_struct.con_obj,1,1);
 	}
 

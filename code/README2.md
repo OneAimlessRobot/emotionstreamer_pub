@@ -425,5 +425,35 @@ from 2 to 9.
 BYE!
 
 
+UPDATE:
+
+There was a major design refactoring as of 13th of december 2025.
+
+Now,
+The generalized config decides which interface this family of services will use.
+
+Within a single machine,
+it will decide 1 ip address.
+The non-port portion of it will be used by any service on that machine.
+clients, servers, heartbeat servers, etc. (bind addresses)
+And, of course, the port mapper.
+
+I thought this would be more elegant.
+If one wishes to run the services in localhost,
+they shall run the portmapper in localhost.
+therefore,
+any other serives which wish to connect must bind to localhost as well.
+overall, I think this reduces lots of redundancy and needless complexity.
+
+The ports are still attributed to services as normal,
+overriding the port from portmapper's address for that service's use.
+
+if this changelog note sounds incoherent,
+it is because I am tired.
+
+But now you only need to pick the upper guy's ip on services that need it:
+content server in the case of client and heartbeat/master server
+in the case of heartbeat servers and content servers (in slave mode)
+
 
 ```

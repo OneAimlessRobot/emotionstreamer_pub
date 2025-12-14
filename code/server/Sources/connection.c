@@ -5,6 +5,7 @@
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
@@ -73,7 +74,7 @@ void con_go(int sockfd_tcp){
 			sock_tcp=sockfd_tcp;
 			unsigned char stream_cache_data[sizeof(mp3_stream_chunk)];
 
-			init_con(&server_con_obj,sock_tcp,SERVER_C,&server_port_mapper_ip_cache_entry);
+			init_con(&server_con_obj,sock_tcp,SERVER_C,&port_mapper_ip_cache_entry);
 
 			con_read_tcp(&server_con_obj,server_data_times_pair);
 

@@ -21,8 +21,6 @@ extern char server_music_quarantine_folder_path[PATHSIZE+1];
 extern char server_working_extension[EXTENSION_SIZE];
 extern ip_cache_entry server_ip_cache_entry;
 extern ip_cache_entry upper_ip_cache_entry;
-extern ip_cache_entry server_port_mapper_ip_cache_entry;
-extern char generalized_config_filepath_buff[PATHSIZE+1];
 extern char server_name_buff[PATHSIZE+1];
 extern char curr_server_quarantine_dir_buff[PATHSIZE+1];
 

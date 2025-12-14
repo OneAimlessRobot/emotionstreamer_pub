@@ -5,6 +5,7 @@
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/more_socket_ops.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/generalized_config.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/interlvl_proto.h"
@@ -21,8 +22,8 @@ static atomic_int innited=0;
 static void cleanup_and_send_ports_back(int useless,void*ptr){
 
 	raise(useless);
-	send_port_back(htons(our_addr.sin_port),&server_browser_port_mapper_ip_cache_entry);
-	free_attempted_ports(0,&server_browser_port_mapper_ip_cache_entry);
+	send_port_back(htons(our_addr.sin_port),&port_mapper_ip_cache_entry);
+	free_attempted_ports(0,&port_mapper_ip_cache_entry);
 	close_con(&con_obj,0,1);
 	exit(useless+(0*((uint64_t)ptr)));
 
@@ -110,10 +111,10 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	    perror("Não conseguimos inicializar address do peer em server_browser!!!\n");
 	    cleanup_and_send_ports_back(SIGINT,NULL);
 	}
-	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,&server_browser_port_mapper_ip_cache_entry);
+	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,&port_mapper_ip_cache_entry);
 	connection_attempt_circuit(&con_obj.sockfd_tcp,cleanup_and_send_ports_back,&our_addr,
                                 &hb_server_addr,
-                                       &server_browser_ip_cache_entry,&server_browser_port_mapper_ip_cache_entry,browser_con_times_pair,NULL);
+                                       &server_browser_ip_cache_entry,&port_mapper_ip_cache_entry,browser_con_times_pair,NULL);
         clear_con_data(&con_obj);
 	char string_to_send[PATHSIZE/2]={0};
 	interlvl_cmd cmd= str_to_interlvl_cmd_type(req);

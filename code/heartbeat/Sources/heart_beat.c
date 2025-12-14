@@ -4,6 +4,7 @@
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/generalized_config.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../../extra_funcs/Includes/interlvl_com.h"
 #include "../Includes/configs.h"
@@ -38,7 +39,7 @@ static void close_all_fds_here(void){
 
 	close_all_fds(arg_o.cons);
 	pthread_mutex_lock(&con_mtx);
-	send_port_back(htons(arg_s.this_con_addr.sin_port),&heartbeat_port_mapper_ip_entry);
+	send_port_back(htons(arg_s.this_con_addr.sin_port),&port_mapper_ip_cache_entry);
 	close_con(arg_s.con_obj,0,1);
 	pthread_mutex_unlock(&con_mtx);
 	pthread_cond_signal(arg_o.cons->start_cond);
@@ -48,7 +49,7 @@ static void close_all_fds_here(void){
 static void call_signal_func(void){
 
 
-	send_port_back(htons(arg_a.accept_addr.sin_port),&heartbeat_port_mapper_ip_entry);
+	send_port_back(htons(arg_a.accept_addr.sin_port),&port_mapper_ip_cache_entry);
 	close_all_fds_here();
 	perror("Saindo do heart beat server!!!!\n");
 	pthread_cond_signal(&master_running_cond);
@@ -101,8 +102,8 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	strncpy(extension_buff,"N/A",EXTENSION_SIZE);
 	con_set set={0};
 
-	memcpy(&arg_s.slave_port_mapper_ip_cache_entry,&heartbeat_port_mapper_ip_entry,sizeof(ip_cache_entry));
-	memcpy(&arg_a.acceptor_port_mapper_ip_cache_entry,&heartbeat_port_mapper_ip_entry,sizeof(ip_cache_entry));
+	memcpy(&arg_s.slave_port_mapper_ip_cache_entry,&port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
+	memcpy(&arg_a.acceptor_port_mapper_ip_cache_entry,&port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
 	memcpy(&arg_s.slave_ip_cache_entry,ent_this,sizeof(ip_cache_entry));
 	if(init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port)){
 		perror("Erro a inicializar address de slave em heartbeat server!!!\n");

@@ -4,6 +4,7 @@
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/configs.h"
 #include "../Includes/heart_beat.h"
+#include "../../extra_funcs/Includes/generalized_config.h"
 
 
 
@@ -13,19 +14,15 @@
 static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
-static char heartbeat_ip_address_buff[PATHSIZE+1]={0};
-static char heartbeat_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 static char upper_ip_address_buff[PATHSIZE+1]={0};
 
-char generalized_config_filepath_buff[PATHSIZE+1]={0};
 char hb_server_name_buff[PATHSIZE+1]={0};
 int8_t hb_heartbeat_protocol;
 
 const uint8_t hb_display_splash=0;
 
-ip_cache_entry heartbeat_ip_cache_entry={{0},0};
-ip_cache_entry upper_ip_cache_entry={{0},0};
-ip_cache_entry heartbeat_port_mapper_ip_entry={{0},0};
+ip_cache_entry upper_ip_cache_entry={{0},0},
+	heartbeat_ip_cache_entry={{0},0};
 
 //EM BYTES E HZ!
 
@@ -38,9 +35,8 @@ uint8_t cfg_hb_server_logging=0;
 
 static void process_ip_cache_entries(void){
 
-	parse_ip_cache_entry(heartbeat_ip_address_buff,&heartbeat_ip_cache_entry);
+	parse_ip_cache_entry(port_mapper_ip_address_buff,&heartbeat_ip_cache_entry);
 	parse_ip_cache_entry(upper_ip_address_buff,&upper_ip_cache_entry);
-	parse_ip_cache_entry(heartbeat_port_mapper_ip_address_buff,&heartbeat_port_mapper_ip_entry);
 
 }
 
@@ -106,28 +102,7 @@ void read_values_cfg_hb(void){
                 clean_and_exit();
 
         }
-        sscanf(curr_line_buff,"heartbeat_ip_address: %s",heartbeat_ip_address_buff);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                clean_and_exit();
-
-        }
         sscanf(curr_line_buff,"upper_server_ip_address: %s",upper_ip_address_buff);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                clean_and_exit();
-
-        }
-        sscanf(curr_line_buff,"heartbeat_port_mapper_ip_address: %s",heartbeat_port_mapper_ip_address_buff);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                clean_and_exit();
-
-        }
-        sscanf(curr_line_buff,"generalized_config_filepath: %s",generalized_config_filepath_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -154,15 +129,8 @@ void print_values_cfg_hb(int fd){
 
 	dprintf(fd,"hb_ack_period_us: %luus\n",cfg_hb_ack_period_us);
 
-        dprintf(fd,"generalized_config_filepath: %s\n",generalized_config_filepath_buff);
-
 	dprintf(fd,"hb_server_name: %s\n",hb_server_name_buff);
-
-	print_ip_cache_entry(stdout,&heartbeat_ip_cache_entry);
 
 	print_ip_cache_entry(stdout,&upper_ip_cache_entry);
 
-	print_ip_cache_entry(stdout,&heartbeat_port_mapper_ip_entry);
-
-	
 }

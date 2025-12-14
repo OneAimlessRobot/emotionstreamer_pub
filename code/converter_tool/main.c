@@ -16,11 +16,10 @@ int main(int argc, char ** argv){
 				"Arg2: output filename (rel. to output_folder defined in config/sizes.cfg)\n");
 		exit(-1);
 	}
-
-	read_values_cfg_converter();
-        print_values_cfg_converter(1);
 	memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
+	read_values_cfg_converter();
+        print_values_cfg_converter(1);
 	start_frame_info_machine(argv[1],argv[2],0);
 
 

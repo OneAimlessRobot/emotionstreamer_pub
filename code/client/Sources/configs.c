@@ -9,6 +9,7 @@
 #include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/ripped_code.h"
 #include "../Includes/chunk_queue.h"
 #include "../Includes/queue_menus.h"
@@ -19,14 +20,10 @@ static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 char client_logs_file_name[PATHSIZE]={0};
 char client_music_folder_path[PATHSIZE]={0};
-char generalized_config_filepath_buff[PATHSIZE+1]={0};
 ip_cache_entry server_ip_cache_entry={{0},0};
 ip_cache_entry client_ip_cache_entry={{0},0};
-ip_cache_entry client_port_mapper_ip_cache_entry={{0},0};//
 
 char server_ip_address_buff[PATHSIZE+1]={0};
-char client_ip_address_buff[PATHSIZE+1]={0};
-char client_port_mapper_ip_address_buff[PATHSIZE+1]={0};
 char cfg_client_device_name_if_alsa[PATHSIZE+1]={0};
 char cfg_client_device_output_if_alsa[PATHSIZE+1]={0};
 
@@ -79,8 +76,7 @@ static void clean_buff(void){
 static void process_ip_cache_entries(void){
 
 	parse_ip_cache_entry(server_ip_address_buff,&server_ip_cache_entry);
-	parse_ip_cache_entry(client_ip_address_buff,&client_ip_cache_entry);
-	parse_ip_cache_entry(client_port_mapper_ip_address_buff,&client_port_mapper_ip_cache_entry);
+	parse_ip_cache_entry(port_mapper_ip_address_buff,&client_ip_cache_entry);
 
 }
 
@@ -237,26 +233,6 @@ void read_values_cfg_client(void){
 	}
 	sscanf(curr_line_buff,"server_ip_address: %s", server_ip_address_buff);
 	clean_buff();
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		clean_and_exit();
-	}
-//client_port_mapper_ip_address:
-	sscanf(curr_line_buff,"client_ip_address: %s", client_ip_address_buff);
-	clean_buff();
-	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-		clean_and_exit();
-	}
-//
-	sscanf(curr_line_buff,"client_port_mapper_ip_address: %s", client_port_mapper_ip_address_buff);
-	clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                clean_and_exit();
-        }
-        sscanf(curr_line_buff,"generalized_config_filepath: %s",generalized_config_filepath_buff);
-        clean_buff();
 	fclose(cfg_fp);
 
 	process_ip_cache_entries();
@@ -311,12 +287,6 @@ void print_values_cfg_client(int fd){
 									cfg_client_alsa_device_latency_if_alsa_ms,
 									MS_TO_US(cfg_client_alsa_device_latency_if_alsa_ms));
 
-        dprintf(fd,"generalized_config_filepath: %s\n",generalized_config_filepath_buff);
-
 	print_ip_cache_entry(stdout,&server_ip_cache_entry);
-
-	print_ip_cache_entry(stdout,&client_ip_cache_entry);
-
-	print_ip_cache_entry(stdout,&client_port_mapper_ip_cache_entry);
 
 }

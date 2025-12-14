@@ -15,17 +15,13 @@ int main(void){
 	if(master_display_splash){
 		print_out_logo();
 	}
-	read_values_cfg_master();
-        print_values_cfg_master(1);
-
         memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
-
-        printf("Curr dir: %s\n", curr_dir);
-        printf("Generalized cfg:\n");
-        parse_generalized_cfg(generalized_config_filepath_buff);
+        parse_generalized_cfg();
         print_values_generalized_cfg(1);
-
+	read_values_cfg_master();
+        print_values_cfg_master(1);
+	printf("Curr dir: %s\n", curr_dir);
 	start_master(master_ip_cache_entry.hostname,master_ip_cache_entry.port);
 
 	printf("Saimos do server!!!!!!\n");

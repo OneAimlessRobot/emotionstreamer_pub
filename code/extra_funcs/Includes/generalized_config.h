@@ -1,7 +1,7 @@
 #ifndef GENERALIZED_CONFIG_H
 #define GENERALIZED_CONFIG_H
 
-#define CONFIG_FILENAME "general_config.cfg"
+#define GENERALIZED_CONFIG_FILENAME "/../config/general_config.cfg"
 
 #define S_TO_US(x) ((x*1000000))
 
@@ -21,10 +21,12 @@
 
 
 extern int_pair port_mapper_times_pair;
+extern ip_cache_entry port_mapper_ip_cache_entry;
+extern char port_mapper_ip_address_buff[PATHSIZE+1];
 
 
 //NULL terminated
-void parse_generalized_cfg(char* dir_path);
+void parse_generalized_cfg(void);
 
 void print_values_generalized_cfg(int fd);
 

@@ -15,14 +15,12 @@ int main(void){
 	if(hb_display_splash){
 		print_out_logo();
 	}
-	read_values_cfg_hb();
-        print_values_cfg_hb(1);
         memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
-        printf("Generalized cfg:\n");
-        parse_generalized_cfg(generalized_config_filepath_buff);
+        parse_generalized_cfg();
         print_values_generalized_cfg(1);
-
+	read_values_cfg_hb();
+        print_values_cfg_hb(1);
         printf("Curr dir: %s\n", curr_dir);
 
 	start_heart_beats(&heartbeat_ip_cache_entry,&upper_ip_cache_entry);

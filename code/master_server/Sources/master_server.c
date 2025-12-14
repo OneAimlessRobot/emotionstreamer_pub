@@ -4,6 +4,7 @@
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/generalized_config.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../../extra_funcs/Includes/interlvl_com.h"
 #include "../../extra_funcs/Includes/server_db_driving.h"
@@ -42,7 +43,7 @@ static void call_signal_func(void){
 
 	close_all_fds_here();
         pthread_mutex_lock(&master_con_mtx);
-	send_port_back(htons(arg_a.accept_addr.sin_port),&master_server_port_mapper_ip_cache_entry);
+	send_port_back(htons(arg_a.accept_addr.sin_port),&port_mapper_ip_cache_entry);
 	pthread_cond_signal(&master_running_cond);
 	perror("Saindo do heart beat server!!!!\n");
 
@@ -88,7 +89,7 @@ void start_master(char* hostname, uint16_t port){
 
 
 
-	memcpy(&arg_a.acceptor_port_mapper_ip_cache_entry,&master_server_port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
+	memcpy(&arg_a.acceptor_port_mapper_ip_cache_entry,&port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
 
         init_module_tcp_stuff(&arg_a.accept_sockfd,hostname,port,&arg_a.accept_addr,SIGPIPE,MAX_HB_SERVERS,0,&arg_a.acceptor_port_mapper_ip_cache_entry);
 	is_on=1;

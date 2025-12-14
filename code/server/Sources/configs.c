@@ -4,6 +4,7 @@
 #include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/load_html.h"
 #include "../Includes/configs.h"
 
@@ -13,14 +14,10 @@ static int tmp_cfg_fd=-1;
 static int tmp_rotation_fd=-1;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
-static char server_ip_address_buff[PATHSIZE+1]={0};
 static char upper_ip_address_buff[PATHSIZE+1]={0};
-static char server_port_mapper_ip_address_buff[PATHSIZE+1]={0};
-char generalized_config_filepath_buff[PATHSIZE+1]={0};
 char server_name_buff[PATHSIZE+1]={0};
 ip_cache_entry server_ip_cache_entry={{0},0};
 ip_cache_entry upper_ip_cache_entry={{0},0};
-ip_cache_entry server_port_mapper_ip_cache_entry={{0},0};
 
 char server_music_folder_path[PATHSIZE+1]={0};
 char server_music_quarantine_folder_path[PATHSIZE+1]={0};
@@ -60,9 +57,8 @@ static void clean_buff(void){
 
 static void process_ip_cache_entries(void){
 
-        parse_ip_cache_entry(server_ip_address_buff,&server_ip_cache_entry);
+        parse_ip_cache_entry(port_mapper_ip_address_buff,&server_ip_cache_entry);
         parse_ip_cache_entry(upper_ip_address_buff,&upper_ip_cache_entry);
-        parse_ip_cache_entry(server_port_mapper_ip_address_buff,&server_port_mapper_ip_cache_entry);
 
 }
 
@@ -252,25 +248,7 @@ void read_values_cfg_server(void){
 
                 clean_and_exit();
         }
-        sscanf(curr_line_buff,"server_ip_address: %s",server_ip_address_buff);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                clean_and_exit();
-        }
         sscanf(curr_line_buff,"upper_server_ip_address: %s",upper_ip_address_buff);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                clean_and_exit();
-        }
-        sscanf(curr_line_buff,"server_port_mapper_ip_address: %s",server_port_mapper_ip_address_buff);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                clean_and_exit();
-        }
-        sscanf(curr_line_buff,"generalized_config_filepath: %s",generalized_config_filepath_buff);
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -365,8 +343,6 @@ void print_values_cfg_server(int fd){
 
 	dprintf(fd,"server_working_extension: %s\n",server_working_extension);
 
-        dprintf(fd,"generalized_config_filepath: %s\n",generalized_config_filepath_buff);
-
 	dprintf(fd,"server_is_auto_mode: %u\n",is_auto_mode);
 
         dprintf(fd,"rotation_filepath_if_auto: %s\n",server_auto_mode_rotation_filename);
@@ -375,12 +351,6 @@ void print_values_cfg_server(int fd){
 
         dprintf(fd,"server_is_slave_mode: %hhu\n",cfg_server_slave_mode);
 
-	print_ip_cache_entry_fd(fd,&server_ip_cache_entry);
-
 	print_ip_cache_entry_fd(fd,&upper_ip_cache_entry);
-
-	print_ip_cache_entry_fd(fd,&server_port_mapper_ip_cache_entry);
-
-
 
 }

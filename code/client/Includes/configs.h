@@ -13,7 +13,6 @@
 extern const uint8_t client_display_splash;
 
 extern ip_cache_entry server_ip_cache_entry,
-		client_port_mapper_ip_cache_entry,
 		client_ip_cache_entry;
 
 extern u_int64_t
