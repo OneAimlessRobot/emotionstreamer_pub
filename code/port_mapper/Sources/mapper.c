@@ -214,6 +214,7 @@ static void print_help(void){
 				"\n- 'c' <port> -> Verificar estado de uma porta"
 					"\n- 'p' -> Imprimir estado do mapper"
 					"\n- 's' -> Parar mapper"
+					"\n- 'k' -> Matar porta\n"
 					"\n- 'h' -> Imprimir este menu\n");
 
 
@@ -369,6 +370,14 @@ void* port_mapper_input_loop(void* args){
 				break;
 			case STOP_MAPPER:
 				raise(SIGINT);
+				cleanup();
+				return args;
+			case KILL_PORT:
+				printf("WARNING: THE PORT MAPPER IS NOT RESPONSIBLE IF PORT IS BEING USED BEFORE CLOSING!\n");
+				scanf("%hu",&port_to_check);
+				fflush(stdin);
+				printf("Attempting to close port %hu\n",port_to_check);
+				close_single_port(port_to_check);
 				cleanup();
 				return args;
 			case PRINT_HELP:
