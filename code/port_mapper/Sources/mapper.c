@@ -378,7 +378,6 @@ void* port_mapper_input_loop(void* args){
 				fflush(stdin);
 				printf("Attempting to close port %hu\n",port_to_check);
 				close_single_port(port_to_check);
-				cleanup();
 				return args;
 			case PRINT_HELP:
 				print_help();
