@@ -8,4 +8,6 @@ tmux new-window -t my_stuff:2 "bash -lc 'cd \"$directory/server\" && ./server.ex
 
 tmux new-window -t my_stuff:3 "bash -lc 'cd \"$directory/client\"; exec bash'"
 
+tmux new-window -t my_stuff:4 "bash -lc 'cd \"$directory\" && nano config/generalized_config.cfg client/configs/sizes.cfg -l; exec bash'"
+
 tmux attach -t my_stuff
