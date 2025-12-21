@@ -214,7 +214,7 @@ static void print_help(void){
 				"\n- 'c' <port> -> Verificar estado de uma porta"
 					"\n- 'p' -> Imprimir estado do mapper"
 					"\n- 's' -> Parar mapper"
-					"\n- 'k' -> Matar porta\n"
+					"\n- 'k' -> Matar porta"
 					"\n- 'h' -> Imprimir este menu\n");
 
 
