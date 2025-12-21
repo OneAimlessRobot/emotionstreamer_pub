@@ -1,0 +1,6 @@
+useful things
+
+
+eval $(ssh-agent -s) && ssh-add ./sshkeys/androidkey4 && ssh -T git@github.com
+
+pushd .. && git stash && git pull origin port_rerouter && bash make* && popd
