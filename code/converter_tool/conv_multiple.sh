@@ -1,6 +1,6 @@
 #!/bin/bash
 
-##fix_mp3_cmd=-hide_banner -loglevel warning -i 'in.mp3' -ignore_unknown -map 0:a -map_metadata -1 -codec:a copy -bitexact 'out.mp3'
+##fix_mp3_cmd=ffmpeg -hide_banner -loglevel warning -i 'in.mp3' -ignore_unknown -map 0:a -map_metadata -1 -codec:a copy -bitexact 'out.mp3'
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
