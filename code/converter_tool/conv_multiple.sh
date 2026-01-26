@@ -1,10 +1,10 @@
 #!/bin/bash
 
-
+##fix_mp3_cmd=-hide_banner -loglevel warning -i 'in.mp3' -ignore_unknown -map 0:a -map_metadata -1 -codec:a copy -bitexact 'out.mp3'
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="folder_new_stufffff/"
+song_subdirectory="Gran_turismo/"
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0
