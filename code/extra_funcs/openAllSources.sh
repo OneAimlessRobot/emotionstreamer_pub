@@ -1,3 +1,3 @@
 #!/bin/bash
 
-nano S*/*.c *.c -l
+nano S*/*.c *.c

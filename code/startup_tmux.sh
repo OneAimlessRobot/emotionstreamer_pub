@@ -1,13 +1,19 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-directory="$(pwd)"
+directory="$(pwd)/code"
 
-tmux new-session -d -s my_stuff "bash -lc 'cd \"$directory/port_mapper\" && ./port_mapper.exe; exec bash'"
+pushd $directory
 
-tmux new-window -t my_stuff:2 "bash -lc 'cd \"$directory/server\" && ./server.exe; exec bash'"
+tmux new-session -d -s my_stuff "bash -lc 'cd \"./port_mapper\" && ./port_mapper.exe; exec bash'"
 
-tmux new-window -t my_stuff:3 "bash -lc 'cd \"$directory/client\"; exec bash'"
+tmux new-window -t my_stuff:2 "bash -lc 'cd \"./server\" && ./server.exe; exec bash'"
 
-tmux new-window -t my_stuff:4 "bash -lc 'cd \"$directory\" && nano config/general_config.cfg client/configs/sizes.cfg -l; exec bash'"
+tmux new-window -t my_stuff:3 "bash -lc 'cd \"./client\"; exec bash'"
+
+tmux new-window -t my_stuff:4 "bash -lc 'bash ./edit_configs.sh; exec bash'"
+
+tmux new-window -t my_stuff:5 "bash -lc 'cd \"./converter_tool\" ; exec bash'"
 
 tmux attach -t my_stuff
+
+popd

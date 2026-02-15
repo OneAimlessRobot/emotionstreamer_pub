@@ -84,28 +84,30 @@ static void generateDirListingPrimitive(char* pattern){
 	*/
         close(outfd);
 }
-char *get_file_extension(const char *path) {
-	char *extension = strrchr(path, '.');
-	char* extension2=NULL;
-	if (extension != NULL) {
-		*(extension)=0;
-		if(is_wav_mode){
 
-			return extension+1;
-		}
-		else{
-			*(extension)=0;
-		    	extension2 = strrchr(path, '.');
-			if (extension2 != NULL) {
-				*(extension)='.';
-				*(extension2)=0;
-				return extension2 + 1;
-			}
-		}
-	}
-	// No file extension found
-	return NULL;
+char *get_file_extension(const char *path) {
+        char *extension = strrchr(path, '.');
+        char* extension2=NULL;
+        if (extension != NULL) {
+                *(extension)=0;
+                if(is_wav_mode){
+
+                        return extension+1;
+                }
+                else{
+                        *(extension)=0;
+                        extension2 = strrchr(path, '.');
+                        if (extension2 != NULL) {
+                                *(extension)='.';
+                                *(extension2)=0;
+                                return extension2 + 1;
+                        }
+                }
+        }
+        // No file extension found
+        return NULL;
 }
+
 
 
 

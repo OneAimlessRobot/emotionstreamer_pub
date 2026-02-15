@@ -4,7 +4,7 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="zomb/"
+song_subdirectory="I_am_fading_away/"
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0
