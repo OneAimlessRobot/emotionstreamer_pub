@@ -2,6 +2,8 @@
 #include <libgen.h>
 #include "../../extra_funcs/Includes/protocol.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
+#include <openssl/ssl.h>
+#include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
@@ -97,7 +99,7 @@ void con_go(int sockfd_tcp){
 						dir_listing_str=generateDirListing(file_name);
 						snprintf(file_path,strnlen(dir_listing_str,PATHSIZE*2+1)+5,"%s",dir_listing_str);
 						break;
-					case CONF:
+					case CONFIG:
 						produce_config_file();
 						snprintf(file_path,sizeof(file_path)-1,"%s",TMP_CONFIG_FILE_PATH);
 						break;
@@ -159,7 +161,7 @@ void con_go(int sockfd_tcp){
 					greet(&server_con_obj,server_con_times_pair);
 					begin_stream(&server_con_obj,fp,fp_boundary,server_chunk_size,stream_cache_data);
 					break;
-				case CONF:
+				case CONFIG:
 					sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
 					remove(TMP_CONFIG_FILE_PATH);
 					snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"\n\n\nServer contents successfully retrieved in full.\n\n");

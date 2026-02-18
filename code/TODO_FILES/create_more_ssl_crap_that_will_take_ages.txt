@@ -1,0 +1,29 @@
+
+
+this is gonna take at least a couple days to do with patience.
+my program is recursive:
+I have:
+1- a server
+2- a server that may log itself in a heartbeat server or master server
+3- heartbeat servers that talk to each other
+4- heartbeat servers that talk to a master
+5- everyone (including the client) talks to a port mapper
+
+
+(lets make a todo list while we are at it:)
+
+6- the server logging entries from the server browser (Also forgot that guy)
+Will also have to include whether or not the server is using ssl so the client is able to choose that in the config
+
+7- hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+
+
+I need,
+according to chat gepeedee,
+
+- an auth cert per client
+- an individual auth-signed cert per server
+
+still crosseyed
+
+

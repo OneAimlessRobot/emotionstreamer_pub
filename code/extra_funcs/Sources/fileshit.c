@@ -1,4 +1,5 @@
 #include "../../Includes/preprocessor.h"
+#include <openssl/ssl.h>
 #include "../Includes/fileshit.h"
 
 FILE* logstream=NULL;
@@ -6,7 +7,12 @@ port_array attempted_port_arr={0};
 
 u_int8_t logging=0;
 
+u_int8_t will_use_ssl=0;
+
+
 char curr_dir[PATHSIZE]={0};
+
+SSL_CTX *global_ctx=NULL;
 
 socklen_t socklenvar[2]= {sizeof(struct sockaddr),sizeof(struct sockaddr_in)};
 void _mkdir(const char *dir) {

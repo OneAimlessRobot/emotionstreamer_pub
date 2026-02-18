@@ -5,6 +5,9 @@
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
+#include <openssl/ssl.h>
+#include "../../extra_funcs/Includes/fileshit.h"
+#include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../Includes/load_html.h"
 #include "../Includes/configs.h"
 
@@ -22,6 +25,10 @@ ip_cache_entry upper_ip_cache_entry={{0},0};
 char server_music_folder_path[PATHSIZE+1]={0};
 char server_music_quarantine_folder_path[PATHSIZE+1]={0};
 char curr_server_quarantine_dir_buff[PATHSIZE+1]={0};
+
+char server_cert_file_path[PATHSIZE+1]={0};
+char server_pkey_file_path[PATHSIZE+1]={0};
+
 
 char server_working_extension[EXTENSION_SIZE]={0};
 const uint8_t server_display_splash=1;
@@ -275,9 +282,34 @@ void read_values_cfg_server(void){
         }
         sscanf(curr_line_buff,"server_is_slave_mode: %hhu",&cfg_server_slave_mode);
         clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                clean_and_exit();
+        }
+        sscanf(curr_line_buff,"server_using_ssl: %hhu",&will_use_ssl);
+        clean_buff();
+	if(will_use_ssl){
+
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+	                clean_and_exit();
+	        }
+	        sscanf(curr_line_buff,"server_cert_file_path: %s",server_cert_file_path);
+	        clean_buff();
+
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+	                clean_and_exit();
+	        }
+	        sscanf(curr_line_buff,"server_pkey_file_path: %s",server_pkey_file_path);
+	        clean_buff();
+	}
 	fclose(cfg_fp);
 	server_working_extension[sizeof(server_working_extension)-1]=0;
 	server_music_folder_path[sizeof(server_music_folder_path)-1]=0;
+	server_music_quarantine_folder_path[sizeof(server_music_quarantine_folder_path)-1]=0;
+	server_cert_file_path[sizeof(server_cert_file_path)-1]=0;
+	server_pkey_file_path[sizeof(server_pkey_file_path)-1]=0;
 	process_ip_cache_entries();
 
 
@@ -351,6 +383,15 @@ void print_values_cfg_server(int fd){
 
         dprintf(fd,"server_is_slave_mode: %hhu\n",cfg_server_slave_mode);
 
+        dprintf(fd,"server_using_ssl: %hhu\n",will_use_ssl);
+
+	if(will_use_ssl){
+
+	        dprintf(fd,"server_cert_file_path: %s\n",server_cert_file_path);
+
+	        dprintf(fd,"server_pkey_file_path: %s\n",server_pkey_file_path);
+
+	}
 	print_ip_cache_entry_fd(fd,&upper_ip_cache_entry);
 
 }

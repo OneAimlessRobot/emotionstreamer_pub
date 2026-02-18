@@ -1,6 +1,7 @@
 #include "../../Includes/preprocessor.h"
 #include "../Includes/auxfuncs.h"
 #include "../Includes/protocol.h"
+#include <openssl/ssl.h>
 #include "../Includes/fileshit.h"
 #include "../Includes/sockio.h"
 
@@ -20,7 +21,7 @@ req_type str_to_req_type(char* str){
 	}
 	if(!strs_are_strictly_equal(str,"conf")){
 
-		return CONF;
+		return CONFIG;
 
 	}
 	if(!strs_are_strictly_equal(str,"rotation")){
@@ -58,7 +59,7 @@ void req_type_to_str(req_type type,char buff[]){
 		case REPORT:
 			snprintf(buff, DEF_DATASIZE, "report");
 		break;
-		case CONF:
+		case CONFIG:
 			snprintf(buff, DEF_DATASIZE, "conf");
 		break;
 		case ROTATION:

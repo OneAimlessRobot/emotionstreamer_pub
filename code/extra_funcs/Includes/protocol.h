@@ -2,7 +2,7 @@
 #define PROTOCOL_H
 
 
-typedef enum req_type{PLAY,CONF,PEEK,DOWN,REPORT,ROTATION,NA}req_type;
+typedef enum req_type{PLAY,CONFIG,PEEK,DOWN,REPORT,ROTATION,NA}req_type;
 
 //todas as strings sao terminadas a 0
 req_type str_to_req_type(char* str);

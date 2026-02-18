@@ -246,7 +246,7 @@ int clientStart(char* req_field,char* file_name){
 	case DOWN:
 		down_func(file_name);
 		break;
-	case CONF:
+	case CONFIG:
 		conf_func();
 		break;
 	case ROTATION:

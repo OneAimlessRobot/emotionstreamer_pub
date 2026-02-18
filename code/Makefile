@@ -16,19 +16,23 @@ CONVERTER_TOOL_BIN= ./converter_tool/converter_tool.exe
 
 LDLIBS :=  -lm
 
+LD_LOCAL_STATIC_LIBS_FOLDER= -L./libs
+
 LDLIBS_SOUND_PLUGINS :=  -lalsa -loss
 
-LDLIBS_SOUND := -lpulse -lao -lpulse-simple -lasound -L./libs -lmpg123
+LDLIBS_SOUND := -lpulse -lao -lpulse-simple -lasound $(LD_LOCAL_STATIC_LIBS_FOLDER) -lmpg123
 
 TSAN_FLAGS = -fsanitize=thread -O0 -g -fno-omit-frame-pointer
 
 LDLIBS_PTHREAD= -lpthread
 
-LDLIBS_SQLITE= -lm -L./libs -lsqlite3
+LDLIBS_SSL_AND_CRYPTO= $(LD_LOCAL_STATIC_LIBS_FOLDER)  -lssl -lcrypto
 
-LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SOUND)  -lpthread -L./libs -lncurses
+LDLIBS_SQLITE= -lm  $(LD_LOCAL_STATIC_LIBS_FOLDER)  -lsqlite3
 
-LDLIBS_SERVER += $(LDLIBS_PTHREAD)
+LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SSL_AND_CRYPTO) $(LDLIBS_SOUND) -lpthread  $(LD_LOCAL_STATIC_LIBS_FOLDER)  -lncurses
+
+LDLIBS_SERVER += $(LDLIBS_PTHREAD) $(LDLIBS_SSL_AND_CRYPTO)
 
 INCLUDE= ./Includes ./mpg123-1.32.10/src/include ./sqlite-amalgamation-3510000 ./wav_stuff_i_stole_because_i_am_lazy .
 SOURCES= . ./Sources
@@ -209,7 +213,7 @@ $(BINARY): $(OBJECTS)
 	$(CC) -g -v  $(CFLAGS) -o  $@ $^
 
 $(SERVERBIN): $(SERVERSTUFF) $(CONVERTER_TOOL_EXTRA_STUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES) $(LDLIBS) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(SERVERRESOURCEFILES)   $(LDLIBS) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
 
 $(CLIENTBIN): $(CLIENTSTUFF) $(CONVERTER_TOOL_EXTRA_STUFF)
 	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CLIENTRESOURCEFILES) $(LDLIBS_CLIENT) $(LDLIBS) $(LDLIBS_SQLITE)
@@ -224,10 +228,10 @@ $(MASTERBIN): $(MASTERSTUFF)
 	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(MASTERRESOURCEFILES) $(LDLIBS) $(LDLIBS_SERVER) $(LDLIBS_SQLITE)
 
 $(PORT_MAPPER_BIN): $(PORT_MAPPER_STUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(PORT_MAPPER_RESOURCEFILES) $(LDLIBS) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(PORT_MAPPER_RESOURCEFILES) $(LDLIBS_SSL_AND_CRYPTO) $(LDLIBS) $(LDLIBS_SQLITE)
 
 $(CONVERTER_TOOL_BIN): $(CONVERTER_TOOL_STUFF)
-	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CONVERTER_TOOL_RESOURCEFILES) $(LDLIBS) $(LDLIBS_SQLITE)
+	$(CC) -g -v  $(CFLAGS) -o  $@ $^ $(CONVERTER_TOOL_RESOURCEFILES)  $(LDLIBS_SSL_AND_CRYPTO) $(LDLIBS) $(LDLIBS_SQLITE)
 
 
 

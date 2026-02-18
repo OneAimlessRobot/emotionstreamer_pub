@@ -18,6 +18,11 @@ extern const uint8_t server_display_splash;
 extern int child_pid;
 extern char server_music_folder_path[PATHSIZE+1];
 extern char server_music_quarantine_folder_path[PATHSIZE+1];
+
+extern char server_cert_file_path[PATHSIZE+1];
+extern char server_pkey_file_path[PATHSIZE+1];
+
+
 extern char server_working_extension[EXTENSION_SIZE];
 extern ip_cache_entry server_ip_cache_entry;
 extern ip_cache_entry upper_ip_cache_entry;

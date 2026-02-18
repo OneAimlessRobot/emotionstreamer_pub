@@ -10,6 +10,9 @@
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
+#include <openssl/ssl.h>
+#include "../../extra_funcs/Includes/fileshit.h"
+#include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../Includes/ripped_code.h"
 #include "../Includes/chunk_queue.h"
 #include "../Includes/queue_menus.h"
@@ -27,6 +30,7 @@ char server_ip_address_buff[PATHSIZE+1]={0};
 char cfg_client_device_name_if_alsa[PATHSIZE+1]={0};
 char cfg_client_device_output_if_alsa[PATHSIZE+1]={0};
 
+char client_ssl_cert_auth_path[PATHSIZE];
 const uint8_t client_display_splash=0;
 
 //EM BYTES E HZ!
@@ -233,8 +237,21 @@ void read_values_cfg_client(void){
 	}
 	sscanf(curr_line_buff,"server_ip_address: %s", server_ip_address_buff);
 	clean_buff();
-	fclose(cfg_fp);
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"client_will_use_ssl: %hhu", &will_use_ssl);
+	clean_buff();
+	if(will_use_ssl){
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+			clean_and_exit();
+		}
+		sscanf(curr_line_buff,"client_ssl_cert_auth_path: %s", client_ssl_cert_auth_path);
+		clean_buff();
+		fclose(cfg_fp);
+	}
 	process_ip_cache_entries();
 
 }
@@ -283,9 +300,17 @@ void print_values_cfg_client(int fd){
 
 	dprintf(fd,"client_device_output_if_alsa: %s\n",cfg_client_device_output_if_alsa);
 
+	dprintf(fd,"server_using_ssl: %hhu\n",will_use_ssl);
+
+        if(will_use_ssl){
+
+                dprintf(fd,"client_ssl_cert_auth_path: %s\n",client_ssl_cert_auth_path);
+
+        }
+
 	dprintf(fd,"client_alsa_device_latency_if_alsa_ms: %lu ms (%lu us)\n",
-									cfg_client_alsa_device_latency_if_alsa_ms,
-									MS_TO_US(cfg_client_alsa_device_latency_if_alsa_ms));
+				cfg_client_alsa_device_latency_if_alsa_ms,
+				MS_TO_US(cfg_client_alsa_device_latency_if_alsa_ms));
 
 	print_ip_cache_entry(stdout,&server_ip_cache_entry);
 

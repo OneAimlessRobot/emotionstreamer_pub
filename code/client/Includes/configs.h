@@ -59,6 +59,7 @@ extern char generalized_config_filepath_buff[PATHSIZE+1],
 	server_ip_address_buff[PATHSIZE+1],
 	client_ip_address_buff[PATHSIZE+1],
 	client_music_folder_path[PATHSIZE],
+	client_ssl_cert_auth_path[PATHSIZE],
 	client_logs_file_name[PATHSIZE];
 
 extern int_pair client_data_times_pair,

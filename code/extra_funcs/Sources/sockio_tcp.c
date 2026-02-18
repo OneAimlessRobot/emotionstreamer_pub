@@ -2,6 +2,7 @@
 #include "../Includes/auxfuncs.h"
 #include "../Includes/sockio.h"
 #include "../Includes/sockio_tcp.h"
+#include <openssl/ssl.h>
 #include "../Includes/fileshit.h"
 
 

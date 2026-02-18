@@ -1,5 +1,6 @@
 #include "../../Includes/preprocessor.h"
 #include "../Includes/auxfuncs.h"
+#include <openssl/ssl.h>
 #include "../Includes/fileshit.h"
 #include "../Includes/sockio.h"
 #include "../Includes/sock_ops.h"

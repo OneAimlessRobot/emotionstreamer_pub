@@ -3,6 +3,8 @@
 #include "../extra_funcs/Includes/sockio.h"
 #include "../extra_funcs/Includes/sockio_tcp.h"
 #include "../extra_funcs/Includes/ip_cache_file.h"
+#include <openssl/ssl.h>
+#include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../Includes/configs.h"
 #include "../Includes/upload_func.h"

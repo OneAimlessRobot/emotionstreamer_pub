@@ -5,7 +5,12 @@ extern port_array attempted_port_arr;
 
 extern FILE* logstream;
 
+extern SSL_CTX *global_ctx;
+
 extern u_int8_t logging;
+
+extern u_int8_t will_use_ssl;
+
 
 extern char curr_dir[PATHSIZE];
 

@@ -2,6 +2,7 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../Includes/load_html.h"
 #include "../../extra_funcs/Includes/protocol.h"
+#include <openssl/ssl.h>
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
@@ -11,6 +12,7 @@
 #include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/connection.h"
+#include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/interlvl_com.h"
 #include "../Includes/engine.h"
 #include "../Includes/connection.h"
@@ -184,7 +186,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sigemptyset(&sa_chld.sa_mask);
         sa_chld.sa_flags = SA_RESTART|SA_NOCLDWAIT;
 	sigaction(SIGCHLD, &sa_chld, NULL);
-
+	
 	char buff[SERVER_NAME_SIZE]={0};
 	char extension_buff[EXTENSION_SIZE+1]={0};
 	strncpy(extension_buff,server_working_extension,EXTENSION_SIZE+1);
@@ -200,10 +202,13 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	if(is_wav_mode){
 		printf("Launched in '.wav' mode!!!\n");
 	}
+	logstream=stdout;
+	init_openssl_libs_server_side(server_cert_file_path);
+	end_openssl_libs_server_side();
+
 	is_on=1;
 	started=!cfg_server_slave_mode;
 	slave_args arg_s={0};
-	logstream=stdout;
 	memset(&state,0,sizeof(server_state));
 	state.name=buff;
 	memcpy(&arg_s.slave_port_mapper_ip_cache_entry,&port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
