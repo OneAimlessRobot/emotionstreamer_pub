@@ -2,30 +2,30 @@
 
 #get song with pattern:
 
-pattern="pretty"
+pattern="$1"
+result_file="./.tmp_result"
+touch $result_file
+./client.exe peek "${pattern}"|grep "${pattern}" > $result_file
 
-result=$(./client.exe peek "${pattern}" | grep "${pattern}")
+cat $result_file
 
-print_command="printf \"${result}\n\""
+num_results=$(cat $result_file| wc -l)
+result=$(cat $result_file)
+rm -rf $result_file
 
-$print_command
+echo "Obtivemos $num_results da pesquisa pelo padrão: '$1'"
 
-num_results=$($print_command| wc -l)
+backend=""
 
-echo $num_results
-
-
-backend="oss"
-
-if [ $num_results -eq 1 ]
-then
-	echo "Musica \"${result}\" ira ser tocada!"
-
-	./client.exe play:${backend} ${result}
-elif [ $num_results -lt 1 ]
+if [ $num_results -lt 1 ]
 then
 
 	echo "Não foram devolvidos resultados do servidor para o padrao fornecido!"
+elif [ $num_results -eq 1 ]
+then
+
+	echo "Musica \"${result}\" ira ser tocada!"
+	./client.exe play:${backend} ${result}
 elif [ $num_results -gt 1 ]
 then
 
