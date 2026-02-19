@@ -2,6 +2,7 @@
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/connection.h"
+#include "../../extra_funcs/Includes/fileshit.h"
 #include "../Includes/configs.h"
 #include "../Includes/master_server.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
@@ -96,6 +97,27 @@ void read_values_cfg_master(void){
         }
         sscanf(curr_line_buff,"master_ack_period_us: %lu",&cfg_master_ack_period_us);
         clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+
+                clean_and_exit();
+        }
+        sscanf(curr_line_buff,"master_auth_cert_file_path: %s",auth_cert_file_path);
+        clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+
+                clean_and_exit();
+        }
+        sscanf(curr_line_buff,"master_host_cert_file_path: %s",host_cert_file_path);
+        clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+
+                clean_and_exit();
+        }
+        sscanf(curr_line_buff,"master_host_pkey_file_path: %s",host_pkey_file_path);
+        clean_buff();
         fclose(cfg_fp);
 
 	process_ip_cache_entries();
@@ -120,5 +142,11 @@ void print_values_cfg_master(int fd){
         dprintf(fd,"master_timeouts_ack: %lus %lu us\n",master_ack_times_pair[0],master_ack_times_pair[1]);
 
 	dprintf(fd,"master_ack_period_us: %luus\n",cfg_master_ack_period_us);
+
+	dprintf(fd,"master_auth_cert_file_path: %s\n",auth_cert_file_path);
+
+	dprintf(fd,"master_host_cert_file_path: %s\n",host_cert_file_path);
+
+	dprintf(fd,"master_host_pkey_file_path: %s\n",host_pkey_file_path);
 
 }

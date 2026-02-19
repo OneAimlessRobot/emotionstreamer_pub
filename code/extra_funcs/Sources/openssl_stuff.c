@@ -47,7 +47,7 @@ void init_openssl_libs_client_side(void){
 		SSL_library_init();
 		global_ctx = SSL_CTX_new(TLS_client_method());
 		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER, NULL);
-		SSL_CTX_load_verify_locations(global_ctx, host_cert_file_path, NULL);
+		SSL_CTX_load_verify_locations(global_ctx, auth_cert_file_path, NULL);
 	}
 
 

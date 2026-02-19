@@ -263,7 +263,7 @@ void read_values_cfg_client(void){
 
 			clean_and_exit();
 		}
-		sscanf(curr_line_buff,"client_tls_cert_auth_path: %s", auth_cert_file_path);
+		sscanf(curr_line_buff,"client_auth_cert_path: %s", auth_cert_file_path);
 		clean_buff();
 	}
 	fclose(cfg_fp);
@@ -323,7 +323,7 @@ void print_values_cfg_client(int fd){
 
         if(will_use_tls){
 
-                dprintf(fd,"client_tls_cert_auth_path: %s\n", auth_cert_file_path);
+                dprintf(fd,"client_auth_cert_path: %s\n", auth_cert_file_path);
 
         }
 

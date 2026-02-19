@@ -12,7 +12,7 @@ u_int8_t will_use_tls=0;
 
 char auth_cert_file_path[PATHSIZE]={0};
 char host_cert_file_path[PATHSIZE]={0};
-char host_cert_pkey_file_path[PATHSIZE]={0};
+char host_pkey_file_path[PATHSIZE]={0};
 
 char curr_dir[PATHSIZE]={0};
 

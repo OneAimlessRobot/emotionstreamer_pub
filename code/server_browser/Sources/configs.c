@@ -1,6 +1,7 @@
 #include "../../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/fileshit.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
 
@@ -86,6 +87,13 @@ void read_values_cfg_browser(void){
         }
         sscanf(curr_line_buff,"browser_timeouts_data: %lu %lu",&browser_data_times_pair[0],&browser_data_times_pair[1]);
         clean_buff();
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+
+                clean_and_exit();
+        }
+        sscanf(curr_line_buff,"browser_auth_cert_file_path: %s",auth_cert_file_path);
+        clean_buff();
 	fclose(cfg_fp);
 
 	process_ip_cache_entries();
@@ -105,5 +113,7 @@ void print_values_cfg_browser(int fd){
         dprintf(fd,"browser_timeouts_con: %lus %lu us\n",browser_con_times_pair[0],browser_con_times_pair[1]);
 
         dprintf(fd,"browser_timeouts_data: %lus %lu us\n",browser_data_times_pair[0],browser_data_times_pair[1]);
+
+	dprintf(fd,"browser_auth_cert_file_path: %s\n",auth_cert_file_path);
 
 }

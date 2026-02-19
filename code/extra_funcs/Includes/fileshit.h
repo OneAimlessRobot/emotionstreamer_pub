@@ -18,7 +18,7 @@ extern char auth_cert_file_path[PATHSIZE];
 
 extern char host_cert_file_path[PATHSIZE];
 
-extern char host_cert_pkey_file_path[PATHSIZE];
+extern char host_pkey_file_path[PATHSIZE];
 
 extern socklen_t socklenvar[2];
 
