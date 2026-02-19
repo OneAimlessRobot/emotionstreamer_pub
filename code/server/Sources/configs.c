@@ -26,14 +26,19 @@ char server_music_folder_path[PATHSIZE+1]={0};
 char server_music_quarantine_folder_path[PATHSIZE+1]={0};
 char curr_server_quarantine_dir_buff[PATHSIZE+1]={0};
 
-char server_cert_file_path[PATHSIZE+1]={0};
-char server_pkey_file_path[PATHSIZE+1]={0};
-
+/*
+char auth_cert_file_path[PATHSIZE]={0};
+char host_cert_file_path[PATHSIZE]={0};
+char host_cert_pkey_file_path[PATHSIZE]={0};
+*/
 
 char server_working_extension[EXTENSION_SIZE]={0};
 const uint8_t server_display_splash=1;
 
-uint8_t cfg_server_logging=0;
+uint8_t
+	cfg_server_print_config,
+	cfg_server_show_splash,
+	cfg_server_logging=0;
 
 uint8_t cfg_server_slave_mode=1;
 char server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILENAME_LENGTH]={{0}};
@@ -191,6 +196,18 @@ void read_values_cfg_server(void){
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"server_print_config: %hhu",&cfg_server_print_config);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"server_show_splash: %hhu",&cfg_server_show_splash);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
                 clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_logging: %hhu",&cfg_server_logging);
@@ -286,30 +303,30 @@ void read_values_cfg_server(void){
 
                 clean_and_exit();
         }
-        sscanf(curr_line_buff,"server_using_ssl: %hhu",&will_use_ssl);
+        sscanf(curr_line_buff,"server_using_ssl: %hhu",&will_use_tls);
         clean_buff();
-	if(will_use_ssl){
+	if(will_use_tls){
 
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	                clean_and_exit();
 	        }
-	        sscanf(curr_line_buff,"server_cert_file_path: %s",server_cert_file_path);
+	        sscanf(curr_line_buff,"server_cert_file_path: %s",host_cert_file_path);
 	        clean_buff();
 
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	                clean_and_exit();
 	        }
-	        sscanf(curr_line_buff,"server_pkey_file_path: %s",server_pkey_file_path);
+	        sscanf(curr_line_buff,"server_pkey_file_path: %s",host_cert_pkey_file_path);
 	        clean_buff();
 	}
 	fclose(cfg_fp);
 	server_working_extension[sizeof(server_working_extension)-1]=0;
 	server_music_folder_path[sizeof(server_music_folder_path)-1]=0;
 	server_music_quarantine_folder_path[sizeof(server_music_quarantine_folder_path)-1]=0;
-	server_cert_file_path[sizeof(server_cert_file_path)-1]=0;
-	server_pkey_file_path[sizeof(server_pkey_file_path)-1]=0;
+	host_cert_file_path[sizeof(host_cert_file_path)-1]=0;
+	host_cert_pkey_file_path[sizeof(host_cert_pkey_file_path)-1]=0;
 	process_ip_cache_entries();
 
 
@@ -355,6 +372,10 @@ void produce_rotation_file(void){
 
 void print_values_cfg_server(int fd){
 
+	dprintf(fd,"server_print_config: %hhu\n",cfg_server_print_config);
+
+	dprintf(fd,"server_show_splash: %hhu\n",cfg_server_show_splash);
+
 	dprintf(fd,"server_logging: %hhu\n",cfg_server_logging);
 
 	dprintf(fd,"server_chunk_size: %lu (max: %u)\n",server_chunk_size,MAX_MP3_STREAM_CHUNK_BUFF_SIZE);
@@ -383,13 +404,13 @@ void print_values_cfg_server(int fd){
 
         dprintf(fd,"server_is_slave_mode: %hhu\n",cfg_server_slave_mode);
 
-        dprintf(fd,"server_using_ssl: %hhu\n",will_use_ssl);
+        dprintf(fd,"server_using_tls: %hhu\n",will_use_tls);
 
-	if(will_use_ssl){
+	if(will_use_tls){
 
-	        dprintf(fd,"server_cert_file_path: %s\n",server_cert_file_path);
+	        dprintf(fd,"server_cert_file_path: %s\n",host_cert_file_path);
 
-	        dprintf(fd,"server_pkey_file_path: %s\n",server_pkey_file_path);
+	        dprintf(fd,"server_pkey_file_path: %s\n",host_cert_pkey_file_path);
 
 	}
 	print_ip_cache_entry_fd(fd,&upper_ip_cache_entry);

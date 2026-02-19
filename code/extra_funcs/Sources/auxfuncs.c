@@ -273,3 +273,40 @@ int time_spec_compare_function(struct timeval* time_one,struct timeval* time_two
 }
 
 
+
+void skip_config_comments(FILE* fp){
+
+	int curr_char=0;
+
+	skip_comment:
+	while(isspace((curr_char=fgetc(fp)))&&curr_char!=EOF);
+	ungetc(curr_char,fp);
+
+	if(curr_char==';'){
+	//
+		/*result=fgets(buff,strlen(COMMENT_STRING)+1,fp);
+		buff[strlen(COMMENT_STRING)]=0;
+		if(!feof(fp)&&strings_are_equal(buff,COMMENT_STRING)){
+			printf("\nComment string: %s\nString lida: '%s'\n",COMMENT_STRING,buff);
+			//printf("\nComment string: %s\n",COMMENT_STRING);
+			for(size_t i=strlen(COMMENT_STRING);i>0;i--){
+				ungetc(buff[i-1],fp);
+			}
+			while(((curr_char=fgetc(fp))!='\n')&&curr_char!=EOF);
+			ungetc(curr_char,fp);
+
+		}*/
+		if((curr_char=fgetc(fp))!=EOF){
+			ungetc(curr_char,fp);
+			while(((curr_char=fgetc(fp))!='\n')&&curr_char!=EOF);
+			ungetc(curr_char,fp);
+		}
+
+	}
+
+	while(isspace((curr_char=fgetc(fp)))&&curr_char!=EOF);
+	ungetc(curr_char,fp);
+	if(curr_char==';'){
+		goto skip_comment;
+	}
+}

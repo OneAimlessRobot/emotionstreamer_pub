@@ -7,9 +7,9 @@
 #include "../Includes/fileshit.h"
 
 
-void init_openssl_libs_server_side(const char* cert_file_path){
+void init_openssl_libs_server_side(void){
 	if(logging){
-		if(will_use_ssl){
+		if(will_use_tls){
 
 			fprintf(logstream,"Server's SSL Ativado? inicializando Server's SSL!...\n");
 		}
@@ -20,19 +20,19 @@ void init_openssl_libs_server_side(const char* cert_file_path){
 		}
 	}
 
-	if(will_use_ssl){
+	if(will_use_tls){
 		SSL_library_init();
 		global_ctx = SSL_CTX_new(TLS_server_method());
 		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER, NULL);
-		SSL_CTX_load_verify_locations(global_ctx, cert_file_path, NULL);
+		SSL_CTX_load_verify_locations(global_ctx, host_cert_file_path, NULL);
 	}
 
 }
 
-void init_openssl_libs_client_side(const char* cert_file_path){
+void init_openssl_libs_client_side(void){
 
 	if(logging){
-		if(will_use_ssl){
+		if(will_use_tls){
 
 			fprintf(logstream,"Client's SSL Ativado? inicializando Client's SSL!...\n");
 		}
@@ -43,11 +43,11 @@ void init_openssl_libs_client_side(const char* cert_file_path){
 		}
 	}
 
-	if(will_use_ssl){
+	if(will_use_tls){
 		SSL_library_init();
 		global_ctx = SSL_CTX_new(TLS_client_method());
 		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER, NULL);
-		SSL_CTX_load_verify_locations(global_ctx, cert_file_path, NULL);
+		SSL_CTX_load_verify_locations(global_ctx, host_cert_file_path, NULL);
 	}
 
 
@@ -61,7 +61,7 @@ void end_openssl_libs_client_side(void){
 
 		fprintf(logstream,"Closing client's global ssl context?\n");
 	}
-	if(global_ctx&&will_use_ssl){
+	if(global_ctx&&will_use_tls){
 		if(logging){
 
 			fprintf(logstream,"Yes!\n");
@@ -85,7 +85,7 @@ void end_openssl_libs_server_side(void){
 
 		fprintf(logstream,"Closing server's global ssl context?\n");
 	}
-	if(global_ctx&&will_use_ssl){
+	if(global_ctx&&will_use_tls){
 		if(logging){
 
 			fprintf(logstream,"Yes!\n");

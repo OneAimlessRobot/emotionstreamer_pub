@@ -11,17 +11,21 @@
 
 int main(void){
 
-	if(port_mapper_display_splash){
+	memset(curr_dir,0,PATHSIZE);
+        getcwd(curr_dir,PATHSIZE-1);
+
+	parse_generalized_cfg();
+        read_values_cfg_port_mapper();
+        if(cfg_port_mapper_show_splash){
 		print_out_logo();
 	}
-        memset(curr_dir,0,PATHSIZE);
-        getcwd(curr_dir,PATHSIZE-1);
-        parse_generalized_cfg();
-        print_values_generalized_cfg(1);
-	read_values_cfg_port_mapper();
-        print_values_cfg_port_mapper(1);
-        printf("Generalized cfg:\n");
-        printf("Curr dir: %s\n", curr_dir);
+        if(cfg_port_mapper_print_config){
+		printf("Generalized cfg:\n");
+        	print_values_generalized_cfg(1);
+		printf("Normal cfg:\n");
+		print_values_cfg_port_mapper(1);
+        }
+	printf("Curr dir: %s\n", curr_dir);
 	port_mapper_init(&port_mapper_ip_cache_entry);
 
         printf("Saimos do port mapper!!!!!!\n");

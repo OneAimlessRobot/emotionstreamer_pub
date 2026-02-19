@@ -10,16 +10,18 @@
 
 int main(int argc, char ** argv){
 
-	if(browser_display_splash){
-        	print_out_logo();
-	}
-        memset(curr_dir,0,PATHSIZE);
+	memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
 	parse_generalized_cfg();
-        print_values_generalized_cfg(1);
-	read_values_cfg_browser();
-        print_values_cfg_browser(1);
-        if(argc!=3){
+        read_values_cfg_browser();
+        if(cfg_browser_show_splash){
+        	print_out_logo();
+	}
+        if(cfg_browser_print_config){
+		print_values_generalized_cfg(1);
+		print_values_cfg_browser(1);
+        }
+	if(argc!=3){
 
                 printf("Precisas de:1- especificar se estas a browsar...1- master server (master) ou...\n2- heartbeat server\n2- address de server para scannear: <ip>:<port> \n");
                 exit(-1);

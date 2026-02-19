@@ -36,6 +36,8 @@ extern const char * play_thread_name,
 		  * rx_thread_name;
 
 extern uint8_t
+	cfg_client_print_config,
+	cfg_client_show_splash,
 	cfg_client_logging,
 	stream_enable_ncurses,
 	stream_show_stats,
@@ -59,7 +61,6 @@ extern char generalized_config_filepath_buff[PATHSIZE+1],
 	server_ip_address_buff[PATHSIZE+1],
 	client_ip_address_buff[PATHSIZE+1],
 	client_music_folder_path[PATHSIZE],
-	client_ssl_cert_auth_path[PATHSIZE],
 	client_logs_file_name[PATHSIZE];
 
 extern int_pair client_data_times_pair,

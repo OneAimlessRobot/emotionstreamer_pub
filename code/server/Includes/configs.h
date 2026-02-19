@@ -19,10 +19,6 @@ extern int child_pid;
 extern char server_music_folder_path[PATHSIZE+1];
 extern char server_music_quarantine_folder_path[PATHSIZE+1];
 
-extern char server_cert_file_path[PATHSIZE+1];
-extern char server_pkey_file_path[PATHSIZE+1];
-
-
 extern char server_working_extension[EXTENSION_SIZE];
 extern ip_cache_entry server_ip_cache_entry;
 extern ip_cache_entry upper_ip_cache_entry;
@@ -49,7 +45,10 @@ extern uint64_t cfg_server_ack_period_us,
 
 extern int8_t is_wav_mode;
 
-extern uint8_t cfg_server_logging;
+extern uint8_t
+	cfg_server_print_config,
+	cfg_server_show_splash,
+	cfg_server_logging;
 
 extern int_pair server_data_times_pair,
 	server_con_times_pair,

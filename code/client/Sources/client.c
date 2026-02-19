@@ -76,17 +76,23 @@ static int64_t down_file_size(void){
 
 		int64_t down_size=-1;
 		clear_con_data(&client_con_obj);
-		printf("Recebendo tamanho!!!\n");
+		if(logging){
+			printf("Recebendo tamanho!!!\n");
+		}
 		con_read_tcp(&client_con_obj,client_data_times_pair);
 		sscanf((char*)client_con_obj.tcp_data,"%ld %s %hhd",&down_size,extension_from_server,&is_wav_mode);
 		if(down_size<=0){
 
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
-			printf(UNSUCESSFUL_DOWNLOAD,reason);
+			if(logging){
+				printf(UNSUCESSFUL_DOWNLOAD,reason);
+			}
 			clear_ports_and_quit(SIGINT,NULL);
 		}
 		clear_con_data(&client_con_obj);
-		printf(CONTENT_DOWNLOAD_INCOMMING,down_size,extension_from_server);
+		if(logging){
+			printf(CONTENT_DOWNLOAD_INCOMMING,down_size,extension_from_server);
+		}
 		return down_size;
 
 }
@@ -105,7 +111,9 @@ static void down_func(char* file_name){
 		snprintf(file_path2,sizeof(file_path2),"%s",file_path);
 		_mkdir(dirname(file_path2));
 		if((fp=creat(file_path,0777))<0){
-                	fprintf(stderr,"Nao foi possivel transferir ficheiro: %s!!!!\nPaths:\nPath1: %s\nPath2: %s\n",strerror(errno),file_path,file_path2);
+                	if(logging){
+				fprintf(stderr,"Nao foi possivel transferir ficheiro: %s!!!!\nPaths:\nPath1: %s\nPath2: %s\n",strerror(errno),file_path,file_path2);
+			}
 			clear_ports_and_quit(SIGINT,NULL);
                 }
 		if(stream_enable_ncurses){
@@ -115,7 +123,9 @@ static void down_func(char* file_name){
 		if(stream_enable_ncurses){
 			endwin_wrapper();
 		}
-		printf("A musica foi guardada em: %s\n",file_path);
+		if(logging){
+			printf("A musica foi guardada em: %s\n",file_path);
+		}
 		clear_ports_and_quit(SIGINT,NULL);
 
 }
@@ -124,7 +134,9 @@ static void peek_func(void){
 
 
 		int down_size=down_file_size();
-		printf(CONTENT_PEEK_INCOMMING);
+		if(logging){
+			printf(CONTENT_PEEK_INCOMMING);
+		}
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
 		clear_ports_and_quit(SIGINT,NULL);
 
@@ -132,7 +144,9 @@ static void peek_func(void){
 static void conf_func(void){
 
 		int down_size=down_file_size();
-		printf(CONTENT_PEEK_INCOMMING);
+		if(logging){
+			printf(CONTENT_PEEK_INCOMMING);
+		}
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
 		clear_ports_and_quit(SIGINT,NULL);
 }
@@ -146,9 +160,15 @@ int clientStart(char* req_field,char* file_name){
         sigaction(SIGINT, &sa, NULL);
 
 	sscanf(req_field,"%[^:]:%s",req_buff,method_buff);
-
-
 	req_type the_type= str_to_req_type(req_buff);
+	if(the_type==NA){
+		printf(UNKNOWN_REQ,req_buff);
+		fclose(logstream);
+		exit(-1);
+	}
+
+
+
 	if(the_type==PLAY){
 	if(!strs_are_strictly_equal(method_buff,"alsa")){
 
@@ -177,18 +197,11 @@ int clientStart(char* req_field,char* file_name){
 
 	}
 	else{
-		fprintf(logstream,"Unknown media library!\n");
-		fclose(logstream);
-		exit(-1);
+		fprintf(logstream,"Unknown media library!\nDefaulting to attempting Pulse!\n");
 	}
 	}
 
 
-	if(the_type==NA){
-		printf(UNKNOWN_REQ,req_buff);
-		fclose(logstream);
-		exit(-1);
-	}
 	ip_cache_entry buff[PREV_ADDR_CACHE_MAX]={0};
 
 
@@ -230,7 +243,9 @@ int clientStart(char* req_field,char* file_name){
 			clear_ports_and_quit(SIGINT,NULL);
         	}
 	}
-	print_sock_addr(client_con_obj.sockfd_tcp);
+	if(logging){
+		print_sock_addr(client_con_obj.sockfd_tcp);
+	}
 	setNonBlocking(&client_con_obj.sockfd_tcp);
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	snprintf((char*)client_con_obj.tcp_data,2*DEF_DATASIZE-1,"%s %s",req_buff,file_name);

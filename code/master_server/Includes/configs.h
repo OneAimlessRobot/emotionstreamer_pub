@@ -14,7 +14,10 @@ extern int_pair master_data_times_pair,
 
 extern uint64_t cfg_master_ack_period_us;
 
-extern uint8_t cfg_master_server_logging;
+extern uint8_t
+	cfg_master_print_config,
+	cfg_master_show_splash,
+	cfg_master_server_logging;
 
 extern uint16_t master_ack_timeout_lim;
 

@@ -18,7 +18,10 @@ extern int_pair hb_data_times_pair,
 extern uint64_t cfg_hb_ack_period_us;
 extern uint16_t hb_ack_timeout_lim;
 
-extern uint8_t cfg_hb_server_logging;
+extern uint8_t
+	cfg_hb_print_config,
+	cfg_hb_show_splash,
+	cfg_hb_server_logging;
 
 void read_values_cfg_hb(void);
 void print_values_cfg_hb(int fd);

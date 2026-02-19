@@ -18,7 +18,8 @@ ip_cache_entry server_browser_ip_cache_entry={{0},0};
 int_pair browser_data_times_pair=(int_pair){BROWSER_TIMEOUT_DATA_SEC,BROWSER_TIMEOUT_DATA_USEC};
 int_pair browser_con_times_pair=(int_pair){BROWSER_TIMEOUT_CON_SEC,BROWSER_TIMEOUT_CON_USEC};
 
-const uint8_t browser_display_splash=0;
+uint8_t	cfg_browser_print_config,
+	cfg_browser_show_splash;
 
 uint8_t cfg_server_browser_logging=0;
 
@@ -52,6 +53,18 @@ void read_values_cfg_browser(void){
                 clean_and_exit();
         }
         clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"browser_print_config: %hhu",&cfg_browser_print_config);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"browser_show_splash: %hhu",&cfg_browser_show_splash);
+	clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 
@@ -83,6 +96,9 @@ void read_values_cfg_browser(void){
 
 void print_values_cfg_browser(int fd){
 
+	dprintf(fd,"browser_print_config: %hhu\n",cfg_browser_print_config);
+
+	dprintf(fd,"browser_show_splash: %hhu\n",cfg_browser_show_splash);
 
         dprintf(fd,"browser_logging: %hhu\n",cfg_server_browser_logging);
 

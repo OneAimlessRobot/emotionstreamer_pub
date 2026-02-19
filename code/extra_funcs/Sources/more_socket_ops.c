@@ -140,9 +140,11 @@ int same_addr_sock_rebind(int*sd){
         set_sock_reuseaddr(sd,1);
         setNonBlocking(sd);
 	if(bind(*sd,(struct sockaddr *)&sockaddr_for_rebind,socklenvar[1])){
-                perror("Não conseguimos dar re bind neste sockfd!!!\n");
-                print_addr_aux("Este é o address:",&sockaddr_for_rebind);
-        	result = 1;
+                if(logging){
+			perror("Não conseguimos dar re bind neste sockfd!!!\n");
+                	print_addr_aux("Este é o address:",&sockaddr_for_rebind);
+        	}
+		result = 1;
 	}
 	else{
 

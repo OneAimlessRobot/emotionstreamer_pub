@@ -13,7 +13,10 @@ extern int_pair browser_data_times_pair,
 extern uint64_t cfg_browser_ack_period_us;
 
 
-extern uint8_t cfg_server_browser_logging;
+extern uint8_t
+	cfg_browser_print_config,
+	cfg_browser_show_splash,
+	cfg_server_browser_logging;
 
 void read_values_cfg_browser(void);
 void print_values_cfg_browser(int fd);

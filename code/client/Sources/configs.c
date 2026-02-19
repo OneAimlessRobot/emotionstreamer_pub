@@ -30,8 +30,9 @@ char server_ip_address_buff[PATHSIZE+1]={0};
 char cfg_client_device_name_if_alsa[PATHSIZE+1]={0};
 char cfg_client_device_output_if_alsa[PATHSIZE+1]={0};
 
-char client_ssl_cert_auth_path[PATHSIZE];
-const uint8_t client_display_splash=0;
+
+uint8_t cfg_client_print_config,
+	cfg_client_show_splash;
 
 //EM BYTES E HZ!
 u_int64_t cfg_latency_ms=DEF_LATENCY_MS,
@@ -98,8 +99,22 @@ void read_values_cfg_client(void){
 
 		clean_and_exit();
 	}
+
 	clean_buff();
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"client_print_config: %hhu",&cfg_client_print_config);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"client_show_splash: %hhu",&cfg_client_show_splash);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+		clean_and_exit();
 
 	}
 	sscanf(curr_line_buff,"client_logging: %hhu",&cfg_client_logging);
@@ -241,22 +256,26 @@ void read_values_cfg_client(void){
 
 		clean_and_exit();
 	}
-	sscanf(curr_line_buff,"client_will_use_ssl: %hhu", &will_use_ssl);
+	sscanf(curr_line_buff,"client_will_use_tls: %hhu", &will_use_tls);
 	clean_buff();
-	if(will_use_ssl){
+	if(will_use_tls){
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 			clean_and_exit();
 		}
-		sscanf(curr_line_buff,"client_ssl_cert_auth_path: %s", client_ssl_cert_auth_path);
+		sscanf(curr_line_buff,"client_tls_cert_auth_path: %s", auth_cert_file_path);
 		clean_buff();
-		fclose(cfg_fp);
 	}
+	fclose(cfg_fp);
 	process_ip_cache_entries();
 
 }
 
 void print_values_cfg_client(int fd){
+
+	dprintf(fd,"client_print_config: %hhu\n",cfg_client_print_config);
+
+	dprintf(fd,"client_show_splash: %hhu\n",cfg_client_show_splash);
 
 	dprintf(fd,"client_logging: %hhu\n",cfg_client_logging);
 
@@ -300,11 +319,11 @@ void print_values_cfg_client(int fd){
 
 	dprintf(fd,"client_device_output_if_alsa: %s\n",cfg_client_device_output_if_alsa);
 
-	dprintf(fd,"server_using_ssl: %hhu\n",will_use_ssl);
+	dprintf(fd,"client_using_tls: %hhu\n",will_use_tls);
 
-        if(will_use_ssl){
+        if(will_use_tls){
 
-                dprintf(fd,"client_ssl_cert_auth_path: %s\n",client_ssl_cert_auth_path);
+                dprintf(fd,"client_tls_cert_auth_path: %s\n", auth_cert_file_path);
 
         }
 
@@ -313,5 +332,4 @@ void print_values_cfg_client(int fd){
 				MS_TO_US(cfg_client_alsa_device_latency_if_alsa_ms));
 
 	print_ip_cache_entry(stdout,&server_ip_cache_entry);
-
 }

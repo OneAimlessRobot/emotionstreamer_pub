@@ -38,7 +38,7 @@ int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 	int error=0;
         if((error=getaddrinfo(hostname_str, NULL, NULL, &addr_info_struct))){
 		if(logging){
-			printf("Erro a obter address a partir de hostname!!\nErro: %s\n",gai_strerror(error));
+			printf("Erro a obter address a partir de hostname!!\nHostname tendado: |%s|\nErro: %s\n",hostname_str?hostname_str:"(null)",gai_strerror(error));
 		}
 		if(addr_info_struct){
 			freeaddrinfo(addr_info_struct);
@@ -68,13 +68,17 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 	int numOfTries=MAX_TRIES;
 	char addr_buff[DEF_DATASIZE]={0};
 	while(success==-1&& numOfTries){
-		print_addr_aux("Tentando conectar a:",dst_addr);
-		fprintf(stdout,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
+		if(logging){
+			print_addr_aux("Tentando conectar a:",dst_addr);
+			fprintf(stdout,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
+		}
 		success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
 		numOfTries--;
 		if(success<0){
 			if(!(errno == EINPROGRESS)){
-				fprintf(stderr,"Não foi possivel: %s\n",strerror(errno));
+				if(logging){
+					fprintf(stderr,"Não foi possivel: %s\n",strerror(errno));
+				}
 				numOfTries=0;
 				break;
 			}
@@ -87,8 +91,10 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 				if(iResult>0){
 					int sockerr=get_sockerr(sockfd);
 					if(!sockerr){
-						fprintf(stderr,"Successful connection!\n");
-						print_addr_aux("Conectado a:",dst_addr);
+						if(logging){
+							fprintf(stderr,"Successful connection!\n");
+							print_addr_aux("Conectado a:",dst_addr);
+						}
 						break;
 					}
 				}
@@ -98,12 +104,16 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 							numOfTries=0;
 							break;
 						}
-						fprintf(stderr,"Select error!! %s\n",strerror(errno));
+						if(logging){
+							fprintf(stderr,"Select error!! %s\n",strerror(errno));
+						}
 						numOfTries=0;
 						break;
 					}
 					else{
-						fprintf(stderr,"Select timeout reached!!\n");
+						if(logging){
+							fprintf(stderr,"Select timeout reached!!\n");
+						}
 						if(same_addr_sock_rebind(sockfd)){
 							numOfTries=0;
 							break;
@@ -115,12 +125,16 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 		}
 		else{
 			snprint_addr_aux(addr_buff,sizeof(addr_buff),dst_addr);
-			fprintf(stderr,"%s\n%s\n",errno?strerror(errno):"Successful connection",errno?"Não conectado.":addr_buff);
+			if(logging){
+				fprintf(stderr,"%s\n%s\n",errno?strerror(errno):"Successful connection",errno?"Não conectado.":addr_buff);
+			}
 			break;
 		}
 	}
 	if(!numOfTries){
-		fprintf(stderr,"Não foi possivel conectar. Numero limite de tentativas (%d) atingido!!!\n",MAX_TRIES);
+		if(logging){
+			fprintf(stderr,"Não foi possivel conectar. Numero limite de tentativas (%d) atingido!!!\n",MAX_TRIES);
+		}
 	}
 	return numOfTries-(((errno == EINPROGRESS)&&!numOfTries)?1:0);
 }

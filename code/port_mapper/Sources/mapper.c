@@ -498,8 +498,10 @@ void port_mapper_init(ip_cache_entry* ent){
 	memset(port_arr,0,sizeof(port_arr));
 	mapper.port_arr=port_arr;
 
-	fetch_port_mapper_file(&mapper);
+	if(cfg_port_mapper_use_port_mapper_file){
 
+		fetch_port_mapper_file(&mapper);
+	}
 	init_addr(&mapper.addr_struct, ent->hostname,ent->port);
 	init_module_tcp_stuff(&mapper.socket,ent->hostname,ent->port,&mapper.addr_struct,SIGINT,cfg_num_ports,1,NULL);
 	running=1;
@@ -518,7 +520,13 @@ void port_mapper_init(ip_cache_entry* ent){
 	printf("Saimos do thread de input!\n");
 	pthread_join(main_tid ,NULL);
 	printf("Saimos do main thread!\n");
-	save_port_mapper_file(&mapper);
+	if(cfg_port_mapper_use_port_mapper_file){
+		save_port_mapper_file(&mapper);
+	}
+	if(cfg_port_mapper_remove_port_file_on_exit){
+
+		remove(PORT_MAPPER_FILEPATH);
+	}
 	exit(0);
 
 }

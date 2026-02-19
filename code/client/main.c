@@ -11,16 +11,18 @@
 int main(int argc, char ** argv){
 
 
-	if(client_display_splash){
-		print_out_logo();
-	}
         memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
         parse_generalized_cfg();
-        print_values_generalized_cfg(1);
 	read_values_cfg_client();
-	print_values_cfg_client(1);
-        printf("Generalized cfg:\n");
+	if(cfg_client_show_splash){
+		print_out_logo();
+	}
+	if(cfg_client_print_config){
+	        printf("Generalized cfg:\n");
+		print_values_generalized_cfg(1);
+		print_values_cfg_client(1);
+	}
 
 	logging=cfg_client_logging;
 	int fd=-1;
@@ -32,7 +34,9 @@ int main(int argc, char ** argv){
         	fd= open(client_logs_file_name,O_TRUNC|O_WRONLY|O_CREAT,0777);
 	}
 	if(fd<0){
-		perror("Não foi possivel criar ficheiro de logs!\n");
+		if(logging){
+			perror("Não foi possivel criar ficheiro de logs!\n");
+		}
 		fd=1;
 
 	}
@@ -53,9 +57,10 @@ int main(int argc, char ** argv){
         else{
                  snprintf(curr_dir+strlen(curr_dir),PATHSIZE,"%s",client_music_folder_path);
 	}
-	printf("Curr dir: %s\n", curr_dir);
+	if(logging){
+		printf("Curr dir: %s\n", curr_dir);
+	}
 	clientStart(argv[1],argv[2]);
-
 
 	return 0;
 }

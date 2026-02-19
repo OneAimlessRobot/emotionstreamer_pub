@@ -203,7 +203,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 		printf("Launched in '.wav' mode!!!\n");
 	}
 	logstream=stdout;
-	init_openssl_libs_server_side(server_cert_file_path);
+	init_openssl_libs_server_side();
 	end_openssl_libs_server_side();
 
 	is_on=1;

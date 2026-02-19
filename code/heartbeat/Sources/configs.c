@@ -17,9 +17,10 @@ static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 static char upper_ip_address_buff[PATHSIZE+1]={0};
 
 char hb_server_name_buff[PATHSIZE+1]={0};
-int8_t hb_heartbeat_protocol;
 
-const uint8_t hb_display_splash=0;
+uint8_t	cfg_hb_print_config,
+	cfg_hb_show_splash;
+
 
 ip_cache_entry upper_ip_cache_entry={{0},0},
 	heartbeat_ip_cache_entry={{0},0};
@@ -61,6 +62,18 @@ void read_values_cfg_hb(void){
 
                 clean_and_exit();
         }
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"hb_print_config: %hhu",&cfg_hb_print_config);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"hb_show_splash: %hhu",&cfg_hb_show_splash);
 	clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -118,6 +131,10 @@ void read_values_cfg_hb(void){
 }
 
 void print_values_cfg_hb(int fd){
+
+	dprintf(fd,"hb_print_config: %hhu\n",cfg_hb_print_config);
+
+	dprintf(fd,"hb_show_splash: %hhu\n",cfg_hb_show_splash);
 
         dprintf(fd,"hb_server_logging: %hhu\n",cfg_hb_server_logging);
 

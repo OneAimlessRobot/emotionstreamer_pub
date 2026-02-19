@@ -12,15 +12,18 @@
 
 int main(void){
 
-	if(master_display_splash){
-		print_out_logo();
-	}
-        memset(curr_dir,0,PATHSIZE);
+	memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
         parse_generalized_cfg();
-        print_values_generalized_cfg(1);
-	read_values_cfg_master();
-        print_values_cfg_master(1);
+        read_values_cfg_master();
+        if(cfg_master_show_splash){
+		print_out_logo();
+	}
+        if(cfg_master_print_config){
+
+		print_values_generalized_cfg(1);
+		print_values_cfg_master(1);
+	}
 	printf("Curr dir: %s\n", curr_dir);
 	start_master(master_ip_cache_entry.hostname,master_ip_cache_entry.port);
 

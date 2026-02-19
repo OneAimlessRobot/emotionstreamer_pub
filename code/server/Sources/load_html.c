@@ -10,7 +10,7 @@
 #include <sys/wait.h>
 
 
-static char* close_keyword = "end_of_contents.";
+static char* close_keyword = "end_of_contents;";
 static char* tmpOne=".tmp.html",* tmpTwo=".tmp1.html";
 
 static char tmpDir[PATHSIZE*2]={0},tmpDir2[PATHSIZE*2]={0},currSearchedDir[PATHSIZE*2]={0};
@@ -143,7 +143,6 @@ char* generateDirListing(char* pattern){
 		fgets(currListing,PATHSIZE*4-1,fstream);
 		currListing[strlen(currListing)-1]=0;
 		if(!strs_are_strictly_equal(currListing,close_keyword)){
-			dprintf(fd,"%s\n\n\nServer contents successfully retrieved in full.\n\n",currListing);
 			break;
 		}
 		char* ext_ptr=get_file_extension(currListing);

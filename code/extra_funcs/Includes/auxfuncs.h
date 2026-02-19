@@ -93,4 +93,5 @@ void time_spec_sub_function(struct timeval* time_one,struct timeval* time_two,st
 int time_spec_compare_function(struct timeval* time_one,struct timeval* time_two);
 void time_spec_print_function(int fd, const char* timeval_name, struct timeval* time_printed);
 
+void skip_config_comments(FILE* fp);
 #endif

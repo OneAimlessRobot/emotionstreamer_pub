@@ -14,8 +14,9 @@
 static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
-const uint8_t master_display_splash=1;
-//EM BYTES E HZ!
+uint8_t	cfg_master_print_config,
+	cfg_master_show_splash;
+
 ip_cache_entry master_ip_cache_entry = {{0},0};
 
 int_pair master_data_times_pair=(int_pair){MASTER_TIMEOUT_DATA_SEC,MASTER_TIMEOUT_DATA_USEC};
@@ -53,6 +54,18 @@ void read_values_cfg_master(void){
                 clean_and_exit();
         }
         clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"master_print_config: %hhu",&cfg_master_print_config);
+	clean_buff();
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+		clean_and_exit();
+	}
+	sscanf(curr_line_buff,"master_show_splash: %hhu",&cfg_master_show_splash);
+	clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
@@ -94,6 +107,9 @@ void read_values_cfg_master(void){
 
 void print_values_cfg_master(int fd){
 
+	dprintf(fd,"master_print_config: %hhu\n",cfg_master_print_config);
+
+	dprintf(fd,"master_show_splash: %hhu\n",cfg_master_show_splash);
 
         dprintf(fd,"master_server_logging: %hhu\n",cfg_master_server_logging);
 

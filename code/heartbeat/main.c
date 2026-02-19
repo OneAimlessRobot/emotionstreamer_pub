@@ -12,16 +12,18 @@
 
 int main(void){
 
-	if(hb_display_splash){
-		print_out_logo();
-	}
-        memset(curr_dir,0,PATHSIZE);
+	memset(curr_dir,0,PATHSIZE);
         getcwd(curr_dir,PATHSIZE-1);
         parse_generalized_cfg();
-        print_values_generalized_cfg(1);
-	read_values_cfg_hb();
-        print_values_cfg_hb(1);
-        printf("Curr dir: %s\n", curr_dir);
+        read_values_cfg_hb();
+        if(cfg_hb_show_splash){
+		print_out_logo();
+	}
+        if(cfg_hb_print_config){
+		print_values_generalized_cfg(1);
+		print_values_cfg_hb(1);
+        }
+	printf("Curr dir: %s\n", curr_dir);
 
 	start_heart_beats(&heartbeat_ip_cache_entry,&upper_ip_cache_entry);
 
