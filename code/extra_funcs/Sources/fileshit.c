@@ -1,5 +1,4 @@
 #include "../../Includes/preprocessor.h"
-#include <openssl/ssl.h>
 #include "../Includes/fileshit.h"
 
 FILE* logstream=NULL;

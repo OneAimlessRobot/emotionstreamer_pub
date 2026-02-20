@@ -119,7 +119,7 @@ static void down_func(char* file_name){
 		if(stream_enable_ncurses){
 			enable_ncurses();
 		}
-		downloadtofd(client_con_obj.sockfd_tcp,fp,down_size,client_data_times_pair);
+		downloadtofd(client_con_obj.sockfd_tcp,fp,down_size,client_data_times_pair,client_con_obj.is_ssl,client_con_obj.con_ssl);
 		if(stream_enable_ncurses){
 			endwin_wrapper();
 		}
@@ -137,7 +137,7 @@ static void peek_func(void){
 		if(logging){
 			printf(CONTENT_PEEK_INCOMMING);
 		}
-		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
+		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair,client_con_obj.is_ssl,client_con_obj.con_ssl);
 		clear_ports_and_quit(SIGINT,NULL);
 
 }
@@ -147,7 +147,7 @@ static void conf_func(void){
 		if(logging){
 			printf(CONTENT_PEEK_INCOMMING);
 		}
-		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair);
+		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair,client_con_obj.is_ssl,client_con_obj.con_ssl);
 		clear_ports_and_quit(SIGINT,NULL);
 }
 
@@ -226,7 +226,7 @@ int clientStart(char* req_field,char* file_name){
 		clear_ports_and_quit(SIGINT,NULL);
 
 	}
-	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,&port_mapper_ip_cache_entry);
+	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,&port_mapper_ip_cache_entry,will_use_tls);
 	connection_attempt_circuit(&client_con_obj.sockfd_tcp,clear_ports_and_quit,&client_ip_address,
                                 &server_ip_address,
                                         &client_ip_cache_entry,&port_mapper_ip_cache_entry,client_con_times_pair,NULL);

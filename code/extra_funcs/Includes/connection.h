@@ -8,15 +8,17 @@ typedef enum con_type{SERVER_C,CLIENT_C} con_type;
 
 typedef struct con_t{
 
-	 struct sockaddr_in
-         		this_tcp_addr,
-			peer_tcp_addr;
-	 struct sockaddr_in port_mapper_addr;
-       	 int is_on,
-         sockfd_tcp;
-	 uint8_t tcp_data[DEF_DATASIZE+1];
-	 ip_cache_entry port_mapper_entry;
-	 con_type type;
+	struct sockaddr_in
+		this_tcp_addr,
+		peer_tcp_addr;
+	struct sockaddr_in port_mapper_addr;
+	int is_on,
+	sockfd_tcp;
+	uint8_t tcp_data[DEF_DATASIZE+1];
+	ip_cache_entry port_mapper_entry;
+	con_type type;
+	uint8_t is_ssl;
+	SSL* con_ssl;
 }con_t;
 //sockfd_tcp tem de ser obtida com connect ou accept!!!!!!!
 
@@ -24,7 +26,7 @@ typedef struct con_t{
 
 //DOES NOT FREE OR INITIALIZE THE BUFFS YOU GIVE IT!
 
-void init_con(con_t* con_obj, int sockfd_tcp,con_type type,ip_cache_entry* ent);
+void init_con(con_t* con_obj, int sockfd_tcp,con_type type,ip_cache_entry* ent,uint8_t is_ssl);
 
 void close_con(con_t* con_obj, int RIGHT_NOW,int close_for_good);
 

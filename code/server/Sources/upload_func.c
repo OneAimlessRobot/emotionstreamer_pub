@@ -3,7 +3,6 @@
 #include "../extra_funcs/Includes/sockio.h"
 #include "../extra_funcs/Includes/sockio_tcp.h"
 #include "../extra_funcs/Includes/ip_cache_file.h"
-#include <openssl/ssl.h>
 #include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../Includes/configs.h"
@@ -11,7 +10,7 @@
 
 
 
-int uploadtofd(int sock,int fd,int_pair times){
+int uploadtofd(int sock,int fd,int_pair times,uint8_t is_ssl,SSL* cSSL){
 
 char buff[DEF_DATASIZE];
 memset(buff,0,DEF_DATASIZE);
@@ -21,12 +20,8 @@ int sent=0;
 while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
 
         errno=0;
-        sent = sendsome(sock, buff,  numread,times);
+        sent = sendsome(sock, buff,  numread,times,is_ssl,cSSL);
         memset(buff,0,DEF_DATASIZE);
-        /*
-	int readjunior=readsome(sock,buff,DEF_DATASIZE,times);
-        memset(buff,0,DEF_DATASIZE);
-	*/
 	int readjunior=0;
         if(sent==-2){
 

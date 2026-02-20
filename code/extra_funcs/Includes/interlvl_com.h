@@ -42,6 +42,7 @@ typedef struct slave_args{
 	int_pair data_times_pair;
 	int_pair ack_times_pair;
 	uint64_t ack_period_us;
+	uint8_t is_ssl;
 	pthread_mutex_t* var_mtx;
 	pthread_mutex_t* con_mtx;
 	pthread_cond_t* trg_cond;
@@ -83,6 +84,7 @@ typedef struct acceptor_args{
 	int_pair ack_times_pair;
 	uint64_t ack_period_us;
 	fd_set mainfds;
+	uint8_t is_ssl;
         int accept_sockfd;
         struct sockaddr_in accept_addr;
 	pthread_mutex_t * master_mtx;

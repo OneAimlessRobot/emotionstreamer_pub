@@ -2,7 +2,6 @@
 #include "../Includes/sockio.h"
 #include "../Includes/ip_cache_file.h"
 #include "../Includes/generalized_config.h"
-#include <openssl/ssl.h>
 #include "../Includes/fileshit.h"
 
 static FILE* cfg_fp=NULL;

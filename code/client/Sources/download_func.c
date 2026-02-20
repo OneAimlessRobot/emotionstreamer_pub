@@ -70,7 +70,7 @@ static void* print_download_bar(void* mem,int64_t len,int64_t* timeout_num){
 }
 
 
-int downloadtofd(int sock,int fd,int64_t size,int_pair times){
+int downloadtofd(int sock,int fd,int64_t size,int_pair times,uint8_t is_ssl,SSL* cSSL){
         int64_t len=1;
         int64_t written=1;
 	int64_t total=0;
@@ -81,7 +81,7 @@ int downloadtofd(int sock,int fd,int64_t size,int_pair times){
         bar.size=40;
         memset(buff,0,DEF_DATASIZE);
         for(;(len==-2||len>0)&&(total!=size);){
-		len=readsome(sock,buff,DEF_DATASIZE,times);
+		len=readsome(sock,buff,DEF_DATASIZE,times,is_ssl,cSSL);
                 if(len==-2){
 			printf("Timeout no download!!!\n");
                 }
@@ -129,7 +129,7 @@ int downloadtofd(int sock,int fd,int64_t size,int_pair times){
 
         }
         memset(buff,0,DEF_DATASIZE);
-        sendsome(sock,buff,DEF_DATASIZE,times);
+        sendsome(sock,buff,DEF_DATASIZE,times,is_ssl,cSSL);
 
         return 0;
 

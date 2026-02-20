@@ -2,10 +2,36 @@
 #include "../Includes/auxfuncs.h"
 #include "../Includes/sockio.h"
 #include "../Includes/sockio_tcp.h"
-#include <openssl/ssl.h>
 #include "../Includes/openssl_stuff.h"
 #include "../Includes/fileshit.h"
 
+void InitializeSSL(void){
+
+    SSL_load_error_strings();
+    SSL_library_init();
+    OpenSSL_add_all_algorithms();
+}
+
+void DestroySSL(void){
+
+    ERR_free_strings();
+    EVP_cleanup();
+}
+
+void ShutdownSSL(SSL** cSSL){
+
+    SSL_shutdown(*cSSL);
+    SSL_free(*cSSL);
+    *cSSL=NULL;
+}
+void convert_fd_to_ssl(SSL* cSSL, int sd){
+	SSL_set_fd(cSSL, sd);
+	//Here is the SSL Accept portion.  Now all reads and writes must use SSL
+	int ssl_err = SSL_accept(cSSL);
+	if(ssl_err<=0){
+		ShutdownSSL(&cSSL);
+	}
+}
 
 void init_openssl_libs_server_side(void){
 	if(logging){

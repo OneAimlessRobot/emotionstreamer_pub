@@ -2,11 +2,10 @@
 #include "../Includes/auxfuncs.h"
 #include "../Includes/sockio.h"
 #include "../Includes/sockio_tcp.h"
-#include <openssl/ssl.h>
 #include "../Includes/fileshit.h"
 
 
-int sendsome(int sd,char buff[],size_t size,int_pair times){
+int sendsome(int sd,char buff[],size_t size,int_pair times,uint8_t is_ssl,SSL* cSSL){
                 if(sd>=0){
 			int iResult;
 	                struct timeval tv;
@@ -20,11 +19,19 @@ int sendsome(int sd,char buff[],size_t size,int_pair times){
 		                tv.tv_usec=times[1];
 		                iResult=select(sd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
 		                if(iResult>0){
-
-		                send_total+= (s=send(sd,buff+send_total,size-send_total,0));
-				if (s < 0) return -1;
-	        		if (s == 0) return send_total;
-		                }
+					if(!is_ssl||!cSSL){
+			                	send_total+= (s=send(sd,buff+send_total,size-send_total,0));
+					}
+					else{
+						send_total+= (s=SSL_write(cSSL,buff+send_total,size-send_total));
+					}
+					if (s < 0){
+						return -1;
+		        		}
+					if (s == 0){
+						return send_total;
+			                }
+				}
 				else if(!iResult){
 		               	return -2;
 				}
@@ -41,7 +48,50 @@ int sendsome(int sd,char buff[],size_t size,int_pair times){
 		return -1;
 }
 
-int sendallfd(int sock,int fd,int_pair times){
+int readsome(int sd,char buff[],size_t size,int_pair times,uint8_t is_ssl,SSL* cSSL){
+		if(sd>=0){
+			int iResult;
+	                struct timeval tv;
+			size_t read_total=0;
+			ssize_t r=0;
+			while(read_total<size){
+	                fd_set rfds;
+	                FD_ZERO(&rfds);
+	                FD_SET(sd,&rfds);
+	                tv.tv_sec=times[0];
+	                tv.tv_usec=times[1];
+	                iResult=select(sd+1,&rfds,(fd_set*)0,(fd_set*)0,&tv);
+	                if(iResult>0){
+				if(!is_ssl||!cSSL){
+					read_total+= (r=recv(sd,buff+read_total,size-read_total,0));
+				}
+				else{
+					read_total+= (r=SSL_read(cSSL,buff+read_total,size-read_total));
+				}
+				if(r < 0){
+					return -1;
+				}
+				if(r == 0){
+					return read_total;
+				}
+			}
+			else if(!iResult){
+	               	return -2;
+			}
+			else{
+			if(logging){
+
+			fprintf(logstream, "SELECT ERROR!!!!! READ\n%s\n",strerror(errno));
+			}
+			return -1;
+			}
+			}
+			return read_total;
+		}
+		return -1;
+}
+
+int sendallfd(int sock,int fd,int_pair times,uint8_t is_ssl,SSL* cSSL){
 
 char buff[DEF_DATASIZE];
 int numread;
@@ -51,7 +101,7 @@ while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
     int totalsent = 0;
     while (totalsent < numread) {
         errno=0;
-	sent = sendsome(sock, buff + totalsent,  numread - totalsent,times);
+	sent = sendsome(sock, buff + totalsent,  numread - totalsent,times,is_ssl, cSSL);
 	if(sent==-2){
 
 		if(logging){
@@ -99,48 +149,13 @@ while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
 return 0;
 }
 
-int readsome(int sd,char buff[],size_t size,int_pair times){
-		if(sd>=0){
-			int iResult;
-	                struct timeval tv;
-			size_t read_total=0;
-			ssize_t r=0;
-			while(read_total<size){
-	                fd_set rfds;
-	                FD_ZERO(&rfds);
-	                FD_SET(sd,&rfds);
-	                tv.tv_sec=times[0];
-	                tv.tv_usec=times[1];
-	                iResult=select(sd+1,&rfds,(fd_set*)0,(fd_set*)0,&tv);
-	                if(iResult>0){
 
-	                read_total+= (r=recv(sd,buff+read_total,size-read_total,0));
-			if (r < 0) return -1;
-	        	if (r == 0) return read_total;
-	                }
-			else if(!iResult){
-	               	return -2;
-			}
-			else{
-			if(logging){
-
-			fprintf(logstream, "SELECT ERROR!!!!! READ\n%s\n",strerror(errno));
-			}
-			return -1;
-			}
-			}
-			return read_total;
-		}
-		return -1;
-}
-
-
-int sendall(int sock,char buff[],size_t size,int_pair times){
+int sendall(int sock,char buff[],size_t size,int_pair times,uint8_t is_ssl,SSL* cSSL){
         int len=0;
 	size_t total=0;
-	for(len=sendsome(sock,buff+total,size-total,times);(len>0)&&(total!=size);total+=len){
+	for(len=sendsome(sock,buff+total,size-total,times,is_ssl,cSSL);(len>0)&&(total!=size);total+=len){
 	
-			len=sendsome(sock,buff+total,size-total,times);
+			len=sendsome(sock,buff+total,size-total,times,is_ssl,cSSL);
 	}
 	
 	if(!(total-size)){
@@ -173,12 +188,12 @@ int sendall(int sock,char buff[],size_t size,int_pair times){
 
 }
 
-int readall(int sock,char buff[],size_t size,int_pair times){
+int readall(int sock,char buff[],size_t size,int_pair times,uint8_t is_ssl,SSL* cSSL){
         int len=0;
 	size_t total=0;
-	for(len=readsome(sock,buff+total,size-total,times);(len>0)&&(total!=size);total+=len){
-	
-			len=readsome(sock,buff+total,size-total,times);
+	for(len=readsome(sock,buff+total,size-total,times,is_ssl,cSSL);(len>0)&&(total!=size);total+=len){
+
+			len=readsome(sock,buff+total,size-total,times,is_ssl,cSSL);
 	}
 	
 	if(!(total-size)){
@@ -211,14 +226,14 @@ int readall(int sock,char buff[],size_t size,int_pair times){
 
 }
 
-int readalltofd(int sock,int fd,size_t size,int_pair times){
+int readalltofd(int sock,int fd,size_t size,int_pair times,uint8_t is_ssl,SSL* cSSL){
         int32_t len=1;
 	int32_t written=1;
 	size_t total=0;
 	char buff[DEF_DATASIZE];
 	memset(buff,0,DEF_DATASIZE);
 	for(;(len==-2||len>0)&&(total!=size);){
-                len=readsome(sock,buff,DEF_DATASIZE,times);
+                len=readsome(sock,buff,DEF_DATASIZE,times,is_ssl,cSSL);
                 written=write(fd,buff,len);
                 total+= (written<0)? 0:written;
                 memset(buff,0,DEF_DATASIZE);

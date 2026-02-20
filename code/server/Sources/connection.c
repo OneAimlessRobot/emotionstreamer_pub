@@ -76,7 +76,7 @@ void con_go(int sockfd_tcp){
 			sock_tcp=sockfd_tcp;
 			unsigned char stream_cache_data[sizeof(mp3_stream_chunk)];
 
-			init_con(&server_con_obj,sock_tcp,SERVER_C,&port_mapper_ip_cache_entry);
+			init_con(&server_con_obj,sock_tcp,SERVER_C,&port_mapper_ip_cache_entry,will_use_tls);
 
 			con_read_tcp(&server_con_obj,server_data_times_pair);
 
@@ -140,11 +140,11 @@ void con_go(int sockfd_tcp){
 				send_download_sizes(fp,file_path,file_info);
 				switch(recvd_type){
 				case PEEK:
-					sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
+					sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair,server_con_obj.is_ssl,server_con_obj.con_ssl);
 					deleteDirListingFile();
 					break;
 				case DOWN:
-					uploadtofd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
+					uploadtofd(server_con_obj.sockfd_tcp,fp,server_data_times_pair,server_con_obj.is_ssl,server_con_obj.con_ssl);
 					break;
 				case REPORT:
 					_mkdir(dirname(rep_file_path_2));
@@ -162,13 +162,13 @@ void con_go(int sockfd_tcp){
 					begin_stream(&server_con_obj,fp,fp_boundary,server_chunk_size,stream_cache_data);
 					break;
 				case CONFIG:
-					sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
+					sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair,server_con_obj.is_ssl,server_con_obj.con_ssl);
 					remove(TMP_CONFIG_FILE_PATH);
 					snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"\n\n\nServer contents successfully retrieved in full.\n\n");
 					con_send_tcp(&server_con_obj,server_data_times_pair);
 					break;
 				case ROTATION:
-					sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair);
+					sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair,server_con_obj.is_ssl,server_con_obj.con_ssl);
 					remove(TMP_ROTATION_FILE_PATH);
 					snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"\n\n\nServer contents successfully retrieved in full.\n\n");
 					con_send_tcp(&server_con_obj,server_data_times_pair);

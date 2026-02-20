@@ -1,5 +1,4 @@
 #include "../../Includes/preprocessor.h"
-#include <openssl/ssl.h>
 #include "../Includes/fileshit.h"
 #include "../Includes/auxfuncs.h"
 #include "../Includes/sockio.h"
@@ -68,7 +67,7 @@ void slave_thread_exit_func(int useless,void* ptr){
 void* slave_thread(void* args){
 	slave_args* arg_struct= (slave_args*)args;
         print_addr_aux("Addr atual do server de heartbeat:",&arg_struct->master_addr);
-	init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,&arg_struct->slave_port_mapper_ip_cache_entry);
+	init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,&arg_struct->slave_port_mapper_ip_cache_entry,arg_struct->is_ssl);
 	connection_attempt_circuit(&arg_struct->con_obj->sockfd_tcp,slave_thread_exit_func,&arg_struct->this_con_addr,
                                 &arg_struct->master_addr,
                                         &arg_struct->slave_ip_cache_entry,
@@ -91,8 +90,7 @@ void* slave_thread(void* args){
         clear_con_data(arg_struct->con_obj);
 	module_type_to_string(arg_struct->type,mod_type);
 
-	uint8_t value=0;
-        snprintf((char*)arg_struct->con_obj->tcp_data,DEF_DATASIZE-1,"%s %s %s %s %hu %s %hhu",LOG_STRING,mod_type,arg_struct->lower_name,ent_addr,arg_struct->this_addr.sin_port,arg_struct->extension_buff,value);
+        snprintf((char*)arg_struct->con_obj->tcp_data,DEF_DATASIZE-1,"%s %s %s %s %hu %s %hhu",LOG_STRING,mod_type,arg_struct->lower_name,ent_addr,arg_struct->this_addr.sin_port,arg_struct->extension_buff,arg_struct->is_ssl);
 
         int result=con_send_tcp(arg_struct->con_obj,arg_struct->ack_times_pair);
         if(result<0){
@@ -380,7 +378,7 @@ void* acceptor_func(void* args){
                         if(sock>=0){
 
 			      setNonBlocking(&sock);
-                              init_con(&con,sock,SERVER_C,&arg_a->acceptor_port_mapper_ip_cache_entry);
+                              init_con(&con,sock,SERVER_C,&arg_a->acceptor_port_mapper_ip_cache_entry,arg_a->is_ssl);
                               result=con_read_tcp(&con,arg_a->con_times_pair);
                               if(result<=0){
                                         perror("Nao sabemos o que querem....\n");

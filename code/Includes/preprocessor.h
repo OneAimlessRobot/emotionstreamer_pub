@@ -28,6 +28,9 @@
 #include <sys/time.h>
 #include <sys/ioctl.h>
 #include <openssl/ssl.h>
+#include <openssl/bio.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/stat.h>
