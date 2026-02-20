@@ -15,17 +15,15 @@
 #include "../../extra_funcs/Includes/more_socket_ops.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
+#include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/protocol.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/ripped_code.h"
 #include "../Includes/mp3module.h"
-
 #include "../Includes/chunk_queue.h"
 #include "../Includes/chunk_player.h"
-
-
 #include "../Includes/streamer_client.h"
 #include "../Includes/client.h"
 #include "../Includes/download_func.h"
@@ -62,6 +60,7 @@ static void clear_ports_and_quit(int signal,void* ptr){
 	send_port_back(htons(client_con_obj.this_tcp_addr.sin_port),&port_mapper_ip_cache_entry);
 	free_attempted_ports(0,&port_mapper_ip_cache_entry);
 	close_con(&client_con_obj,0,1);
+	end_openssl_libs_client_side();
 	fclose(logstream);
 	close(fp);
 	exit(signal+(0*((uint64_t)ptr)));
@@ -79,13 +78,21 @@ static int64_t down_file_size(void){
 		if(logging){
 			printf("Recebendo tamanho!!!\n");
 		}
-		con_read_tcp(&client_con_obj,client_data_times_pair);
+		int ret_read=con_read_tcp(&client_con_obj,client_data_times_pair);
 		sscanf((char*)client_con_obj.tcp_data,"%ld %s %hhd",&down_size,extension_from_server,&is_wav_mode);
-		if(down_size<=0){
+		printf("String recebida do server upon entry: |%s|\n",(char*)client_con_obj.tcp_data);
+		if(ret_read<=0){
 
-			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_NOFILE :UNSUCESSFUL_DOWNLOAD_CON_ERROR;
+			if(client_con_obj.is_ssl){
+                                if(logging){
+					fprintf(logstream,"Receive from server failed!!!\n");
+					ERR_print_errors_fp(logstream);
+                        	}
+			}
+			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_CON_ERROR:UNSUCESSFUL_DOWNLOAD_NOFILE ;
 			if(logging){
 				printf(UNSUCESSFUL_DOWNLOAD,reason);
+				printf("String recebida do server upon entry: |%s|\n",(char*)client_con_obj.tcp_data);
 			}
 			clear_ports_and_quit(SIGINT,NULL);
 		}
@@ -101,7 +108,6 @@ static void play_func(void){
 		uint64_t chunk_size=0;
 		con_read_tcp(&client_con_obj,client_data_times_pair);
 		sscanf((char*)client_con_obj.tcp_data,"%lu",&chunk_size);
-		greet(&client_con_obj,client_con_times_pair);
 		player_init_stream(&client_con_obj,chunk_size,play_way);
 }
 static void down_func(char* file_name){
@@ -226,6 +232,7 @@ int clientStart(char* req_field,char* file_name){
 		clear_ports_and_quit(SIGINT,NULL);
 
 	}
+	init_openssl_libs_client_side();
 	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,&port_mapper_ip_cache_entry,will_use_tls);
 	connection_attempt_circuit(&client_con_obj.sockfd_tcp,clear_ports_and_quit,&client_ip_address,
                                 &server_ip_address,
@@ -248,8 +255,8 @@ int clientStart(char* req_field,char* file_name){
 	}
 	setNonBlocking(&client_con_obj.sockfd_tcp);
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
+	greet(&client_con_obj,client_con_times_pair);
 	snprintf((char*)client_con_obj.tcp_data,2*DEF_DATASIZE-1,"%s %s",req_buff,file_name);
-
 	con_send_tcp(&client_con_obj,client_data_times_pair);
 
 

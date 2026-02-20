@@ -155,7 +155,7 @@ if (player->oss_sound_fd < 0) {
 	return;
 }
 
-printf("Innited OSS file descriptor... All that is left is setting ioctl opts!\n");
+print_log_string("Innited OSS file descriptor... All that is left is setting ioctl opts!\n");
 int frag= FRAG_PARAM_FOR_OSS;
 ioctl(player->oss_sound_fd, SNDCTL_DSP_SETFRAGMENT, &frag);
 
@@ -168,7 +168,7 @@ ioctl(player->oss_sound_fd, SNDCTL_DSP_CHANNELS, &player->current_result.channel
 
 ioctl(player->oss_sound_fd, SNDCTL_DSP_SPEED, &player->current_result.hz);
 
-printf("... Which we just did!...\n[thumbs up]\nWe're done we play sound wedoeht!\n");
+print_log_string("... Which we just did!...\n[thumbs up]\nWe're done we play sound wedoeht!\n");
 
 
 
@@ -205,7 +205,7 @@ while (*n != NULL) {
 
 //Free hint buffer too
 snd_device_name_free_hint((void**)hints);
-print_string(alsa_device_print_buff);
+print_log_string(alsa_device_print_buff);
 
 
 }
@@ -241,7 +241,7 @@ if ((err =snd_pcm_set_params(player->play_stream_alsa,
 		return;
 	}
 	else{
-		printf("ALSA initialized successfully!!!!\n");
+		print_log_string("ALSA initialized successfully!!!!\n");
 	}
 
 }
@@ -286,7 +286,7 @@ static void initPA(chunk_player*player){
 	}
 	else{
 
-	printf("pulseaudio initialized successfully!!!!\n");
+	print_log_string("pulseaudio initialized successfully!!!!\n");
 
 	}
 }
@@ -303,7 +303,7 @@ static void changePA(chunk_player*player){
 	pa_proplist_set(proplist, PA_PROP_FORMAT_CHANNELS  , (int*)&(ss.channels), 4);
 	pa_stream_proplist_update(player->play_stream_pa->stream, PA_UPDATE_REPLACE, proplist,NULL,NULL);
      	pa_proplist_free(proplist);
-	printf("pulseaudio changed successfully!!!!\n");
+	print_log_string("pulseaudio changed successfully!!!!\n");
      }
 }
 
@@ -317,7 +317,7 @@ static void initAO(chunk_player*player){
 	print_driver_infos();
 	driver_id = ao_driver_id("pulse");
 	if(driver_id<0){
-		printf("Error opening libao sound driver.\n");
+		print_log_string("Error opening libao sound driver.\n");
 		raise(SIGINT);
 		stop_client_stream();
 		return;

@@ -34,7 +34,7 @@ LDLIBS_CLIENT += $(LDLIBS_PTHREAD) $(LDLIBS_SSL_AND_CRYPTO) $(LDLIBS_SOUND) -lpt
 
 LDLIBS_SERVER += $(LDLIBS_PTHREAD) $(LDLIBS_SSL_AND_CRYPTO)
 
-INCLUDE= ./Includes ./mpg123-1.32.10/src/include ./sqlite-amalgamation-3510000 ./wav_stuff_i_stole_because_i_am_lazy .
+INCLUDE= ./Includes ./openssl/includes ./mpg123-1.32.10/src/include ./sqlite-amalgamation-3510000 ./wav_stuff_i_stole_because_i_am_lazy .
 SOURCES= . ./Sources
 
 SERVERINCLUDE= ./server/Includes ./extra_funcs/Includes

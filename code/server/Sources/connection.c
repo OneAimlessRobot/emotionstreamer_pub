@@ -2,10 +2,9 @@
 #include <libgen.h>
 #include "../../extra_funcs/Includes/protocol.h"
 #include "../../extra_funcs/Includes/auxfuncs.h"
-#include <openssl/ssl.h>
+#include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/fileshit.h"
-#include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/configs.h"
@@ -42,6 +41,7 @@ static void cleanup(void){
 	if(fp_boundary>=0){
 		close(fp_boundary);
 	}
+	end_openssl_libs_server_side();
 	close(sock_tcp);
 	close_con(&server_con_obj,0,1);
 	printf("Sent ports after minor server operation!\n");
@@ -66,7 +66,16 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 			else{
 				snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"-1");
 			}
-			con_send_tcp(&server_con_obj,server_data_times_pair);
+			printf("String a enviar ao cliente: |%s|\n",(char*)server_con_obj.tcp_data);
+			int ret_send=con_send_tcp(&server_con_obj,server_data_times_pair);
+			if(ret_send<=0){
+				if(server_con_obj.is_ssl){
+					if(logging){
+						fprintf(logstream,"Send to client failed!!!\n");
+						ERR_print_errors_fp(logstream);
+					}
+				}
+			}
 }
 
 //static get_filename_extension
@@ -75,13 +84,11 @@ void con_go(int sockfd_tcp){
 
 			sock_tcp=sockfd_tcp;
 			unsigned char stream_cache_data[sizeof(mp3_stream_chunk)];
-
+			init_openssl_libs_server_side();
 			init_con(&server_con_obj,sock_tcp,SERVER_C,&port_mapper_ip_cache_entry,will_use_tls);
-
+			greet(&server_con_obj,server_con_times_pair);
 			con_read_tcp(&server_con_obj,server_data_times_pair);
-
 			sscanf((char*)server_con_obj.tcp_data,"%s %s",req_string_buff,file_name);
-
 			printf("Buff recebido:\n\"%s\"\n%s recebido!\n",server_con_obj.tcp_data,req_string_buff);
 			recvd_type=str_to_req_type(req_string_buff);
 			if(recvd_type==PLAY||recvd_type==DOWN){
@@ -158,7 +165,6 @@ void con_go(int sockfd_tcp){
 
 						cleanup();
 					}
-					greet(&server_con_obj,server_con_times_pair);
 					begin_stream(&server_con_obj,fp,fp_boundary,server_chunk_size,stream_cache_data);
 					break;
 				case CONFIG:

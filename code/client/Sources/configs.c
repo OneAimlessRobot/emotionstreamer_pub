@@ -265,6 +265,18 @@ void read_values_cfg_client(void){
 		}
 		sscanf(curr_line_buff,"client_auth_cert_path: %s", auth_cert_file_path);
 		clean_buff();
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+			clean_and_exit();
+		}
+		sscanf(curr_line_buff,"client_host_cert_path: %s", host_cert_file_path);
+		clean_buff();
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+			clean_and_exit();
+		}
+		sscanf(curr_line_buff,"client_host_pkey_path: %s", host_pkey_file_path);
+		clean_buff();
 	}
 	fclose(cfg_fp);
 	process_ip_cache_entries();
@@ -324,6 +336,10 @@ void print_values_cfg_client(int fd){
         if(will_use_tls){
 
                 dprintf(fd,"client_auth_cert_path: %s\n", auth_cert_file_path);
+
+                dprintf(fd,"client_host_cert_path: %s\n", host_cert_file_path);
+
+                dprintf(fd,"client_pkey_cert_path: %s\n", host_pkey_file_path);
 
         }
 

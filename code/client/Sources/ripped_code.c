@@ -7,6 +7,7 @@
 #include <sys/ioctl.h> //for ioctl()
 #include <linux/soundcard.h> //SOUND_PCM*
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include <ao/ao.h>
 #include "../Includes/configs.h"
@@ -76,6 +77,13 @@ void print_string(const char* str){
 		pthread_mutex_lock(&ncurses_mtx);
 		printw("%s",str);
 		pthread_mutex_unlock(&ncurses_mtx);
+	}
+
+}
+//NULL TERMINATED ALWAYS!
+void print_log_string(const char* str){
+	if(logging){
+		print_string(str);
 	}
 
 }

@@ -5,7 +5,6 @@
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
-#include <openssl/ssl.h>
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../Includes/load_html.h"

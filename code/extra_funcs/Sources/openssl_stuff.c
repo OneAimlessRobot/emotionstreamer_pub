@@ -4,9 +4,13 @@
 #include "../Includes/sockio_tcp.h"
 #include "../Includes/openssl_stuff.h"
 #include "../Includes/fileshit.h"
+#include <unistd.h>
+#include <limits.h>
 
 void InitializeSSL(void){
 
+    printf("OpenSSL version: %s\n", OPENSSL_VERSION_TEXT);
+    printf("OpenSSL version text func: %s\n", OpenSSL_version(OPENSSL_VERSION));    
     SSL_load_error_strings();
     SSL_library_init();
     OpenSSL_add_all_algorithms();
@@ -19,20 +23,97 @@ void DestroySSL(void){
 }
 
 void ShutdownSSL(SSL** cSSL){
-
-    SSL_shutdown(*cSSL);
-    SSL_free(*cSSL);
-    *cSSL=NULL;
+	SSL_shutdown(*cSSL);
+	SSL_free(*cSSL);
+	*cSSL=NULL;
 }
-void convert_fd_to_ssl(SSL* cSSL, int sd){
-	SSL_set_fd(cSSL, sd);
+void convert_server_con_to_ssl(SSL** cSSL, int sd,int_pair times){
+
+	(*cSSL)=SSL_new(global_ctx);
+	SSL_set_fd(*cSSL, sd);
 	//Here is the SSL Accept portion.  Now all reads and writes must use SSL
-	int ssl_err = SSL_accept(cSSL);
-	if(ssl_err<=0){
-		ShutdownSSL(&cSSL);
+	int ssl_ret=0,ssl_err=0;
+	struct timeval tv;
+	tv.tv_sec=times[0];
+	tv.tv_usec=times[1];
+	while(1) {
+		ssl_ret  = SSL_accept(*cSSL);
+
+		if (ssl_ret == 1) {
+			// Handshake complete
+			break;
+		}
+
+		ssl_err = SSL_get_error(*cSSL, ssl_ret);
+
+		if (ssl_err == SSL_ERROR_WANT_READ) {
+			fd_set rfds;
+			FD_ZERO(&rfds);
+			FD_SET(sd, &rfds);
+			select(sd + 1, &rfds, (fd_set*)0, (fd_set*)0, &tv);
+		}
+		else if (ssl_err == SSL_ERROR_WANT_WRITE) {
+			fd_set wfds;
+			FD_ZERO(&wfds);
+			FD_SET(sd, &wfds);
+			select(sd + 1, (fd_set*)0, &wfds, (fd_set*)0, &tv);
+		}
+		else {
+			// Real failure
+			if(logging){
+				fprintf(logstream, "SSL handshake failed:\n");
+				ERR_print_errors_fp(logstream);
+			}
+			ShutdownSSL(cSSL);
+			break;
+		}
 	}
 }
+void convert_client_con_to_ssl(SSL** cSSL, int sd,int_pair times){
 
+	(*cSSL)=SSL_new(global_ctx);
+	SSL_set_fd(*cSSL, sd);
+	//Here is the SSL Accept portion.  Now all reads and writes must use SSL
+	int ssl_ret=0,ssl_err=0;
+	struct timeval tv;
+	tv.tv_sec=times[0];
+	tv.tv_usec=times[1];
+	while(1) {
+		ssl_ret  = SSL_connect(*cSSL);
+
+		if (ssl_ret == 1) {
+			// Handshake complete
+			break;
+		}
+
+		ssl_err = SSL_get_error(*cSSL, ssl_ret);
+
+		if (ssl_err == SSL_ERROR_WANT_READ) {
+			fd_set rfds;
+			FD_ZERO(&rfds);
+			FD_SET(sd, &rfds);
+			select(sd + 1, &rfds, (fd_set*)0, (fd_set*)0, &tv);
+		}
+		else if (ssl_err == SSL_ERROR_WANT_WRITE) {
+			fd_set wfds;
+			FD_ZERO(&wfds);
+			FD_SET(sd, &wfds);
+			select(sd + 1, (fd_set*)0, &wfds, (fd_set*)0, &tv);
+		}
+		else {
+		// Real failure
+			if(logging){
+				fprintf(logstream, "SSL handshake failed:\n");
+				ERR_print_errors_fp(logstream);
+			}
+			ShutdownSSL(cSSL);
+			break;
+		}
+		if(logging){
+			fprintf(logstream,"Waiting...\n");
+		}
+	}
+}
 void init_openssl_libs_server_side(void){
 	if(logging){
 		if(will_use_tls){
@@ -47,10 +128,29 @@ void init_openssl_libs_server_side(void){
 	}
 
 	if(will_use_tls){
-		SSL_library_init();
+		InitializeSSL();
 		global_ctx = SSL_CTX_new(TLS_server_method());
 		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER, NULL);
-		SSL_CTX_load_verify_locations(global_ctx, host_cert_file_path, NULL);
+
+		/* Load CA certificate to verify the server */
+		if (!SSL_CTX_load_verify_locations(global_ctx, auth_cert_file_path, NULL)) {
+		    ERR_print_errors_fp(stderr);
+		}
+
+		/* Load client certificate */
+		if (!SSL_CTX_use_certificate_file(global_ctx, host_cert_file_path, SSL_FILETYPE_PEM)) {
+		    ERR_print_errors_fp(stderr);
+		}
+
+		/* Load client private key */
+		if (!SSL_CTX_use_PrivateKey_file(global_ctx, host_pkey_file_path, SSL_FILETYPE_PEM)) {
+		    ERR_print_errors_fp(stderr);
+		}
+
+		/* Make sure key matches cert */
+		if (!SSL_CTX_check_private_key(global_ctx)) {
+		    fprintf(stderr, "Client key does not match certificate\n");
+		}
 	}
 
 }
@@ -70,10 +170,33 @@ void init_openssl_libs_client_side(void){
 	}
 
 	if(will_use_tls){
-		SSL_library_init();
+		InitializeSSL();
 		global_ctx = SSL_CTX_new(TLS_client_method());
 		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER, NULL);
-		SSL_CTX_load_verify_locations(global_ctx, auth_cert_file_path, NULL);
+
+		char cwd[PATH_MAX];
+		getcwd(cwd, sizeof(cwd));
+		printf("Current working dir: %s\n", cwd);
+
+		/* Load CA certificate to verify the server */
+		if (!SSL_CTX_load_verify_locations(global_ctx, auth_cert_file_path, NULL)) {
+		    ERR_print_errors_fp(stderr);
+		}
+
+		/* Load client certificate */
+		if (!SSL_CTX_use_certificate_file(global_ctx, host_cert_file_path, SSL_FILETYPE_PEM)) {
+		    ERR_print_errors_fp(stderr);
+		}
+
+		/* Load client private key */
+		if (!SSL_CTX_use_PrivateKey_file(global_ctx, host_pkey_file_path, SSL_FILETYPE_PEM)) {
+		    ERR_print_errors_fp(stderr);
+		}
+
+		/* Make sure key matches cert */
+		if (!SSL_CTX_check_private_key(global_ctx)) {
+		    fprintf(stderr, "Client key does not match certificate\n");
+		}
 	}
 
 
@@ -92,6 +215,7 @@ void end_openssl_libs_client_side(void){
 
 			fprintf(logstream,"Yes!\n");
 		}
+		DestroySSL();
 		SSL_CTX_free(global_ctx);
 		global_ctx=NULL;
 		if(logging){
@@ -116,6 +240,7 @@ void end_openssl_libs_server_side(void){
 
 			fprintf(logstream,"Yes!\n");
 		}
+		DestroySSL();
 		SSL_CTX_free(global_ctx);
 		global_ctx=NULL;
 		if(logging){

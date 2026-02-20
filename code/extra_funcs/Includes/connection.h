@@ -4,7 +4,9 @@
 typedef enum con_type{SERVER_C,CLIENT_C} con_type;
 
 #define CONNECTION_ESTABLISHED_MSG "Conectado a %s!!!!!!\n"
+#define CON_NAME_DEFAULT "Unnamed connection"
 #define PORT_ADVANCE_CONSTANT 5000
+#define CON_NAME_MAX_LENGTH 128
 
 typedef struct con_t{
 
@@ -19,12 +21,15 @@ typedef struct con_t{
 	con_type type;
 	uint8_t is_ssl;
 	SSL* con_ssl;
+	char con_name[CON_NAME_MAX_LENGTH+1];
 }con_t;
 //sockfd_tcp tem de ser obtida com connect ou accept!!!!!!!
 
 //buff_triple COMES FROM THE OUTSIDE!
 
 //DOES NOT FREE OR INITIALIZE THE BUFFS YOU GIVE IT!
+
+void give_name_to_con(con_t* con_obj, const char* name);
 
 void init_con(con_t* con_obj, int sockfd_tcp,con_type type,ip_cache_entry* ent,uint8_t is_ssl);
 

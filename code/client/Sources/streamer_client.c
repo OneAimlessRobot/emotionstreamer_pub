@@ -15,6 +15,7 @@
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/sockio_udp.h"
+#include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/ripped_code.h"
@@ -47,6 +48,7 @@ static int stats_pct_full_decoding=0,
 	stats_time_ms=0,
 	stats_pct_full_playing=0;
 
+static int ready_2_go=0;
 static const int play=1;
 static const int decode=1;
 static const int input_enabled=1;
@@ -160,14 +162,21 @@ static int read_chunk_tcp(client_stream_t* strm,int_pair pair){
 
 
 static void rx_thread_func(void){
-	print_string("Thread de reading alcançado!\n");
+	print_log_string("Thread de reading alcançado!\n");
 	tid_rx=gettid_here();
 	set_this_thread_name(tid_rx, rx_thread_name);
 	while(innited){
-		acess_var_mtx(&variable_acess_mtx,&reading,1,V_SET);
+		acess_var_mtx(&variable_acess_mtx,&ready_2_go,1,V_SET);
+		if(!is_wav_compat_mode()){
+			print_log_string("Lets poke the decoder thread!\n");
+			pthread_cond_signal(&decoder_cond);
+			print_log_string("Decoder thread poked!\n");
+		}
 		while(innited){
 			rx_result=read_chunk_tcp(&stream_struct,client_data_times_pair);
 			if(rx_result<=0){
+				print_log_string("Thread de reading parado (early)!!!\n");
+				stop_client_stream();
 				return;
 			}
 			if(!is_wav_compat_mode()){
@@ -185,6 +194,12 @@ static void rx_thread_func(void){
 			}
 			decode_queue_full=perform_queue_op(is_wav_compat_mode()?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,is_wav_compat_mode()?(q_op){Q_LOOK,Q_IS_FULL}:(q_op){Q_LOOK,Q_IS_FULL});
 			if(decode_queue_full){
+				if(!is_wav_compat_mode()){
+					print_log_string("Lets poke the decoder thread!\n");
+					pthread_cond_signal(&decoder_cond);
+					print_log_string("Decoder thread poked!\n");
+				}
+				print_log_string("Breaking loop due to full decoding/playing queue!\n");
 				break;
 			}
 			if(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK)){
@@ -199,20 +214,22 @@ static void rx_thread_func(void){
 		}
 		pthread_mutex_unlock(&reading_mtx);
 	}
-	print_string("Thread de reading parado!!!\n");
+	print_log_string("Thread de reading parado!!!\n");
 	return;
 }
 
 static void* dec_thread_func(void* args){
 	pthread_mutex_lock(&decoder_mtx);
-	while(!acess_var_mtx(&variable_acess_mtx,&reading,0,V_LOOK)&&innited){
+	while(!acess_var_mtx(&variable_acess_mtx,&ready_2_go,0,V_LOOK)&&innited){
 
+		print_log_string("Waiting loop de thread de decoding alcançado!\n");
 		pthread_cond_wait(&decoder_cond,&decoder_mtx);
+		print_log_string("Waiting loop de thread de decoding triggered com cond!\n");
 	}
 	pthread_mutex_unlock(&decoder_mtx);
 	tid_dec=gettid_here();
 	set_this_thread_name(tid_dec, decode_thread_name);
-	print_string("Thread de decoding alcançado!\n");
+	print_log_string("Thread de decoding alcançado!\n");
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&decoding,1,V_SET);
 		while(innited){
@@ -240,13 +257,13 @@ static void* dec_thread_func(void* args){
 				memset(decode_print_buff,0,sizeof(decode_print_buff));
 				if(decode_ret_val==MPG123_DONE){
 					snprintf(decode_print_buff,sizeof(decode_print_buff)-1,"Stream done!\n");
-					print_string(decode_print_buff);
+					print_log_string(decode_print_buff);
 					raise(SIGINT);
 					stop_client_stream();
         			}
 				else if(decode_ret_val==MPG123_ERR){
 					snprintf(decode_print_buff,sizeof(decode_print_buff)-1,"Decoding error: %s\n",mpg123_strerror(stream_struct.decoder->dec));
-					print_string(decode_print_buff);
+					print_log_string(decode_print_buff);
 					raise(SIGINT);
 					stop_client_stream();
         			}
@@ -260,7 +277,7 @@ static void* dec_thread_func(void* args){
 	}
 	pthread_mutex_unlock(&decoder_mtx);
 	}
-	print_string("Thread de decoding parado!!!\n");
+	print_log_string("Thread de decoding parado!!!\n");
 
 	return  args;
 }
@@ -276,7 +293,7 @@ static void* play_thread_func(void* args){
 	usleep(cfg_latency_ms*1000);
 	tid_play=gettid_here();
 	set_this_thread_name(tid_play, play_thread_name);
-	print_string("Thread de play alcançado!\n");
+	print_log_string("Thread de play alcançado!\n");
 	while(innited){
 		acess_var_mtx(&variable_acess_mtx,&playing,1,V_SET);
 		if(!acess_var_mtx(&variable_acess_mtx,&showing,0,V_LOOK)){
@@ -314,7 +331,8 @@ static void* play_thread_func(void* args){
 	}
 	pthread_mutex_unlock(&player_mtx);
 	}
-	print_string("Thread de playing parado!!!\n");
+	print_log_string("Thread de playing parado!!!\n");
+	stop_client_stream();
 	return  args;
 }
 static void* show_stats(void* args){
@@ -327,7 +345,7 @@ static void* show_stats(void* args){
 	pthread_mutex_unlock(&stats_mtx);
 	tid_stats=gettid_here();
 	set_this_thread_name(tid_stats, stats_thread_name);
-	print_string("Thread de stats alcançado!\n");
+	print_log_string("Thread de stats alcançado!\n");
 	if(stream_enable_ncurses){
         	enable_ncurses();
 		clear();
@@ -393,7 +411,7 @@ static void* input_thread_func(void* args){
 	pthread_mutex_unlock(&input_mtx);
 	tid_input=gettid_here();
 	set_this_thread_name(tid_input, input_thread_name);
-	print_string("Thread de input alcançado!\n");
+	print_log_string("Thread de input alcançado!\n");
 	while(innited){
 		memset(input_buff,0,sizeof(input_buff)-1);
 		if(stream_enable_ncurses){
@@ -415,7 +433,7 @@ static void* input_thread_func(void* args){
 			break;
 			case 's':
 				pthread_mutex_lock(&input_mtx);
-				print_string("Tentando sair!\n");
+				print_log_string("Tentando sair!\n");
 				raise(SIGINT);
 				stop_client_stream();
 				pthread_mutex_unlock(&input_mtx);
@@ -453,26 +471,35 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	stream_struct.player_que=&player_que;
 	stream_struct.player=&player;
 	if(!is_wav_compat_mode()){
-		printf("Decoder thread (named %s) will be initialized\n",decode_thread_name);
+		printf("Decoder will be initialized\n");
 		init_queue(&decoder_que,sizeof(d_chunk_buff),cfg_stream_decoder_cache_size_chunks,cfg_show_decoder_queue_length,(char*)decode_queue_name);
 		init_decoder(&decoder,sizeof(d_chunk_buff),sizeof(pd_chunk_buff),r_chunk_buff,d_chunk_buff,pd_chunk_buff);
 		stream_struct.decoder=&decoder;
 		stream_struct.decoder_que=&decoder_que;
 		is_first_player_chunk=0;
+		printf("Decoder thread initialized successfully\n");
 	}
 	stream_struct.con_obj=con_obj;
 	innited=1;
 	if(!is_wav_compat_mode()){
+		printf("Decoder thread (named %s) to be initialized\n",decode_thread_name);
 		create_client_thread(&t_dec,dec_thread_func);
+		printf("Decoder thread (named %s) initialized successfully\n",decode_thread_name);
 	}
 	if(play){
+		printf("Player thread (named %s) to be initialized\n",play_thread_name);
 		create_client_thread(&t_play,play_thread_func);
+		printf("Player thread (named %s) initialized sucessfully\n",play_thread_name);
 	}
 	if(stream_show_stats){
+		printf("Stats thread (named %s) to be initialized\n",stats_thread_name);
 		create_client_thread(&t_stats,show_stats);
+		printf("Stats thread (named %s) initialized sucessfully\n",stats_thread_name);
 	}
 	if(input_enabled){
+		printf("Input thread (named %s) to be initialized\n",input_thread_name);
 		create_client_thread(&t_input,input_thread_func);
+		printf("Input thread (named %s) initialized successfully\n",input_thread_name);
 	}
 	rx_thread_func();
 	while(innited&&(acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)||acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK))){
@@ -508,6 +535,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	}
 	stop_client_stream();
 	perform_play_op(stream_struct.player,NULL,P_CLEAN);
+	end_openssl_libs_client_side();
 	printf("SAIMOS DO CLIENT!\nVamos ver errno:%s\n",strerror(errno));
 	return 0;
 }

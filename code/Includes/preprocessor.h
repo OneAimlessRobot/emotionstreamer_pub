@@ -27,6 +27,7 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/ioctl.h>
+#include <openssl/opensslv.h>
 #include <openssl/ssl.h>
 #include <openssl/bio.h>
 #include <openssl/ssl.h>

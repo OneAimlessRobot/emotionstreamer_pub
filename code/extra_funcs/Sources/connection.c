@@ -1,8 +1,8 @@
 #include "../../Includes/preprocessor.h"
 #include "../Includes/auxfuncs.h"
-#include <openssl/ssl.h>
 #include "../Includes/fileshit.h"
 #include "../Includes/sockio.h"
+#include "../Includes/openssl_stuff.h"
 #include "../Includes/sock_ops.h"
 #include "../Includes/more_socket_ops.h"
 #include "../Includes/sockio_udp.h"
@@ -226,6 +226,12 @@ void close_con(con_t* con_obj,int RIGHT_NOW,int close_for_good){
 		if(logging){
 			fprintf(logstream,"Fechamos conexão!!!!\nDe vez? %s\n",close_for_good?"Yes!":"No...");
 		}
+		if(con_obj->con_ssl){
+			if(logging){
+				fprintf(logstream,"Closing ssl on connection named %s!\n",con_obj->con_name);
+			}
+			ShutdownSSL(&con_obj->con_ssl);
+		}
 	}
 	else{
 
@@ -234,9 +240,18 @@ void close_con(con_t* con_obj,int RIGHT_NOW,int close_for_good){
 		}
 	}
 }
+
+void give_name_to_con(con_t* con_obj, const char* name){
+
+	if(name){
+		memcpy(con_obj->con_name,name,min(strlen(name),CON_NAME_MAX_LENGTH));
+	}
+
+}
 void init_con(con_t* con_obj,int sockfd_tcp,con_type type,ip_cache_entry *ent,uint8_t is_ssl){
 
 				prep_con(con_obj);
+				give_name_to_con(con_obj,CON_NAME_DEFAULT);
 				con_obj->is_on=1;
 				con_obj->type=type;
                                 con_obj->sockfd_tcp=sockfd_tcp;
@@ -256,8 +271,6 @@ void init_con(con_t* con_obj,int sockfd_tcp,con_type type,ip_cache_entry *ent,ui
 
 				memset(con_obj->tcp_data,0,DEF_DATASIZE+1);
 				con_obj->is_ssl=is_ssl;
-				con_obj->con_ssl=NULL;
-
 
 }
 
@@ -423,6 +436,13 @@ void ask_for_ports(ip_cache_entry* ent){
 
 static void greet_server(con_t* con_obj, int_pair pair){
 
+	if(con_obj->is_ssl){
+		convert_server_con_to_ssl(&con_obj->con_ssl,con_obj->sockfd_tcp,pair);
+	}
+	else{
+		con_obj->con_ssl=NULL;
+	}
+
 	char client_data[DEF_DATASIZE+1];
 	memset(client_data,0,DEF_DATASIZE+1);
 	con_read_tcp(con_obj,pair);
@@ -445,6 +465,13 @@ static void greet_server(con_t* con_obj, int_pair pair){
 }
 
 static void greet_client(con_t* con_obj,int_pair pair){
+
+	if(con_obj->is_ssl){
+		convert_client_con_to_ssl(&con_obj->con_ssl,con_obj->sockfd_tcp,pair);
+	}
+	else{
+		con_obj->con_ssl=NULL;
+	}
 
 	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%s",CON_STRING);
 	if(logging){

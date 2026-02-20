@@ -15,7 +15,7 @@ rm -rf $result_file
 
 echo "Obtivemos $num_results da pesquisa pelo padrão: '$1'"
 
-backend=""
+backend="oss"
 
 if [ $num_results -lt 1 ]
 then
