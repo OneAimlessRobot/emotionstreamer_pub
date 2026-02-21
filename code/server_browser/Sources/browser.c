@@ -116,16 +116,16 @@ void init_browser(char* hostname, char* req,uint16_t port){
                                 &hb_server_addr,
                                        &server_browser_ip_cache_entry,&port_mapper_ip_cache_entry,browser_con_times_pair,NULL);
         clear_con_data(&con_obj);
-	char string_to_send[PATHSIZE/2]={0};
+	char string_to_send[DEF_DATASIZE/2]={0};
 	interlvl_cmd cmd= str_to_interlvl_cmd_type(req);
 
 	switch(cmd){
 
 		case SHOW:
-			strncpy(string_to_send,SHOW_STRING,(PATHSIZE/2)-1);
+			strncpy(string_to_send,SHOW_STRING,(DEF_DATASIZE/2)-1);
 			break;
 		case MASTER_SHOW:
-			strncpy(string_to_send,SHOW_MASTER_STRING,(PATHSIZE/2)-1);
+			strncpy(string_to_send,SHOW_MASTER_STRING,(DEF_DATASIZE/2)-1);
 			break;
 		default:
 			printf("Request desconhecido: |%s|\n",req);

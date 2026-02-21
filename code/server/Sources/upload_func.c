@@ -20,7 +20,7 @@ int sent=0;
 while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
 
         errno=0;
-        sent = sendsome(sock, buff,  numread,times,is_ssl,cSSL);
+        sent = is_ssl?sendsome_ssl(cSSL, buff,  numread,times):sendsome(sock, buff,  numread,times);
         memset(buff,0,DEF_DATASIZE);
 	int readjunior=0;
         if(sent==-2){

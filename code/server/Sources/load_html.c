@@ -35,7 +35,7 @@ static void generateDirListingPrimitive(char* pattern){
 	//(Ahem chatgpt solution ahem)
 	//(Ahem I wish system() did not even exist so I would not be tempted to use it ahem)
 
-	char buff[DEF_DATASIZE+5]={0};
+	char buff[PATHSIZE+5]={0};
 	snprintf(buff,sizeof(buff)-3,".%s",server_music_folder_path);
 	chdir(buff);
 	memset(buff,0,sizeof(buff));

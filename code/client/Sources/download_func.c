@@ -81,15 +81,24 @@ int downloadtofd(int sock,int fd,int64_t size,int_pair times,uint8_t is_ssl,SSL*
         bar.size=40;
         memset(buff,0,DEF_DATASIZE);
         for(;(len==-2||len>0)&&(total!=size);){
-		len=readsome(sock,buff,DEF_DATASIZE,times,is_ssl,cSSL);
-                if(len==-2){
-			printf("Timeout no download!!!\n");
+		if(is_ssl){
+			len=readsome_ssl(cSSL,buff,DEF_DATASIZE,times);
                 }
-                written=write(fd,buff,len);
-		total+= (written<0)? 0:written;
-                bar.curr+=(written<0)? 0:written;
+		else{
+			len=readsome(sock,buff,DEF_DATASIZE,times);
+
+		}
+		if(len==-2){
+			printf("Timeout no download!!!\n");
+        		continue;
+	        }
+                if(len>0){
+			written=write(fd,buff,len);
+			total+= (written<0)? 0:written;
+	                bar.curr+=(written<0)? 0:written;
+	                memset(buff,0,DEF_DATASIZE);
+		}
 		print_download_bar((void*)&bar,len,&timeout_num);
-                memset(buff,0,DEF_DATASIZE);
         }
         if(!(bar.curr)){
                 if(logging){
@@ -129,7 +138,13 @@ int downloadtofd(int sock,int fd,int64_t size,int_pair times,uint8_t is_ssl,SSL*
 
         }
         memset(buff,0,DEF_DATASIZE);
-        sendsome(sock,buff,DEF_DATASIZE,times,is_ssl,cSSL);
+	if(is_ssl){
+
+	       sendsome_ssl(cSSL,buff,DEF_DATASIZE,times);
+	}
+	else{
+	       sendsome(sock,buff,DEF_DATASIZE,times);
+	}
 
         return 0;
 

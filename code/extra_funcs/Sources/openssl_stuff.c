@@ -7,6 +7,15 @@
 #include <unistd.h>
 #include <limits.h>
 
+int verify_callback(int ok, X509_STORE_CTX *ctx) {
+    if (!ok) {
+        int err = X509_STORE_CTX_get_error(ctx);
+        printf("Verify error: %s\n",
+               X509_verify_cert_error_string(err));
+    }
+    return ok;
+}
+
 void InitializeSSL(void){
 
     printf("OpenSSL version: %s\n", OPENSSL_VERSION_TEXT);
@@ -130,7 +139,7 @@ void init_openssl_libs_server_side(void){
 	if(will_use_tls){
 		InitializeSSL();
 		global_ctx = SSL_CTX_new(TLS_server_method());
-		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER, NULL);
+		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, verify_callback);
 
 		/* Load CA certificate to verify the server */
 		if (!SSL_CTX_load_verify_locations(global_ctx, auth_cert_file_path, NULL)) {
@@ -172,7 +181,7 @@ void init_openssl_libs_client_side(void){
 	if(will_use_tls){
 		InitializeSSL();
 		global_ctx = SSL_CTX_new(TLS_client_method());
-		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER, NULL);
+		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER, verify_callback);
 
 		char cwd[PATH_MAX];
 		getcwd(cwd, sizeof(cwd));

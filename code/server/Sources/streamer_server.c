@@ -45,9 +45,16 @@ static void cleanup(int useless){
 	initted=0*useless;
 }
 static int send_chunk_tcp(server_stream_t* strm,int_pair pair){
+	int result=-1;
+	if(strm->con_obj->is_ssl){
 
-	return sendsome(strm->con_obj->sockfd_tcp,(char*)strm->chunk_data_cache,strm->chunk_size+(is_wav_mode?0:sizeof(frame_info_t)+4),pair,strm->con_obj->is_ssl,strm->con_obj->con_ssl);
+		result = sendsome_ssl(strm->con_obj->con_ssl,(char*)strm->chunk_data_cache,strm->chunk_size+(is_wav_mode?0:sizeof(frame_info_t)+4),pair);
+	}
+	else{
+		result = sendsome(strm->con_obj->sockfd_tcp,(char*)strm->chunk_data_cache,strm->chunk_size+(is_wav_mode?0:sizeof(frame_info_t)+4),pair);
 
+	}
+	return result;
 }
 
 static int send_chunk_to_client(void){
