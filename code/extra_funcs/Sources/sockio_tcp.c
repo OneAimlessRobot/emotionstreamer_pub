@@ -236,8 +236,7 @@ while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
 return 0;
 }
 int readalltofd(int sock,int fd,size_t size,int_pair times,uint8_t is_ssl,SSL* cSSL){
-        int32_t len=1;
-	int32_t written=1;
+    int32_t len=1;
 	size_t total=0;
 	char buff[DEF_DATASIZE];
 	memset(buff,0,DEF_DATASIZE);

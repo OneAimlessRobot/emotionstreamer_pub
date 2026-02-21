@@ -40,7 +40,7 @@ static int fp=-1;
 static struct sigaction sa;
 static char extension_from_server[PATHSIZE]={0};
 static	char method_buff[PATHSIZE]={0},
-	req_buff[PATHSIZE/4]={0},
+	req_buff[DEF_DATASIZE/4]={0},
 	file_path[PATHSIZE*3-1]={0},
 	file_path2[PATHSIZE*3-1]={0};
 static struct sockaddr_in server_ip_address,
@@ -256,7 +256,7 @@ int clientStart(char* req_field,char* file_name){
 	setNonBlocking(&client_con_obj.sockfd_tcp);
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	greet(&client_con_obj,client_con_times_pair);
-	snprintf((char*)client_con_obj.tcp_data,2*DEF_DATASIZE-1,"%s %s",req_buff,file_name);
+	snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE-1,"%s %s",req_buff,file_name);
 	con_send_tcp(&client_con_obj,client_data_times_pair);
 
 
