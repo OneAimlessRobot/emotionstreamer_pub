@@ -6,36 +6,27 @@
 #include "../Includes/fileshit.h"
 #include <unistd.h>
 #include <limits.h>
-uint8_t SERVER_SSL_initted_in_process=0;  
+uint8_t SERVER_SSL_initted_in_process=0;
 
-uint8_t SSL_on_in_process=0;  
+uint8_t SSL_on_in_process=0;
 
-uint8_t CLIENT_SSL_initted_in_process=0;  
-
-int verify_callback(int ok, X509_STORE_CTX *ctx) {
-    if (!ok) {
-        int err = X509_STORE_CTX_get_error(ctx);
-        printf("Verify error: %s\n",
-               X509_verify_cert_error_string(err));
-    }
-    return ok;
-}
+uint8_t CLIENT_SSL_initted_in_process=0;
 
 void InitializeSSL(void){
 	if(SSL_on_in_process){
-		if(logging){	
+		if(logging){
 			fprintf(logstream,"SSL já ativo! Ignorando!\n");
 		}
 		return;
 	}
 	else{
-		if(logging){	
+		if(logging){
 			fprintf(logstream,"SSL ativo! SSL_on_in_process: 0 -> 1 !\n");
 		}
 		SSL_on_in_process=1;
 	}
     printf("OpenSSL version: %s\n", OPENSSL_VERSION_TEXT);
-    printf("OpenSSL version text func: %s\n", OpenSSL_version(OPENSSL_VERSION));    
+    printf("OpenSSL version text func: %s\n", OpenSSL_version(OPENSSL_VERSION));
     SSL_load_error_strings();
     SSL_library_init();
     OpenSSL_add_all_algorithms();
@@ -43,13 +34,13 @@ void InitializeSSL(void){
 
 void DestroySSL(void){
 	if(!SSL_on_in_process){
-		if(logging){	
+		if(logging){
 			fprintf(logstream,"SSL já desativado! Ignorando!\n");
 		}
 		return;
 	}
 	else{
-		if(logging){	
+		if(logging){
 			fprintf(logstream,"SSL desativado! SSL_on_in_process: 1 -> 0 !\n");
 		}
 		SSL_on_in_process=0;
@@ -179,7 +170,7 @@ void init_openssl_libs_server_side(void){
 		}
 		InitializeSSL();
 		global_ctx = SSL_CTX_new(TLS_server_method());
-		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, verify_callback);
+		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER,NULL);
 
 		/* Load CA certificate to verify the server */
 		if (!SSL_CTX_load_verify_locations(global_ctx, auth_cert_file_path, NULL)) {
@@ -233,7 +224,7 @@ void init_openssl_libs_client_side(void){
 		}
 		InitializeSSL();
 		global_ctx = SSL_CTX_new(TLS_client_method());
-		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER, verify_callback);
+		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER, NULL);
 
 		char cwd[PATH_MAX];
 		getcwd(cwd, sizeof(cwd));

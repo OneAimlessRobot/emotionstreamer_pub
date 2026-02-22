@@ -27,9 +27,19 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 			else if (ret == 0) {
 				return send_total;
 			}
-	        int err = SSL_get_error(ssl, ret);
-	        
-		if (err == SSL_ERROR_WANT_READ|| err == SSL_ERROR_WANT_WRITE) {
+	        int ssl_err = SSL_get_error(ssl, ret);
+		if (ssl_err == SSL_ERROR_WANT_READ) {
+			fd_set rfds;
+			FD_ZERO(&rfds);
+			FD_SET(sd, &rfds);
+			select(sd + 1, &rfds, (fd_set*)0, (fd_set*)0, &tv);
+			continue;
+		}
+		else if (ssl_err == SSL_ERROR_WANT_WRITE) {
+			fd_set wfds;
+			FD_ZERO(&wfds);
+			FD_SET(sd, &wfds);
+			select(sd + 1, (fd_set*)0, &wfds, (fd_set*)0, &tv);
 			continue;
 		}
 		else{
@@ -75,9 +85,19 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 		else if (ret == 0) {
 			return read_total;
 		}
-		int err = SSL_get_error(ssl, ret);
-		
-		if (err == SSL_ERROR_WANT_READ||err == SSL_ERROR_WANT_WRITE) {		
+		int ssl_err = SSL_get_error(ssl, ret);
+		if (ssl_err == SSL_ERROR_WANT_READ) {
+			fd_set rfds;
+			FD_ZERO(&rfds);
+			FD_SET(sd, &rfds);
+			select(sd + 1, &rfds, (fd_set*)0, (fd_set*)0, &tv);
+			continue;
+		}
+		else if (ssl_err == SSL_ERROR_WANT_WRITE) {
+			fd_set wfds;
+			FD_ZERO(&wfds);
+			FD_SET(sd, &wfds);
+			select(sd + 1, (fd_set*)0, &wfds, (fd_set*)0, &tv);
 			continue;
 		}
 		else{
