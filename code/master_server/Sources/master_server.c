@@ -2,6 +2,7 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
@@ -41,6 +42,7 @@ static void close_all_fds_here(void){
 static void call_signal_func(void){
 
 
+	end_openssl_libs_server_side();
 	close_all_fds_here();
         pthread_mutex_lock(&master_con_mtx);
 	send_port_back(htons(arg_a.accept_addr.sin_port),&port_mapper_ip_cache_entry);
@@ -112,7 +114,8 @@ void start_master(char* hostname, uint16_t port){
         arg_a.arg_o=&arg_o;
         arg_a.arg_s=NULL;
         arg_a.con_mtx=&master_con_mtx;
-        arg_a.var_mtx=&master_mtx;
+        arg_a.is_tls=will_use_tls;
+	arg_a.var_mtx=&master_mtx;
 	arg_a.ack_period_us=cfg_master_ack_period_us;
 	arg_a.master_mtx=arg_o.start_cond_mtx;
 

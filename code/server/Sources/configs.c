@@ -325,6 +325,7 @@ void read_values_cfg_server(void){
 	server_working_extension[sizeof(server_working_extension)-1]=0;
 	server_music_folder_path[sizeof(server_music_folder_path)-1]=0;
 	server_music_quarantine_folder_path[sizeof(server_music_quarantine_folder_path)-1]=0;
+	auth_cert_file_path[sizeof(auth_cert_file_path)-1]=0;
 	host_cert_file_path[sizeof(host_cert_file_path)-1]=0;
 	host_pkey_file_path[sizeof(host_pkey_file_path)-1]=0;
 	process_ip_cache_entries();

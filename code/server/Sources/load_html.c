@@ -135,8 +135,6 @@ char* generateDirListing(char* pattern){
 	}
 	remove(tmpDir);
 	char currListing[PATHSIZE*4-1]={0};
-	dprintf(fd,"Conteudos do server:\n");
-
 	while(1){
 
 		memset(currListing,0,PATHSIZE*4-1);

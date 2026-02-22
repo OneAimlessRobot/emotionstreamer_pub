@@ -125,29 +125,38 @@ void read_values_cfg_hb(void){
         }
         sscanf(curr_line_buff,"hb_server_name: %s",hb_server_name_buff);
         clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-
-                clean_and_exit();
-        }
-        sscanf(curr_line_buff,"hb_auth_cert_file_path: %s",auth_cert_file_path);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
         }
-        sscanf(curr_line_buff,"hb_host_cert_file_path: %s",host_cert_file_path);
+        sscanf(curr_line_buff,"hb_using_tls: %hhu",&will_use_tls);
         clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+	if(will_use_tls){
 
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-                clean_and_exit();
-        }
-        sscanf(curr_line_buff,"hb_host_pkey_file_path: %s",host_pkey_file_path);
-        clean_buff();
+	                clean_and_exit();
+	        }
+	        sscanf(curr_line_buff,"hb_auth_cert_file_path: %s",auth_cert_file_path);
+	        clean_buff();
+			if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+	                clean_and_exit();
+	        }
+	        sscanf(curr_line_buff,"hb_host_cert_file_path: %s",host_cert_file_path);
+	        clean_buff();
+
+			if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+	                clean_and_exit();
+	        }
+	        sscanf(curr_line_buff,"hb_host_pkey_file_path: %s",host_pkey_file_path);
+	        clean_buff();
+	}
         fclose(cfg_fp);
-
+	auth_cert_file_path[sizeof(auth_cert_file_path)-1]=0;
+	host_cert_file_path[sizeof(host_cert_file_path)-1]=0;
+	host_pkey_file_path[sizeof(host_pkey_file_path)-1]=0;
 	process_ip_cache_entries();
 
 }
@@ -170,11 +179,15 @@ void print_values_cfg_hb(int fd){
 
 	dprintf(fd,"hb_server_name: %s\n",hb_server_name_buff);
 
-	dprintf(fd,"hb_auth_cert_file_path: %s\n",auth_cert_file_path);
+	dprintf(fd,"hb_using_tls: %huu\n",will_use_tls);
 
-	dprintf(fd,"hb_host_cert_file_path: %s\n",host_cert_file_path);
+	if(will_use_tls){
+		dprintf(fd,"hb_auth_cert_file_path: %s\n",auth_cert_file_path);
 
-	dprintf(fd,"hb_host_pkey_file_path: %s\n",host_pkey_file_path);
+		dprintf(fd,"hb_host_cert_file_path: %s\n",host_cert_file_path);
+
+		dprintf(fd,"hb_host_pkey_file_path: %s\n",host_pkey_file_path);
+	}
 
 	print_ip_cache_entry(stdout,&upper_ip_cache_entry);
 

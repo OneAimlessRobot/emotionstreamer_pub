@@ -142,6 +142,7 @@ static void peek_func(void){
 		int down_size=down_file_size();
 		if(logging){
 			printf(CONTENT_PEEK_INCOMMING);
+			printf("Conteúdos do server:\n");
 		}
 		readalltofd(client_con_obj.sockfd_tcp,1,down_size,client_data_times_pair,client_con_obj.is_ssl,client_con_obj.con_ssl);
 		clear_ports_and_quit(SIGINT,NULL);

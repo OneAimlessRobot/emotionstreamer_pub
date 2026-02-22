@@ -97,20 +97,6 @@ void read_values_cfg_port_mapper(void){
         }
         sscanf(curr_line_buff,"port_mapper_remove_port_file_on_exit: %hhu",&cfg_port_mapper_remove_port_file_on_exit);
         clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-
-                clean_and_exit();
-        }
-        sscanf(curr_line_buff,"port_mapper_host_cert_file_path: %s",host_cert_file_path);
-        clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-
-                clean_and_exit();
-        }
-        sscanf(curr_line_buff,"port_mapper_host_pkey_file_path: %s",host_pkey_file_path);
-        clean_buff();
 	fclose(cfg_fp);
 }
 void print_values_cfg_port_mapper(int fd){
@@ -129,9 +115,5 @@ void print_values_cfg_port_mapper(int fd){
 	dprintf(fd,"port_mapper_use_port_mapper_file: %hhu\n",cfg_port_mapper_use_port_mapper_file);
 
 	dprintf(fd,"port_mapper_remove_port_file_on_exit: %hhu\n",cfg_port_mapper_remove_port_file_on_exit);
-
-	dprintf(fd,"port_mapper_host_cert_file_path: %s\n",host_cert_file_path);
-
-	dprintf(fd,"port_mapper_host_pkey_file_path: %s\n",host_pkey_file_path);
 
 }

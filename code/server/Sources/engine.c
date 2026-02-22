@@ -2,9 +2,9 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../Includes/load_html.h"
 #include "../../extra_funcs/Includes/protocol.h"
-#include <openssl/ssl.h>
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/configs.h"
@@ -217,6 +217,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 		arg_s.exit_signal=SIGTERM;
 		arg_s.con_obj=&state.hb_con;
 		arg_s.clean_func=call_sigint;
+		arg_s.is_tls=will_use_tls;
 		arg_s.ack_period_us=cfg_server_ack_period_us;
 		arg_s.sig_func=serverStop;
 		arg_s.start_trigger=&started;

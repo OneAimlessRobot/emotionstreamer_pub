@@ -2,6 +2,7 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/more_socket_ops.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
@@ -21,6 +22,7 @@ static atomic_int innited=0;
 
 static void cleanup_and_send_ports_back(int useless,void*ptr){
 
+	end_openssl_libs_client_side();
 	raise(useless);
 	send_port_back(htons(our_addr.sin_port),&port_mapper_ip_cache_entry);
 	free_attempted_ports(0,&port_mapper_ip_cache_entry);
@@ -111,7 +113,8 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	    perror("Não conseguimos inicializar address do peer em server_browser!!!\n");
 	    cleanup_and_send_ports_back(SIGINT,NULL);
 	}
-	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,&port_mapper_ip_cache_entry,0);
+	init_openssl_libs_client_side();
+	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,&port_mapper_ip_cache_entry,will_use_tls);
 	connection_attempt_circuit(&con_obj.sockfd_tcp,cleanup_and_send_ports_back,&our_addr,
                                 &hb_server_addr,
                                        &server_browser_ip_cache_entry,&port_mapper_ip_cache_entry,browser_con_times_pair,NULL);
@@ -131,7 +134,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 			printf("Request desconhecido: |%s|\n",req);
 			cleanup_and_send_ports_back(SIGINT,NULL);
         }
-
+	greet(&con_obj,browser_con_times_pair);
 	snprintf((char*)con_obj.tcp_data,DEF_DATASIZE-1,"%s",string_to_send);
         int result=con_send_tcp(&con_obj,browser_con_times_pair);
         if(result<0){

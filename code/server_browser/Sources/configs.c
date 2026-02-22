@@ -89,13 +89,36 @@ void read_values_cfg_browser(void){
         clean_buff();
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
-
                 clean_and_exit();
         }
-        sscanf(curr_line_buff,"browser_auth_cert_file_path: %s",auth_cert_file_path);
+        sscanf(curr_line_buff,"browser_using_tls: %hhu",&will_use_tls);
         clean_buff();
-	fclose(cfg_fp);
+	if(will_use_tls){
 
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+	                clean_and_exit();
+	        }
+	        sscanf(curr_line_buff,"browser_auth_cert_file_path: %s",auth_cert_file_path);
+	        clean_buff();
+			if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+	                clean_and_exit();
+	        }
+	        sscanf(curr_line_buff,"browser_host_cert_file_path: %s",host_cert_file_path);
+	        clean_buff();
+
+			if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+	                clean_and_exit();
+	        }
+	        sscanf(curr_line_buff,"browser_host_pkey_file_path: %s",host_pkey_file_path);
+	        clean_buff();
+	}
+	fclose(cfg_fp);
+	auth_cert_file_path[sizeof(auth_cert_file_path)-1]=0;
+	host_cert_file_path[sizeof(host_cert_file_path)-1]=0;
+	host_pkey_file_path[sizeof(host_pkey_file_path)-1]=0;
 	process_ip_cache_entries();
 
 
@@ -114,6 +137,13 @@ void print_values_cfg_browser(int fd){
 
         dprintf(fd,"browser_timeouts_data: %lus %lu us\n",browser_data_times_pair[0],browser_data_times_pair[1]);
 
-	dprintf(fd,"browser_auth_cert_file_path: %s\n",auth_cert_file_path);
+	dprintf(fd,"browser_using_tls: %hhu\n",will_use_tls);
 
+	if(will_use_tls){
+		dprintf(fd,"browser_auth_cert_file_path: %s\n",auth_cert_file_path);
+
+		dprintf(fd,"browser_host_cert_file_path: %s\n",host_cert_file_path);
+
+		dprintf(fd,"browser_host_pkey_file_path: %s\n",host_pkey_file_path);
+	}
 }

@@ -3,9 +3,10 @@
 #get song with pattern:
 
 pattern="$1"
+
 result_file="./.tmp_result"
 touch $result_file
-./client.exe peek "${pattern}"|grep "${pattern}" > $result_file
+./client.exe peek "${pattern}" > $result_file
 
 cat $result_file
 

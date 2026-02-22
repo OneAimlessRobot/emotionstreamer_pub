@@ -4,6 +4,13 @@
 
 #define SSL_TIMEOUT_WAIT_SEC 1
 #define SSL_TIMEOUT_WAIT_USEC 1000
+
+extern uint8_t SERVER_SSL_initted_in_process;
+
+extern uint8_t SSL_on_in_process;
+
+extern uint8_t CLIENT_SSL_initted_in_process;
+
 void InitializeSSL(void);
 
 void DestroySSL(void);

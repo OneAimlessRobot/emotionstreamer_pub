@@ -2,6 +2,7 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
@@ -49,6 +50,7 @@ static void close_all_fds_here(void){
 static void call_signal_func(void){
 
 
+	end_openssl_libs_server_side();
 	send_port_back(htons(arg_a.accept_addr.sin_port),&port_mapper_ip_cache_entry);
 	close_all_fds_here();
 	perror("Saindo do heart beat server!!!!\n");
@@ -133,6 +135,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
 	arg_s.con_obj=&con_obj;
 	arg_s.con_mtx=&con_mtx;
+	arg_s.is_tls=will_use_tls;
 	arg_s.sig_func=sigint_handler;
 	arg_s.clean_func=call_signal_func;
 	arg_s.trg_cond=&master_cond;
@@ -151,6 +154,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         arg_a.sig_func=sigint_handler;
 	arg_a.arg_s=&arg_s;
 	arg_a.ack_period_us=cfg_hb_ack_period_us;
+	arg_a.is_tls=arg_s.is_tls;
 	arg_a.master_mtx=&master_mtx;
         arg_a.var_mtx=arg_s.var_mtx;
 

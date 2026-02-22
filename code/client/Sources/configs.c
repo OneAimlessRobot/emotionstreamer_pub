@@ -256,7 +256,7 @@ void read_values_cfg_client(void){
 
 		clean_and_exit();
 	}
-	sscanf(curr_line_buff,"client_will_use_tls: %hhu", &will_use_tls);
+	sscanf(curr_line_buff,"client_using_tls: %hhu", &will_use_tls);
 	clean_buff();
 	if(will_use_tls){
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
