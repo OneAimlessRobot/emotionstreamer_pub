@@ -1,5 +1,9 @@
 #!/bin/bash
 #hostname = all.ddnskey.com
-#url: http://addysmagic.freedynamicdns.net:PORT_GOES_HERE
-noip-duc --check-interval 5m --username  b1v3q8j@ddnskey.com --password A4dG2TM8VZV9 --ip-method static:85.138.81.153 -g addysmagic2.ddns.net --daemon-group addysmagic2
+#url: http://lenasattic.ddns.net:PORT_GOES_HERE
+
+#username/email: pzkcxhz@ddnskey.com
+#password: 5FGymDwo53ry
+#ddns key hostname: all.ddnskey.com
+noip-duc --check-interval 5m --username  pzkcxhz@ddnskey.com --password 5FGymDwo53ry --ip-method static:85.138.81.153 -g lenasattic.ddns.net --daemon-group lara_and_lenas_group
 
