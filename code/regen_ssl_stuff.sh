@@ -1,7 +1,5 @@
 #!/bin/bash
 
-module_name_file=".module_name"
-
 name_string_for_authority_stuff="ca-emo_mer"
 
 host_string_in_file_name="host"
@@ -191,3 +189,7 @@ cre8_cert_module_name_files
 export_host_certs_to_dirs
 
 find $our_cwd -iname "*certs_and_pkeys*"
+
+rm -rf "$our_cwd$tmp_host_cert_directory_name"
+
+rm -rf "$our_cwd$tmp_auth_cert_directory_name"
