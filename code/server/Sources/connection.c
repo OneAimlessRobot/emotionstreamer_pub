@@ -66,7 +66,6 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 			else{
 				snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"-1");
 			}
-			printf("String a enviar ao cliente: |%s|\n",(char*)server_con_obj.tcp_data);
 			int ret_send=con_send_tcp(&server_con_obj,server_data_times_pair);
 			if(ret_send<0){
 				if(server_con_obj.is_ssl){

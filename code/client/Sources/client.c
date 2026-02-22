@@ -80,7 +80,6 @@ static int64_t down_file_size(void){
 		}
 		int ret_read=con_read_tcp(&client_con_obj,client_data_times_pair);
 		sscanf((char*)client_con_obj.tcp_data,"%ld %s %hhd",&down_size,extension_from_server,&is_wav_mode);
-		printf("String recebida do server upon entry: |%s|\n",(char*)client_con_obj.tcp_data);
 		if(ret_read<=0){
 
 			if(client_con_obj.is_ssl){
