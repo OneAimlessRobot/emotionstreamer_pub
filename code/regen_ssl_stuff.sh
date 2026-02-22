@@ -9,10 +9,6 @@ tmp_auth_cert_directory_name="tmp_auth_cert_dir"
 
 tmp_host_cert_directory_name="tmp_host_cert_dir"
 
-name_string_for_authority_stuff="ca-emo_mer"
-name_string_for_server_string="${name_string_for_authority_stuff}_host_${module_name}"
-
-
 our_cwd="$(pwd)/"
 
 script_root_name="/cert_script_root/"
@@ -181,16 +177,6 @@ export_host_certs_to_dirs(){
 		mv "$our_cwd$tmp_host_cert_directory_name"/* "${complete_cert_directories_to_work_on[$i]}"
 		
 	done
-}
-
-
-gener8_module_cert(){
-	openssl genrsa -out "${name_string_for_server_string}.key" 2048
-
-	openssl req -new -key "${name_string_for_server_string}.key" -out "${name_string_for_server_string}.csr" -config "${name_string_for_server_string}.conf"
-
-
-	openssl x509 -req -in "${name_string_for_server_string}.csr" -CA "${name_string_for_authority_stuff}.crt" -CAkey "${name_string_for_authority_stuff}.key" -CAcreateserial -out "${name_string_for_server_string}.crt" -days 825 -sha256 -extensions v3_req -extfile "${name_string_for_server_string}.conf"
 }
 
 remv_cert_directories
