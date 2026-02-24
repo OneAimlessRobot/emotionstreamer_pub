@@ -37,6 +37,8 @@ start_another_proc_func(){
 
 }
 
+chmod a+rwx $tmp_pid_file
+
 pushd $directory
 
 

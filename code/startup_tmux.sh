@@ -10,15 +10,14 @@ session_name="my_stuff"
 
 termux_tmp_pid_file=".termux_tmp_pids"
 
-
 directory="$(pwd)"
 
 
 
 start_another_proc_func_inner(){
 
-	echo "$BASHPID" >> $termux_tmp_pid_file
-	tmux new-window -t session_name:$curr_term_started "$1"
+	echo $(tmux list-panes -t $session_name:$curr_term_started -F '#{pane_pid}') >> $termux_tmp_pid_file
+	tmux new-window -t $session_name:$curr_term_started "$1"
 	curr_term_started=$(($curr_term_started+1))
 
 }
@@ -27,9 +26,10 @@ start_another_proc_func(){
 
 	sleep $sleep_time
 
-	start_another_proc_func_inner "$1"&
+	start_another_proc_func_inner "$1"
 
 }
+chmod a+rwx $termux_tmp_pid_file
 
 pushd $directory
 
@@ -51,9 +51,8 @@ start_another_proc_func "bash -lc 'bash ./edit_configs.sh; exec bash'"
 
 start_another_proc_func "bash -lc 'cd \"./converter_tool\" ; exec bash'"
 
+sleep $(($sleep_time*$sleep_time_mult_attach_cmd_proc)) && tmux attach -t $session_name
+
 cat $tmp_pid_file
-
-sleep $(($sleep_time*$sleep_time_mult_attach_cmd_proc)) && tmux attach -t my_stuff
-
 
 popd
