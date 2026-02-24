@@ -30,6 +30,8 @@ static void cleanup_and_send_ports_back(int useless,void*ptr){
 	exit(useless+(0*((uint64_t)ptr)));
 
 }
+
+
 static void sigint_handler(int useless){
 
 
@@ -38,6 +40,13 @@ static void sigint_handler(int useless){
 }
 
 
+void exit_emergency_func(void){
+
+	//argument can be anything, really
+	sigint_handler(1);
+	cleanup_and_send_ports_back(SIGINT,NULL);
+
+}
 static void recv_servers(void){
 
 
@@ -107,6 +116,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	sigaction(SIGPIPE, &sa, NULL);
 	logging=cfg_server_browser_logging;
 	logstream=stdout;
+	exit_func_for_this_module=exit_emergency_func;
 
         if(init_addr(&hb_server_addr,hostname,port)){
 

@@ -45,6 +45,14 @@ static void cleanup(void){
 
 
 }
+
+void exit_emergency_func(void){
+
+	raise(SIGINT);
+	cleanup();
+
+
+}
 static int port_in_range(uint16_t port){
 
 	return (port>=cfg_init_port)&&(port<=(cfg_init_port+cfg_num_ports));
@@ -491,6 +499,8 @@ void port_mapper_init(ip_cache_entry* ent){
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
+	exit_func_for_this_module=exit_emergency_func;
+
 	logging=cfg_port_mapper_logging;
 	logstream=stdout;
 	int32_t port_arr[cfg_num_ports];

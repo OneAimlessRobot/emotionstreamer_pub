@@ -115,7 +115,7 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
-
+	
 	stream_struct.con_obj=con_obj;
         stream_struct.local_fd=fd;
         stream_struct.local_fd_boundary=fd_boundary;
@@ -138,6 +138,7 @@ void close_stream(void){
 
 void begin_stream(con_t*con_obj,int fd, int fd_boundary,uint64_t chunk_size,unsigned char* stream_buff){
 
+	exit_func_for_this_module=close_stream;
 	init_server_stream(fd,fd_boundary,con_obj, chunk_size,stream_buff);
 
 

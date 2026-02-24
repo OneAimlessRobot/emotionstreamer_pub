@@ -185,5 +185,3 @@ void end_frame_info_machine(frame_info_machine_t* machine){
 		close(machine->fd_out);
 	}
 }
-
-

@@ -551,11 +551,16 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	return 0;
 }
 
+void exit_emergency_func_stream(void){
 
+	raise(SIGINT);
+	stop_client_stream();
+}
 
 
 void player_init_stream(con_t* con_obj,uint64_t chunk_size,method which_mode){
 
+	exit_func_for_this_module=exit_emergency_func_stream;
 	init_client_stream(con_obj,chunk_size,which_mode);
 }
 

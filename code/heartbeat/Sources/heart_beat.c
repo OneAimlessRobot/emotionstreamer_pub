@@ -57,6 +57,7 @@ static void call_signal_func(void){
 	pthread_cond_signal(&master_running_cond);
 }
 
+
 static void sigint_handler(int useless){
 
 	is_on=0*useless;
@@ -67,6 +68,13 @@ static void sigpipe_handler(int useless){
 	is_on+=0*useless;
 }
 
+void exit_emergency_func(void){
+
+	//argument can be anything, really
+	sigint_handler(1);
+	call_signal_func();
+
+}
 void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
  	sa.sa_handler = sigint_handler;
@@ -78,6 +86,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sigemptyset(&sa_sigpipe.sa_mask);
         sa_sigpipe.sa_flags = SA_RESTART;
     	sigaction(SIGPIPE, &sa_sigpipe, NULL);
+	exit_func_for_this_module=exit_emergency_func;
 
 	logging=cfg_hb_server_logging;
 	logstream=stdout;

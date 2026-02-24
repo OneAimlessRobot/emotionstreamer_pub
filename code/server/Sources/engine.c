@@ -58,6 +58,7 @@ static void call_sigint_sub_connection(void){
 	pthread_mutex_unlock(&con_mtx);
 
 }
+
 static void call_sigint_chld(int useless){
 
 	is_on+=0*useless;
@@ -72,6 +73,15 @@ static void conStop(int useless){
 
 	is_on=0*useless;
 	started=1;
+}
+
+void exit_emergency_func(void){
+	//arg can me anything, really
+	serverStop(1);
+
+	call_sigint_sub_connection();
+	call_sigint();
+
 }
 static void pick_next_song(void){
 	if(is_auto_mode){
@@ -180,13 +190,14 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
         sigaction(SIGTERM, &sa, NULL);
-
-	logging=cfg_server_logging;
         sa_chld.sa_handler = call_sigint_chld;
         sigemptyset(&sa_chld.sa_mask);
         sa_chld.sa_flags = SA_RESTART|SA_NOCLDWAIT;
 	sigaction(SIGCHLD, &sa_chld, NULL);
-	
+
+	exit_func_for_this_module=exit_emergency_func;
+
+	logging=cfg_server_logging;
 	char buff[SERVER_NAME_SIZE]={0};
 	char extension_buff[EXTENSION_SIZE+1]={0};
 	strncpy(extension_buff,server_working_extension,EXTENSION_SIZE+1);

@@ -4,7 +4,7 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="I_am_fading_away/"
+song_subdirectory="Kichi_-_REBORN/"
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0

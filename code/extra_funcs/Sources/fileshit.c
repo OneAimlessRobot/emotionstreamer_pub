@@ -18,6 +18,7 @@ char curr_dir[PATHSIZE]={0};
 SSL_CTX *global_ctx=NULL;
 
 socklen_t socklenvar[2]= {sizeof(struct sockaddr),sizeof(struct sockaddr_in)};
+
 void _mkdir(const char *dir) {
     char tmp[256];
     char *p = NULL;
@@ -37,3 +38,4 @@ void _mkdir(const char *dir) {
     }
     mkdir(tmp, S_IRWXU);
 }
+exit_func_t  exit_func_for_this_module=NULL;

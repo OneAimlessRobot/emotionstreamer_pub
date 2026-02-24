@@ -1,7 +1,10 @@
 #ifndef FILESHIT_H
 #define FILESHIT_H
 typedef uint16_t port_array[DEF_DATASIZE+1];
+
 extern port_array attempted_port_arr;
+
+typedef typeof(void (void)) *exit_func_t;
 
 extern FILE* logstream;
 
@@ -23,5 +26,8 @@ extern char host_pkey_file_path[PATHSIZE];
 extern socklen_t socklenvar[2];
 
 void _mkdir(const char *dir);
+
+
+extern exit_func_t exit_func_for_this_module;
 
 #endif

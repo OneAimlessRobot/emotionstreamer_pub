@@ -11,7 +11,7 @@
 #define MAX_MP3_STREAM_CHUNK_BUFF_SIZE 32768
 
 typedef struct mp3_stream_chunk{
-	
+
 	frame_info_t the_frame_info;
 	uint8_t padding[4];
 	uint8_t actual_frame[MAX_MP3_STREAM_CHUNK_BUFF_SIZE+1];

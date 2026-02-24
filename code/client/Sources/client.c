@@ -69,8 +69,11 @@ static void useless_handler(int useless){
 
 	started=is_on=useless;
 }
+void exit_emergency_func(void){
 
+	clear_ports_and_quit(SIGINT,NULL);
 
+}
 static int64_t down_file_size(void){
 
 		int64_t down_size=-1;
@@ -164,6 +167,7 @@ int clientStart(char* req_field,char* file_name){
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
+	exit_func_for_this_module=exit_emergency_func;
 
 	sscanf(req_field,"%[^:]:%s",req_buff,method_buff);
 	req_type the_type= str_to_req_type(req_buff);
