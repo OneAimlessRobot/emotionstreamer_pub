@@ -146,7 +146,7 @@ void print_addr_aux(char* prompt,struct sockaddr_in* addr){
 }
 void snprint_addr_aux(char* dst,uint16_t* port,uint32_t size,struct sockaddr_in* addr){
          snprintf(dst,size-1,"%s",inet_ntoa(addr->sin_addr));
-	(*port)=ntohs(addr->sin_port);
+	(*port)=addr->sin_port;
 }
 int randInteger(int min, int max) {
     // Seed the random number generator with the current time.
@@ -164,7 +164,7 @@ int randInteger(int min, int max) {
 
 //NULL TERMINATED!!
 char* randStr(int size,char*buff){
-	
+
         struct timespec time;
 
         clock_gettime(CLOCK_REALTIME, &time);

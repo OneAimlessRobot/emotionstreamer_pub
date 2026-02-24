@@ -79,9 +79,6 @@ void exit_emergency_func(void){
 	//arg can me anything, really
 	serverStop(1);
 
-	call_sigint_sub_connection();
-	call_sigint();
-
 }
 static void pick_next_song(void){
 	if(is_auto_mode){
@@ -194,7 +191,6 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sigemptyset(&sa_chld.sa_mask);
         sa_chld.sa_flags = SA_RESTART|SA_NOCLDWAIT;
 	sigaction(SIGCHLD, &sa_chld, NULL);
-
 	exit_func_for_this_module=exit_emergency_func;
 
 	logging=cfg_server_logging;
