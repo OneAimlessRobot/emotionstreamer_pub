@@ -25,7 +25,7 @@ start_another_proc_func_inner(){
 
 
 	echo "$BASHPID" >> "${tmp_pid_file}"
-	"${term_exec_string}" "$1"
+	${term_exec_string} "$1"
 
 }
 
