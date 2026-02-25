@@ -4,7 +4,7 @@ backup_one="/mnt/FASTstorage/FASTprogs"
 backup_two="/mnt/REBORN/FASTERprogs"
 backup_three="/mnt/SUPER_CAVALEIRO/progsBackup"
 
-file_extensions="*.{md,sh,webp}"
+file_extensions="*.*{md,sh,webp,git}*"
 
 pushd "${backup_one}/emotionstreamer/code" &&
 bash makeAll.sh &&
