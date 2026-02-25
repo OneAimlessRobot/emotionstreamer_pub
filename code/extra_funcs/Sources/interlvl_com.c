@@ -405,7 +405,7 @@ void* acceptor_func(void* args){
 					snprintf((char*)con.tcp_data,DEF_DATASIZE-1,"Nao sou um master."
                                                                                      "Mas, se quiseres, Está aqui o meu master."
                                                                                      "Tenta falar com ele: %s:%hu\n",
-                                                                                                ip_buff,master_stored_port);
+                                                                                                ip_buff,ntohs(master_stored_port));
 					}
 					else{
 					snprintf((char*)con.tcp_data,DEF_DATASIZE-1,"Sup. Im master. Waddyawant?\n");
