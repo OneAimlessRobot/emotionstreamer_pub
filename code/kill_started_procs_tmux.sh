@@ -6,14 +6,14 @@ directory=$(pwd)
 
 tmp_pid_file=".termux_tmp_pids"
 
-num_of_procs=$(wc -l < $tmp_pid_file)
+num_of_procs=$(wc -l < "${tmp_pid_file}")
 
 session_name="my_stuff"
 
-echo $num_of_procs
+echo "${num_of_procs}"
 
 
-tmux kill-session -t $session_name
+tmux kill-session -t "${session_name}"
 
 #loop_signal_at_process_func(){
 #	limit=$3
@@ -35,4 +35,4 @@ tmux kill-session -t $session_name
 
 #done < $tmp_pid_file
 
-cat /dev/null >| $tmp_pid_file
+cat /dev/null >| "${tmp_pid_file}"

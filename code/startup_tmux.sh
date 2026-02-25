@@ -1,8 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-sleep_time=2
+sleep_time=0.5
 
-sleep_time_mult_attach_cmd_proc=3
+sleep_time_mult_attach_cmd_proc=0.5
 
 curr_term_started=1
 
@@ -16,15 +16,15 @@ directory="$(pwd)"
 
 start_another_proc_func_inner(){
 
-	tmux new-window -t $session_name:$curr_term_started "$1"
-	echo $(tmux list-panes -t $session_name:$curr_term_started -F '#{pane_pid}') >> $termux_tmp_pid_file
-	curr_term_started=$(($curr_term_started+1))
+	tmux new-window -t "${session_name}":"${curr_term_started}" "$1"
+	echo $(tmux list-panes -t "${session_name}":"${curr_term_started}" -F '#{pane_pid}') >> "${termux_tmp_pid_file}"
+	curr_term_started=$(("${curr_term_started}"+1))
 
 }
 
 start_another_proc_func(){
 
-	sleep $sleep_time
+	sleep "${sleep_time}"
 
 	start_another_proc_func_inner "$1"
 
@@ -32,11 +32,11 @@ start_another_proc_func(){
 
 if [ -f "${termux_tmp_pid_file}"  ]
 then
-	chmod a+rwx $termux_tmp_pid_file
+	chmod a+rwx "${termux_tmp_pid_file}"
 fi
-pushd $directory
+pushd "${directory}"
 
-tmux new-session -d -s $session_name
+tmux new-session -d -s "${session_name}"
 
 start_another_proc_func "bash -lc 'cd \"./port_mapper\" && ./emotionstreamer_port_mapper.exe; exec bash'"
 
@@ -54,8 +54,8 @@ start_another_proc_func "bash -lc 'bash ./edit_configs.sh; exec bash'"
 
 start_another_proc_func "bash -lc 'cd \"./converter_tool\" ; exec bash'"
 
-sleep $(($sleep_time*$sleep_time_mult_attach_cmd_proc)) && tmux attach -t $session_name
+sleep $(echo "${sleep_time}*${sleep_time_mult_attach_cmd_proc}" | bc) && tmux attach -t "${session_name}"
 
-cat $tmp_pid_file
+cat "${tmp_pid_file}"
 
 popd

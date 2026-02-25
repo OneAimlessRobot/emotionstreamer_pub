@@ -16,33 +16,33 @@ term_exec_string_case_X11="xterm -e"
 
 if [ -z "${DISPLAY}"  ];
 then
-	term_exec_string=$term_exec_string_case_wayland
+	term_exec_string="${term_exec_string_case_wayland}"
 else
-	term_exec_string=$term_exec_string_case_X11
+	term_exec_string="${term_exec_string_case_X11}"
 fi
 
 start_another_proc_func_inner(){
 
 
-	echo "$BASHPID" >> $tmp_pid_file
-	$term_exec_string "$1"
+	echo "$BASHPID" >> "${tmp_pid_file}"
+	"${term_exec_string}" "$1"
 
 }
 
 start_another_proc_func(){
 
-	sleep $sleep_time
+	sleep "${sleep_time}"
 
 	start_another_proc_func_inner "$1"&
 
 }
 if [ -f "${termux_tmp_pid_file}"  ]
 then
-	chmod a+rwx $tmp_pid_file
+	chmod a+rwx "${tmp_pid_file}"
 fi
 
 
-pushd $directory
+pushd "${directory}"
 
 
 
@@ -62,4 +62,4 @@ start_another_proc_func "pushd $directory && pushd master_server && bash ./no-ip
 
 start_another_proc_func "pushd $directory && exec bash"
 
-cat $tmp_pid_file
+cat "${tmp_pid_file}"
