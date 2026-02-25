@@ -56,6 +56,6 @@ start_another_proc_func "bash -lc 'cd \"./converter_tool\" ; exec bash'"
 
 sleep $(echo "${sleep_time}*${sleep_time_mult_attach_cmd_proc}" | bc) && tmux attach -t "${session_name}"
 
-cat "${tmp_pid_file}"
+cat "${termux_tmp_pid_file}"
 
 popd
