@@ -29,11 +29,14 @@ start_another_proc_func(){
 	start_another_proc_func_inner "$1"
 
 }
-chmod a+rwx $termux_tmp_pid_file
 
+if [ [ test -f $termux_tmp_pid_file ] ]
+then
+	chmod a+rwx $termux_tmp_pid_file
+fi
 pushd $directory
 
-tmux new-session -d -s session_name
+tmux new-session -d -s $session_name
 
 start_another_proc_func "bash -lc 'cd \"./port_mapper\" && ./emotionstreamer_port_mapper.exe; exec bash'"
 
