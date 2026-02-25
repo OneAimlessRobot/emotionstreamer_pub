@@ -36,8 +36,11 @@ start_another_proc_func(){
 	start_another_proc_func_inner "$1"&
 
 }
+if [ -f "${termux_tmp_pid_file}"  ]
+then
+	chmod a+rwx $tmp_pid_file
+fi
 
-chmod a+rwx $tmp_pid_file
 
 pushd $directory
 

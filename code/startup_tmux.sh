@@ -4,7 +4,7 @@ sleep_time=2
 
 sleep_time_mult_attach_cmd_proc=3
 
-curr_term_started=2
+curr_term_started=1
 
 session_name="my_stuff"
 
@@ -16,8 +16,8 @@ directory="$(pwd)"
 
 start_another_proc_func_inner(){
 
-	echo $(tmux list-panes -t $session_name:$curr_term_started -F '#{pane_pid}') >> $termux_tmp_pid_file
 	tmux new-window -t $session_name:$curr_term_started "$1"
+	echo $(tmux list-panes -t $session_name:$curr_term_started -F '#{pane_pid}') >> $termux_tmp_pid_file
 	curr_term_started=$(($curr_term_started+1))
 
 }
@@ -30,7 +30,7 @@ start_another_proc_func(){
 
 }
 
-if [ [ test -f $termux_tmp_pid_file ] ]
+if [ -f "${termux_tmp_pid_file}"  ]
 then
 	chmod a+rwx $termux_tmp_pid_file
 fi
