@@ -13,7 +13,7 @@ script_root_name="/cert_script_root/"
 
 module_cert_directory_name="/certs_and_pkeys/"
 
-directories_to_work_on=("port_mapper" "server" "heartbeat" "client" "server_browser" "master_server")
+directories_to_work_on=("port_mapper" "content_server" "heartbeat_server" "client" "server_browser" "master_server")
 
 complete_directories_to_work_on=()
 
@@ -178,7 +178,6 @@ export_host_certs_to_dirs(){
 }
 
 remv_cert_directories
-
 
 cre8_auth_cert
 

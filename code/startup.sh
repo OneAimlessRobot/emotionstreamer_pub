@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep_time=0.25
+sleep_time=0.5
 
 directory=$(pwd)
 
@@ -42,14 +42,14 @@ chmod a+rwx $tmp_pid_file
 pushd $directory
 
 
-cat /dev/null >| $tmp_pid_file
 
+start_another_proc_func "pushd $directory && pushd port_mapper && ./emotionstreamer_port_mapper.exe && exec bash"
 
-start_another_proc_func "pushd $directory && pushd port_mapper && ./port_mapper.exe && exec bash"
+start_another_proc_func "pushd $directory && pushd master_server && ./emotionstreamer_master_server.exe  && exec bash"
 
-start_another_proc_func "pushd $directory && pushd master_server && ./master_server.exe  && exec bash"
+start_another_proc_func "pushd $directory && pushd heartbeat_server && ./emotionstreamer_heartbeat_server.exe  && exec bash"
 
-start_another_proc_func "pushd $directory && pushd server && ./server.exe  && exec bash"
+start_another_proc_func "pushd $directory && pushd content_server && ./emotionstreamer_content_server.exe  && exec bash"
 
 start_another_proc_func "pushd $directory && pushd client &&  exec bash"
 

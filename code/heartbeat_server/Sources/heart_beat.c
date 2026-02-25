@@ -72,7 +72,6 @@ void exit_emergency_func(void){
 
 	//argument can be anything, really
 	sigint_handler(1);
-	call_signal_func();
 
 }
 void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){

@@ -81,10 +81,11 @@ void* slave_thread(void* args){
 
         setNonBlocking(&(arg_struct->con_obj->sockfd_tcp));
 	char mod_type[PATHSIZE/8]={0};
+	uint16_t the_port_to_give=arg_struct->this_addr.sin_port;
         clear_con_data(arg_struct->con_obj);
 	module_type_to_string(arg_struct->type,mod_type);
 	greet(arg_struct->con_obj,arg_struct->con_times_pair);
-        snprintf((char*)arg_struct->con_obj->tcp_data,DEF_DATASIZE-1,"%s %s %s %s %hhu",LOG_STRING,mod_type,arg_struct->lower_name,arg_struct->extension_buff,arg_struct->is_tls);
+        snprintf((char*)arg_struct->con_obj->tcp_data,DEF_DATASIZE-1,"%s %s %s %hu %s %hhu",LOG_STRING,mod_type,arg_struct->lower_name,the_port_to_give,arg_struct->extension_buff,arg_struct->is_tls);
 
         int result=con_send_tcp(arg_struct->con_obj,arg_struct->ack_times_pair);
         if(result<0){
@@ -384,7 +385,7 @@ void* acceptor_func(void* args){
 			      getpeername(con.sockfd_tcp, (struct sockaddr*)&their_addr, &socklenvar[1]);
                               uint16_t stored_port=0;
 			      uint8_t using_tls=0;
-                              sscanf((char*)con.tcp_data,"%s %s %s %s %hhu",req_buff,type_buff,name_buff, extension_buff, &using_tls);
+                              sscanf((char*)con.tcp_data,"%s %s %s %hu %s %hhu",req_buff,type_buff,name_buff, &stored_port,extension_buff, &using_tls);
 			      clear_con_data(&con);
 			      if(result<=0){
                                         perror("Nao sabemos o que querem....\n");
@@ -399,12 +400,12 @@ void* acceptor_func(void* args){
 						fprintf(logstream,"Anyways....\n....\n....\nShow master requested!!!!\n");
                                         }
 					if(!is_master){
-
-					snprint_addr_aux(ip_buff,&stored_port,PATHSIZE/4,&arg_a->arg_s->master_addr);
+					uint16_t master_stored_port=0;
+					snprint_addr_aux(ip_buff,&master_stored_port,PATHSIZE/4,&arg_a->arg_s->master_addr);
 					snprintf((char*)con.tcp_data,DEF_DATASIZE-1,"Nao sou um master."
                                                                                      "Mas, se quiseres, Está aqui o meu master."
                                                                                      "Tenta falar com ele: %s:%hu\n",
-                                                                                                ip_buff,htons(stored_port));
+                                                                                                ip_buff,master_stored_port);
 					}
 					else{
 					snprintf((char*)con.tcp_data,DEF_DATASIZE-1,"Sup. Im master. Waddyawant?\n");
@@ -432,7 +433,8 @@ void* acceptor_func(void* args){
                               		if(logging){
 						fprintf(logstream,"Log server requested!!!!\n");
                                         }
-					snprint_addr_aux(ip_buff,&stored_port,PATHSIZE/4,&their_addr);
+					uint16_t useless_arg=0;
+					snprint_addr_aux(ip_buff,&useless_arg,PATHSIZE/4,&their_addr);
 					add_con(arg_a->arg_o->cons,&con,type_buff,sock,name_buff,ip_buff,stored_port,extension_buff,using_tls);
                                         break;
                                 default:

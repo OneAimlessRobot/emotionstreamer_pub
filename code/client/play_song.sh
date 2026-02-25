@@ -6,7 +6,7 @@ pattern="$1"
 
 result_file="./.tmp_result"
 touch $result_file
-./client.exe peek "${pattern}" > $result_file
+./emotionstreamer_client.exe peek "${pattern}" > $result_file
 
 cat $result_file
 
@@ -26,7 +26,7 @@ elif [ $num_results -eq 1 ]
 then
 
 	echo "Musica \"${result}\" ira ser tocada!"
-	./client.exe play:${backend} ${result}
+	./emotionstreamer_client.exe play:${backend} ${result}
 elif [ $num_results -gt 1 ]
 then
 

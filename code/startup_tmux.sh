@@ -33,15 +33,13 @@ chmod a+rwx $termux_tmp_pid_file
 
 pushd $directory
 
-cat /dev/null >|  $termux_tmp_pid_file
-
 tmux new-session -d -s session_name
 
-start_another_proc_func "bash -lc 'cd \"./port_mapper\" && ./port_mapper.exe; exec bash'"
+start_another_proc_func "bash -lc 'cd \"./port_mapper\" && ./emotionstreamer_port_mapper.exe; exec bash'"
 
-start_another_proc_func "bash -lc 'cd \"./master_server\" && ./master_server.exe; exec bash'"
+start_another_proc_func "bash -lc 'cd \"./master_server\" && ./emotionstreamer_master_server.exe; exec bash'"
 
-start_another_proc_func "bash -lc 'cd \"./server\" && ./server.exe; exec bash'"
+start_another_proc_func "bash -lc 'cd \"./content_server\" && ./emotionstreamer_content_server.exe; exec bash'"
 
 start_another_proc_func "bash -lc 'cd \"./client\"; exec bash'"
 
