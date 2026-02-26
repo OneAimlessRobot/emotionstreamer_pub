@@ -10,13 +10,11 @@
 #include "../Includes/interlvl_proto.h"
 #include "../Includes/interlvl_com.h"
 
-
-
 static void do_indexed_overseer_con_op(int i,overseer_args* arg_s,int is_reply,int reply_result[2]){
 	if(!is_reply){
 	pthread_mutex_lock(arg_s->cons->set_mtx);
         clear_con_data(&arg_s->cons->con_arr[i]);
-        reply_result[0]=con_read_tcp(&arg_s->cons->con_arr[i],arg_s->ack_times_pair);
+        reply_result[0]=con_read(&arg_s->cons->con_arr[i],arg_s->ack_times_pair);
         reply_result[1]=strs_are_strictly_equal((char*)(arg_s->cons->con_arr[i].tcp_data),HB_SEND_STRING);
         pthread_mutex_unlock(arg_s->cons->set_mtx);
 	}
@@ -24,7 +22,7 @@ static void do_indexed_overseer_con_op(int i,overseer_args* arg_s,int is_reply,i
 	pthread_mutex_lock(arg_s->cons->set_mtx);
         clear_con_data(&arg_s->cons->con_arr[i]);
         snprintf((char*)(arg_s->cons->con_arr[i].tcp_data),DEF_DATASIZE-1,"%s",HB_REPLY_STRING);
-        reply_result[0]=con_send_tcp(&arg_s->cons->con_arr[i],arg_s->ack_times_pair);
+        reply_result[0]=con_send(&arg_s->cons->con_arr[i],arg_s->ack_times_pair);
         pthread_mutex_unlock(arg_s->cons->set_mtx);
         }
 }
@@ -33,7 +31,7 @@ static void do_indexed_slave_con_op(slave_args* arg_s,int is_reply,int reply_res
 	if(!is_reply){
 	pthread_mutex_lock(arg_s->con_mtx);
         clear_con_data(arg_s->con_obj);
-        reply_result[0]=con_read_tcp(arg_s->con_obj,arg_s->ack_times_pair);
+        reply_result[0]=con_read(arg_s->con_obj,arg_s->ack_times_pair);
         reply_result[1]=strs_are_strictly_equal((char*)(arg_s->con_obj->tcp_data),HB_REPLY_STRING);
         pthread_mutex_unlock(arg_s->con_mtx);
 	}
@@ -41,7 +39,7 @@ static void do_indexed_slave_con_op(slave_args* arg_s,int is_reply,int reply_res
 	pthread_mutex_lock(arg_s->con_mtx);
         clear_con_data(arg_s->con_obj);
         snprintf((char*)(arg_s->con_obj->tcp_data),DEF_DATASIZE-1,"%s",HB_SEND_STRING);
-        reply_result[0]=con_send_tcp(arg_s->con_obj,arg_s->ack_times_pair);
+        reply_result[0]=con_send(arg_s->con_obj,arg_s->ack_times_pair);
         pthread_mutex_unlock(arg_s->con_mtx);
         }
 }
@@ -80,14 +78,18 @@ void* slave_thread(void* args){
 
 
         setNonBlocking(&(arg_struct->con_obj->sockfd_tcp));
-	char mod_type[PATHSIZE/8]={0};
-	uint16_t the_port_to_give=arg_struct->this_addr.sin_port;
+	uint16_t the_port_to_give=htons(arg_struct->this_addr.sin_port);
         clear_con_data(arg_struct->con_obj);
-	module_type_to_string(arg_struct->type,mod_type);
 	greet(arg_struct->con_obj,arg_struct->con_times_pair);
-        snprintf((char*)arg_struct->con_obj->tcp_data,DEF_DATASIZE-1,"%s %s %s %hu %s %hhu",LOG_STRING,mod_type,arg_struct->lower_name,the_port_to_give,arg_struct->extension_buff,arg_struct->is_tls);
-
-        int result=con_send_tcp(arg_struct->con_obj,arg_struct->ack_times_pair);
+	interlvl_cmd cmd=LOG;
+	proto_arr proto_array={0};
+	proto_array[0]=(uint16_t)htons(cmd);
+	proto_array[1]=(uint16_t)htons(arg_struct->type);
+	proto_array[2]=the_port_to_give;
+	proto_array[3]=(uint16_t)htons(arg_struct->is_tls);
+	memcpy(arg_struct->con_obj->tcp_data,proto_array,PROTO_ARR_SIZE);
+	snprintf((char*)&arg_struct->con_obj->tcp_data[PROTO_ARR_SIZE],DEF_DATASIZE-2,"%s %s",arg_struct->extension_buff,arg_struct->lower_name);
+        int result=con_send(arg_struct->con_obj,arg_struct->ack_times_pair);
         if(result<0){
 
 
@@ -95,7 +97,7 @@ void* slave_thread(void* args){
                 slave_thread_exit_func(SIGINT,(void*)(arg_struct));
 		return args;
         }
-        result=con_read_tcp(arg_struct->con_obj,arg_struct->ack_times_pair);
+        result=con_read(arg_struct->con_obj,arg_struct->ack_times_pair);
         if(result<0){
 
 
@@ -104,7 +106,6 @@ void* slave_thread(void* args){
 		return args;
 
         }
-        
 	(*arg_struct->start_trigger)=1;
         pthread_cond_signal(arg_struct->trg_cond);
 
@@ -211,17 +212,17 @@ static void kill_con(con_set* set,int index){
         set->fd_arr[index]=0;
         set->curr_size--;
         pthread_mutex_unlock(set->set_mtx);
-	
+
 }
 
 
 
-void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff,uint8_t using_tls){
+void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff,uint16_t using_tls){
 
         pthread_mutex_lock(set->set_mtx);
 	int i=1;
         char big_buff[PATHSIZE*6]={0};
-	snprintf(big_buff,sizeof(big_buff)-1,"'%s', %d, %s, '%s:%hu', '%s', %hhu",type_buff,id,name_buff,ip_buff,htons(stored_port),extension_buff,using_tls);
+	snprintf(big_buff,sizeof(big_buff)-1,"'%s', %d, %s, '%s:%hu', '%s', %hu",type_buff,id,name_buff,ip_buff,htons(stored_port),extension_buff,using_tls);
         FD_SET(con->sockfd_tcp,&set->rdfds);
         for(;set->fd_arr[i];i++);
         set->fd_arr[i]=con->sockfd_tcp;
@@ -334,14 +335,13 @@ void module_type_to_string(module_type type,char* buff){
 }
 
 void* acceptor_func(void* args){
-	
 	acceptor_args* arg_a = (acceptor_args*)args;
         char extension_buff[EXTENSION_SIZE+1]={0};
-	char req_buff[PATHSIZE/4]={0};
+	proto_arr proto_array={0};
+	char req_buff[DEF_DATASIZE+1]={0};
         char ip_buff[PATHSIZE/4]={0};
         char name_buff[PATHSIZE/4]={0};
         char type_buff[PATHSIZE/4]={0};
-        char big_buff[PATHSIZE*6]={0};
         int result=0;
         int iResult,
                sock=-1;
@@ -358,9 +358,6 @@ void* acceptor_func(void* args){
 	init_openssl_libs_server_side();
         while((*arg_a->is_on)){
 
-
-
-                memset(big_buff,0,sizeof(big_buff));
                 struct timeval tv;
                 tv.tv_sec=arg_a->con_times_pair[0];
                 tv.tv_usec=arg_a->con_times_pair[1];
@@ -368,84 +365,82 @@ void* acceptor_func(void* args){
                 FD_SET(arg_a->accept_sockfd,&arg_a->mainfds);
                 iResult=select(arg_a->accept_sockfd+1,&arg_a->mainfds,(fd_set*)0,(fd_set*)0,&tv);
                 if(iResult>0){
-                        con_t con={0};
-			sock= accept(arg_a->accept_sockfd,NULL,NULL);
-                        if(sock>=0){
+				con_t con={0};
+				sock= accept(arg_a->accept_sockfd,NULL,NULL);
+				if(sock>=0){
 
-			      setNonBlocking(&sock);
-                              init_con(&con,sock,SERVER_C,&arg_a->acceptor_port_mapper_ip_cache_entry,arg_a->is_tls);
-                              greet(&con,arg_a->con_times_pair);
-                              result=con_read_tcp(&con,arg_a->con_times_pair);
-                              if(result<=0){
-                                        perror("Nao sabemos o que querem....\n");
-                                        close_con(&con,0,1);
-                                        continue;
-                              }
-			      struct sockaddr_in their_addr={0};
-			      getpeername(con.sockfd_tcp, (struct sockaddr*)&their_addr, &socklenvar[1]);
-                              uint16_t stored_port=0;
-			      uint8_t using_tls=0;
-                              sscanf((char*)con.tcp_data,"%s %s %s %hu %s %hhu",req_buff,type_buff,name_buff, &stored_port,extension_buff, &using_tls);
-			      clear_con_data(&con);
-			      if(result<=0){
-                                        perror("Nao sabemos o que querem....\n");
-                                        close_con(&con,0,1);
-                                        continue;
-                              }
-			      interlvl_cmd cmd=str_to_interlvl_cmd_type((char*)req_buff);
-                              switch(cmd){
+				setNonBlocking(&sock);
+				init_con(&con,sock,SERVER_C,&arg_a->acceptor_port_mapper_ip_cache_entry,arg_a->is_tls);
+				greet(&con,arg_a->con_times_pair);
+				result=con_read(&con,arg_a->con_times_pair);
+				if(result<=0){
+				        perror("Nao sabemos o que querem....\n");
+				        close_con(&con,0,1);
+				        continue;
+				}
+				interlvl_cmd cmd=(interlvl_cmd)0;
+
+				memcpy(req_buff,con.tcp_data,DEF_DATASIZE);
+				memcpy(proto_array,req_buff,PROTO_ARR_SIZE);
+				cmd=ntohs(proto_array[0]);
+				switch(cmd){
 
 				case MASTER_SHOW:
 					if(logging){
 						fprintf(logstream,"Anyways....\n....\n....\nShow master requested!!!!\n");
-                                        }
+				        }
 					if(!is_master){
 					uint16_t master_stored_port=0;
 					snprint_addr_aux(ip_buff,&master_stored_port,PATHSIZE/4,&arg_a->arg_s->master_addr);
 					snprintf((char*)con.tcp_data,DEF_DATASIZE-1,"Nao sou um master."
-                                                                                     "Mas, se quiseres, Está aqui o meu master."
-                                                                                     "Tenta falar com ele: %s:%hu\n",
-                                                                                                ip_buff,ntohs(master_stored_port));
+				                                                     "Mas, se quiseres, Está aqui o meu master."
+				                                                     "Tenta falar com ele: %s:%hu\n",
+				                                                                ip_buff,ntohs(master_stored_port));
 					}
 					else{
 					snprintf((char*)con.tcp_data,DEF_DATASIZE-1,"Sup. Im master. Waddyawant?\n");
 
 					}
-					con_send_tcp(&con,arg_a->data_times_pair);
-                                        con_read_tcp(&con,arg_a->data_times_pair);
-                                        clear_con_data(&con);
-                                        snprintf((char*)con.tcp_data,DEF_DATASIZE-1,"done");
-                                        con_send_tcp(&con,arg_a->data_times_pair);
-                                        con_read_tcp(&con,arg_a->data_times_pair);
-                                        close_con(&con,0,1);
-                                        break;
+					con_send(&con,arg_a->data_times_pair);
+				        clear_con_data(&con);
+				        snprintf((char*)con.tcp_data,DEF_DATASIZE-1,"done");
+				        con_send(&con,arg_a->data_times_pair);
+				        close_con(&con,0,1);
+				        break;
 
-                                case SHOW:
+				case SHOW:
 					if(logging){
 						fprintf(logstream,"Anyways....\n....\n....\nShow servers requested!!!!\n");
-                                        }
+				        }
 					show_servers(&con,arg_a->data_times_pair);
-                                        close_con(&con,0,1);
-                                        break;
-                                case LOG:
-					result=con_send_tcp(&con,arg_a->con_times_pair);
-                              		clear_con_data(&con);
-                              		if(logging){
+				        close_con(&con,0,1);
+				        break;
+				case LOG:
+					struct sockaddr_in their_addr={0};
+					getpeername(con.sockfd_tcp, (struct sockaddr*)&their_addr, &socklenvar[1]);
+					module_type the_type=(module_type)ntohs(proto_array[1]);
+					module_type_to_string(the_type,type_buff);
+					uint16_t stored_port=ntohs(proto_array[2]);
+					uint16_t using_tls=ntohs(proto_array[3]);
+					sscanf((char*)&req_buff[PROTO_ARR_SIZE],"%s %s",extension_buff,name_buff);
+					result=con_send(&con,arg_a->con_times_pair);
+					clear_con_data(&con);
+					if(logging){
 						fprintf(logstream,"Log server requested!!!!\n");
-                                        }
+				        }
 					uint16_t useless_arg=0;
 					snprint_addr_aux(ip_buff,&useless_arg,PATHSIZE/4,&their_addr);
 					add_con(arg_a->arg_o->cons,&con,type_buff,sock,name_buff,ip_buff,stored_port,extension_buff,using_tls);
-                                        break;
-                                default:
+				        break;
+				default:
 					if(logging){
 						fprintf(logstream,"Request desconhecido %s!!!!\n",req_buff);
-                                        }
+				        }
 					close_con(&con,0,1);
-                                        break;
+				        break;
 
 
-                              }
+				}
 
                         }
                         else{

@@ -14,7 +14,6 @@
 #include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
-#include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/connection.h"
@@ -30,7 +29,7 @@
 #include "../Includes/client_aux_funcs.h"
 
 
-static int read_tcp_result=-1;
+static int read_result=-1;
 static uint8_t read_tcp_chk[sizeof(mp3_stream_chunk)]={0};
 static int decode_queue_full=0,
 	pause_value=0,
@@ -134,31 +133,30 @@ static int is_wav_compat_mode(void){
 	return (is_wav_mode||!decode);
 
 }
-static int read_chunk_tcp(client_stream_t* strm,int_pair pair){
-//,strm->con_obj->is_ssl,strm->con_obj->con_ssl
+static int read_chunk(client_stream_t* strm,int_pair pair){
 	if(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK)){
 		if(strm->con_obj->is_ssl){
-			read_tcp_result= readsome_ssl(strm->con_obj->con_ssl,(char*)(strm->player->h_chunk),strm->player->chunk_size,pair);
+			read_result= readsome_ssl(strm->con_obj->con_ssl,(char*)(strm->player->h_chunk),strm->player->chunk_size,pair);
 		}
 		else{
 
-			read_tcp_result= readsome(strm->con_obj->sockfd_tcp,(char*)(strm->player->h_chunk),strm->player->chunk_size,pair);
+			read_result= readsome(strm->con_obj->sockfd_tcp,(char*)(strm->player->h_chunk),strm->player->chunk_size,pair);
 		}
 	}
 	else{
 		if(strm->con_obj->is_ssl){
-			read_tcp_result= readsome_ssl(strm->con_obj->con_ssl,(char*)(is_wav_compat_mode()?strm->player->r_chunk:read_tcp_chk),is_wav_compat_mode()?strm->player->chunk_size:strm->decoder->d_chunk_size,pair);
+			read_result= readsome_ssl(strm->con_obj->con_ssl,(char*)(is_wav_compat_mode()?strm->player->r_chunk:read_tcp_chk),is_wav_compat_mode()?strm->player->chunk_size:strm->decoder->d_chunk_size,pair);
 		}
 		else{
-			read_tcp_result= readsome(strm->con_obj->sockfd_tcp,(char*)(is_wav_compat_mode()?strm->player->r_chunk:read_tcp_chk),is_wav_compat_mode()?strm->player->chunk_size:strm->decoder->d_chunk_size,pair);
+			read_result= readsome(strm->con_obj->sockfd_tcp,(char*)(is_wav_compat_mode()?strm->player->r_chunk:read_tcp_chk),is_wav_compat_mode()?strm->player->chunk_size:strm->decoder->d_chunk_size,pair);
 		}
 		if(decode&&!is_wav_mode){
 			memcpy(strm->decoder->r_chunk,&read_tcp_chk,strm->decoder->d_chunk_size);
 		}
 	}
-	if(read_tcp_result<0){
+	if(read_result<0){
 		acess_var_mtx(&variable_acess_mtx,&lost_packet,1,V_SET);
-		return read_tcp_result;
+		return read_result;
 	}
 	acess_var_mtx(&variable_acess_mtx,&lost_packet,0,V_SET);
 	if(acess_var_mtx(&variable_acess_mtx,&is_first_player_chunk,0,V_LOOK)){
@@ -168,7 +166,7 @@ static int read_chunk_tcp(client_stream_t* strm,int_pair pair){
 	else{
 		perform_queue_op(is_wav_compat_mode()?strm->player_que:strm->decoder_que,is_wav_compat_mode()?strm->player->r_chunk:strm->decoder->r_chunk,NULL,(q_op){Q_READ_FROM,Q_LOOK_NA});
 	}
-	return read_tcp_result;
+	return read_result;
 }
 
 
@@ -184,7 +182,7 @@ static void rx_thread_func(void){
 			print_log_string("Decoder thread poked!\n");
 		}
 		while(innited){
-			rx_result=read_chunk_tcp(&stream_struct,client_data_times_pair);
+			rx_result=read_chunk(&stream_struct,client_data_times_pair);
 			if(rx_result<=0){
 				print_log_string("Thread de reading parado (early)!!!\n");
 				stop_client_stream();

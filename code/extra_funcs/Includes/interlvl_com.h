@@ -1,7 +1,7 @@
 #ifndef INTERLVL_COM_H
 #define INTERLVL_COM_H
 
-typedef enum{SERVER,HB_SERVER,M_SERVER,TYPE_NA}module_type;
+typedef enum{SERVER=40,HB_SERVER=60,M_SERVER=80,TYPE_NA=100}module_type;
 typedef typeof(void (int))  *quit_func;
 typedef typeof(void (void))  *cleanup_func;
 
@@ -36,13 +36,12 @@ typedef struct slave_args{
 	uint64_t ack_timeout_lim;
 	atomic_int* start_trigger;
 	con_t* con_obj;
-	int8_t transmit_protocol;
 	atomic_int* loop_var;
 	int_pair con_times_pair;
 	int_pair data_times_pair;
 	int_pair ack_times_pair;
 	uint64_t ack_period_us;
-	uint8_t is_tls;
+	uint16_t is_tls;
 	pthread_mutex_t* var_mtx;
 	pthread_mutex_t* con_mtx;
 	pthread_cond_t* trg_cond;
@@ -84,7 +83,7 @@ typedef struct acceptor_args{
 	int_pair ack_times_pair;
 	uint64_t ack_period_us;
 	fd_set mainfds;
-	uint8_t is_tls;
+	uint16_t is_tls;
         int accept_sockfd;
         struct sockaddr_in accept_addr;
 	pthread_mutex_t * master_mtx;
@@ -98,7 +97,7 @@ typedef struct acceptor_args{
 
 void init_con_set(con_set* set,con_t* con_buff,int* fd_buff,int max_size,pthread_mutex_t* mtx,pthread_cond_t* cond);
 void close_all_fds(con_set* set);
-void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff, uint8_t using_tls);
+void add_con(con_set* set,con_t*con,char* type_buff,int id,char* name_buff,char* ip_buff,uint16_t stored_port,char* extension_buff, uint16_t using_tls);
 void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper,ip_cache_entry* port_mapper_cache_entry);
 
 

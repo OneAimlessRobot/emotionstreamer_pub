@@ -9,7 +9,6 @@
 #include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
-#include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../../extra_funcs/Includes/openssl_stuff.h"
@@ -17,7 +16,6 @@
 #include "../Includes/engine.h"
 #include "../Includes/connection.h"
 #include <sys/wait.h>
-
 
 static server_state state;
 static pthread_t hb_tid;
@@ -77,7 +75,7 @@ static void conStop(int useless){
 
 void exit_emergency_func(void){
 	//arg can me anything, really
-	serverStop(1);
+	//serverStop(1);
 
 }
 static void pick_next_song(void){

@@ -65,8 +65,9 @@ static void sigpipe_handler(int useless){
 
 void exit_emergency_func(void){
 
-	sigint_handler(1);
+	/*sigint_handler(1);
 	call_signal_func();
+	*/
 
 }
 void start_master(char* hostname, uint16_t port){

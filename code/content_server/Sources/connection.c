@@ -10,7 +10,6 @@
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
-#include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../Includes/load_html.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/engine.h"
@@ -25,9 +24,10 @@ static int sock_tcp;
 static char file_name[PATHSIZE]={0},
 	* dir_listing_str=NULL,
 	file_path[PATHSIZE*3 +4]={0},
-	req_string_buff[PATHSIZE]={0},
+	req_string_buff[DEF_DATASIZE+1]={0},
 	rep_file_path[PATHSIZE*3 +4]={0},
 	rep_file_path_2[PATHSIZE*3 +4]={0};
+static proto_arr proto_array={0};
 
 static req_type recvd_type=NA;
 static struct stat file_info={0};
@@ -66,7 +66,7 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 			else{
 				snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"-1");
 			}
-			int ret_send=con_send_tcp(&server_con_obj,server_data_times_pair);
+			int ret_send=con_send(&server_con_obj,server_data_times_pair);
 			if(ret_send<0){
 				if(server_con_obj.is_ssl){
 					if(logging){
@@ -86,10 +86,12 @@ void con_go(int sockfd_tcp){
 			init_openssl_libs_server_side();
 			init_con(&server_con_obj,sock_tcp,SERVER_C,&port_mapper_ip_cache_entry,will_use_tls);
 			greet(&server_con_obj,server_con_times_pair);
-			con_read_tcp(&server_con_obj,server_data_times_pair);
-			sscanf((char*)server_con_obj.tcp_data,"%s %s",req_string_buff,file_name);
-			printf("Buff recebido:\n\"%s\"\n%s recebido!\n",server_con_obj.tcp_data,req_string_buff);
-			recvd_type=str_to_req_type(req_string_buff);
+			con_read(&server_con_obj,server_data_times_pair);
+
+			memcpy(req_string_buff,server_con_obj.tcp_data,DEF_DATASIZE);
+			memcpy(proto_array,req_string_buff,PROTO_ARR_SIZE);
+			recvd_type=ntohs(proto_array[0]);
+			sscanf((char*)&req_string_buff[sizeof(uint16_t)],"%s",file_name);
 			if(recvd_type==PLAY||recvd_type==DOWN){
 				if(is_auto_mode){
 					printf("Musica ignorada! Escolhendo a proxima da rotation!\n");
@@ -119,7 +121,7 @@ void con_go(int sockfd_tcp){
 						snprintf(rep_file_path_2,sizeof(rep_file_path_2),"%s",rep_file_path);
 						break;
 					default:
-						printf(UNKNOWN_REQ,req_string_buff);
+						printf(UNKNOWN_REQ);
 						cleanup();
 				}
 			}
@@ -160,7 +162,7 @@ void con_go(int sockfd_tcp){
 					break;
 				case PLAY:
 					snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%lu",server_chunk_size);
-					if(con_send_tcp(&server_con_obj,server_data_times_pair)<=0){
+					if(con_send(&server_con_obj,server_data_times_pair)<=0){
 
 						cleanup();
 					}
@@ -170,13 +172,13 @@ void con_go(int sockfd_tcp){
 					sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair,server_con_obj.is_ssl,server_con_obj.con_ssl);
 					remove(TMP_CONFIG_FILE_PATH);
 					snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"\n\n\nServer contents successfully retrieved in full.\n\n");
-					con_send_tcp(&server_con_obj,server_data_times_pair);
+					con_send(&server_con_obj,server_data_times_pair);
 					break;
 				case ROTATION:
 					sendallfd(server_con_obj.sockfd_tcp,fp,server_data_times_pair,server_con_obj.is_ssl,server_con_obj.con_ssl);
 					remove(TMP_ROTATION_FILE_PATH);
 					snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"\n\n\nServer contents successfully retrieved in full.\n\n");
-					con_send_tcp(&server_con_obj,server_data_times_pair);
+					con_send(&server_con_obj,server_data_times_pair);
 					break;
 				default:
 					break;

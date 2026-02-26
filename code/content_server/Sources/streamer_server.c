@@ -9,7 +9,6 @@
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
-#include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/streamer_server.h"
 
@@ -44,7 +43,7 @@ static void stop_server_stream(server_stream_t* strm){
 static void cleanup(int useless){
 	initted=0*useless;
 }
-static int send_chunk_tcp(server_stream_t* strm,int_pair pair){
+static int send_chunk(server_stream_t* strm,int_pair pair){
 	int result=-1;
 	if(strm->con_obj->is_ssl){
 
@@ -61,7 +60,7 @@ static int send_chunk_to_client(void){
 
 	int result=0;
 	while(initted){
-		result=send_chunk_tcp(&stream_struct,server_drop_chunks_times_pair);
+		result=send_chunk(&stream_struct,server_drop_chunks_times_pair);
 			if(result==-2){
 				continue;
 			}
@@ -115,7 +114,6 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
-	
 	stream_struct.con_obj=con_obj;
         stream_struct.local_fd=fd;
         stream_struct.local_fd_boundary=fd_boundary;

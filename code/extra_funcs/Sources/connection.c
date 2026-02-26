@@ -5,7 +5,6 @@
 #include "../Includes/openssl_stuff.h"
 #include "../Includes/sock_ops.h"
 #include "../Includes/more_socket_ops.h"
-#include "../Includes/sockio_udp.h"
 #include "../Includes/sockio_tcp.h"
 #include "../Includes/ip_cache_file.h"
 #include "../Includes/connection.h"
@@ -274,12 +273,12 @@ void init_con(con_t* con_obj,int sockfd_tcp,con_type type,ip_cache_entry *ent,ui
 
 }
 
-int con_send_tcp(con_t* con_obj,int_pair pair){
+int con_send(con_t* con_obj,int_pair pair){
 
 	return con_obj->is_ssl?sendsome_ssl(con_obj->con_ssl,(const char*)con_obj->tcp_data, DEF_DATASIZE, pair):sendsome(con_obj->sockfd_tcp,(char*)con_obj->tcp_data,DEF_DATASIZE,pair);
 }
 
-int con_read_tcp(con_t* con_obj,int_pair pair){
+int con_read(con_t* con_obj,int_pair pair){
 
 	return con_obj->is_ssl?readsome_ssl(con_obj->con_ssl,(char*)con_obj->tcp_data, DEF_DATASIZE, pair):readsome(con_obj->sockfd_tcp,(char*)con_obj->tcp_data,DEF_DATASIZE,pair);
 }
@@ -445,7 +444,7 @@ static void greet_server(con_t* con_obj, int_pair pair){
 
 	char client_data[DEF_DATASIZE+1];
 	memset(client_data,0,DEF_DATASIZE+1);
-	con_read_tcp(con_obj,pair);
+	con_read(con_obj,pair);
 	sscanf((char*)con_obj->tcp_data,"%s",(char*)client_data);
 	if(logging){
 		fprintf(logstream,"tuplo recebido: (string) = (%s)\n",client_data);
@@ -477,7 +476,7 @@ static void greet_client(con_t* con_obj,int_pair pair){
 	if(logging){
 		fprintf(logstream,"String enviada %s\n",(char*)con_obj->tcp_data);
 	}
-	con_send_tcp(con_obj,pair);
+	con_send(con_obj,pair);
 
 	clear_con_data(con_obj);
 
@@ -496,11 +495,6 @@ void greet(con_t*con_obj,int_pair times_pair){
 		default:
 			break;
 	}
-
-	if(logging){
-		print_addr_aux("Addresss tcp de nos:",&con_obj->this_tcp_addr);
-	}
-
 
 }
 

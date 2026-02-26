@@ -35,11 +35,9 @@ void init_con(con_t* con_obj, int sockfd_tcp,con_type type,ip_cache_entry* ent,u
 
 void close_con(con_t* con_obj, int RIGHT_NOW,int close_for_good);
 
-void close_udp_of_con(con_t* con_obj);
+int con_send(con_t* con_obj,int_pair pair);
 
-int con_send_tcp(con_t* con_obj,int_pair pair);
-
-int con_read_tcp(con_t* con_obj,int_pair pair);
+int con_read(con_t* con_obj,int_pair pair);
 
 //initialize con_obj first!!!
 void clear_con_data(con_t* con_obj);

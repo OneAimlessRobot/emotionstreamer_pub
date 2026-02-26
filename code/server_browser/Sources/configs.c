@@ -91,7 +91,7 @@ void read_values_cfg_browser(void){
 
                 clean_and_exit();
         }
-        sscanf(curr_line_buff,"browser_using_tls: %hhu",&will_use_tls);
+        sscanf(curr_line_buff,"browser_using_tls: %hu",&will_use_tls);
         clean_buff();
 	if(will_use_tls){
 
@@ -137,7 +137,7 @@ void print_values_cfg_browser(int fd){
 
         dprintf(fd,"browser_timeouts_data: %lus %lu us\n",browser_data_times_pair[0],browser_data_times_pair[1]);
 
-	dprintf(fd,"browser_using_tls: %hhu\n",will_use_tls);
+	dprintf(fd,"browser_using_tls: %hu\n",will_use_tls);
 
 	if(will_use_tls){
 		dprintf(fd,"browser_auth_cert_file_path: %s\n",auth_cert_file_path);

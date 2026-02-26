@@ -297,7 +297,7 @@ void read_values_cfg_server(void){
 
                 clean_and_exit();
         }
-        sscanf(curr_line_buff,"server_using_tls: %hhu",&will_use_tls);
+        sscanf(curr_line_buff,"server_using_tls: %hu",&will_use_tls);
         clean_buff();
 	if(will_use_tls){
 
@@ -405,13 +405,13 @@ void print_values_cfg_server(int fd){
 
         dprintf(fd,"server_is_slave_mode: %hhu\n",cfg_server_slave_mode);
 
-        dprintf(fd,"server_using_tls: %hhu\n",will_use_tls);
+        dprintf(fd,"server_using_tls: %hu\n",will_use_tls);
 
 	if(will_use_tls){
 
 	        dprintf(fd,"server_auth_cert_file_path: %s\n",auth_cert_file_path);
-	        
-	        dprintf(fd,"server_host_cert_file_path: %s\n",host_cert_file_path);
+
+		dprintf(fd,"server_host_cert_file_path: %s\n",host_cert_file_path);
 
 	        dprintf(fd,"server_host_pkey_file_path: %s\n",host_pkey_file_path);
 

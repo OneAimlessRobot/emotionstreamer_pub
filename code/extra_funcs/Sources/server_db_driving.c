@@ -159,7 +159,7 @@ static int send_show_servers(void* arg1, int n_cols, char** cols,char** cols_nam
         }
         clear_con_data(&sender->con_obj);
         snprintf((char*)sender->con_obj.tcp_data,DEF_DATASIZE-1,"%s",buff);
-        int result=con_send_tcp(&sender->con_obj,sender->pair);
+        int result=con_send(&sender->con_obj,sender->pair);
         if(result<0){
 		if(result!=-2){
  	               perror("Erro a enviar servers a browser 3 send!!!!!!\n");
@@ -167,11 +167,10 @@ static int send_show_servers(void* arg1, int n_cols, char** cols,char** cols_nam
 		}
 		else{
 	               perror("Timeout a enviar servers a browser 3 send!!!!!!\n");
-        	
 		}
         }
-	
-        result=con_read_tcp(&sender->con_obj,sender->pair);
+	/*
+        result=con_read(&sender->con_obj,sender->pair);
         if(result<0){
 		if(result!=-2){
  	                perror("Erro a enviar servers a browser 3 read!!!!!!\n");
@@ -181,7 +180,7 @@ static int send_show_servers(void* arg1, int n_cols, char** cols,char** cols_nam
 	                perror("Timeout a enviar servers a browser 3 read!!!!!!\n");
 		}
 
-        }
+        }*/
 	return 0;
 
 }
@@ -194,7 +193,7 @@ memcpy(sender.pair,pair,sizeof(int_pair));
 char statement_str[PATHSIZE]={0};
 
 snprintf((char*)sender.con_obj.tcp_data,DEF_DATASIZE-1,SERVER_LIST_HEADER);
-int result=con_send_tcp(&sender.con_obj,pair);
+int result=con_send(&sender.con_obj,pair);
 if(result<0){
 	if(result!=-2){
 		perror("Erro a enviar servers a browser 1 send!!!!!!\n");
@@ -205,7 +204,7 @@ if(result<0){
 	}
 
 }
-result=con_read_tcp(&sender.con_obj,pair);
+/*result=con_read(&sender.con_obj,pair);
 if(result<0){
 	if(result!=-2){
 		perror("Erro a enviar servers a browser 2 read!!!!!!\n");
@@ -215,14 +214,14 @@ if(result<0){
 	     	perror("Timeout a servers a browser 2 read!!!!!\n");
 	}
 }
-
+*/
 
 snprintf(statement_str,PATHSIZE-1,SHOW_SERVERS_TMPL);
 
 sqlite3_exec(db, statement_str,send_show_servers,(void*)&sender,NULL);
 
 snprintf((char*)sender.con_obj.tcp_data,DEF_DATASIZE-1,"done");
-con_send_tcp(&sender.con_obj,pair);
+con_send(&sender.con_obj,pair);
 
 return 1;
 }

@@ -61,7 +61,6 @@ static int port_in_range(uint16_t port){
 }
 static int is_no_more_room(void){
 
-	
 	return (acess_var_mtx_uint16(&running_mtx,&mapper.curr_num_ports,0,V_LOOK)>=cfg_num_ports);
 
 

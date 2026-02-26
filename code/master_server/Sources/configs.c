@@ -101,7 +101,7 @@ void read_values_cfg_master(void){
 
                 clean_and_exit();
         }
-        sscanf(curr_line_buff,"master_using_tls: %hhu",&will_use_tls);
+        sscanf(curr_line_buff,"master_using_tls: %hu",&will_use_tls);
         clean_buff();
 	if(will_use_tls){
 
@@ -152,7 +152,7 @@ void print_values_cfg_master(int fd){
 
 	dprintf(fd,"master_ack_period_us: %luus\n",cfg_master_ack_period_us);
 
-	dprintf(fd,"master_using_tls: %huu\n",will_use_tls);
+	dprintf(fd,"master_using_tls: %hu\n",will_use_tls);
 
 	if(will_use_tls){
 		dprintf(fd,"master_auth_cert_file_path: %s\n",auth_cert_file_path);

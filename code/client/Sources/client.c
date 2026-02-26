@@ -14,7 +14,6 @@
 #include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/more_socket_ops.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
-#include "../../extra_funcs/Includes/sockio_udp.h"
 #include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/protocol.h"
@@ -71,7 +70,7 @@ static void useless_handler(int useless){
 }
 void exit_emergency_func(void){
 
-	clear_ports_and_quit(SIGINT,NULL);
+	//clear_ports_and_quit(SIGINT,NULL);
 
 }
 static int64_t down_file_size(void){
@@ -81,7 +80,7 @@ static int64_t down_file_size(void){
 		if(logging){
 			printf("Recebendo tamanho!!!\n");
 		}
-		int ret_read=con_read_tcp(&client_con_obj,client_data_times_pair);
+		int ret_read=con_read(&client_con_obj,client_data_times_pair);
 		sscanf((char*)client_con_obj.tcp_data,"%ld %s %hhd",&down_size,extension_from_server,&is_wav_mode);
 		if(ret_read<=0){
 
@@ -108,7 +107,7 @@ static int64_t down_file_size(void){
 static void play_func(void){
 		down_file_size();
 		uint64_t chunk_size=0;
-		con_read_tcp(&client_con_obj,client_data_times_pair);
+		con_read(&client_con_obj,client_data_times_pair);
 		sscanf((char*)client_con_obj.tcp_data,"%lu",&chunk_size);
 		player_init_stream(&client_con_obj,chunk_size,play_way);
 }
@@ -172,7 +171,7 @@ int clientStart(char* req_field,char* file_name){
 	sscanf(req_field,"%[^:]:%s",req_buff,method_buff);
 	req_type the_type= str_to_req_type(req_buff);
 	if(the_type==NA){
-		printf(UNKNOWN_REQ,req_buff);
+		printf(UNKNOWN_REQ);
 		fclose(logstream);
 		exit(-1);
 	}
@@ -260,8 +259,11 @@ int clientStart(char* req_field,char* file_name){
 	setNonBlocking(&client_con_obj.sockfd_tcp);
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
 	greet(&client_con_obj,client_con_times_pair);
-	snprintf((char*)client_con_obj.tcp_data,DEF_DATASIZE-1,"%s %s",req_buff,file_name);
-	con_send_tcp(&client_con_obj,client_data_times_pair);
+	proto_arr proto_array={0};
+	proto_array[0]=(uint16_t)htons(the_type);
+	memcpy(client_con_obj.tcp_data,proto_array,sizeof(uint16_t));
+	snprintf((char*)&client_con_obj.tcp_data[sizeof(uint16_t)],DEF_DATASIZE-2,"%s",file_name);
+	con_send(&client_con_obj,client_data_times_pair);
 
 
 	switch(the_type){
@@ -286,9 +288,7 @@ int clientStart(char* req_field,char* file_name){
 		clear_ports_and_quit(SIGINT,NULL);
         	break;
 	default:
-		printf(UNKNOWN_REQ,req_buff);
-		clear_ports_and_quit(SIGINT,NULL);
-        	break;
+		break;
 	}
 	return 0;
 }

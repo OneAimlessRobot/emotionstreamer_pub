@@ -30,4 +30,4 @@ do
 
 done < "${tmp_pid_file}"
 
-cat /dev/null >| "${tmp_pid_file}"
+cat /dev/null > "${tmp_pid_file}"

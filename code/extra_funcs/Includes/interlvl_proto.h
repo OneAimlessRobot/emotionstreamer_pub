@@ -5,7 +5,9 @@
 #define SHOW_MASTER_STRING "showme_master"
 #define LOG_STRING "mayi"
 
-typedef enum interlvl_cmd{SHOW,MASTER_SHOW,LOG,INTERLVL_NA}interlvl_cmd;
+
+
+typedef enum interlvl_cmd{SHOW=14,MASTER_SHOW=15,LOG=20,INTERLVL_NA=25}interlvl_cmd;
 
 
 interlvl_cmd str_to_interlvl_cmd_type(char* str);
