@@ -75,7 +75,7 @@ static void conStop(int useless){
 
 void exit_emergency_func(void){
 	//arg can me anything, really
-	//serverStop(1);
+	serverStop(1);
 
 }
 static void pick_next_song(void){
@@ -189,6 +189,8 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sigemptyset(&sa_chld.sa_mask);
         sa_chld.sa_flags = SA_RESTART|SA_NOCLDWAIT;
 	sigaction(SIGCHLD, &sa_chld, NULL);
+
+	use_exit_func=0;
 	exit_func_for_this_module=exit_emergency_func;
 
 	logging=cfg_server_logging;

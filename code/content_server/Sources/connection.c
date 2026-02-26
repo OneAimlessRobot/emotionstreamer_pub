@@ -80,6 +80,7 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 //static get_filename_extension
 void con_go(int sockfd_tcp){
 
+			use_exit_func=1;
 			exit_func_for_this_module=cleanup;
 			sock_tcp=sockfd_tcp;
 			unsigned char stream_cache_data[sizeof(mp3_stream_chunk)];

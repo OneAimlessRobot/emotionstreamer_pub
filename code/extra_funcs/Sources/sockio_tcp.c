@@ -42,7 +42,9 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 		}
 		else{
 		    ERR_print_errors_fp(stderr);
-		    exit_func_for_this_module();
+		    if(use_exit_func){
+			exit_func_for_this_module();
+		    }
 		    return -1;
 		}
 	}
@@ -54,7 +56,9 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 
 	        	fprintf(logstream, "SELECT ERROR!!!!! SSL SEND\n%s\n",strerror(errno));
 		}
-		exit_func_for_this_module();
+		if(use_exit_func){
+			exit_func_for_this_module();
+		}
 		return -1;
 	}
 
@@ -110,7 +114,9 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 		}
 		else{
 		    ERR_print_errors_fp(stderr);
-		    exit_func_for_this_module();
+		    if(use_exit_func){
+			exit_func_for_this_module();
+		    }
 		    return -1;
 		}
 	}
@@ -122,8 +128,10 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 
 	        	fprintf(logstream, "SELECT ERROR!!!!! SSL READ\n%s\n",strerror(errno));
 		}
-		exit_func_for_this_module();
-		return -1;
+		if(use_exit_func){
+			exit_func_for_this_module();
+		}
+	        return -1;
 	}
 
 }
@@ -160,8 +168,10 @@ int sendsome(int sd,char buff[],size_t size,int_pair times){
 
 			fprintf(logstream, "SELECT ERROR!!!!! SEND\n%s\n",strerror(errno));
 			}
-			exit_func_for_this_module();
-		    	return -1;
+			if(use_exit_func){
+				exit_func_for_this_module();
+		    	}
+			return -1;
 			}
 		}
 		return send_total;
@@ -199,8 +209,10 @@ int readsome(int sd,char buff[],size_t size,int_pair times){
 
 			fprintf(logstream, "SELECT ERROR!!!!! READ\n%s\n",strerror(errno));
 			}
-			exit_func_for_this_module();
-		    	return -1;
+			if(use_exit_func){
+				exit_func_for_this_module();
+		    	}
+			return -1;
 			}
 			}
 			return read_total;

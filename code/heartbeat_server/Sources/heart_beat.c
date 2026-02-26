@@ -71,7 +71,7 @@ static void sigpipe_handler(int useless){
 void exit_emergency_func(void){
 
 	//argument can be anything, really
-	//sigint_handler(1);
+	sigint_handler(1);
 
 }
 void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
@@ -85,6 +85,8 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sigemptyset(&sa_sigpipe.sa_mask);
         sa_sigpipe.sa_flags = SA_RESTART;
     	sigaction(SIGPIPE, &sa_sigpipe, NULL);
+
+	use_exit_func=0;
 	exit_func_for_this_module=exit_emergency_func;
 
 	logging=cfg_hb_server_logging;
