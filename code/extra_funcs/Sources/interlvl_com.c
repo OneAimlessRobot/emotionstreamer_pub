@@ -338,11 +338,13 @@ void* acceptor_func(void* args){
 	acceptor_args* arg_a = (acceptor_args*)args;
         char extension_buff[EXTENSION_SIZE+1]={0};
 	proto_arr proto_array={0};
+	uint16_t master_stored_port=0;
 	char req_buff[DEF_DATASIZE+1]={0};
         char ip_buff[PATHSIZE/4]={0};
         char name_buff[PATHSIZE/4]={0};
         char type_buff[PATHSIZE/4]={0};
-        int result=0;
+	int result=0;
+	uint16_t useless_arg=0;
         int iResult,
                sock=-1;
 	int is_master=((arg_a->arg_s)==NULL);
@@ -366,7 +368,8 @@ void* acceptor_func(void* args){
                 iResult=select(arg_a->accept_sockfd+1,&arg_a->mainfds,(fd_set*)0,(fd_set*)0,&tv);
                 if(iResult>0){
 				con_t con={0};
-				sock= accept(arg_a->accept_sockfd,NULL,NULL);
+				sockaddr_in_struct their_addr={0};
+        			sock= accept(arg_a->accept_sockfd,NULL,NULL);
 				if(sock>=0){
 
 				setNonBlocking(&sock);
@@ -390,7 +393,6 @@ void* acceptor_func(void* args){
 						fprintf(logstream,"Anyways....\n....\n....\nShow master requested!!!!\n");
 				        }
 					if(!is_master){
-					uint16_t master_stored_port=0;
 					snprint_addr_aux(ip_buff,&master_stored_port,PATHSIZE/4,&arg_a->arg_s->master_addr);
 					snprintf((char*)con.tcp_data,DEF_DATASIZE-1,"Nao sou um master."
 				                                                     "Mas, se quiseres, Está aqui o meu master."
@@ -416,21 +418,16 @@ void* acceptor_func(void* args){
 				        close_con(&con,0,1);
 				        break;
 				case LOG:
-					sockaddr_in_struct their_addr={0};
 					getpeername(con.sockfd_tcp, (struct sockaddr*)&their_addr, &socklenvar[1]);
-					module_type the_type=(module_type)ntohs(proto_array[1]);
-					module_type_to_string(the_type,type_buff);
-					uint16_t stored_port=ntohs(proto_array[2]);
-					uint16_t using_tls=ntohs(proto_array[3]);
+					module_type_to_string((module_type)ntohs(proto_array[1]),type_buff);
 					sscanf((char*)&req_buff[PROTO_ARR_SIZE],"%s %s",extension_buff,name_buff);
 					result=con_send(&con,arg_a->con_times_pair);
 					clear_con_data(&con);
 					if(logging){
 						fprintf(logstream,"Log server requested!!!!\n");
 				        }
-					uint16_t useless_arg=0;
 					snprint_addr_aux(ip_buff,&useless_arg,PATHSIZE/4,&their_addr);
-					add_con(arg_a->arg_o->cons,&con,type_buff,sock,name_buff,ip_buff,stored_port,extension_buff,using_tls);
+					add_con(arg_a->arg_o->cons,&con,type_buff,sock,name_buff,ip_buff,ntohs(proto_array[2]),extension_buff,ntohs(proto_array[3]));
 				        break;
 				default:
 					if(logging){
