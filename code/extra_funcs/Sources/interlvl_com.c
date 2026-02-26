@@ -10,13 +10,15 @@
 #include "../Includes/interlvl_proto.h"
 #include "../Includes/interlvl_com.h"
 typedef struct sockaddr_in sockaddr_in_struct;
+
 static void do_indexed_overseer_con_op(int i,overseer_args* arg_s,int is_reply,int reply_result[2]){
+
 	if(!is_reply){
 	pthread_mutex_lock(arg_s->cons->set_mtx);
         clear_con_data(&arg_s->cons->con_arr[i]);
         reply_result[0]=con_read(&arg_s->cons->con_arr[i],arg_s->ack_times_pair);
         reply_result[1]=strs_are_strictly_equal((char*)(arg_s->cons->con_arr[i].tcp_data),HB_SEND_STRING);
-        pthread_mutex_unlock(arg_s->cons->set_mtx);
+	pthread_mutex_unlock(arg_s->cons->set_mtx);
 	}
 	else{
 	pthread_mutex_lock(arg_s->cons->set_mtx);
@@ -116,16 +118,12 @@ void* slave_thread(void* args){
 	do_indexed_slave_con_op(arg_struct,1,result);
 	if((result[0]<=0)){
 
-                if(result[0]!=-2){
-	                perror("");
-			break;
- 		}
+                perror("");
+		break;
         }
-	else{
-		if(logging){
-			fprintf(logstream,"Ack enviado em slave thread!\n");
-                }
-	}
+	else if(logging){
+		fprintf(logstream,"Ack enviado em slave thread!\n");
+        }
 	usleep(arg_struct->ack_period_us);
 	}
 	(*arg_struct->start_trigger)=2;
@@ -168,10 +166,8 @@ void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct so
 		raise(exit_signal);
 		exit(-1);
         }
-	else{
-		if(logging){
-			print_addr_aux("Sucesso a dar bind!\nAddress em questão:",&sockaddr_buff_local);
-		}
+	else if(logging){
+		print_addr_aux("Sucesso a dar bind!\nAddress em questão:",&sockaddr_buff_local);
 	}
         listen(*sockptr,max_connected);
 	memcpy(sockaddr_buff,&sockaddr_buff_local,sizeof(struct sockaddr_in));
@@ -266,11 +262,9 @@ void* watch_dog_func(void* args){
                 	if(FD_ISSET(acess_var_mtx(arg_s->cons->set_mtx,&arg_s->cons->fd_arr[i],0,V_LOOK),&arg_s->cons->rdfds)){
         			do_indexed_overseer_con_op(i,arg_s,0,result);
 				if(result[0]<=0){
-			                if(result[0]!=-2){
-			                	perror("");
-						kill_con(arg_s->cons,i);
-						continue;
-					}
+			               	perror("");
+					kill_con(arg_s->cons,i);
+					continue;
 				}
 				else{
 					if(logging){

@@ -86,7 +86,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sa_sigpipe.sa_flags = SA_RESTART;
     	sigaction(SIGPIPE, &sa_sigpipe, NULL);
 
-	use_exit_func=0;
+	use_exit_func=1;
 	exit_func_for_this_module=exit_emergency_func;
 
 	logging=cfg_hb_server_logging;
