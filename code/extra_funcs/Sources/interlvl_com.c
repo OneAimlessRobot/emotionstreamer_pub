@@ -9,7 +9,7 @@
 #include "../Includes/server_db_driving.h"
 #include "../Includes/interlvl_proto.h"
 #include "../Includes/interlvl_com.h"
-
+typedef struct sockaddr_in sockaddr_in_struct;
 static void do_indexed_overseer_con_op(int i,overseer_args* arg_s,int is_reply,int reply_result[2]){
 	if(!is_reply){
 	pthread_mutex_lock(arg_s->cons->set_mtx);
@@ -416,7 +416,7 @@ void* acceptor_func(void* args){
 				        close_con(&con,0,1);
 				        break;
 				case LOG:
-					struct sockaddr_in their_addr={0};
+					sockaddr_in_struct their_addr={0};
 					getpeername(con.sockfd_tcp, (struct sockaddr*)&their_addr, &socklenvar[1]);
 					module_type the_type=(module_type)ntohs(proto_array[1]);
 					module_type_to_string(the_type,type_buff);
