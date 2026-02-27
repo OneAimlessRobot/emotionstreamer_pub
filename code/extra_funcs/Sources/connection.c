@@ -437,6 +437,12 @@ static void greet_server(con_t* con_obj, int_pair pair){
 
 	if(con_obj->is_ssl){
 		convert_server_con_to_ssl(&con_obj->con_ssl,con_obj->sockfd_tcp,pair);
+		if(!con_obj->con_ssl){
+			if(logging){
+				fprintf(logstream,"Handshake failed server. Aborting\n");
+			}
+			raise(SIGINT);
+		}
 	}
 	else{
 		con_obj->con_ssl=NULL;
@@ -467,11 +473,16 @@ static void greet_client(con_t* con_obj,int_pair pair){
 
 	if(con_obj->is_ssl){
 		convert_client_con_to_ssl(&con_obj->con_ssl,con_obj->sockfd_tcp,pair);
+		if(!con_obj->con_ssl){
+			if(logging){
+				fprintf(logstream,"Handshake failed client. Aborting\n");
+			}
+			raise(SIGINT);
+		}
 	}
 	else{
 		con_obj->con_ssl=NULL;
 	}
-
 	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%s",CON_STRING);
 	if(logging){
 		fprintf(logstream,"String enviada %s\n",(char*)con_obj->tcp_data);

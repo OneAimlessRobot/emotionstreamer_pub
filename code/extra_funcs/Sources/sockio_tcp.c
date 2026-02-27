@@ -42,6 +42,10 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 		}
 		else{
 		    ERR_print_errors_fp(stderr);
+	            if(logging){
+
+			fprintf(logstream, "SSL ERROR AT SSL SEND\n%s\n",strerror(errno));
+		    }
 		    if(use_exit_func){
 			exit_func_for_this_module();
 		    }
@@ -114,6 +118,10 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 		}
 		else{
 		    ERR_print_errors_fp(stderr);
+	            if(logging){
+
+			fprintf(logstream, "SSL ERROR AT SSL READ\n%s\n",strerror(errno));
+		    }
 		    if(use_exit_func){
 			exit_func_for_this_module();
 		    }

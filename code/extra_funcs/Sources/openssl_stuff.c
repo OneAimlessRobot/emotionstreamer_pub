@@ -106,6 +106,9 @@ void convert_server_con_to_ssl(SSL** cSSL, int sd,int_pair times){
 			ShutdownSSL(cSSL);
 			break;
 		}
+		if(logging){
+			fprintf(logstream,"Waiting...\n");
+		}
 	}
 }
 void convert_client_con_to_ssl(SSL** cSSL, int sd,int_pair times){
