@@ -218,7 +218,7 @@ fprintf(stderr,"Is stdin a tty? %d\nIs stdout a tty? %d\nWhat term are we in [no
     nodelay(stdscr, TRUE); // nonblocking input
     noecho();             // don't echo keypresses
     cbreak();             // disable line buffering
-    ncurses_heartbeat();
+    //ncurses_heartbeat();
     curs_set(0);          // hide cursor
     //keypad(stdscr, TRUE); // enable arrow keys
 }

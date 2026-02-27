@@ -2,7 +2,7 @@
 
 #get song with pattern:
 
-if [ $! -ne 3 ];
+if [ "$#" -ne 2 ];
 then
 	echo "Needs 2 args!"
 	echo "(num args supplied: $?)"
@@ -23,7 +23,7 @@ num_results=$(cat $result_file| wc -l)
 result=$(cat $result_file)
 rm -rf $result_file
 
-echo "Obtivemos $num_results da pesquisa pelo padrão: '$1'"
+echo "Obtivemos $num_results da pesquisa pelo padrão: '$2'"
 
 
 if [ $num_results -lt 1 ]
