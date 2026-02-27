@@ -214,12 +214,6 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 
 void close_con(con_t* con_obj,int RIGHT_NOW,int close_for_good){
 	if(con_obj->is_on){
-		if(con_obj->con_ssl){
-			if(logging){
-				fprintf(logstream,"Closing ssl on connection named %s!\n",con_obj->con_name);
-			}
-			ShutdownSSL(&con_obj->con_ssl);
-		}
 		if(con_obj->sockfd_tcp>=0){
 			if(logging){
 				fprintf(logstream,"Fechamos socket numero %d!!!!\n",con_obj->sockfd_tcp);
@@ -230,6 +224,12 @@ void close_con(con_t* con_obj,int RIGHT_NOW,int close_for_good){
 		con_obj->is_on=(0||(close_for_good!=0));
 		if(logging){
 			fprintf(logstream,"Fechamos conexão!!!!\nDe vez? %s\n",close_for_good?"Yes!":"No...");
+		}
+		if(con_obj->con_ssl){
+			if(logging){
+				fprintf(logstream,"Closing ssl on connection named %s!\n",con_obj->con_name);
+			}
+			ShutdownSSL(&con_obj->con_ssl);
 		}
 	}
 	else{
