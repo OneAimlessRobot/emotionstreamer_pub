@@ -51,6 +51,10 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 			return send_total;
 		}
 		else{
+		    if(errno==EAGAIN){
+
+			continue;
+		    }
 		    ERR_print_errors_fp(stderr);
 	            if(logging){
 
@@ -127,6 +131,10 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 			return read_total;
 		}
 		else{
+		    if(errno==EAGAIN){
+
+			continue;
+		    }
 		    ERR_print_errors_fp(stderr);
 	            if(logging){
 
