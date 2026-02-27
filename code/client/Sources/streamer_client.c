@@ -490,25 +490,25 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	}
 	stream_struct.con_obj=con_obj;
 	innited=1;
-	if(!is_wav_compat_mode()){
-		printf("Decoder thread (named %s) to be initialized\n",decode_thread_name);
-		create_client_thread(&t_dec,dec_thread_func);
-		printf("Decoder thread (named %s) initialized successfully\n",decode_thread_name);
+	if(stream_show_stats){
+		printf("Stats thread (named %s) to be initialized\n",stats_thread_name);
+		create_client_thread(&t_stats,show_stats);
+		printf("Stats thread (named %s) initialized sucessfully\n",stats_thread_name);
 	}
 	if(play){
 		printf("Player thread (named %s) to be initialized\n",play_thread_name);
 		create_client_thread(&t_play,play_thread_func);
 		printf("Player thread (named %s) initialized sucessfully\n",play_thread_name);
 	}
-	if(stream_show_stats){
-		printf("Stats thread (named %s) to be initialized\n",stats_thread_name);
-		create_client_thread(&t_stats,show_stats);
-		printf("Stats thread (named %s) initialized sucessfully\n",stats_thread_name);
-	}
 	if(input_enabled){
 		printf("Input thread (named %s) to be initialized\n",input_thread_name);
 		create_client_thread(&t_input,input_thread_func);
 		printf("Input thread (named %s) initialized successfully\n",input_thread_name);
+	}
+	if(!is_wav_compat_mode()){
+		printf("Decoder thread (named %s) to be initialized\n",decode_thread_name);
+		create_client_thread(&t_dec,dec_thread_func);
+		printf("Decoder thread (named %s) initialized successfully\n",decode_thread_name);
 	}
 	rx_thread_func();
 	while(innited&&(acess_var_mtx(&variable_acess_mtx,&playing,0,V_LOOK)||acess_var_mtx(&variable_acess_mtx,&decoding,0,V_LOOK))){
