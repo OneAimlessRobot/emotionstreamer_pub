@@ -2,8 +2,17 @@
 
 #get song with pattern:
 
-pattern="$1"
+if [ $! -ne 3 ];
+then
+	echo "Needs 2 args!"
+	echo "(num args supplied: $?)"
+	echo "1- backend"
+	echo "2- expression for song"
+	exit
+fi
 
+pattern="$2"
+backend="$1"
 result_file="./.tmp_result"
 touch $result_file
 ./emotionstreamer_client.exe peek "${pattern}" > $result_file
@@ -16,7 +25,6 @@ rm -rf $result_file
 
 echo "Obtivemos $num_results da pesquisa pelo padrão: '$1'"
 
-backend="oss"
 
 if [ $num_results -lt 1 ]
 then
