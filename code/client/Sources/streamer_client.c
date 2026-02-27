@@ -402,6 +402,7 @@ static void* show_stats(void* args){
 		if(stream_enable_ncurses){
 			touchwin(stdscr);
 			wrefresh(stdscr);
+			fflush(stdout);
 		}
 		stats_end = clock();
 	        stats_cpu_time_used = F_S_TO_US(((float) (stats_end - stats_start)) / CLOCKS_PER_SEC);
