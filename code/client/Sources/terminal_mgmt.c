@@ -192,6 +192,13 @@ void endwin_wrapper(void){
 	pthread_mutex_unlock(&close_ncurses_mtx);
 }
 void enable_ncurses(void){
+//setvbuf(stdout, NULL,_IONBF,0)
+//setvbuf(stderr, NULL,_IONBF,0)
+//fprintf(stderr,"Is stdin a tty? %d\nIs stdout a tty? %d\nWhat term are we in? %s\n\n",isatty(0),isatty(1),getenv("TERM"));
+//FILE* tty = fopen("/dev/tty","r+");
+//SCREEN*s=newterm(NULL,tty,tty);
+//set_term(s);
+
     initscr();            // start ncurses
     cbreak();             // disable line buffering
     noecho();             // don't echo keypresses

@@ -28,7 +28,6 @@
 #include "../Includes/terminal_mgmt.h"
 #include "../Includes/client_aux_funcs.h"
 
-#define ATOMIC_CODE
 
 static int read_result=-1;
 static uint8_t read_tcp_chk[sizeof(mp3_stream_chunk)]={0};
@@ -320,11 +319,8 @@ static void* play_thread_func(void* args){
 				break;
 			}
 			perform_queue_op(stream_struct.player_que,is_wav_compat_mode()?stream_struct.player->pr_chunk:stream_struct.player->p_chunk,NULL,(q_op){Q_READ_TO,Q_LOOK_NA});
-			if(!showing){
-				showing=1;
-				pthread_cond_signal(&stats_cond);
-			}
-
+			showing=1;
+			pthread_cond_signal(&stats_cond);
 			if(!is_wav_compat_mode()){
 				perform_play_op(stream_struct.player,NULL,P_SAFE_DECODER_BUFF_LOAD);
 				pthread_cond_signal(&decoder_cond);
@@ -359,11 +355,12 @@ static void* show_stats(void* args){
 	pthread_mutex_unlock(&stats_mtx);
 	tid_stats=gettid_here();
 	set_this_thread_name(tid_stats, stats_thread_name);
-	print_log_string("Thread de stats alcançado!\n");
+	print_string("Thread de stats alcançado!\n");
 	perform_play_op(stream_struct.player,&stats_result_struct,P_GET_FRAME_DATA);
 	if(stream_enable_ncurses){
         	enable_ncurses();
-		clear();
+		clearok(stdscr,1);
+		refresh();
 	}
 	else{
 		printf("\033[2J");
@@ -379,6 +376,7 @@ static void* show_stats(void* args){
 		}
 		if(stream_enable_ncurses){
 			clear();
+			//clearok(stdscr,1);
 		}
 		else{
 			printf("\033[H");
@@ -400,6 +398,7 @@ static void* show_stats(void* args){
 			perform_queue_op(stream_struct.player_que,NULL,&stats_result_struct,(q_op){Q_PRINT,Q_LOOK_NA});
 		}
 		if(stream_enable_ncurses){
+			touchwin(stdscr);
 			wrefresh(stdscr);
 		}
 		stats_end = clock();
@@ -433,7 +432,6 @@ static void* input_thread_func(void* args){
 		switch(input_buff[0]){
 
 			case 'p':
-				#ifdef ATOMIC_CODE
 				pause_value=paused;
 				if(pause_value){
 
@@ -441,15 +439,6 @@ static void* input_thread_func(void* args){
 					pthread_cond_signal(&player_cond);
 				}
 				paused=!pause_value;
-				#else
-				pause_value=acess_var_mtx(&variable_acess_mtx,&paused,0,V_LOOK);
-				if(pause_value){
-
-					pthread_cond_signal(&reading_cond);
-					pthread_cond_signal(&player_cond);
-				}
-				acess_var_mtx(&variable_acess_mtx,&paused,!pause_value,V_SET);
-				#endif
 			break;
 			case 's':
 				pthread_mutex_lock(&input_mtx);
@@ -457,6 +446,7 @@ static void* input_thread_func(void* args){
 				raise(SIGINT);
 				stop_client_stream();
 				pthread_mutex_unlock(&input_mtx);
+			break;
 			case 3:
 				pthread_mutex_lock(&input_mtx);
 				print_log_string("Tentando sair!\n");
