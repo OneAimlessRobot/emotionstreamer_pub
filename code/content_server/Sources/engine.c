@@ -36,7 +36,7 @@ int child_pid=-1;
 static void call_sigint(void){
 
 	close(state.server_sock_tcp);
-	perror("Sinal de parar server\n");
+	printf("Sinal de parar server\n");
 	pthread_mutex_lock(&con_mtx);
 	send_port_back(htons(state.server_tcp_addr.sin_port),&port_mapper_ip_cache_entry);
 	if(cfg_server_slave_mode){
@@ -48,7 +48,7 @@ static void call_sigint(void){
 static void call_sigint_sub_connection(void){
 
 	close(state.server_sock_tcp);
-	perror("Sinal de parar sub conexão server\n");
+	printf("Sinal de parar sub conexão server\n");
 	pthread_mutex_lock(&con_mtx);
 	if(cfg_server_slave_mode){
 		close_con(&state.hb_con,0,1);

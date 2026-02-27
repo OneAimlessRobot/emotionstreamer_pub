@@ -56,6 +56,8 @@ start_another_proc_func "pushd $directory && pushd content_server && ./emotionst
 
 start_another_proc_func "pushd $directory && pushd client &&  exec bash"
 
+start_another_proc_func "pushd $directory && pushd converter_tool &&  exec bash"
+
 start_another_proc_func "pushd $directory && pushd server_browser &&  exec bash"
 
 start_another_proc_func "pushd $directory && pushd master_server && bash ./no-ip-stuff.sh && exec bash"

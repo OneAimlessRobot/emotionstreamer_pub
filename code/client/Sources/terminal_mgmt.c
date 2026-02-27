@@ -193,7 +193,7 @@ void endwin_wrapper(void){
 }
 void enable_ncurses(void){
     initscr();            // start ncurses
-    //cbreak();             // disable line buffering
+    cbreak();             // disable line buffering
     noecho();             // don't echo keypresses
     nodelay(stdscr, TRUE); // nonblocking input
     curs_set(0);          // hide cursor

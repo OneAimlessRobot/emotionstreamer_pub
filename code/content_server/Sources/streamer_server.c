@@ -124,7 +124,7 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 	server_stream();
 	raise(SIGINT);
 	stop_server_stream(&stream_struct);
-	printf("SAIMOS DA STREAM DO SERVER!\n Vamos ver errno:%s\n",strerror(errno));
+	printf("SAIMOS DA STREAM DO SERVER!\n");
 	return 0;
 }
 

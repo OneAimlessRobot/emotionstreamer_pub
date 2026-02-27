@@ -47,7 +47,7 @@ static void call_signal_func(void){
         pthread_mutex_lock(&master_con_mtx);
 	send_port_back(htons(arg_a.accept_addr.sin_port),&port_mapper_ip_cache_entry);
 	pthread_cond_signal(&master_running_cond);
-	perror("Saindo do heart beat server!!!!\n");
+	printf("Saindo do heart beat server!!!!\n");
 
 
 }

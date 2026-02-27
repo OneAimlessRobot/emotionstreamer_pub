@@ -53,7 +53,7 @@ static void call_signal_func(void){
 	end_openssl_libs_server_side();
 	send_port_back(htons(arg_a.accept_addr.sin_port),&port_mapper_ip_cache_entry);
 	close_all_fds_here();
-	perror("Saindo do heart beat server!!!!\n");
+	printf("Saindo do heart beat server!!!!\n");
 	pthread_cond_signal(&master_running_cond);
 }
 

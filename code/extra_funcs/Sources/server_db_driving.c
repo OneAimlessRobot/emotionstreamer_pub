@@ -169,18 +169,6 @@ static int send_show_servers(void* arg1, int n_cols, char** cols,char** cols_nam
 	               perror("Timeout a enviar servers a browser 3 send!!!!!!\n");
 		}
         }
-	/*
-        result=con_read(&sender->con_obj,sender->pair);
-        if(result<0){
-		if(result!=-2){
- 	                perror("Erro a enviar servers a browser 3 read!!!!!!\n");
-	                raise(SIGINT);
-		}
-		else{
-	                perror("Timeout a enviar servers a browser 3 read!!!!!!\n");
-		}
-
-        }*/
 	return 0;
 
 }
@@ -204,17 +192,6 @@ if(result<0){
 	}
 
 }
-/*result=con_read(&sender.con_obj,pair);
-if(result<0){
-	if(result!=-2){
-		perror("Erro a enviar servers a browser 2 read!!!!!!\n");
-		raise(SIGINT);
-	}
-	else{
-	     	perror("Timeout a servers a browser 2 read!!!!!\n");
-	}
-}
-*/
 
 snprintf(statement_str,PATHSIZE-1,SHOW_SERVERS_TMPL);
 

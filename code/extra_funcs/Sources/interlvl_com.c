@@ -286,24 +286,20 @@ void* watch_dog_func(void* args){
 }
 
 module_type string_to_module_type(char*str){
-	
 	module_type result=TYPE_NA;
 	if(!strs_are_strictly_equal(str,"server_mod")){
 
 		result=SERVER;
-	
 
 	}
 	else if(!strs_are_strictly_equal(str,"heartbeat_mod")){
 
 		result=HB_SERVER;
-	
 
 	}
 	else if(!strs_are_strictly_equal(str,"master_mod")){
 
 		result=M_SERVER;
-	
 
 	}
 

@@ -60,9 +60,11 @@ void DestroySSL(void){
 }
 
 void ShutdownSSL(SSL** cSSL){
-	SSL_shutdown(*cSSL);
-	SSL_free(*cSSL);
-	*cSSL=NULL;
+	if((*cSSL)!=NULL){
+		SSL_shutdown(*cSSL);
+		SSL_free(*cSSL);
+		*cSSL=NULL;
+	}
 }
 void convert_server_con_to_ssl(SSL** cSSL, int sd,int_pair times){
 
