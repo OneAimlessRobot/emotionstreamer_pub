@@ -51,6 +51,8 @@ static const int play=1;
 static const int decode=1;
 static const int input_enabled=1;
 static struct sigaction sa;
+static struct sigaction sa_winch;
+
 static char decode_print_buff[DEF_DATASIZE]={0},
 		stats_print_buff[DEF_DATASIZE+1]={0},
 		input_buff[DEF_DATASIZE+1]={0};
@@ -100,6 +102,7 @@ static atomic_int
 
 static atomic_int innited=0;
 static atomic_int exiting=0;
+static atomic_int will_redraw=0;
 
 static chunk_queue player_que={0},
 		decoder_que={0};
@@ -137,7 +140,11 @@ static void sigint_handler(int useless){
 	playing=1;
 	stop_client_stream();
 }
+static void sigwinch_handler(int useless){
 
+	will_redraw=1+(0*useless);
+
+}
 static int is_wav_compat_mode(void){
 
 	return (is_wav_mode||!decode);
@@ -381,6 +388,10 @@ static void* show_stats(void* args){
 			//clearok(stdscr,1);
 		}
 		else{
+			if(will_redraw){
+				printf("\033[2J");
+				will_redraw=0;
+			}
 			printf("\033[H");
 		}
 		snprintf(stats_print_buff,sizeof(stats_print_buff)-1,"buffer: %d ms\nplaying pct: %d\ndecoding pct: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nWAV innited? %s\n\n",
@@ -473,6 +484,12 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
 
+	if(!stream_enable_ncurses){
+	        sa_winch.sa_handler = sigwinch_handler;
+        	sigemptyset(&sa_winch.sa_mask);
+        	sa_winch.sa_flags = SA_RESTART;
+        	sigaction(SIGWINCH, &sa_winch, NULL);
+	}
 	uint8_t h_chunk_buff[is_wav_compat_mode()?chunk_size:1];
 	memset(h_chunk_buff,0,sizeof(h_chunk_buff));
 	uint8_t r_chunk_buff[sizeof(frame_info_t)+4+chunk_size];
