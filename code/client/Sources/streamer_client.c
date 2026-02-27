@@ -360,7 +360,9 @@ static void* show_stats(void* args){
 	if(stream_enable_ncurses){
         	enable_ncurses();
 		clearok(stdscr,1);
+		touchwin(stdscr);
 		refresh();
+		doupdate();
 	}
 	else{
 		printf("\033[2J");
