@@ -117,9 +117,6 @@ void convert_client_con_to_ssl(SSL** cSSL, int sd,int_pair times){
 	SSL_set_fd(*cSSL, sd);
 	//Here is the SSL Accept portion.  Now all reads and writes must use SSL
 	int ssl_ret=0,ssl_err=0;
-	struct timeval tv;
-	tv.tv_sec=times[0];
-	tv.tv_usec=times[1];
 	while(1) {
 		ssl_ret  = SSL_connect(*cSSL);
 
@@ -131,12 +128,18 @@ void convert_client_con_to_ssl(SSL** cSSL, int sd,int_pair times){
 		ssl_err = SSL_get_error(*cSSL, ssl_ret);
 
 		if (ssl_err == SSL_ERROR_WANT_READ) {
+			struct timeval tv;
+			tv.tv_sec=times[0];
+			tv.tv_usec=times[1];
 			fd_set rfds;
 			FD_ZERO(&rfds);
 			FD_SET(sd, &rfds);
 			select(sd + 1, &rfds, (fd_set*)0, (fd_set*)0, &tv);
 		}
 		else if (ssl_err == SSL_ERROR_WANT_WRITE) {
+			struct timeval tv;
+			tv.tv_sec=times[0];
+			tv.tv_usec=times[1];
 			fd_set wfds;
 			FD_ZERO(&wfds);
 			FD_SET(sd, &wfds);
