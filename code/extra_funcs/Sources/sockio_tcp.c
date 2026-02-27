@@ -27,7 +27,17 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 			return send_total;
 		}
 		int ssl_err = SSL_get_error(ssl, ret);
-		if (ssl_err == SSL_ERROR_WANT_WRITE) {
+		if (ssl_err == SSL_ERROR_WANT_READ) {
+			struct timeval mtv;
+			mtv.tv_sec=times[0];
+			mtv.tv_usec=times[1];
+			fd_set mrfds;
+			FD_ZERO(&mrfds);
+			FD_SET(sd, &mrfds);
+			select(sd + 1, &mrfds, (fd_set*)0, (fd_set*)0, &mtv);
+			continue;
+		}
+		else if (ssl_err == SSL_ERROR_WANT_WRITE) {
 			struct timeval mtv;
 			mtv.tv_sec=times[0];
 			mtv.tv_usec=times[1];
