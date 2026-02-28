@@ -38,13 +38,13 @@ pushd "${directory}"
 
 tmux new-session -d -s "${session_name}"
 
-start_another_proc_func "bash -lc 'cd \"./port_mapper\" && ./emotionstreamer_port_mapper.exe; exec bash'"
+start_another_proc_func "bash -lc 'cd \"./port_mapper\" && ./emotionstreamer_port_mapper.exe >outfile 2>&1 ; exec bash'"
 
-#start_another_proc_func "bash -lc 'cd \"./master_server\" && ./emotionstreamer_master_server.exe; exec bash'"
+start_another_proc_func "bash -lc 'cd \"./master_server\" && ./emotionstreamer_master_server.exe >outfile 2>&1 ; exec bash'"
 
-#start_another_proc_func "bash -lc 'cd \"./heartbeat_server\" && ./emotionstreamer_heartbeat_server.exe; exec bash'"
+start_another_proc_func "bash -lc 'cd \"./heartbeat_server\" && ./emotionstreamer_heartbeat_server.exe >outfile 2>&1 ; exec bash'"
 
-#start_another_proc_func "bash -lc 'cd \"./content_server\" && ./emotionstreamer_content_server.exe; exec bash'"
+start_another_proc_func "bash -lc 'cd \"./content_server\" && ./emotionstreamer_content_server.exe >outfile 2>&1 ; exec bash'"
 
 start_another_proc_func "bash -lc 'cd \"./client\"; exec bash'"
 

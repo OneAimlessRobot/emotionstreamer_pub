@@ -46,13 +46,13 @@ pushd "${directory}"
 
 
 
-start_another_proc_func "pushd $directory && pushd port_mapper && ./emotionstreamer_port_mapper.exe && exec bash"
+start_another_proc_func "pushd $directory && pushd port_mapper && ./emotionstreamer_port_mapper.exe >log_file.txt 2>&1 && exec bash"
 
-start_another_proc_func "pushd $directory && pushd master_server && ./emotionstreamer_master_server.exe  && exec bash"
+start_another_proc_func "pushd $directory && pushd master_server && ./emotionstreamer_master_server.exe >log_file.txt 2>&1  && exec bash"
 
-start_another_proc_func "pushd $directory && pushd heartbeat_server && ./emotionstreamer_heartbeat_server.exe  && exec bash"
+start_another_proc_func "pushd $directory && pushd heartbeat_server && ./emotionstreamer_heartbeat_server.exe >log_file.txt 2>&1  && exec bash"
 
-start_another_proc_func "pushd $directory && pushd content_server && ./emotionstreamer_content_server.exe  && exec bash"
+start_another_proc_func "pushd $directory && pushd content_server && ./emotionstreamer_content_server.exe >log_file.txt 2>&1  && exec bash"
 
 start_another_proc_func "pushd $directory && pushd client &&  exec bash"
 
