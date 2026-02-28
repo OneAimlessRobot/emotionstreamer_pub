@@ -79,8 +79,7 @@ static pthread_mutex_t reading_mtx=PTHREAD_MUTEX_INITIALIZER,
 static pthread_t t_play,
 	  	t_dec,
 	  	t_input,
-	  	t_rx;
-//	  	t_stats;
+	  	t_stats;
 
 static pid_t tid_rx,
 		tid_play,
@@ -517,13 +516,11 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	}
 	stream_struct.con_obj=con_obj;
 	innited=1;
-	/*
 	if(stream_show_stats){
 		printf("Stats thread (named %s) to be initialized\n",stats_thread_name);
 		create_client_thread(&t_stats,show_stats);
 		printf("Stats thread (named %s) initialized sucessfully\n",stats_thread_name);
 	}
-	*/
 	if(play){
 		printf("Player thread (named %s) to be initialized\n",play_thread_name);
 		create_client_thread(&t_play,play_thread_func);
@@ -539,12 +536,8 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		create_client_thread(&t_dec,dec_thread_func);
 		printf("Decoder thread (named %s) initialized successfully\n",decode_thread_name);
 	}
-	printf("Reading thread (named %s) to be initialized\n",rx_thread_name);
-	create_client_thread(&t_rx,rx_thread_func);
-	printf("Stats thread (named %s) initialized sucessfully\n",rx_thread_name);
-	//rx_thread_func();
-	show_stats(NULL);
-	while(innited&&(playing)){
+	rx_thread_func(NULL);
+	while(innited&&(playing||decoding)){
 		usleep(S_TO_US(1));
 	}
 	pthread_mutex_lock(&running_mtx);
@@ -554,12 +547,9 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	}
 	pthread_mutex_unlock(&running_mtx);
 	stop_client_stream();
-	/*
 	if(stream_show_stats){
 		join_client_thread(t_stats,(char*)stats_thread_name);
 	}
-	*/
-	join_client_thread(t_rx,(char*)rx_thread_name);
 	if(input_enabled){
 		join_client_thread(t_input,(char*)input_thread_name);
 		endwin_wrapper();
