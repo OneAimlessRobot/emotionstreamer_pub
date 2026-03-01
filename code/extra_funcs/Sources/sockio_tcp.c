@@ -51,7 +51,6 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 			return send_total;
 		}
 		else if(ssl_err == SSL_ERROR_SYSCALL){
-			
 		    ERR_print_errors_fp(stderr);
 		    if(logging){
 
@@ -62,8 +61,13 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 			continue;
 		    }
 		    if(errno == EWOULDBLOCK){
-				
-			continue;	
+			   continue;
+			}
+		    if(errno == EPIPE){
+			    if(use_exit_func){
+					exit_func_for_this_module();
+			    }
+			    return -1;
 			}
 		}
 		else{
@@ -143,7 +147,6 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 			return read_total;
 		}
 		else if(ssl_err == SSL_ERROR_SYSCALL){
-			
 		    ERR_print_errors_fp(stderr);
 		    if(logging){
 
@@ -154,13 +157,18 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 			continue;
 		    }
 		    if(errno == EWOULDBLOCK){
-				
-			continue;	
+			   continue;
 			}
-		}
+		    if(errno == EPIPE){
+			    if(use_exit_func){
+					exit_func_for_this_module();
+			    }
+			    return -1;
+			}
+		    }
 		else{
 		    ERR_print_errors_fp(stderr);
-	        if(logging){
+	           if(logging){
 
 				fprintf(logstream, "SSL FATAL ERROR AT SSL READ\n%s\n",strerror(errno));
 		    }
