@@ -50,18 +50,30 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 		else if (ssl_err == SSL_ERROR_ZERO_RETURN) {
 			return send_total;
 		}
-		else{
+		else if(ssl_err == SSL_ERROR_SYSCALL){
+			
+		    ERR_print_errors_fp(stderr);
+		    if(logging){
+
+				fprintf(logstream, "SSL SYSCALL ERROR AT SSL SEND\n%s\n",strerror(errno));
+		    }
 		    if(errno==EAGAIN){
 
 			continue;
 		    }
+		    if(errno == EWOULDBLOCK){
+				
+			continue;	
+			}
+		}
+		else{
 		    ERR_print_errors_fp(stderr);
-	            if(logging){
+	        if(logging){
 
-			fprintf(logstream, "SSL ERROR AT SSL SEND\n%s\n",strerror(errno));
+				fprintf(logstream, "SSL FATAL ERROR AT SSL READ\n%s\n",strerror(errno));
 		    }
 		    if(use_exit_func){
-			exit_func_for_this_module();
+				exit_func_for_this_module();
 		    }
 		    return -1;
 		}
@@ -130,18 +142,30 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 		else if (ssl_err == SSL_ERROR_ZERO_RETURN) {
 			return read_total;
 		}
-		else{
+		else if(ssl_err == SSL_ERROR_SYSCALL){
+			
+		    ERR_print_errors_fp(stderr);
+		    if(logging){
+
+				fprintf(logstream, "SSL SYSCALL ERROR AT SSL READ\n%s\n",strerror(errno));
+		    }
 		    if(errno==EAGAIN){
 
 			continue;
 		    }
+		    if(errno == EWOULDBLOCK){
+				
+			continue;	
+			}
+		}
+		else{
 		    ERR_print_errors_fp(stderr);
-	            if(logging){
+	        if(logging){
 
-			fprintf(logstream, "SSL ERROR AT SSL READ\n%s\n",strerror(errno));
+				fprintf(logstream, "SSL FATAL ERROR AT SSL READ\n%s\n",strerror(errno));
 		    }
 		    if(use_exit_func){
-			exit_func_for_this_module();
+				exit_func_for_this_module();
 		    }
 		    return -1;
 		}

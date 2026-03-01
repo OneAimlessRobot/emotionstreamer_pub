@@ -4,7 +4,7 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="Kichi_-_REBORN/"
+song_subdirectory="got_its_chance_to_say/"
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0
