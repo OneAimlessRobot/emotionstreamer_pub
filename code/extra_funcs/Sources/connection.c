@@ -53,7 +53,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 		if(logging){
 			perror("Criação de socket para conectar ao port mapper para devolver porta unica mal sucedida. Abortando\n");
 		}
-		raise(SIGINT);
 		return;
 	}
 
@@ -63,7 +62,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 			perror("Iniciacao de address para conectar ao port mapper para devolver porta unica mal sucedida. Abortando\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 	}
 	int result=-1;
@@ -74,7 +72,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 			perror("Conexão ao port mapper para devolver porta unica mal sucedida! Abortando\n");
 		}
 		socket_close(&tmp_socket,result_con!=0);
-		raise(SIGINT);
 		return;
 	}
 
@@ -85,7 +82,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -96,7 +92,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 			perror("Não conseguimos enviar o request de fecho de porta ao port mapper!!!!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -107,7 +102,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 			perror("Não conseguimos enviar a porta para fechar portas ao port mapper!!!!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -132,7 +126,6 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 		if(logging){
 			perror("Criação de socket para conectar ao port mapper para devolver portas mal sucedida. Abortando\n");
 		}
-		raise(SIGINT);
 		return;
 	}
 
@@ -142,7 +135,6 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 			perror("Iniciacao de address para conectar ao port mapper para devolver portas mal sucedida. Abortando\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 	}
 	int result=-1;
@@ -153,7 +145,6 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 			perror("Conexão ao port mapper para devolver portas mal sucedida! Abortando\n");
 		}
 		socket_close(&tmp_socket,result_con!=0);
-		raise(SIGINT);
 		return;
 	}
 
@@ -164,7 +155,6 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -175,7 +165,6 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 			perror("Não conseguimos enviar o request de fecho de portas ao port mapper!!!!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -291,7 +280,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 		if(logging){
 			perror("Conexão ao port mapper para pedir unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
 		}
-		raise(SIGINT);
 		return;
 	}
 	if(init_addr(&addr, ent->hostname,ent->port)){
@@ -299,7 +287,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 			perror("Iniciacao de address para conectar ao port mapper para pedir unica porta unica mal sucedida. Abortando\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 	}
 	int result=-1;
@@ -310,7 +297,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 			perror("Conexão ao port mapper para pedir unica porta mal sucedida! Abortando\n");
 		}
 		socket_close(&tmp_socket,result_con!=0);
-		raise(SIGINT);
 		return;
 	}
 
@@ -321,7 +307,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -331,7 +316,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 			perror("Não conseguimos receber porta do port mapper!!!!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -349,7 +333,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 			fprintf(logstream,"Aviso de que já temos as portas não enviado!!!\nMensagem que devia ter sido enviada:\n%s\n",buff_for_ports);
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
         }
         if(logging){
@@ -365,7 +348,6 @@ void ask_for_ports(ip_cache_entry* ent){
 		if(logging){
 			perror("Conexão ao port mapper para pedir unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
 		}
-		raise(SIGINT);
 		return;
 	}
 	if(init_addr(&addr, ent->hostname,ent->port)){
@@ -373,7 +355,6 @@ void ask_for_ports(ip_cache_entry* ent){
 			perror("Iniciacao de address para conectar ao port mapper para pedir unica porta unica mal sucedida. Abortando\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 	}
 	int result=-1;
@@ -384,7 +365,6 @@ void ask_for_ports(ip_cache_entry* ent){
 			perror("Conexão ao port mapper para pedir unica porta mal sucedida! Abortando\n");
 		}
 		socket_close(&tmp_socket,result_con!=0);
-		raise(SIGINT);
 		return;
 	}
 
@@ -395,7 +375,6 @@ void ask_for_ports(ip_cache_entry* ent){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -405,7 +384,6 @@ void ask_for_ports(ip_cache_entry* ent){
 			perror("Não conseguimos receber portas do port mapper!!!!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -423,7 +401,6 @@ void ask_for_ports(ip_cache_entry* ent){
 			fprintf(logstream,"Aviso de que já temos as portas não enviado!!!\nMensagem que devia ter sido enviada:\n%s\n",buff_for_ports);
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
         }
         if(logging){
