@@ -76,6 +76,13 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 		}
 		else{
 		    ERR_print_errors_fp(stderr);
+		    if(errno==EAGAIN){
+
+			continue;
+		    }
+		    if(errno == EWOULDBLOCK){
+			   continue;
+			}
 		if(logging){
 
 			fprintf(logstream, "SSL FATAL ERROR AT SSL SEND\n%s\nWill emergency func be called? %s\n",strerror(errno),use_exit_func?"Yes!":"No..:");
@@ -176,6 +183,13 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 		    }
 		else{
 		    ERR_print_errors_fp(stderr);
+		    if(errno==EAGAIN){
+
+			continue;
+		    }
+		    if(errno == EWOULDBLOCK){
+			   continue;
+			}
 		   if(logging){
 
 				fprintf(logstream, "SSL FATAL ERROR AT SSL READ\n%s\nWill emergency func be called? %s\n",strerror(errno),use_exit_func?"Yes!":"No..:");
