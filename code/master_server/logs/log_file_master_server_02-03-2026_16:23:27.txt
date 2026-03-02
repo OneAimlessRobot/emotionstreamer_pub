@@ -74,363 +74,6 @@ Nada....
 Endereço: 
 192.168.0.100 Porta: 11007
 Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
 ip address: 
 Endereço: 
 192.168.0.100 Porta: 7777
@@ -467,54 +110,10 @@ Endereço:
 Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
 Nada....
 
 Endereço: 
 192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
@@ -558,52 +157,6 @@ Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
 Ack recebido em watchdog thread!
 Nada....
 
@@ -615,8 +168,6 @@ De vez? Yes!
 Closing ssl on connection named Unnamed connection!
 Statement: DELETE from Servers
 Where server_id = 6
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
 Nada....
 
 Endereço: 
@@ -701,12 +252,6 @@ Endereço:
 Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
 Nada....
 
@@ -714,74 +259,11 @@ Endereço:
 192.168.0.100 Porta: 11007
 Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
 Nada....
 
 Endereço: 
 192.168.0.100 Porta: 11007
 Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
 Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
@@ -852,136 +334,76 @@ Nada....
 
 Endereço: 
 192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11007
-Ack recebido em watchdog thread!
-Ack recebido em watchdog thread!
 Ack recebido em watchdog thread!
 ip address: 
 Endereço: 
 192.168.0.100 Porta: 7777
 Demos free a um addr info!!!
 Waiting...
+Waiting...
 tuplo recebido: (string) = (hey)
 Log server requested!!!!
 Statement: INSERT Into Servers Values('heartbeat_mod', 6, "Estou-bem-e-tu?", '192.168.0.162:11008', 'N/A', 1)
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
 Nada....
 
 Endereço: 
@@ -1876,4 +1298,1534 @@ Nada....
 
 Endereço: 
 192.168.0.100 Porta: 11007
-Ack rec
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Log server requested!!!!
+Statement: INSERT Into Servers Values('heartbeat_mod', 6, "Estou-bem-e-tu?", '192.168.0.162:11008', 'N/A', 1)
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Fechamos socket numero 6!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Statement: DELETE from Servers
+Where server_id = 6
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Log server requested!!!!
+Statement: INSERT Into Servers Values('heartbeat_mod', 6, "Estou-bem-e-tu?", '192.168.0.162:11008', 'N/A', 1)
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Fechamos socket numero 6!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Statement: DELETE from Servers
+Where server_id = 6
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 6!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 6!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11007
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack recebido em wat

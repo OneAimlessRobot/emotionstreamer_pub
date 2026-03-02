@@ -160,7 +160,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:08:38
+now: 2026-03-02 16:23:32
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -169,7 +169,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:08:41
+now: 2026-03-02 16:23:35
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -178,7 +178,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:08:44
+now: 2026-03-02 16:23:38
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -187,7 +187,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:08:47
+now: 2026-03-02 16:23:41
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -196,7 +196,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:08:50
+now: 2026-03-02 16:23:44
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -205,7 +205,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:08:53
+now: 2026-03-02 16:23:47
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -214,7 +214,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:08:56
+now: 2026-03-02 16:23:50
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -223,7 +223,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:08:59
+now: 2026-03-02 16:23:53
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -232,7 +232,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:02
+now: 2026-03-02 16:23:56
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -241,7 +241,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:05
+now: 2026-03-02 16:23:59
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -250,7 +250,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:08
+now: 2026-03-02 16:24:02
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -259,7 +259,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:11
+now: 2026-03-02 16:24:05
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -268,7 +268,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:14
+now: 2026-03-02 16:24:08
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -277,7 +277,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:17
+now: 2026-03-02 16:24:11
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -286,7 +286,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:20
+now: 2026-03-02 16:24:14
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -295,7 +295,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:23
+now: 2026-03-02 16:24:17
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -304,7 +304,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:26
+now: 2026-03-02 16:24:20
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -313,7 +313,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:29
+now: 2026-03-02 16:24:23
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -322,7 +322,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:32
+now: 2026-03-02 16:24:26
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -331,7 +331,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:35
+now: 2026-03-02 16:24:29
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -340,7 +340,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:38
+now: 2026-03-02 16:24:32
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -349,7 +349,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:41
+now: 2026-03-02 16:24:35
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -358,7 +358,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:44
+now: 2026-03-02 16:24:38
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -367,7 +367,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:47
+now: 2026-03-02 16:24:41
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -376,7 +376,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:50
+now: 2026-03-02 16:24:44
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -385,7 +385,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:53
+now: 2026-03-02 16:24:47
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -394,7 +394,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:56
+now: 2026-03-02 16:24:50
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -403,7 +403,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:09:59
+now: 2026-03-02 16:24:53
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -412,7 +412,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:02
+now: 2026-03-02 16:24:56
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -421,7 +421,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:05
+now: 2026-03-02 16:24:59
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -430,7 +430,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:08
+now: 2026-03-02 16:25:02
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -439,7 +439,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:11
+now: 2026-03-02 16:25:05
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -448,7 +448,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:14
+now: 2026-03-02 16:25:08
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -457,7 +457,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:17
+now: 2026-03-02 16:25:11
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -466,7 +466,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:20
+now: 2026-03-02 16:25:14
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -475,7 +475,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:23
+now: 2026-03-02 16:25:17
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -484,7 +484,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:26
+now: 2026-03-02 16:25:20
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -493,7 +493,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:29
+now: 2026-03-02 16:25:23
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -502,7 +502,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:32
+now: 2026-03-02 16:25:26
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -511,7 +511,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:35
+now: 2026-03-02 16:25:29
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -520,7 +520,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:38
+now: 2026-03-02 16:25:32
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -529,7 +529,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:41
+now: 2026-03-02 16:25:35
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -538,7 +538,7 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:44
+now: 2026-03-02 16:25:38
 Ack enviado em slave thread!
 Ack enviado em slave thread!
 Ack enviado em slave thread!
@@ -547,1915 +547,2908 @@ Nome do server atual: "ola-bom-dia-como-estas"
 Endereço de server atual:
 Endereço: 
 192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:47
+now: 2026-03-02 16:25:41
 Ack enviado em slave thread!
 Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:50
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:53
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:56
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:10:59
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:02
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:05
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:09
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:12
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:15
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:18
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:21
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:24
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:27
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:30
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:33
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:36
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:39
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:42
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:45
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:48
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:51
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:54
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:11:57
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:00
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:03
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:06
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:09
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:12
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:15
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:18
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:21
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:24
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:27
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:30
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:33
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:36
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:39
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:42
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:45
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:48
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:51
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:54
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:12:57
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:00
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:03
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:06
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:09
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:12
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:15
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:18
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:21
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:24
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:27
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:30
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:33
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:36
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:39
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:42
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:45
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:48
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:51
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:54
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:13:57
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:00
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:03
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:06
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:09
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:12
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:15
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:18
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:21
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:24
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:27
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:30
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:33
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:36
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:39
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:42
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:45
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:48
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:51
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:54
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:14:57
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:00
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:03
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:06
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:09
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:12
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:15
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:18
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:21
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:24
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:27
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:30
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:33
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:36
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:39
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:42
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:45
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:48
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:51
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:54
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:15:57
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:00
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:03
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:06
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:09
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:12
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:15
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:18
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:21
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:24
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:27
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:30
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:33
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:36
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:39
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:42
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:45
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:48
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:51
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:54
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:16:57
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:00
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:03
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:06
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:09
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:12
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:15
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:18
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:21
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:24
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:27
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:30
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:33
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:36
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:39
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:42
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:45
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:48
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:51
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:54
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:17:57
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:00
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:03
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:06
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:09
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:12
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:15
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:18
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:21
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:24
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:27
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:30
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:33
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:36
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:39
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:42
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:45
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:48
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:51
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:54
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:18:57
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:00
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:03
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:06
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:09
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:12
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:15
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:18
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:21
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:24
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:27
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:30
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:33
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:36
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:39
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:42
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:45
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:48
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:51
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:54
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:19:57
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:00
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:03
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:06
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:09
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:12
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:15
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:18
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:21
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:24
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:27
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:30
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:33
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:36
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:39
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:42
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:45
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:48
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:51
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:54
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:20:57
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:21:00
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:21:03
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Timed out! ( more that 3s waiting 4 udp). Trying again...
-Nome do server atual: "ola-bom-dia-como-estas"
-Endereço de server atual:
-Endereço: 
-192.168.0.100 Porta: 11010
-now: 2026-03-02 16:21:06
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-SSL SYSCALL ERROR AT SSL SEND
-Connection reset by peer
-Will emergency func be called? Yes!
-Slave quit function called!!!
-Closing client's global ssl context?
-CLIENT SSL desativado! CLIENT_SSL_initted_in_process: 1 -> 0 !
-Yes!
-SSL desativado! SSL_on_in_process: 1 -> 0 !
-Client's global ssl context closed!!
+Connection accepted!
+Server's SSL Ativado? inicializando Server's SSL!...
+SERVER SSL ativo! SERVER_SSL_initted_in_process: 0 -> 1 !
+SSL já ativo! Ignorando!
 ip address: 
 Endereço: 
 192.168.0.100 Porta: 7777
 Demos free a um addr info!!!
-Tentando conectar a:
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+We are in wav mode! getting read of header at the start!
+A file path é: /mnt/FASTstorage/FASTprogs/emotionstreamer/code/content_server/raw_songs/.tmp1.html
+Sent ports after minor server operation!
+Sinal de parar sub conexão server
+Exiting child in server!!
+-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:08
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:11
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:14
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:17
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:20
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:23
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:26
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:29
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:32
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:35
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:38
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:41
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Connection accepted!
+Ack enviado em slave thread!
+Connection accepted!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:47
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:50
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:08
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:11
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:14
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:17
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:20
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:23
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:26
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:29
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:32
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:35
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:38
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:41
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Connection accepted!
+Ack enviado em slave thread!
+Connection accepted!
+Server's SSL Ativado? inicializando Server's SSL!...
+SERVER SSL ativo! SERVER_SSL_initted_in_process: 0 -> 1 !
+SSL já ativo! Ignorando!
+ip address: 
 Endereço: 
 192.168.0.100 Porta: 7777
-(Tentativa 1)
-Portas enviadas e coiso!!!!!!
-A porta enviada foi 11011
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+We are NOT in WAV mode bruuuhhhhh
+sucessfully opened boundary file at /mnt/FASTstorage/FASTprogs/emotionstreamer/code/content_server/raw_songs/./dante_and_hema_insomnia_season/Dante_and_Hema_The_Maid_-_Cloud_needles.mp3.boundary
+A file path é: /mnt/FASTstorage/FASTprogs/emotionstreamer/code/content_server/raw_songs/./dante_and_hema_insomnia_season/Dante_and_Hema_The_Maid_-_Cloud_needles.mp3
+We are NOT in wav mode!!!
+SSL SYSCALL ERROR AT SSL SEND
+Connection reset by peer
+Will emergency func be called? Yes!
+Fechamos socket numero 5!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Fechamos conexão!!!!
+De vez? Yes!
+SAIMOS DA STREAM DO SERVER!
+Closing server's global ssl context?
+SERVER SSL desativado! SERVER_SSL_initted_in_process: 1 -> 0 !
+Yes!
+SSL desativado! SSL_on_in_process: 1 -> 0 !
+Server's global ssl context closed!!
+Fechamos conexão!!!!
+De vez? Yes!
+Sent ports after minor server operation!
+Sinal de parar sub conexão server
 Fechamos socket numero 4!!!!
 Fechamos conexão!!!!
 De vez? Yes!
 Closing ssl on connection named Unnamed connection!
-Sinal de parar server
-ip address: 
+Exiting child in server!!
+-estas"
+Endereço de server atual:
 Endereço: 
-192.168.0.100 Porta: 7777
-Demos free a um addr info!!!
-Tentando conectar a:
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:53
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
 Endereço: 
-192.168.0.100 Porta: 7777
-(Tentativa 1)
-Portas enviadas e coiso!!!!!!
-A porta enviada foi 11010
-Fechamos conexão!!!!
-De vez? Yes!
-Saimos do lower thread
-Fechou a loja!!!
-Juntamos o thread hb_tid
-Fechamos conexão!!!!
-De vez? Yes!
-Sinal de parar server
-ip address: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:56
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
 Endereço: 
-192.168.0.100 Porta: 7777
-Demos free a um addr info!!!
-Tentando conectar a:
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:25:59
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
 Endereço: 
-192.168.0.100 Porta: 7777
-(Tentativa 1)
-Portas enviadas e coiso!!!!!!
-A porta enviada foi 11010
-Fechamos conexão!!!!
-De vez? Yes!
-Saimos do server!!!!!!
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:03
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:06
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:09
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:12
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:15
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:18
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:21
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:24
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:27
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:30
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:33
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:36
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:39
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:42
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:45
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:48
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:51
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:54
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:26:57
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:00
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:03
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:06
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:09
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:12
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:15
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:18
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:21
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:24
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:27
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:30
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:33
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:36
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:39
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:42
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:45
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:48
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:51
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:54
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:27:57
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:00
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:03
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:06
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:09
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:12
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:15
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:18
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:21
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:24
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:27
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:30
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:33
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:36
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:39
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:42
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:45
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:48
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:51
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:54
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:28:57
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:00
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:03
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:06
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:09
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:12
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:15
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:18
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:21
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:24
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:27
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:30
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:33
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:36
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:39
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:42
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:45
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:48
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:51
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:54
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:29:57
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:00
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:03
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:06
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:09
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:12
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:15
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:18
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:21
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:24
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:27
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:30
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:33
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:36
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:39
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:42
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:45
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:48
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:51
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:54
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:30:57
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:00
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:03
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:06
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:09
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:12
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:15
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:18
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:21
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:24
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:27
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:30
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:33
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:36
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:39
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:42
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:45
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:48
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:51
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:54
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:31:57
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:00
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:03
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:06
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:09
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:12
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:15
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:18
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:21
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:24
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:27
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:30
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:33
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:36
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:39
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:42
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:45
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:48
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:51
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:54
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:32:57
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:00
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:03
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:06
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:09
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:12
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:15
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:18
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:21
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:24
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:27
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:30
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:33
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:36
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:39
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:42
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:45
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:48
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:51
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:54
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:33:57
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:00
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:03
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:06
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:09
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:12
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:15
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:18
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:21
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:24
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:27
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:31
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:34
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:37
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:40
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:43
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:46
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:49
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:52
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:55
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:34:58
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:01
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:04
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:07
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:10
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:13
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:16
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:19
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:22
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:25
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:28
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:31
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:34
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:37
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:40
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:43
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:46
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:49
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:52
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:55
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:35:58
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:01
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:04
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:07
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:10
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:13
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:16
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:19
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:22
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:25
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:28
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:31
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:34
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:37
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:40
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:43
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:46
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:49
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:52
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:55
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:36:58
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:01
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:04
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:07
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:10
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:13
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:16
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:19
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:22
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:25
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:28
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:31
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:34
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:37
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:40
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:43
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:46
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:49
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:52
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:55
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:37:58
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:01
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:04
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:07
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:10
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:13
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:16
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:19
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:22
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:25
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:28
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:31
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:34
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:37
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:40
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:43
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:46
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:49
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:52
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:55
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:38:58
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:01
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:04
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:07
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:10
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:13
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:16
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:19
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:22
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:25
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:28
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:31
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:34
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:37
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:40
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:43
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:46
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:49
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:52
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:55
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:39:58
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:40:01
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:40:04
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:40:07
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:40:10
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:40:13
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:40:16
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:40:19
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Ack enviado em slave thread!
+Timed out! ( more that 3s waiting 4 udp). Trying again...
+Nome do server atual: "ola-bom-dia-como-estas"
+Endereço de server atual:
+Endereço: 
+192.168.0.100 Porta: 11010
+now: 2026-03-02 16:40:22
+Ack e

@@ -126,10 +126,10 @@ End of port array state
 Waiting...
 String enviada hey
 hb_thread do streamer server: online
+Ack enviado em slave thread!
 Server's SSL Ativado? inicializando Server's SSL!...
 SERVER SSL ativo! SERVER_SSL_initted_in_process: 0 -> 1 !
 SSL já ativo! Ignorando!
-Ack enviado em slave thread!
 ip address: 
 Endereço: 
 192.168.0.100 Porta: 7777
@@ -2436,9 +2436,285 @@ Endereço:
 Ack enviado em slave thread!
 Ack recebido em watchdog thread!
 Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
 Ack recebido em watchdog thread!
 Ack enviado em slave thread!
 Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
 Nada....
 
 Endereço: 
@@ -2543,12 +2819,21 @@ Nada....
 
 Endereço: 
 192.168.0.100 Porta: 11008
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
 Nada....
 
 Endereço: 
@@ -2556,53 +2841,26 @@ Endereço:
 Ack enviado em slave thread!
 Ack recebido em watchdog thread!
 Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
 Nada....
 
 Endereço: 
 192.168.0.100 Porta: 11008
-Ack enviado em slave thread!
 Ack recebido em watchdog thread!
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11008
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11008
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11008
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Ack enviado em slave thread!
-Ack recebido em watchdog thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11008
 Ack enviado em slave thread!
 Ack recebido em watchdog thread!
 Ack enviado em slave thread!
@@ -2612,84 +2870,523 @@ Nada....
 
 Endereço: 
 192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
 Ack enviado em slave thread!
+Ack recebido em watchdog thread!
 Ack enviado em slave thread!
+Ack recebido em watchdog thread!
 Ack enviado em slave thread!
-Fechamos socket numero 6!!!!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Log server requested!!!!
+Statement: INSERT Into Servers Values('server_mod', 7, "ola-bom-dia-como-estas", '192.168.0.162:11010', '.mp3', 1)
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 8!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 8!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 8!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 8!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 8!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 8!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 8!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 8!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 8!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 8!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Fechamos socket numero 7!!!!
 Fechamos conexão!!!!
 De vez? Yes!
 Closing ssl on connection named Unnamed connection!
 Statement: DELETE from Servers
-Where server_id = 6
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11008
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11008
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Ack enviado em slave thread!
-Nada....
-
-Endereço: 
-192.168.0.100 Porta: 11008
-Ack enviado em slave thread!
-SSL SYSCALL ERROR AT SSL SEND
-Broken pipe
-Will emergency func be called? Yes!
-Slave quit function called!!!
-Closing client's global ssl context?
-CLIENT SSL desativado! CLIENT_SSL_initted_in_process: 1 -> 0 !
-Yes!
-SSL desativado! SSL_on_in_process: 1 -> 0 !
-Client's global ssl context closed!!
+Where server_id = 7
 ip address: 
 Endereço: 
 192.168.0.100 Porta: 7777
 Demos free a um addr info!!!
-Tentando conectar a:
-Endereço: 
-192.168.0.100 Porta: 7777
-(Tentativa 1)
-Portas enviadas e coiso!!!!!!
-A porta enviada foi 11009
-Fechamos socket numero 5!!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
 Fechamos conexão!!!!
 De vez? Yes!
 Closing ssl on connection named Unnamed connection!
-Closing server's global ssl context?
-Nooooo... (Server's global ctx is null so there is nothing to close)
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
 ip address: 
 Endereço: 
 192.168.0.100 Porta: 7777
 Demos free a um addr info!!!
-Tentando conectar a:
-Endereço: 
-192.168.0.100 Porta: 7777
-(Tentativa 1)
-Portas enviadas e coiso!!!!!!
-A porta enviada foi 11008
-ip address: 
-Endereço: 
-192.168.0.100 Porta: 7777
-Demos free a um addr info!!!
-Tentando conectar a:
-Endereço: 
-192.168.0.100 Porta: 7777
-(Tentativa 1)
-Portas enviadas e coiso!!!!!!
-A porta enviada foi 11009
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
 Fechamos conexão!!!!
 De vez? Yes!
-Saindo do heart beat server!!!!
-Saimos do lower thread
-Saimos do thread de replies ao master to server de heartbeat!!!!!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack enviado em slave thread!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
+Fechamos conexão!!!!
+De vez? Yes!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
 Nada....
 
 Endereço: 
@@ -2698,40 +3395,509 @@ ip address:
 Endereço: 
 192.168.0.100 Porta: 7777
 Demos free a um addr info!!!
-Tentando conectar a:
-Endereço: 
-192.168.0.100 Porta: 7777
-(Tentativa 1)
-Portas enviadas e coiso!!!!!!
-A porta enviada foi 11008
-Saimos do thread de heart_beat_master!!!!
-Closing server's global ssl context?
-Nooooo... (Server's global ctx is null so there is nothing to close)
-ip address: 
-Endereço: 
-192.168.0.100 Porta: 7777
-Demos free a um addr info!!!
-Tentando conectar a:
-Endereço: 
-192.168.0.100 Porta: 7777
-(Tentativa 1)
-Portas enviadas e coiso!!!!!!
-A porta enviada foi 11008
-ip address: 
-Endereço: 
-192.168.0.100 Porta: 7777
-Demos free a um addr info!!!
-Tentando conectar a:
-Endereço: 
-192.168.0.100 Porta: 7777
-(Tentativa 1)
-Portas enviadas e coiso!!!!!!
-A porta enviada foi 11009
+Waiting...
+Waiting...
+tuplo recebido: (string) = (hey)
+Anyways....
+....
+....
+Show servers requested!!!!
+Fechamos socket numero 7!!!!
 Fechamos conexão!!!!
 De vez? Yes!
-Saindo do heart beat server!!!!
-Saimos do thread master do server de heartbeat!!!!!
-Saimos do thread watchdog do server de heartbeat!!!!!
-Statement: DROP TABLE Servers
-Saimos do server!!!!!!
-Hello world!!!!
+Closing ssl on connection named Unnamed connection!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Ack recebido em watchdog thread!
+Ack enviado em slave thread!
+Nada....
+
+Endereço: 
+192.168.0.100 Porta: 11008
+Ack recebido em watchdog 
