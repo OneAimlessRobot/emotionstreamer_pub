@@ -125,11 +125,11 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 			}
 		}
 		else{
-			
 			snprint_addr_aux(addr_buff,&port,sizeof(addr_buff),dst_addr);
 			if(logging){
 				fprintf(stderr,"%s\n%s\n",errno?strerror(errno):"Successful connection",errno?"Não conectado.":addr_buff);
 			}
+			numOfTries=(errno?0:numOfTries);
 			break;
 		}
 	}

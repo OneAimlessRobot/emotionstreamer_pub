@@ -498,6 +498,8 @@ void port_mapper_init(ip_cache_entry* ent){
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
+
+	use_exit_func=1;
 	exit_func_for_this_module=exit_emergency_func;
 
 	logging=cfg_port_mapper_logging;
