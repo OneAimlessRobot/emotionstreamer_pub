@@ -144,6 +144,7 @@ static int con_accepting_loop(void){
 				}
 				else{
 					perror("Rejected connection!");
+					return 1;
 				}
 			}
 		else if(iResult<0){

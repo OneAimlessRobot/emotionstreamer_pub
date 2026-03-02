@@ -464,6 +464,13 @@ void* port_mapper_main_loop(void* args){
 				arg[0]=sock;
 				accepted_connection_thread((void*)arg);
 			}
+			else{
+
+				perror("Rejected connection!\n");
+				raise(SIGINT);
+				cleanup();
+				break;
+			}
 		}
 		else if(!iResult)
 		{
@@ -478,12 +485,12 @@ void* port_mapper_main_loop(void* args){
 		       }
 		       raise(SIGINT);
 		       cleanup();
+		       break;
 	
 		}
 		pthread_cond_signal(&input_cond);
 	}
-
-
+	pthread_cond_signal(&input_cond);
 	return args;
 
 }
