@@ -129,7 +129,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 			if(logging){
 				fprintf(stderr,"%s\n%s\n",errno?strerror(errno):"Successful connection",errno?"Não conectado.":addr_buff);
 			}
-			//numOfTries=((errno==EINVAL)?0:numOfTries);
+			numOfTries=((errno!=EINPROGRESS)?0:numOfTries);
 			break;
 		}
 	}
