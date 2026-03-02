@@ -67,67 +67,49 @@ Porta 7: 11018
 Porta 8: 11019
 
 Connection accepted!
-Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
-Porta enviada!!! 11012
-conseguimos receber porta do port mapper!!!!!!
+Recebemos esta string de request: 'hey!_lemme_in!!!!'
+Porta enviadas!!! 9 delas!
+conseguimos enviar portas do port mapper!!!!!!
 String que recebemos: ""thx_FRIENNND!!!!!!!""
 Connection accepted!
-Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
-Porta enviada!!! 11013
-conseguimos receber porta do port mapper!!!!!!
-String que recebemos: ""thx_FRIENNND!!!!!!!""
-Connection accepted!
-Recebemos esta string de request: ''
-??????????
-Connection accepted!
-Recebemos esta string de request: ''
-??????????
+Recebemos esta string de request: 'see_you_lateeer!!!'
+Recebemos estas portas para fechar!!
+8 delas!
+Porta 1: 11013
+Porta 2: 11014
+Porta 3: 11015
+Porta 4: 11016
+Porta 5: 11017
+Porta 6: 11018
+Porta 7: 11019
+Porta 8: 11020
+
 Connection accepted!
 Recebemos esta string de request: 'ok--_okay,_bye!'
 Recebemos esta porta para fechar!!!
-11013
+11012
+Connection accepted!
+Recebemos esta string de request: 'hey!_lemme_in!!!!'
+Porta enviadas!!! 9 delas!
+conseguimos enviar portas do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'see_you_lateeer!!!'
+Recebemos estas portas para fechar!!
+8 delas!
+Porta 1: 11013
+Porta 2: 11014
+Porta 3: 11015
+Porta 4: 11016
+Porta 5: 11017
+Porta 6: 11018
+Porta 7: 11019
+Porta 8: 11020
+
 Connection accepted!
 Recebemos esta string de request: 'ok--_okay,_bye!'
 Recebemos esta porta para fechar!!!
-11013
-Connection accepted!
-Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
-Porta enviada!!! 11013
-conseguimos receber porta do port mapper!!!!!!
-String que recebemos: ""thx_FRIENNND!!!!!!!""
-Connection accepted!
-Recebemos esta string de request: ''
-??????????
-Connection accepted!
-Recebemos esta string de request: ''
-??????????
-Connection accepted!
-Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
-Porta enviada!!! 11014
-conseguimos receber porta do port mapper!!!!!!
-String que recebemos: ""thx_FRIENNND!!!!!!!""
-Connection accepted!
-Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
-Porta enviada!!! 11015
-conseguimos receber porta do port mapper!!!!!!
-String que recebemos: ""thx_FRIENNND!!!!!!!""
-Connection accepted!
-Recebemos esta string de request: ''
-??????????
-Connection accepted!
-Recebemos esta string de request: ''
-??????????
-Connection accepted!
-Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
-Porta enviada!!! 11016
-conseguimos receber porta do port mapper!!!!!!
-String que recebemos: ""thx_FRIENNND!!!!!!!""
-Connection accepted!
-Recebemos esta string de request: ''
-??????????
-Connection accepted!
-Recebemos esta string de request: ''
-??????????
+11012
 Hotel?.......
 Trivago....
 Não é? Eu... Eu não sei, memo...
@@ -322,6 +304,4 @@ Trivago....
 Não é? Eu... Eu não sei, memo...
 Hotel?.......
 Trivago....
-Não é? Eu... Eu não sei, memo...
-Hotel?.......
-Triv
+Não é?

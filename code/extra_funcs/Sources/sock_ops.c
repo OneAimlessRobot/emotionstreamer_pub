@@ -73,7 +73,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 			print_addr_aux("Tentando conectar a:",dst_addr);
 			fprintf(stdout,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
 		}
-		success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
+		success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr_in));
 		numOfTries--;
 		if(success<0){
 			if(!(errno == EINPROGRESS)){
@@ -129,7 +129,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 			if(logging){
 				fprintf(stderr,"%s\n%s\n",errno?strerror(errno):"Successful connection",errno?"Não conectado.":addr_buff);
 			}
-			numOfTries=(errno?0:numOfTries);
+			//numOfTries=((errno==EINVAL)?0:numOfTries);
 			break;
 		}
 	}
