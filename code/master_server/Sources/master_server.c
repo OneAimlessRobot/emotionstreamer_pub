@@ -81,7 +81,7 @@ void start_master(char* hostname, uint16_t port){
 	sa_sigpipe.sa_flags = SA_RESTART;
 	sigaction(SIGPIPE, &sa_sigpipe, NULL);
 
-	use_exit_func=0;
+	use_exit_func=1;
 	exit_func_for_this_module=exit_emergency_func;
 
 

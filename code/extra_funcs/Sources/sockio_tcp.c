@@ -64,20 +64,23 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 			   continue;
 			}
 		     else{
+			    if(logging){
+
+					fprintf(logstream, "Will emergency func be called? %s\n",use_exit_func?"Yes!":"No..:");
+			    }
 			    if(use_exit_func){
 					exit_func_for_this_module();
 			    }
 			    return -1;
 			}
-		    
 		}
 		else{
 		    ERR_print_errors_fp(stderr);
-	        if(logging){
+		if(logging){
 
-				fprintf(logstream, "SSL FATAL ERROR AT SSL READ\n%s\n",strerror(errno));
-		    }
-		    if(use_exit_func){
+			fprintf(logstream, "SSL FATAL ERROR AT SSL SEND\n%s\nWill emergency func be called? %s\n",strerror(errno),use_exit_func?"Yes!":"No..:");
+		}
+	           if(use_exit_func){
 				exit_func_for_this_module();
 		    }
 		    return -1;
@@ -89,7 +92,7 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 	else{
 		if(logging){
 
-	        	fprintf(logstream, "SELECT ERROR!!!!! SSL SEND\n%s\n",strerror(errno));
+			fprintf(logstream, "SSL FATAL ERROR AT SSL SEND\n%s\nWill emergency func be called? %s\n",strerror(errno),use_exit_func?"Yes!":"No..:");
 		}
 		if(use_exit_func){
 			exit_func_for_this_module();
@@ -161,17 +164,21 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 			   continue;
 			}
 		    else{
+			    if(logging){
+
+					fprintf(logstream, "Will emergency func be called? %s\n",use_exit_func?"Yes!":"No..:");
+			    }
 			    if(use_exit_func){
-					exit_func_for_this_module();
+				    exit_func_for_this_module();
 			    }
 			    return -1;
 			}
 		    }
 		else{
 		    ERR_print_errors_fp(stderr);
-	           if(logging){
+		   if(logging){
 
-				fprintf(logstream, "SSL FATAL ERROR AT SSL READ\n%s\n",strerror(errno));
+				fprintf(logstream, "SSL FATAL ERROR AT SSL READ\n%s\nWill emergency func be called? %s\n",strerror(errno),use_exit_func?"Yes!":"No..:");
 		    }
 		    if(use_exit_func){
 				exit_func_for_this_module();
@@ -185,7 +192,7 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 	else{
 		if(logging){
 
-	        	fprintf(logstream, "SELECT ERROR!!!!! SSL READ\n%s\n",strerror(errno));
+			fprintf(logstream, "SSL FATAL ERROR AT SSL READ\n%s\nWill emergency func be called? %s\n",strerror(errno),use_exit_func?"Yes!":"No..:");
 		}
 		if(use_exit_func){
 			exit_func_for_this_module();

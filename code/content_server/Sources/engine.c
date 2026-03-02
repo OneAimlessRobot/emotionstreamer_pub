@@ -190,7 +190,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
         sa_chld.sa_flags = SA_RESTART|SA_NOCLDWAIT;
 	sigaction(SIGCHLD, &sa_chld, NULL);
 
-	use_exit_func=0;
+	use_exit_func=1;
 	exit_func_for_this_module=exit_emergency_func;
 
 	logging=cfg_server_logging;
