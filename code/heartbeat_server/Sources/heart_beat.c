@@ -37,14 +37,12 @@ static con_t con_obj={0};
 
 static void close_all_fds_here(void){
 
-
 	close_all_fds(arg_o.cons);
 	pthread_mutex_lock(&con_mtx);
 	send_port_back(htons(arg_s.this_con_addr.sin_port),&port_mapper_ip_cache_entry);
 	close_con(arg_s.con_obj,0,1);
 	pthread_mutex_unlock(&con_mtx);
-	pthread_cond_signal(arg_o.cons->start_cond);
-
+        pthread_cond_broadcast(arg_o.cons->start_cond);
 
 }
 static void call_signal_func(void){

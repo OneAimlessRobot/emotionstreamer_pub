@@ -438,7 +438,6 @@ void* acceptor_func(void* args){
 				        arg_a->sig_func(SIGINT);
 					arg_a->clean_func();
 					break;
-		                
 				}
 			}
 
@@ -453,7 +452,6 @@ void* acceptor_func(void* args){
 
 
         }
-        send_port_back(htons(arg_a->accept_addr.sin_port),&arg_a->acceptor_port_mapper_ip_cache_entry);
         printf("Saimos do thread de heart_beat_master!!!!\n");
 
 	arg_a->sig_func(SIGINT);

@@ -1,0 +1,40 @@
+Successful connection
+192.168.0.100
+Opened database successfully
+Done. no more rows available
+Done. no more rows available
+Socket operation on non-socket
+Não conectado.
+Successful connection!
+Operation now in progress
+Não conectado.
+Done. no more rows available
+Done. no more rows available
+Success
+Done. no more rows available
+Não foi possivel: Connection refused
+Não foi possivel conectar. Numero limite de tentativas (3) atingido!!!
+Conexão ao port mapper para devolver porta unica mal sucedida! Abortando
+: Connection refused
+Não foi possivel: Connection refused
+Não foi possivel conectar. Numero limite de tentativas (3) atingido!!!
+Conexão ao port mapper para devolver porta unica mal sucedida! Abortando
+: Connection refused
+Não foi possivel: Connection refused
+Não foi possivel conectar. Numero limite de tentativas (3) atingido!!!
+Conexão ao port mapper para devolver porta unica mal sucedida! Abortando
+: Connection refused
+Não foi possivel: Connection refused
+Não foi possivel conectar. Numero limite de tentativas (3) atingido!!!
+Conexão ao port mapper para devolver porta unica mal sucedida! Abortando
+: Connection refused
+Não foi possivel: Connection refused
+Não foi possivel conectar. Numero limite de tentativas (3) atingido!!!
+Conexão ao port mapper para devolver porta unica mal sucedida! Abortando
+: Connection refused
+Não foi possivel: Connection refused
+Não foi possivel conectar. Numero limite de tentativas (3) atingido!!!
+Conexão ao port mapper para devolver porta unica mal sucedida! Abortando
+: Connection refused
+Done. no more rows available
+Closed database successfully

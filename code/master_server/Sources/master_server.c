@@ -48,8 +48,7 @@ static void call_signal_func(void){
 	send_port_back(htons(arg_a.accept_addr.sin_port),&port_mapper_ip_cache_entry);
 	pthread_cond_signal(&master_running_cond);
 	printf("Saindo do heart beat server!!!!\n");
-
-
+	pthread_mutex_unlock(&master_con_mtx);
 }
 
 static void sigint_handler(int useless){
