@@ -68,7 +68,7 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 
 					fprintf(logstream, "Will emergency func be called? %s\n",use_exit_func?"Yes!":"No..:");
 			    }
-			    if(use_exit_func){
+			    if((errno!=EPIPE)&&use_exit_func){
 					exit_func_for_this_module();
 			    }
 			    return -1;
@@ -175,7 +175,7 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 
 					fprintf(logstream, "Will emergency func be called? %s\n",use_exit_func?"Yes!":"No..:");
 			    }
-			    if(use_exit_func){
+			    if((errno!=EPIPE)&&use_exit_func){
 				    exit_func_for_this_module();
 			    }
 			    return -1;
