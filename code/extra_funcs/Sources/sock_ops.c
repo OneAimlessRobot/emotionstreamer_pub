@@ -25,8 +25,8 @@ void setNonBlocking(int*socket) {
 void print_sock_addr(int socket){
 
 	struct sockaddr_in addr={0};
-
-	getsockname(socket,(struct sockaddr*)(&addr),socklenvar);
+	socklen_t sockaddr_len_var=sizeof(struct sockaddr_in);
+	getsockname(socket,(struct sockaddr*)(&addr),&sockaddr_len_var);
 
 	print_addr_aux("O endereço desta socket é:\n",&addr);
 
@@ -129,7 +129,6 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 			if(logging){
 				fprintf(stderr,"%s\n%s\n",errno?strerror(errno):"Successful connection",errno?"Não conectado.":addr_buff);
 			}
-			numOfTries=((errno!=EINPROGRESS)?0:numOfTries);
 			break;
 		}
 	}

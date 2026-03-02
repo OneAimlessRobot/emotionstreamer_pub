@@ -1,0 +1,40 @@
+Successful connection
+192.168.0.100
+Não foi possivel conectar. Numero limite de tentativas (3) atingido!!!
+Conexão ao port mapper para pedir unica porta mal sucedida! Abortando
+: Success
+Erro a dar bind em socket de listening!!!
+: Address already in use
+Address already in use
+Não conectado.
+Não foi possivel conectar. Numero limite de tentativas (3) atingido!!!
+Conexão ao port mapper para devolver porta unica mal sucedida! Abortando
+: Address already in use
+Curr dir: /mnt/FASTstorage/FASTprogs/emotionstreamer/code/heartbeat_server
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 11007
+Demos free a um addr info!!!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Tentando conectar a:
+Endereço: 
+192.168.0.100 Porta: 7777
+(Tentativa 1)
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Address em questão:
+Endereço: 
+192.168.0.100 Porta: 7777
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Tentando conectar a:
+Endereço: 
+192.168.0.100 Porta: 7777
+(Tentativa 1)

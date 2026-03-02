@@ -432,7 +432,15 @@ void* acceptor_func(void* args){
                         }
                         else{
                              perror("Rejected connection!");
-                        }
+			     perror("Erro no accept no thread de heartbeats!!!!\n");
+		             if(errno==EINVAL){
+
+				        arg_a->sig_func(SIGINT);
+					arg_a->clean_func();
+					break;
+		                
+				}
+			}
 
                 }
                 else if(iResult<0){

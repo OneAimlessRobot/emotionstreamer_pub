@@ -1,0 +1,17 @@
+port_mapper_timeouts_con: 1s 500000 us
+master_print_config: 1
+master_show_splash: 0
+master_server_logging: 1
+master_timeouts_con: 3s 3 us
+master_timeouts_data: 3s 5 us
+master_timeouts_ack: 3s 5 us
+master_ack_period_us: 1000000us
+master_using_tls: 1
+master_auth_cert_file_path: ./certs_and_pkeys/ca-emo_mer.crt
+master_host_cert_file_path: ./certs_and_pkeys/ca-emo_mer_host_master_server.crt
+master_host_pkey_file_path: ./certs_and_pkeys/ca-emo_mer_host_master_server.key
+Successful connection
+192.168.0.100
+Opened database successfully
+Done. no more rows available
+Done. no more rows available
