@@ -259,7 +259,12 @@ int clientStart(char* req_field,char* file_name){
 	}
 	setNonBlocking(&client_con_obj.sockfd_tcp);
 	getsockname(client_con_obj.sockfd_tcp,(struct sockaddr*)&client_con_obj.this_tcp_addr,socklenvar);
-	greet(&client_con_obj,client_con_times_pair);
+	if(greet(&client_con_obj,client_con_times_pair)){
+
+		perror("Handshake failed!!!!\n");
+		clear_ports_and_quit(SIGINT,NULL);
+
+	}
 	proto_arr proto_array={0};
 	proto_array[0]=(uint16_t)htons(the_type);
 	memcpy(client_con_obj.tcp_data,proto_array,sizeof(uint16_t));

@@ -110,7 +110,12 @@ void init_browser(char* hostname, char* req,uint16_t port){
                                        &server_browser_ip_cache_entry,&port_mapper_ip_cache_entry,browser_con_times_pair,NULL);
         clear_con_data(&con_obj);
 	interlvl_cmd cmd= str_to_interlvl_cmd_type(req);
-	greet(&con_obj,browser_con_times_pair);
+	if(greet(&con_obj,browser_con_times_pair)){
+
+		perror("Nao deu para contactar server de heartbeats!!!! Greeting failed!\n");
+		cleanup_and_send_ports_back(SIGINT,NULL);
+
+	}
 	uint16_t byte_to_send=(uint16_t)htons(cmd);
 	*((uint16_t*)(&con_obj.tcp_data)[0])=byte_to_send;
         int result=con_send(&con_obj,browser_con_times_pair);

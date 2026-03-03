@@ -82,7 +82,13 @@ void* slave_thread(void* args){
         setNonBlocking(&(arg_struct->con_obj->sockfd_tcp));
 	uint16_t the_port_to_give=htons(arg_struct->this_addr.sin_port);
         clear_con_data(arg_struct->con_obj);
-	greet(arg_struct->con_obj,arg_struct->con_times_pair);
+	if(greet(arg_struct->con_obj,arg_struct->con_times_pair)){
+
+		perror("Nao deu para contactar server acima!!!!\nHandshake failed\n");
+                slave_thread_exit_func(SIGINT,(void*)(arg_struct));
+		return args;
+
+	}
 	interlvl_cmd cmd=LOG;
 	proto_arr proto_array={0};
 	proto_array[0]=(uint16_t)htons(cmd);
@@ -364,7 +370,12 @@ void* acceptor_func(void* args){
 
 				setNonBlocking(&sock);
 				init_con(&con,sock,SERVER_C,&arg_a->acceptor_port_mapper_ip_cache_entry,arg_a->is_tls);
-				greet(&con,arg_a->con_times_pair);
+				if(greet(&con,arg_a->con_times_pair)){
+					perror("Handshake failed\n");
+				        close_con(&con,0,1);
+				        continue;
+
+				}
 				result=con_read(&con,arg_a->con_times_pair);
 				if(result<=0){
 				        perror("Nao sabemos o que querem....\n");

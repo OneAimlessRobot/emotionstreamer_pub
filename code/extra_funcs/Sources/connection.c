@@ -410,7 +410,7 @@ void ask_for_ports(ip_cache_entry* ent){
 }
 
 
-static void greet_server(con_t* con_obj, int_pair pair){
+static int greet_server(con_t* con_obj, int_pair pair){
 
 	if(con_obj->is_ssl){
 		convert_server_con_to_ssl(&con_obj->con_ssl,con_obj->sockfd_tcp,pair);
@@ -418,7 +418,7 @@ static void greet_server(con_t* con_obj, int_pair pair){
 			if(logging){
 				fprintf(logstream,"Handshake failed server. Aborting\n");
 			}
-			raise(SIGINT);
+			return -1;
 		}
 	}
 	else{
@@ -442,11 +442,12 @@ static void greet_server(con_t* con_obj, int_pair pair){
 
 			fprintf(logstream,"String de conexão errada recebida!\nRecebemos \"%s\" do cliente!\n",client_data);
 		}
-		raise(SIGINT);
+		return -1;
 	}
+	return 0;
 }
 
-static void greet_client(con_t* con_obj,int_pair pair){
+static int greet_client(con_t* con_obj,int_pair pair){
 
 	if(con_obj->is_ssl){
 		convert_client_con_to_ssl(&con_obj->con_ssl,con_obj->sockfd_tcp,pair);
@@ -454,7 +455,7 @@ static void greet_client(con_t* con_obj,int_pair pair){
 			if(logging){
 				fprintf(logstream,"Handshake failed client. Aborting\n");
 			}
-			raise(SIGINT);
+			return -1;
 		}
 	}
 	else{
@@ -468,21 +469,21 @@ static void greet_client(con_t* con_obj,int_pair pair){
 
 	clear_con_data(con_obj);
 
+	return 0;
 }
 
 
-void greet(con_t*con_obj,int_pair times_pair){
+int greet(con_t*con_obj,int_pair times_pair){
 
 	switch(con_obj->type){
 		case SERVER_C:
-			greet_server(con_obj,times_pair);
-			break;
+			return greet_server(con_obj,times_pair);
 		case CLIENT_C:
-			greet_client(con_obj,times_pair);
-			break;
+			return greet_client(con_obj,times_pair);
 		default:
 			break;
 	}
+	return -1;
 
 }
 

@@ -86,7 +86,12 @@ void con_go(int sockfd_tcp){
 			unsigned char stream_cache_data[sizeof(mp3_stream_chunk)];
 			init_openssl_libs_server_side();
 			init_con(&server_con_obj,sock_tcp,SERVER_C,&port_mapper_ip_cache_entry,will_use_tls);
-			greet(&server_con_obj,server_con_times_pair);
+			if(greet(&server_con_obj,server_con_times_pair)){
+
+				printf("Handshake failed!!!\n");
+				cleanup();
+				return;
+			}
 			con_read(&server_con_obj,server_data_times_pair);
 
 			memcpy(req_string_buff,server_con_obj.tcp_data,DEF_DATASIZE);

@@ -57,5 +57,5 @@ void connection_attempt_circuit(int* socket_fd,void (*quit_handler)(int, void*),
 					int_pair con_times_pair,
 					void*ptr);
 
-void greet(con_t*con_obj,int_pair times_pair);
+int greet(con_t*con_obj,int_pair times_pair);
 #endif
