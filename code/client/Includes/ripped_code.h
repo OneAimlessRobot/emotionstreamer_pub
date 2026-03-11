@@ -36,7 +36,6 @@ typedef struct chunk_size_helper{
 
 }chunk_size_helper;
 
-
 void print_string(const char* str);
 void print_log_string(const char* str);
 int should_switch(decoder_result_struct* before_result,decoder_result_struct* current_result);

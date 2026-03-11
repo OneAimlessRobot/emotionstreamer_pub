@@ -419,7 +419,12 @@ static void play_chunk_alsa(chunk_player* player){
 
 }
 static void play_chunk_pa(chunk_player* player){
-	play_from_sound_device_pa(player->play_stream_pa,player->pr_chunk,&player->current_result);
+	int result=play_from_sound_device_pa(player->play_stream_pa,player->pr_chunk,&player->current_result);
+
+	if(result){
+		cleanPA(player);
+		initPA(player);
+	}
 }
 
 static void play_chunk_ao(chunk_player* player){
