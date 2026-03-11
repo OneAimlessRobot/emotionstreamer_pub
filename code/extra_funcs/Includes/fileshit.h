@@ -1,5 +1,12 @@
 #ifndef FILESHIT_H
 #define FILESHIT_H
+
+#define PROTO_ARR_NUM_CELLS 4
+
+#define PROTO_ARR_SIZE (PROTO_ARR_NUM_CELLS* sizeof(uint16_t))
+
+typedef uint16_t proto_arr[PROTO_ARR_NUM_CELLS];
+
 typedef uint16_t port_array[DEF_DATASIZE+1];
 
 extern port_array attempted_port_arr;
@@ -12,7 +19,10 @@ extern SSL_CTX *global_ctx;
 
 extern u_int8_t logging;
 
-extern u_int8_t will_use_tls;
+extern u_int8_t use_exit_func;
+
+extern u_int16_t will_use_tls;
+
 
 
 extern char curr_dir[PATHSIZE];

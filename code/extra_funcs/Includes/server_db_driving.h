@@ -9,7 +9,7 @@
 
 #define SHOW_TABLE_HEADER_TMPL "\n[ MODULE_TYPE | id | MODULE_NAME | MODULE_ADDR | FILE_EXT | USING_TLS ]\n"
 
-#define SPAWN_SERVER_TABLE "CREATE TABLE Servers(server_type Varchar(256), server_id int unique not null,server_name Varchar(256) unique not null, server_ip Varchar(256), server_extension Varchar(256), using_tls int(3), primary key(server_id))"
+#define SPAWN_SERVER_TABLE "CREATE TABLE Servers(server_type Varchar(256), server_id int unique not null,server_name Varchar(256) not null, server_ip Varchar(256), server_extension Varchar(256), using_tls int(3), primary key(server_id))"
 
 #define REMOVE_SERVER_TABLE "DROP TABLE Servers"
 

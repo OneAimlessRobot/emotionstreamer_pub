@@ -61,7 +61,6 @@ static int port_in_range(uint16_t port){
 }
 static int is_no_more_room(void){
 
-	
 	return (acess_var_mtx_uint16(&running_mtx,&mapper.curr_num_ports,0,V_LOOK)>=cfg_num_ports);
 
 
@@ -465,6 +464,13 @@ void* port_mapper_main_loop(void* args){
 				arg[0]=sock;
 				accepted_connection_thread((void*)arg);
 			}
+			else{
+
+				perror("Rejected connection!\n");
+				raise(SIGINT);
+				cleanup();
+				break;
+			}
 		}
 		else if(!iResult)
 		{
@@ -479,12 +485,12 @@ void* port_mapper_main_loop(void* args){
 		       }
 		       raise(SIGINT);
 		       cleanup();
+		       break;
 	
 		}
 		pthread_cond_signal(&input_cond);
 	}
-
-
+	pthread_cond_signal(&input_cond);
 	return args;
 
 }
@@ -499,6 +505,8 @@ void port_mapper_init(ip_cache_entry* ent){
         sa.sa_flags = SA_RESTART;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGPIPE, &sa, NULL);
+
+	use_exit_func=1;
 	exit_func_for_this_module=exit_emergency_func;
 
 	logging=cfg_port_mapper_logging;

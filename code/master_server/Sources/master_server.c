@@ -47,9 +47,8 @@ static void call_signal_func(void){
         pthread_mutex_lock(&master_con_mtx);
 	send_port_back(htons(arg_a.accept_addr.sin_port),&port_mapper_ip_cache_entry);
 	pthread_cond_signal(&master_running_cond);
-	perror("Saindo do heart beat server!!!!\n");
-
-
+	printf("Saindo do heart beat server!!!!\n");
+	pthread_mutex_unlock(&master_con_mtx);
 }
 
 static void sigint_handler(int useless){
@@ -66,7 +65,6 @@ static void sigpipe_handler(int useless){
 void exit_emergency_func(void){
 
 	sigint_handler(1);
-	call_signal_func();
 
 }
 void start_master(char* hostname, uint16_t port){
@@ -80,7 +78,10 @@ void start_master(char* hostname, uint16_t port){
 	sigemptyset(&sa_sigpipe.sa_mask);
 	sa_sigpipe.sa_flags = SA_RESTART;
 	sigaction(SIGPIPE, &sa_sigpipe, NULL);
+
+	use_exit_func=1;
 	exit_func_for_this_module=exit_emergency_func;
+
 
 	logging=cfg_master_server_logging;
 	logstream=stdout;

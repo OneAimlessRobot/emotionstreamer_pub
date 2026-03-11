@@ -25,8 +25,8 @@ void setNonBlocking(int*socket) {
 void print_sock_addr(int socket){
 
 	struct sockaddr_in addr={0};
-
-	getsockname(socket,(struct sockaddr*)(&addr),socklenvar);
+	socklen_t sockaddr_len_var=sizeof(struct sockaddr_in);
+	getsockname(socket,(struct sockaddr*)(&addr),&sockaddr_len_var);
 
 	print_addr_aux("O endereço desta socket é:\n",&addr);
 
@@ -65,6 +65,7 @@ int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 
 int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 	int success=-1;
+	uint16_t port=0;
 	int numOfTries=MAX_TRIES;
 	char addr_buff[DEF_DATASIZE]={0};
 	while(success==-1&& numOfTries){
@@ -72,7 +73,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 			print_addr_aux("Tentando conectar a:",dst_addr);
 			fprintf(stdout,"(Tentativa %d)\n",-numOfTries+MAX_TRIES+1);
 		}
-		success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr));
+		success=connect(*sockfd,(struct sockaddr*)dst_addr,sizeof(struct sockaddr_in));
 		numOfTries--;
 		if(success<0){
 			if(!(errno == EINPROGRESS)){
@@ -124,7 +125,7 @@ int tryConnect(int*sockfd,int_pair times_pair,struct sockaddr_in* dst_addr){
 			}
 		}
 		else{
-			snprint_addr_aux(addr_buff,sizeof(addr_buff),dst_addr);
+			snprint_addr_aux(addr_buff,&port,sizeof(addr_buff),dst_addr);
 			if(logging){
 				fprintf(stderr,"%s\n%s\n",errno?strerror(errno):"Successful connection",errno?"Não conectado.":addr_buff);
 			}

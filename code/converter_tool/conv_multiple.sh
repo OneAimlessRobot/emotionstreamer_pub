@@ -4,7 +4,11 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="Kichi_-_REBORN/"
+<<<<<<< HEAD
+song_subdirectory="crowds_yakui_the_maid_ep/"
+=======
+song_subdirectory="when_they_saw_my_AAASAHASUH/"
+>>>>>>> 09dade63978dbb53d18cb723589f6cfbfa8491a9
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0
@@ -33,7 +37,7 @@ done
 
 for ((i=0;i<num_of_songs;i++));
 do
-    ./converter_tool.exe "${song_subdirectory}${song_basenames[i]}" "${song_subdirectory}${song_basenames[i]}"
+    ./emotionstreamer_converter_tool.exe "${song_subdirectory}${song_basenames[i]}" "${song_subdirectory}${song_basenames[i]}"
 done
 
 echo "Done compiling all the songs!";

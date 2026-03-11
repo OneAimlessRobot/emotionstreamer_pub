@@ -51,7 +51,7 @@ static void recv_servers(void){
 
 
 	clear_con_data(&con_obj);
-	int result=con_read_tcp(&con_obj,browser_data_times_pair);
+	int result=con_read(&con_obj,browser_data_times_pair);
 	if(result<0){
 
 			if(result==-2){
@@ -64,21 +64,9 @@ static void recv_servers(void){
 
 	}
 	dprintf(fd,"%s\n",(char*)con_obj.tcp_data);
-	result=con_send_tcp(&con_obj,browser_data_times_pair);
-	if(result<0){
-
-			if(result==-2){
-				printf("timeout 2!!!\n");
-			}
-			else{
-				perror("erro 2!!!\n");
-				cleanup_and_send_ports_back(SIGINT,NULL);
-			}
-
-	}
 	while(innited&&strs_are_strictly_equal((char*)con_obj.tcp_data,"done")){
 
-		int result=con_read_tcp(&con_obj,browser_data_times_pair);
+		int result=con_read(&con_obj,browser_data_times_pair);
 		if(result<0){
 			if(result==-2){
 				printf("timeout 3!!!\n");
@@ -90,17 +78,6 @@ static void recv_servers(void){
 			}
 		}
 		dprintf(fd,"%s\n",(char*)con_obj.tcp_data);
-		result=con_send_tcp(&con_obj,browser_data_times_pair);
-		if(result<0){
-			if(result==-2){
-				printf("timeout 4!!!\n");
-				continue;
-			}
-			else{
-				perror("erro 4!!!\n");
-				break;
-			}
-		}
 	}
 	cleanup_and_send_ports_back(SIGINT,NULL);
 
@@ -116,6 +93,9 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	sigaction(SIGPIPE, &sa, NULL);
 	logging=cfg_server_browser_logging;
 	logstream=stdout;
+
+	use_exit_func=1;
+
 	exit_func_for_this_module=exit_emergency_func;
 
         if(init_addr(&hb_server_addr,hostname,port)){
@@ -129,24 +109,16 @@ void init_browser(char* hostname, char* req,uint16_t port){
                                 &hb_server_addr,
                                        &server_browser_ip_cache_entry,&port_mapper_ip_cache_entry,browser_con_times_pair,NULL);
         clear_con_data(&con_obj);
-	char string_to_send[DEF_DATASIZE/2]={0};
 	interlvl_cmd cmd= str_to_interlvl_cmd_type(req);
+	if(greet(&con_obj,browser_con_times_pair)){
 
-	switch(cmd){
+		perror("Nao deu para contactar server de heartbeats!!!! Greeting failed!\n");
+		cleanup_and_send_ports_back(SIGINT,NULL);
 
-		case SHOW:
-			strncpy(string_to_send,SHOW_STRING,(DEF_DATASIZE/2)-1);
-			break;
-		case MASTER_SHOW:
-			strncpy(string_to_send,SHOW_MASTER_STRING,(DEF_DATASIZE/2)-1);
-			break;
-		default:
-			printf("Request desconhecido: |%s|\n",req);
-			cleanup_and_send_ports_back(SIGINT,NULL);
-        }
-	greet(&con_obj,browser_con_times_pair);
-	snprintf((char*)con_obj.tcp_data,DEF_DATASIZE-1,"%s",string_to_send);
-        int result=con_send_tcp(&con_obj,browser_con_times_pair);
+	}
+	uint16_t byte_to_send=(uint16_t)htons(cmd);
+	*((uint16_t*)(&con_obj.tcp_data)[0])=byte_to_send;
+        int result=con_send(&con_obj,browser_con_times_pair);
         if(result<0){
 
 

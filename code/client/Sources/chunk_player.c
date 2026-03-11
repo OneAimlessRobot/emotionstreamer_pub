@@ -54,6 +54,16 @@ static oss_frag_params main_oss_params={1,13,0,5};
 
 #define OSS_DEVICE_NAME "/dev/dsp"
 
+static pa_buffer_attr attr={
+	.maxlength=(uint32_t)-1,
+	.tlength= 4096*16,
+	.prebuf=(uint32_t)-1,
+	.minreq=(uint32_t)-1,
+	.fragsize=(uint32_t)-1
+
+
+};
+
 static pa_sample_spec ss={0};
 
 static ao_sample_format format={0};
@@ -275,10 +285,11 @@ static void print_driver_infos(void){
 }
 static void initPA(chunk_player*player){
      memset(&ss,0,sizeof(pa_sample_spec));
+
      ss.format =PA_SAMPLE_S16LE;
      ss.rate = player->current_result.hz;
      ss.channels = player->current_result.channels;
-     if (!(player->play_stream_pa = pa_simple_new(NULL, "client.exe", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &errno))) {
+     if (!(player->play_stream_pa = pa_simple_new(NULL, "client.exe", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, &attr, &errno))) {
          fprintf(stderr, "pa_simple_new() failed: %s\n", pa_strerror(errno));
         raise(SIGINT);
 	stop_client_stream();

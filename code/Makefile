@@ -1,18 +1,18 @@
-BINARY= emotionserver.exe
+BINARY= full_emotionserver.exe
 
-SERVERBIN= ./server/server.exe
+SERVERBIN= ./content_server/emotionstreamer_content_server.exe
 
-CLIENTBIN= ./client/client.exe
+CLIENTBIN= ./client/emotionstreamer_client.exe
 
-BROWSERBIN= ./server_browser/server_browser.exe
+BROWSERBIN= ./server_browser/emotionstreamer_server_browser.exe
 
-HEARTBEATBIN= ./heartbeat/heart_beat.exe
+HEARTBEATBIN= ./heartbeat_server/emotionstreamer_heartbeat_server.exe
 
-MASTERBIN= ./master_server/master_server.exe
+MASTERBIN= ./master_server/emotionstreamer_master_server.exe
 
-PORT_MAPPER_BIN= ./port_mapper/port_mapper.exe
+PORT_MAPPER_BIN= ./port_mapper/emotionstreamer_port_mapper.exe
 
-CONVERTER_TOOL_BIN= ./converter_tool/converter_tool.exe
+CONVERTER_TOOL_BIN= ./converter_tool/emotionstreamer_converter_tool.exe
 
 LDLIBS :=  -lm
 
@@ -37,9 +37,9 @@ LDLIBS_SERVER += $(LDLIBS_PTHREAD) $(LDLIBS_SSL_AND_CRYPTO)
 INCLUDE= ./Includes ./openssl/includes ./mpg123-1.32.10/src/include ./sqlite-amalgamation-3510000 ./wav_stuff_i_stole_because_i_am_lazy .
 SOURCES= . ./Sources
 
-SERVERINCLUDE= ./server/Includes ./extra_funcs/Includes
-SERVERSOURCES= ./server/Sources ./server ./extra_funcs/Sources
-SERVERRESOURCES= ./server/resources
+SERVERINCLUDE= ./content_server/Includes ./extra_funcs/Includes
+SERVERSOURCES= ./content_server/Sources ./content_server ./extra_funcs/Sources
+SERVERRESOURCES= ./content_server/resources
 
 CLIENTINCLUDE= ./client/Includes ./extra_funcs/Includes
 CLIENTSOURCES= ./client/Sources ./client ./extra_funcs/Sources ./wav_stuff_i_stole_because_i_am_lazy
@@ -49,9 +49,9 @@ BROWSERINCLUDE= ./server_browser/Includes ./extra_funcs/Includes
 BROWSERSOURCES= ./server_browser/Sources ./server_browser ./extra_funcs/Sources
 BROWSERRESOURCES= ./server_browser/resources
 
-HEARTBEATINCLUDE= ./heartbeat/Includes ./extra_funcs/Includes
-HEARTBEATSOURCES= ./heartbeat/Sources ./heartbeat ./extra_funcs/Sources
-HEARTBEATRESOURCES= ./heartbeat/resources
+HEARTBEATINCLUDE= ./heartbeat_server/Includes ./extra_funcs/Includes
+HEARTBEATSOURCES= ./heartbeat_server/Sources ./heartbeat_server ./extra_funcs/Sources
+HEARTBEATRESOURCES= ./heartbeat_server/resources
 
 MASTERINCLUDE= ./master_server/Includes ./extra_funcs/Includes
 MASTERSOURCES= ./master_server/Sources ./master_server ./extra_funcs/Sources

@@ -256,7 +256,7 @@ void read_values_cfg_client(void){
 
 		clean_and_exit();
 	}
-	sscanf(curr_line_buff,"client_using_tls: %hhu", &will_use_tls);
+	sscanf(curr_line_buff,"client_using_tls: %hu", &will_use_tls);
 	clean_buff();
 	if(will_use_tls){
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -331,7 +331,7 @@ void print_values_cfg_client(int fd){
 
 	dprintf(fd,"client_device_output_if_alsa: %s\n",cfg_client_device_output_if_alsa);
 
-	dprintf(fd,"client_using_tls: %hhu\n",will_use_tls);
+	dprintf(fd,"client_using_tls: %hu\n",will_use_tls);
 
         if(will_use_tls){
 

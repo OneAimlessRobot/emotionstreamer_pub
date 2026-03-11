@@ -5,7 +5,6 @@
 #include "../Includes/openssl_stuff.h"
 #include "../Includes/sock_ops.h"
 #include "../Includes/more_socket_ops.h"
-#include "../Includes/sockio_udp.h"
 #include "../Includes/sockio_tcp.h"
 #include "../Includes/ip_cache_file.h"
 #include "../Includes/connection.h"
@@ -54,7 +53,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 		if(logging){
 			perror("Criação de socket para conectar ao port mapper para devolver porta unica mal sucedida. Abortando\n");
 		}
-		raise(SIGINT);
 		return;
 	}
 
@@ -64,7 +62,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 			perror("Iniciacao de address para conectar ao port mapper para devolver porta unica mal sucedida. Abortando\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 	}
 	int result=-1;
@@ -75,7 +72,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 			perror("Conexão ao port mapper para devolver porta unica mal sucedida! Abortando\n");
 		}
 		socket_close(&tmp_socket,result_con!=0);
-		raise(SIGINT);
 		return;
 	}
 
@@ -86,7 +82,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -97,7 +92,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 			perror("Não conseguimos enviar o request de fecho de porta ao port mapper!!!!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -108,7 +102,6 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 			perror("Não conseguimos enviar a porta para fechar portas ao port mapper!!!!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -133,7 +126,6 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 		if(logging){
 			perror("Criação de socket para conectar ao port mapper para devolver portas mal sucedida. Abortando\n");
 		}
-		raise(SIGINT);
 		return;
 	}
 
@@ -143,7 +135,6 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 			perror("Iniciacao de address para conectar ao port mapper para devolver portas mal sucedida. Abortando\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 	}
 	int result=-1;
@@ -154,7 +145,6 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 			perror("Conexão ao port mapper para devolver portas mal sucedida! Abortando\n");
 		}
 		socket_close(&tmp_socket,result_con!=0);
-		raise(SIGINT);
 		return;
 	}
 
@@ -165,7 +155,6 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -176,7 +165,6 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 			perror("Não conseguimos enviar o request de fecho de portas ao port mapper!!!!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -274,12 +262,12 @@ void init_con(con_t* con_obj,int sockfd_tcp,con_type type,ip_cache_entry *ent,ui
 
 }
 
-int con_send_tcp(con_t* con_obj,int_pair pair){
+int con_send(con_t* con_obj,int_pair pair){
 
 	return con_obj->is_ssl?sendsome_ssl(con_obj->con_ssl,(const char*)con_obj->tcp_data, DEF_DATASIZE, pair):sendsome(con_obj->sockfd_tcp,(char*)con_obj->tcp_data,DEF_DATASIZE,pair);
 }
 
-int con_read_tcp(con_t* con_obj,int_pair pair){
+int con_read(con_t* con_obj,int_pair pair){
 
 	return con_obj->is_ssl?readsome_ssl(con_obj->con_ssl,(char*)con_obj->tcp_data, DEF_DATASIZE, pair):readsome(con_obj->sockfd_tcp,(char*)con_obj->tcp_data,DEF_DATASIZE,pair);
 }
@@ -292,7 +280,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 		if(logging){
 			perror("Conexão ao port mapper para pedir unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
 		}
-		raise(SIGINT);
 		return;
 	}
 	if(init_addr(&addr, ent->hostname,ent->port)){
@@ -300,7 +287,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 			perror("Iniciacao de address para conectar ao port mapper para pedir unica porta unica mal sucedida. Abortando\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 	}
 	int result=-1;
@@ -311,7 +297,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 			perror("Conexão ao port mapper para pedir unica porta mal sucedida! Abortando\n");
 		}
 		socket_close(&tmp_socket,result_con!=0);
-		raise(SIGINT);
 		return;
 	}
 
@@ -322,7 +307,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -332,7 +316,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 			perror("Não conseguimos receber porta do port mapper!!!!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -350,7 +333,6 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 			fprintf(logstream,"Aviso de que já temos as portas não enviado!!!\nMensagem que devia ter sido enviada:\n%s\n",buff_for_ports);
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
         }
         if(logging){
@@ -366,7 +348,6 @@ void ask_for_ports(ip_cache_entry* ent){
 		if(logging){
 			perror("Conexão ao port mapper para pedir unica porta mal sucedida!\nSocket não pôde ser criada!\nAbortando\n");
 		}
-		raise(SIGINT);
 		return;
 	}
 	if(init_addr(&addr, ent->hostname,ent->port)){
@@ -374,7 +355,6 @@ void ask_for_ports(ip_cache_entry* ent){
 			perror("Iniciacao de address para conectar ao port mapper para pedir unica porta unica mal sucedida. Abortando\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 	}
 	int result=-1;
@@ -385,7 +365,6 @@ void ask_for_ports(ip_cache_entry* ent){
 			perror("Conexão ao port mapper para pedir unica porta mal sucedida! Abortando\n");
 		}
 		socket_close(&tmp_socket,result_con!=0);
-		raise(SIGINT);
 		return;
 	}
 
@@ -396,7 +375,6 @@ void ask_for_ports(ip_cache_entry* ent){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -406,7 +384,6 @@ void ask_for_ports(ip_cache_entry* ent){
 			perror("Não conseguimos receber portas do port mapper!!!!!!\n");
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
 
 	}
@@ -424,7 +401,6 @@ void ask_for_ports(ip_cache_entry* ent){
 			fprintf(logstream,"Aviso de que já temos as portas não enviado!!!\nMensagem que devia ter sido enviada:\n%s\n",buff_for_ports);
 		}
 		close(tmp_socket);
-		raise(SIGINT);
 		return;
         }
         if(logging){
@@ -434,10 +410,16 @@ void ask_for_ports(ip_cache_entry* ent){
 }
 
 
-static void greet_server(con_t* con_obj, int_pair pair){
+static int greet_server(con_t* con_obj, int_pair pair){
 
 	if(con_obj->is_ssl){
 		convert_server_con_to_ssl(&con_obj->con_ssl,con_obj->sockfd_tcp,pair);
+		if(!con_obj->con_ssl){
+			if(logging){
+				fprintf(logstream,"Handshake failed server. Aborting\n");
+			}
+			return -1;
+		}
 	}
 	else{
 		con_obj->con_ssl=NULL;
@@ -445,7 +427,7 @@ static void greet_server(con_t* con_obj, int_pair pair){
 
 	char client_data[DEF_DATASIZE+1];
 	memset(client_data,0,DEF_DATASIZE+1);
-	con_read_tcp(con_obj,pair);
+	con_read(con_obj,pair);
 	sscanf((char*)con_obj->tcp_data,"%s",(char*)client_data);
 	if(logging){
 		fprintf(logstream,"tuplo recebido: (string) = (%s)\n",client_data);
@@ -460,47 +442,48 @@ static void greet_server(con_t* con_obj, int_pair pair){
 
 			fprintf(logstream,"String de conexão errada recebida!\nRecebemos \"%s\" do cliente!\n",client_data);
 		}
-		raise(SIGINT);
+		return -1;
 	}
+	return 0;
 }
 
-static void greet_client(con_t* con_obj,int_pair pair){
+static int greet_client(con_t* con_obj,int_pair pair){
 
 	if(con_obj->is_ssl){
 		convert_client_con_to_ssl(&con_obj->con_ssl,con_obj->sockfd_tcp,pair);
+		if(!con_obj->con_ssl){
+			if(logging){
+				fprintf(logstream,"Handshake failed client. Aborting\n");
+			}
+			return -1;
+		}
 	}
 	else{
 		con_obj->con_ssl=NULL;
 	}
-
 	snprintf((char*)con_obj->tcp_data,DEF_DATASIZE,"%s",CON_STRING);
 	if(logging){
 		fprintf(logstream,"String enviada %s\n",(char*)con_obj->tcp_data);
 	}
-	con_send_tcp(con_obj,pair);
+	con_send(con_obj,pair);
 
 	clear_con_data(con_obj);
 
+	return 0;
 }
 
 
-void greet(con_t*con_obj,int_pair times_pair){
+int greet(con_t*con_obj,int_pair times_pair){
 
 	switch(con_obj->type){
 		case SERVER_C:
-			greet_server(con_obj,times_pair);
-			break;
+			return greet_server(con_obj,times_pair);
 		case CLIENT_C:
-			greet_client(con_obj,times_pair);
-			break;
+			return greet_client(con_obj,times_pair);
 		default:
 			break;
 	}
-
-	if(logging){
-		print_addr_aux("Addresss tcp de nos:",&con_obj->this_tcp_addr);
-	}
-
+	return -1;
 
 }
 

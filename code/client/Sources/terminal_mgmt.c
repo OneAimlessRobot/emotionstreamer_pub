@@ -191,15 +191,38 @@ void endwin_wrapper(void){
 	}
 	pthread_mutex_unlock(&close_ncurses_mtx);
 }
-void enable_ncurses(void){
-    initscr();            // start ncurses
-    //cbreak();             // disable line buffering
-    noecho();             // don't echo keypresses
-    nodelay(stdscr, TRUE); // nonblocking input
-    curs_set(0);          // hide cursor
-    //keypad(stdscr, TRUE); // enable arrow keys
+
+static void ncurses_heartbeat(void){
+	for(int i=0;i<200;i++){
+		erase();
+		mvprintw(0,0,"heartbeat: %d\n",i);
+		refresh();
+		nanosleep(&(struct timespec){.tv_nsec=50*1000*1000},NULL);
+
+	}
+
 
 }
+void enable_ncurses(void){
+setvbuf(stdout, NULL,_IONBF,0);
+setvbuf(stderr, NULL,_IONBF,0);
+fprintf(stderr,"Is stdin a tty? %d\nIs stdout a tty? %d\nWhat term are we in? %s\n\n",isatty(0),isatty(1),getenv("TERM"));
+setenv("TERM","xterm-256color",1);
+fprintf(stderr,"Is stdin a tty? %d\nIs stdout a tty? %d\nWhat term are we in [now]? %s\n\n",isatty(0),isatty(1),getenv("TERM"));
+//FILE* tty = fopen("/dev/tty","r+");
+//SCREEN*s=newterm(NULL,tty,tty);
+//set_term(s);
+    initscr();            // start ncurses
+    clear();
+    refresh();
+    nodelay(stdscr, TRUE); // nonblocking input
+    noecho();             // don't echo keypresses
+    cbreak();             // disable line buffering
+    //ncurses_heartbeat();
+    curs_set(0);          // hide cursor
+    //keypad(stdscr, TRUE); // enable arrow keys
+}
+
 /*
 //clear entire screen
 printf("\033[2J");        // clear entire screen
