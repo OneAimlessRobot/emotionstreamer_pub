@@ -4,11 +4,7 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-<<<<<<< HEAD
-song_subdirectory="crowds_yakui_the_maid_ep/"
-=======
-song_subdirectory="when_they_saw_my_AAASAHASUH/"
->>>>>>> 09dade63978dbb53d18cb723589f6cfbfa8491a9
+song_subdirectory=""
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0
