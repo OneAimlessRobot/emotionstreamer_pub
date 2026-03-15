@@ -56,7 +56,7 @@ static oss_frag_params main_oss_params={1,13,0,5};
 
 static pa_buffer_attr attr={
 	.maxlength=(uint32_t)-1,
-	.tlength= 4096*16,
+	.tlength= 4096*2,
 	.prebuf=(uint32_t)-1,
 	.minreq=(uint32_t)-1,
 	.fragsize=(uint32_t)-1
