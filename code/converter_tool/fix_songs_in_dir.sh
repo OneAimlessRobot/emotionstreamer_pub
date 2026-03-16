@@ -52,7 +52,8 @@ fix_song_function(){
 		song_name_two="${1}2.${song_extension}"
 		song_name_boundary="${1}.${song_extension}.${boundary_extension}"
 		rm -rf "${song_name_boundary}"
-		ffmpeg -hide_banner -loglevel warning -i "${song_name}" -ignore_unknown -map 0:a -map_metadata -1 -codec:a copy -bitexact "${song_name_two}"
+		#ffmpeg -hide_banner -loglevel warning -i "${song_name}" -ignore_unknown -map 0:a -map_metadata -1 -codec:a copy -bitexact "${song_name_two}"
+		ffmpeg -i "${song_name}"  "${song_name_two}"
 		rm -rf "${song_name}"
 		mv "${song_name_two}" "${song_name}"
 	
