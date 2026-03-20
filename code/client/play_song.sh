@@ -3,6 +3,19 @@
 #get song with pattern:
 
 exit_wait=3
+if [ "$#" -ne 3 ];
+then
+	print_help
+	exit
+fi
+
+song_arr=()
+
+pattern="$2"
+backend="$1"
+playlist="$3"
+
+
 print_help(){
 
 	echo "Needs 2 args!"
@@ -106,23 +119,12 @@ main(){
 
 	print_song_dir
 
-	echo "Obtivemos $count da pesquisa pelo padrão: '$2'"
+	echo "Obtivemos $count da pesquisa pelo padrão: \"${pattern}\""
 
 	play_wrapper_function
 
 	rm -rf $result_file
 
 }
-if [ "$#" -ne 3 ];
-then
-	print_help
-	exit
-fi
-
-song_arr=()
-
-pattern="$2"
-backend="$1"
-playlist="$3"
 
 main
