@@ -116,6 +116,7 @@ main(){
 	count=0
 
 	fill_up_song_dir
+	rm -rf $result_file
 
 	print_song_dir
 
@@ -123,7 +124,6 @@ main(){
 
 	play_wrapper_function
 
-	rm -rf $result_file
 
 }
 
