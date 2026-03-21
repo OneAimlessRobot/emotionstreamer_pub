@@ -81,8 +81,6 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 				}
 			}
 }
-
-//static get_filename_extension
 void con_go(int sockfd_tcp){
 			sa.sa_handler = conStop;
 			sigemptyset(&sa.sa_mask);

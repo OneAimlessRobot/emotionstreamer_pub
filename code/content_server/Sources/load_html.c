@@ -19,7 +19,8 @@ static void generateDirListingPrimitive(char* pattern){
 
         int outfd= open(tmpDir,O_TRUNC|O_WRONLY|O_CREAT,0777);
         snprintf(currSearchedDir,PATHSIZE*2-1,"%s",curr_dir);
-	//THIS LINE HAS RIPPED CODE! FIND ALL BASEFILENAMES WITH EXTENSION '.WAV', but dont show the extension! (IMPORTANT FOR SECURITY)
+
+	//THIS LINE HAS RIPPED CODE! FIND ALL BASEFILENAMES WITH THE USED EXTENSION, but dont show the extension! (IMPORTANT FOR SECURITY)
 	//https://www.baeldung.com/linux/find-filenames-no-extension
 	//https://stackoverflow.com/questions/1447625/list-files-with-certain-extensions-with-ls-and-grep
 	//https://stackoverflow.com/questions/41965415/using-find-to-return-filenames-without-extension
@@ -35,7 +36,13 @@ static void generateDirListingPrimitive(char* pattern){
 	//(Ahem chatgpt solution ahem)
 	//(Ahem I wish system() did not even exist so I would not be tempted to use it ahem)
 
+
+	//We can sort now yippieeee
+	//I understand this stuff much better after actually grappling with it :P
+
 	char buff[PATHSIZE+5]={0};
+
+
 	snprintf(buff,sizeof(buff)-3,".%s",server_music_folder_path);
 	chdir(buff);
 	memset(buff,0,sizeof(buff));
@@ -87,25 +94,6 @@ static void generateDirListingPrimitive(char* pattern){
 		break;
 
 	}
-	/*
-	pid_fork_find_cmd=fork();
-	switch(pid_fork_find_cmd){
-		case -1:
-			exit(-1);
-		break;
-		case 0:
-			dup2(outfd,STDOUT_FILENO);
-			close(outfd);
-			execvp(args_cmd_find[0],args_cmd_find);
-		break;
-		default:
-			wait(NULL);
-			dprintf(outfd,"%s\n",close_keyword);
-		break;
-
-	}
-	chdir("..");
-        */
 	/*
 	my god I hate how easy it is to do just this instead of execvp
 	fuck.
