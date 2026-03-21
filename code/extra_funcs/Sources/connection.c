@@ -168,16 +168,8 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 		return;
 
 	}
-	if(logging){
-		fprintf(logstream,"Init port array state!\n");
-		print_port_arr();
-	}
 	attempted_port_arr[0]-=(port_that_works!=0);
 	if(port_that_works){
-		if(logging){
-			fprintf(logstream,"port array state\nWe are about to move anything beyond slot %hu back 1 position towards slot %hu\nWe will move %hu items of size %lu\nThere are %hu ports to free right now\n",port_that_works+1,port_that_works,attempted_port_arr[0]-(port_that_works)+1,sizeof(attempted_port_arr[0]),attempted_port_arr[0]);
-			print_port_arr();
-		}
 		memmove(&attempted_port_arr[port_that_works],&attempted_port_arr[port_that_works+1],(attempted_port_arr[0]-(port_that_works)+1)*sizeof(attempted_port_arr[0]));
 	}
 	result=sendsome(tmp_socket,(char*)attempted_port_arr,sizeof(port_array),port_mapper_times_pair);
@@ -192,11 +184,7 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 
 	}
 	else{
-		if(logging){
-			fprintf(logstream,"End port array state\nWe sent all the ports!!!\n");
-			print_port_arr();
-		}
-		close(tmp_socket);
+	close(tmp_socket);
 	}
 
 }
@@ -209,16 +197,14 @@ void close_con(con_t* con_obj,int RIGHT_NOW,int close_for_good){
 			}
 			socket_close(&(con_obj->sockfd_tcp),RIGHT_NOW);
 		}
+		if(logging){
+			fprintf(logstream,"Closing ssl on connection named %s!\n",con_obj->con_name);
+		}
+		ShutdownSSL(&con_obj->con_ssl);
 		con_obj->sockfd_tcp=-1;
 		con_obj->is_on=(0||(close_for_good!=0));
 		if(logging){
 			fprintf(logstream,"Fechamos conexão!!!!\nDe vez? %s\n",close_for_good?"Yes!":"No...");
-		}
-		if(con_obj->con_ssl){
-			if(logging){
-				fprintf(logstream,"Closing ssl on connection named %s!\n",con_obj->con_name);
-			}
-			ShutdownSSL(&con_obj->con_ssl);
 		}
 	}
 	else{

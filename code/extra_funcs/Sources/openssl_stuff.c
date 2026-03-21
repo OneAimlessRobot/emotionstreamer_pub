@@ -22,6 +22,7 @@ int verify_callback(int ok, X509_STORE_CTX *ctx) {
 }
 
 void InitializeSSL(void){
+     if(will_use_tls){
 	if(SSL_on_in_process){
 		if(logging){
 			fprintf(logstream,"SSL já ativo! Ignorando!\n");
@@ -39,24 +40,27 @@ void InitializeSSL(void){
     SSL_load_error_strings();
     SSL_library_init();
     OpenSSL_add_all_algorithms();
+   }
 }
 
 void DestroySSL(void){
-	if(!SSL_on_in_process){
-		if(logging){
-			fprintf(logstream,"SSL já desativado! Ignorando!\n");
+	if(will_use_tls){
+		if(!SSL_on_in_process){
+			if(logging){
+				fprintf(logstream,"SSL já desativado! Ignorando!\n");
+			}
+			return;
 		}
-		return;
-	}
-	else{
-		if(logging){
-			fprintf(logstream,"SSL desativado! SSL_on_in_process: 1 -> 0 !\n");
+		else{
+			if(logging){
+				fprintf(logstream,"SSL desativado! SSL_on_in_process: 1 -> 0 !\n");
+			}
+			SSL_on_in_process=0;
 		}
-		SSL_on_in_process=0;
-	}
 
-    ERR_free_strings();
-    EVP_cleanup();
+	    ERR_free_strings();
+	    EVP_cleanup();
+	}
 }
 
 void ShutdownSSL(SSL** cSSL){
@@ -68,7 +72,7 @@ void ShutdownSSL(SSL** cSSL){
 }
 void convert_server_con_to_ssl(SSL** cSSL, int sd,int_pair times){
 
-	(*cSSL)=SSL_new(global_ctx);
+	(*cSSL)=SSL_new(global_server_ctx);
 	SSL_set_fd(*cSSL, sd);
 	//Here is the SSL Accept portion.  Now all reads and writes must use SSL
 	int ssl_ret=0,ssl_err=0;
@@ -116,7 +120,7 @@ void convert_server_con_to_ssl(SSL** cSSL, int sd,int_pair times){
 }
 void convert_client_con_to_ssl(SSL** cSSL, int sd,int_pair times){
 
-	(*cSSL)=SSL_new(global_ctx);
+	(*cSSL)=SSL_new(global_client_ctx);
 	SSL_set_fd(*cSSL, sd);
 	//Here is the SSL Accept portion.  Now all reads and writes must use SSL
 	int ssl_ret=0,ssl_err=0;
@@ -188,27 +192,26 @@ void init_openssl_libs_server_side(void){
 			}
 			SERVER_SSL_initted_in_process=1;
 		}
-		InitializeSSL();
-		global_ctx = SSL_CTX_new(TLS_server_method());
-		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, verify_callback);
+		global_server_ctx = SSL_CTX_new(TLS_server_method());
+		SSL_CTX_set_verify(global_server_ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, verify_callback);
 
 		/* Load CA certificate to verify the server */
-		if (!SSL_CTX_load_verify_locations(global_ctx, auth_cert_file_path, NULL)) {
+		if (!SSL_CTX_load_verify_locations(global_server_ctx, auth_cert_file_path, NULL)) {
 		    ERR_print_errors_fp(stderr);
 		}
 
 		/* Load client certificate */
-		if (!SSL_CTX_use_certificate_file(global_ctx, host_cert_file_path, SSL_FILETYPE_PEM)) {
+		if (!SSL_CTX_use_certificate_file(global_server_ctx, host_cert_file_path, SSL_FILETYPE_PEM)) {
 		    ERR_print_errors_fp(stderr);
 		}
 
 		/* Load client private key */
-		if (!SSL_CTX_use_PrivateKey_file(global_ctx, host_pkey_file_path, SSL_FILETYPE_PEM)) {
+		if (!SSL_CTX_use_PrivateKey_file(global_server_ctx, host_pkey_file_path, SSL_FILETYPE_PEM)) {
 		    ERR_print_errors_fp(stderr);
 		}
 
 		/* Make sure key matches cert */
-		if (!SSL_CTX_check_private_key(global_ctx)) {
+		if (!SSL_CTX_check_private_key(global_server_ctx)) {
 		    fprintf(stderr, "Client key does not match certificate\n");
 		}
 	}
@@ -242,31 +245,30 @@ void init_openssl_libs_client_side(void){
 			}
 			CLIENT_SSL_initted_in_process=1;
 		}
-		InitializeSSL();
-		global_ctx = SSL_CTX_new(TLS_client_method());
-		SSL_CTX_set_verify(global_ctx, SSL_VERIFY_PEER, verify_callback);
+		global_client_ctx = SSL_CTX_new(TLS_client_method());
+		SSL_CTX_set_verify(global_client_ctx, SSL_VERIFY_PEER, verify_callback);
 
 		char cwd[PATH_MAX];
 		getcwd(cwd, sizeof(cwd));
 		printf("Current working dir: %s\n", cwd);
 
 		/* Load CA certificate to verify the server */
-		if (!SSL_CTX_load_verify_locations(global_ctx, auth_cert_file_path, NULL)) {
+		if (!SSL_CTX_load_verify_locations(global_client_ctx, auth_cert_file_path, NULL)) {
 		    ERR_print_errors_fp(stderr);
 		}
 
 		/* Load client certificate */
-		if (!SSL_CTX_use_certificate_file(global_ctx, host_cert_file_path, SSL_FILETYPE_PEM)) {
+		if (!SSL_CTX_use_certificate_file(global_client_ctx, host_cert_file_path, SSL_FILETYPE_PEM)) {
 		    ERR_print_errors_fp(stderr);
 		}
 
 		/* Load client private key */
-		if (!SSL_CTX_use_PrivateKey_file(global_ctx, host_pkey_file_path, SSL_FILETYPE_PEM)) {
+		if (!SSL_CTX_use_PrivateKey_file(global_client_ctx, host_pkey_file_path, SSL_FILETYPE_PEM)) {
 		    ERR_print_errors_fp(stderr);
 		}
 
 		/* Make sure key matches cert */
-		if (!SSL_CTX_check_private_key(global_ctx)) {
+		if (!SSL_CTX_check_private_key(global_client_ctx)) {
 		    fprintf(stderr, "Client key does not match certificate\n");
 		}
 	}
@@ -282,15 +284,15 @@ void end_openssl_libs_client_side(void){
 
 		fprintf(logstream,"Closing client's global ssl context?\n");
 	}
-	if(global_ctx&&will_use_tls){
+	if(will_use_tls){
 		if(!CLIENT_SSL_initted_in_process){
-			if(logging){	
+			if(logging){
 				fprintf(logstream,"CLIENT SSL já desativado! Ignorando!\n");
 			}
 			return;
 		}
 		else{
-			if(logging){	
+			if(logging){
 				fprintf(logstream,"CLIENT SSL desativado! CLIENT_SSL_initted_in_process: 1 -> 0 !\n");
 			}
 			CLIENT_SSL_initted_in_process=0;
@@ -299,9 +301,7 @@ void end_openssl_libs_client_side(void){
 
 			fprintf(logstream,"Yes!\n");
 		}
-		DestroySSL();
-		SSL_CTX_free(global_ctx);
-		global_ctx=NULL;
+		SSL_CTX_free(global_client_ctx);
 		if(logging){
 
 			fprintf(logstream,"Client's global ssl context closed!!\n");
@@ -319,15 +319,15 @@ void end_openssl_libs_server_side(void){
 
 		fprintf(logstream,"Closing server's global ssl context?\n");
 	}
-	if(global_ctx&&will_use_tls){
+	if(will_use_tls){
 		if(!SERVER_SSL_initted_in_process){
-			if(logging){	
+			if(logging){
 				fprintf(logstream,"SERVER SSL já desativado! Ignorando!\n");
 			}
 			return;
 		}
 		else{
-			if(logging){	
+			if(logging){
 				fprintf(logstream,"SERVER SSL desativado! SERVER_SSL_initted_in_process: 1 -> 0 !\n");
 			}
 			SERVER_SSL_initted_in_process=0;
@@ -336,9 +336,7 @@ void end_openssl_libs_server_side(void){
 
 			fprintf(logstream,"Yes!\n");
 		}
-		DestroySSL();
-		SSL_CTX_free(global_ctx);
-		global_ctx=NULL;
+		SSL_CTX_free(global_server_ctx);
 		if(logging){
 
 			fprintf(logstream,"Server's global ssl context closed!!\n");

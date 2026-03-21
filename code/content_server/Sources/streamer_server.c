@@ -17,7 +17,6 @@
 
 
 atomic_int initted=0;
-static struct sigaction sa;
 
 
 static server_stream_t stream_struct={
@@ -109,12 +108,7 @@ static void server_stream(void){
 static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chunk_size,unsigned char* stream_buff){
 
 
-        sa.sa_handler = cleanup;
-        sigemptyset(&sa.sa_mask);
-        sa.sa_flags = SA_RESTART;
-        sigaction(SIGINT, &sa, NULL);
-        sigaction(SIGPIPE, &sa, NULL);
-	stream_struct.con_obj=con_obj;
+        stream_struct.con_obj=con_obj;
         stream_struct.local_fd=fd;
         stream_struct.local_fd_boundary=fd_boundary;
 	stream_struct.chunk_size=chunk_size;
@@ -122,7 +116,7 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 	memset(stream_struct.chunk_data_cache,0,stream_struct.chunk_size);
 	initted=1;
 	server_stream();
-	raise(SIGINT);
+	cleanup(0);
 	stop_server_stream(&stream_struct);
 	printf("SAIMOS DA STREAM DO SERVER!\n");
 	return 0;
@@ -130,7 +124,7 @@ static int init_server_stream(int fd,int fd_boundary,con_t* con_obj,uint64_t chu
 
 void close_stream(void){
 
-	raise(SIGINT);
+	cleanup(0);
 	stop_server_stream(&stream_struct);
 }
 

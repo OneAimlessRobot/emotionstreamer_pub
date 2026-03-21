@@ -41,33 +41,17 @@ static void call_sigint(void){
 	send_port_back(htons(state.server_tcp_addr.sin_port),&port_mapper_ip_cache_entry);
 	if(cfg_server_slave_mode){
 		close_con(&state.hb_con,0,1);
+		end_openssl_libs_client_side();
 	}
 	pthread_mutex_unlock(&con_mtx);
 
 }
-static void call_sigint_sub_connection(void){
-
-	close(state.server_sock_tcp);
-	printf("Sinal de parar sub conexão server\n");
-	pthread_mutex_lock(&con_mtx);
-	if(cfg_server_slave_mode){
-		close_con(&state.hb_con,0,1);
-	}
-	pthread_mutex_unlock(&con_mtx);
-
-}
-
 static void call_sigint_chld(int useless){
 
 	is_on+=0*useless;
 	started+=0*useless;
 }
 static void serverStop(int useless){
-
-	is_on=0*useless;
-	started=1;
-}
-static void conStop(int useless){
 
 	is_on=0*useless;
 	started=1;
@@ -90,6 +74,7 @@ static void pick_next_song(void){
 	}
 
 }
+
 static int con_accepting_loop(void){
 
 		printf("Chegamos ao loop de conexoes!\n");
@@ -99,8 +84,6 @@ static int con_accepting_loop(void){
 			pthread_cond_wait(&eng_cond,&eng_mtx);
 		}
 		pthread_mutex_unlock(&eng_mtx);
-
-
 		while(is_on){
 
 			int iResult,
@@ -117,28 +100,23 @@ static int con_accepting_loop(void){
 			if(iResult>0){
 				sock= accept(state.server_sock_tcp,NULL,NULL);
 				if(sock>=0){
-					printf("Connection accepted!\n");
+					char buff[128]={0};
+					snprintf(buff,sizeof(buff)-1,"%d",sock);
+					char* args_module_cmd[]={"./emotionstreamer_content_server.exe","0",buff,NULL};
+					printf("Connection accepted! Args to be passed:\nExec type: %s\nSocket to be passed: %s\n",args_module_cmd[1],args_module_cmd[2]);
 					pid=1;
 					child_pid=pid=fork();
 					switch(pid){
 						case 0:
-							setNonBlocking(&sock);
-						        sa.sa_handler = conStop;
-						        sigemptyset(&sa.sa_mask);
-						        sa.sa_flags = SA_RESTART;
-						        sigaction(SIGINT, &sa, NULL);
-						        sigaction(SIGPIPE, &sa, NULL);
-						        sigaction(SIGTERM, &sa, NULL);
-
-							con_go(sock);
-							call_sigint_sub_connection();
-							return 0;
+							execvp(args_module_cmd[0],args_module_cmd);
+							perror("execvp");
+							break;
 						case -1:
+							perror("fork");
 							raise(SIGTERM);
 							return 1;
 						default:
 							close(sock);
-
 							break;
 					}
 				}
@@ -158,7 +136,7 @@ static int con_accepting_loop(void){
 			}
 		}
 		else{
-			printf("Timed out! ( more that %lus waiting 4 udp). Trying again...\n",server_con_times_pair[0]);
+			printf("Timed out!\n(more that %lus waiting 4 connection.)\nTrying again...\n",server_con_times_pair[0]);
 			printf("Nome do server atual: %s\n",state.name);
 			print_addr_aux("Endereço de server atual:",&state.server_tcp_addr);
 			print_current_date();
@@ -171,7 +149,6 @@ static int con_accepting_loop(void){
 			time_spec_print_function(1, "\n\nOut of: ", &rotation_period);
 			pick_next_song();
 		}
-		
 	}
 	printf("Fechou a loja!!!\n");
 	return 1;
@@ -198,6 +175,10 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	char buff[SERVER_NAME_SIZE]={0};
 	char extension_buff[EXTENSION_SIZE+1]={0};
 	strncpy(extension_buff,server_working_extension,EXTENSION_SIZE+1);
+	is_wav_mode=(int8_t)(!strs_are_strictly_equal(extension_buff,WAV_MODE_EXTENSION));
+	if(is_wav_mode){
+		printf("Launched in '.wav' mode!!!\n");
+	}
 	if(!strnlen(server_name_buff,SERVER_NAME_SIZE)){
 
 		randStr(SERVER_NAME_SIZE-1,buff);
@@ -205,10 +186,6 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	else{
 
 		memcpy(buff,server_name_buff,min(strlen(server_name_buff),sizeof(buff)-1));
-	}
-	is_wav_mode=(int8_t)(!strs_are_strictly_equal(extension_buff,WAV_MODE_EXTENSION));
-	if(is_wav_mode){
-		printf("Launched in '.wav' mode!!!\n");
 	}
 	logstream=stdout;
 	is_on=1;
@@ -219,6 +196,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	memcpy(&arg_s.slave_port_mapper_ip_cache_entry,&port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
 	memcpy(&arg_s.slave_ip_cache_entry,ent_this,sizeof(ip_cache_entry));
 	init_module_tcp_stuff(&state.server_sock_tcp,ent_this->hostname,ent_this->port,&state.server_tcp_addr,SIGTERM,MAX_CLIENTS_HARD_LIMIT,0,&arg_s.slave_port_mapper_ip_cache_entry);
+	InitializeSSL();
 	if(cfg_server_slave_mode){
 
 		arg_s.lower_name=buff;
@@ -261,13 +239,12 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 			printf("Juntamos o thread hb_tid\n");
 			close_con(&state.hb_con,0,1);
 		}
-	call_sigint();
+		call_sigint();
 	}
 	else{
 	printf("Exiting child in server!!\n");
-	exit(-1);
-
 	}
+	DestroySSL();
 	return result;
 }
 

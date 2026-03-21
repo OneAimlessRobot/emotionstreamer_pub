@@ -43,18 +43,60 @@ static void generateDirListingPrimitive(char* pattern){
 	char* extension_arg1=(server_working_extension);
 	char* extension_arg2=(is_wav_mode?"":BOUNDARY_FILE_EXT);
 	snprintf(buff,sizeof(buff)-3,"*%s*%s*%s*",pattern_arg,extension_arg1,extension_arg2);
-	char* args_cmd[]={"find",".", "-type","f","-iwholename", buff,NULL};
-	pid_t pid_fork_find_cmd=fork();
-	switch(pid_fork_find_cmd){
+	char* args_cmd_find[]={"find",".", "-type","f","-iwholename", buff,NULL},
+		*args_cmd_sort[]={"sort",NULL};
+	pid_t pid_fork_find_cmd,
+		pid_fork_sort_cmd;
+	int the_pipe[2],pipe_result;
+	pid_fork_sort_cmd=fork();
+	switch(pid_fork_sort_cmd){
 
 		case -1:
 			close(outfd);
 			exit(-1);
 		break;
 		case 0:
+			pipe_result=pipe(the_pipe);
+			if(pipe_result>=0){
+
+				pid_fork_find_cmd=fork();
+				switch(pid_fork_find_cmd){
+					case -1:
+						exit(-1);
+					break;
+					case 0:
+						close(outfd);
+						dup2(the_pipe[1],STDOUT_FILENO);
+						close(the_pipe[0]);
+						execvp(args_cmd_find[0],args_cmd_find);
+					break;
+					default:
+					break;
+
+				}
+			}
+			dup2(the_pipe[0],STDIN_FILENO);
+			close(the_pipe[1]);
 			dup2(outfd,STDOUT_FILENO);
 			close(outfd);
-			execvp(args_cmd[0],args_cmd);
+			execvp(args_cmd_sort[0],args_cmd_sort);
+		break;
+		default:
+			wait(NULL);
+			dprintf(outfd,"%s\n",close_keyword);
+		break;
+
+	}
+	/*
+	pid_fork_find_cmd=fork();
+	switch(pid_fork_find_cmd){
+		case -1:
+			exit(-1);
+		break;
+		case 0:
+			dup2(outfd,STDOUT_FILENO);
+			close(outfd);
+			execvp(args_cmd_find[0],args_cmd_find);
 		break;
 		default:
 			wait(NULL);
@@ -63,7 +105,8 @@ static void generateDirListingPrimitive(char* pattern){
 
 	}
 	chdir("..");
-        /*
+        */
+	/*
 	my god I hate how easy it is to do just this instead of execvp
 	fuck.
 	you.

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes ./heart*.exe
+valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes ./*heart*.exe

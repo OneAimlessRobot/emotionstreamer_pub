@@ -22,11 +22,12 @@ static atomic_int innited=0;
 
 static void cleanup_and_send_ports_back(int useless,void*ptr){
 
-	end_openssl_libs_client_side();
 	raise(useless);
 	send_port_back(htons(our_addr.sin_port),&port_mapper_ip_cache_entry);
 	free_attempted_ports(0,&port_mapper_ip_cache_entry);
 	close_con(&con_obj,0,1);
+	end_openssl_libs_client_side();
+	DestroySSL();
 	exit(useless+(0*((uint64_t)ptr)));
 
 }
@@ -103,6 +104,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	    perror("Não conseguimos inicializar address do peer em server_browser!!!\n");
 	    cleanup_and_send_ports_back(SIGINT,NULL);
 	}
+	InitializeSSL();
 	init_openssl_libs_client_side();
 	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,&port_mapper_ip_cache_entry,will_use_tls);
 	connection_attempt_circuit(&con_obj.sockfd_tcp,cleanup_and_send_ports_back,&our_addr,

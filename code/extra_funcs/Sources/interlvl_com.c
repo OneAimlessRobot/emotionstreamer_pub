@@ -49,7 +49,6 @@ void slave_thread_exit_func(int useless,void* ptr){
 
 	if(ptr){
 		printf("Slave quit function called!!!\n");
-		end_openssl_libs_client_side();
 		slave_args* arg_struct=(slave_args*)ptr;
 		pthread_mutex_lock(arg_struct->con_mtx);
 		send_port_back(htons(arg_struct->this_con_addr.sin_port),&arg_struct->slave_port_mapper_ip_cache_entry);

@@ -1,6 +1,14 @@
 #!/bin/bash
 
 #get song with pattern:
+print_help(){
+
+	echo "Needs 2 args!"
+	echo "(num args supplied: $?)"
+	echo "1- backend"
+	echo "2- expression for song"
+	echo "3- > 0 => multiplas tocadas no caso de multiplos resultados de pesquisa"
+}
 
 exit_wait=3
 if [ "$#" -ne 3 ];
@@ -16,14 +24,6 @@ backend="$1"
 playlist="$3"
 
 
-print_help(){
-
-	echo "Needs 2 args!"
-	echo "(num args supplied: $?)"
-	echo "1- backend"
-	echo "2- expression for song"
-	echo "3- > 0 => multiplas tocadas no caso de multiplos resultados de pesquisa"
-}
 
 fill_up_song_dir(){
 	while read -r the_song

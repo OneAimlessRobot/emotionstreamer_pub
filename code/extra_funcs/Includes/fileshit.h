@@ -15,7 +15,8 @@ typedef typeof(void (void)) *exit_func_t;
 
 extern FILE* logstream;
 
-extern SSL_CTX *global_ctx;
+extern SSL_CTX *global_server_ctx,
+		*global_client_ctx;
 
 extern u_int8_t logging;
 

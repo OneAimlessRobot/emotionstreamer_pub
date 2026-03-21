@@ -60,8 +60,11 @@ static void clear_ports_and_quit(int signal,void* ptr){
 	free_attempted_ports(0,&port_mapper_ip_cache_entry);
 	close_con(&client_con_obj,0,1);
 	end_openssl_libs_client_side();
+	DestroySSL();
 	fclose(logstream);
-	close(fp);
+	if(fp>=0){
+		close(fp);
+	}
 	exit(signal+(0*((uint64_t)ptr)));
 }
 static void useless_handler(int useless){
@@ -236,6 +239,7 @@ int clientStart(char* req_field,char* file_name){
 		clear_ports_and_quit(SIGINT,NULL);
 
 	}
+	InitializeSSL();
 	init_openssl_libs_client_side();
 	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,&port_mapper_ip_cache_entry,will_use_tls);
 	connection_attempt_circuit(&client_con_obj.sockfd_tcp,clear_ports_and_quit,&client_ip_address,

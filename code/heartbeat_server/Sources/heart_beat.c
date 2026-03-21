@@ -48,7 +48,6 @@ static void close_all_fds_here(void){
 static void call_signal_func(void){
 
 
-	end_openssl_libs_server_side();
 	send_port_back(htons(arg_a.accept_addr.sin_port),&port_mapper_ip_cache_entry);
 	close_all_fds_here();
 	printf("Saindo do heart beat server!!!!\n");
@@ -122,7 +121,7 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	}
 
 	init_module_tcp_stuff(&arg_a.accept_sockfd,ent_this->hostname,ent_this->port,&arg_a.accept_addr,SIGPIPE,MAX_SERVERS,0,&arg_a.acceptor_port_mapper_ip_cache_entry);
-
+	InitializeSSL();
 	memcpy(&arg_s.this_addr,&arg_a.accept_addr,sizeof(struct sockaddr_in));
 
 	arg_a.is_on=&is_on;
@@ -205,7 +204,9 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	printf("Saimos do thread watchdog do server de heartbeat!!!!!\n");
 	closeDB();
 	close(arg_a.accept_sockfd);
-	
+	end_openssl_libs_server_side();
+	end_openssl_libs_client_side();
+	DestroySSL();
 }
 
 

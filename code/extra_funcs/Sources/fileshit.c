@@ -17,9 +17,12 @@ char host_pkey_file_path[PATHSIZE]={0};
 
 char curr_dir[PATHSIZE]={0};
 
-SSL_CTX *global_ctx=NULL;
+SSL_CTX *global_server_ctx=NULL,
+	*global_client_ctx=NULL;
 
 socklen_t socklenvar[2]= {sizeof(struct sockaddr),sizeof(struct sockaddr_in)};
+
+//https://stackoverflow.com/questions/2336242/recursive-mkdir-system-call-on-unix
 
 void _mkdir(const char *dir) {
     char tmp[256];

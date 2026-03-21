@@ -28,13 +28,18 @@ static char file_name[PATHSIZE]={0},
 	rep_file_path[PATHSIZE*3 +4]={0},
 	rep_file_path_2[PATHSIZE*3 +4]={0};
 static proto_arr proto_array={0};
+static struct sigaction sa;
 
 static req_type recvd_type=NA;
 static struct stat file_info={0};
 
 static int fp=-1;
 static int fp_boundary=-1;
-//https://stackoverflow.com/questions/2336242/recursive-mkdir-system-call-on-unix
+
+static void conStop(int useless){
+	fp=(0*useless)+fp;
+
+}
 
 static void cleanup(void){
 	close(fp);
@@ -79,11 +84,26 @@ static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 
 //static get_filename_extension
 void con_go(int sockfd_tcp){
+			sa.sa_handler = conStop;
+			sigemptyset(&sa.sa_mask);
+			sa.sa_flags = SA_RESTART;
+			sigaction(SIGINT, &sa, NULL);
+			sigaction(SIGPIPE, &sa, NULL);
+			sigaction(SIGTERM, &sa, NULL);
 
+			logging=cfg_server_logging;
+			logstream=stdout;
+			char extension_buff[EXTENSION_SIZE+1]={0};
+			strncpy(extension_buff,server_working_extension,EXTENSION_SIZE+1);
+			is_wav_mode=(int8_t)(!strs_are_strictly_equal(extension_buff,WAV_MODE_EXTENSION));
+			if(is_wav_mode){
+				printf("Launched in '.wav' mode!!!\n");
+			}
 			use_exit_func=1;
 			exit_func_for_this_module=cleanup;
 			sock_tcp=sockfd_tcp;
 			unsigned char stream_cache_data[sizeof(mp3_stream_chunk)];
+			InitializeSSL();
 			init_openssl_libs_server_side();
 			init_con(&server_con_obj,sock_tcp,SERVER_C,&port_mapper_ip_cache_entry,will_use_tls);
 			if(greet(&server_con_obj,server_con_times_pair)){
