@@ -1,2 +1,0 @@
-Rejected connection!
-: Bad file descriptor
