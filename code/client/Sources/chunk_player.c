@@ -225,7 +225,7 @@ static void initALSA(chunk_player* player){
 list_alsa_devices();
 int err;
 memset(tmp_dev_string,0,sizeof(tmp_dev_string));
-snprintf(tmp_dev_string,strlen(cfg_client_device_name_if_alsa)+strlen(cfg_client_device_output_if_alsa)+10,"%s,%s",cfg_client_device_name_if_alsa,cfg_client_device_output_if_alsa);
+snprintf(tmp_dev_string,strlen(cfg_client_device_name_if_alsa)+strlen(cfg_client_device_output_if_alsa)+10,"%s%s%s",cfg_client_device_name_if_alsa,strlen(cfg_client_device_output_if_alsa)?",":"",cfg_client_device_output_if_alsa);
 
 if(!innited){
 	if ((err=snd_pcm_open(&player->play_stream_alsa, tmp_dev_string, SND_PCM_STREAM_PLAYBACK, 0)) < 0){
