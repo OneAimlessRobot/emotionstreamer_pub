@@ -23,6 +23,7 @@ static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 char client_logs_file_name[PATHSIZE]={0};
 char client_music_folder_path[PATHSIZE]={0};
+char song_name_global[PATHSIZE]={0};
 ip_cache_entry server_ip_cache_entry={{0},0};
 ip_cache_entry client_ip_cache_entry={{0},0};
 
@@ -69,7 +70,7 @@ uint8_t stream_show_stats=1;
 uint8_t stream_show_decoder_queue=0;
 uint8_t stream_show_player_queue=1;
 uint8_t stream_show_frames=1;
-int8_t is_wav_mode=0;
+int16_t is_wav_mode=0;
 int_pair client_data_times_pair=(int_pair){CLIENT_TIMEOUT_DATA_SEC,CLIENT_TIMEOUT_DATA_USEC};
 int_pair client_con_times_pair=(int_pair){CLIENT_TIMEOUT_CON_SEC,CLIENT_TIMEOUT_CON_USEC};
 

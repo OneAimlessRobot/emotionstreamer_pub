@@ -1,0 +1,20 @@
+Successful connection
+192.168.0.100
+Socket operation on non-socket
+Não conectado.
+Successful connection!
+Operation now in progress
+Não conectado.
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+Select error: Interrupted system call
+Successful connection
+192.168.0.100
+Bad file descriptor
+Não conectado.
+Bad file descriptor
+Não conectado.

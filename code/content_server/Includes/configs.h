@@ -26,7 +26,7 @@ extern char server_name_buff[PATHSIZE+1];
 extern char curr_server_quarantine_dir_buff[PATHSIZE+1];
 
 extern char server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILENAME_LENGTH];
-extern char server_auto_mode_rotation_filename[PATHSIZE+1];
+extern char server_auto_mode_rotation_filename[CONFIG_READ_LINE_BUFF_SIZE];
 
 extern uint8_t cfg_server_slave_mode;
 
@@ -43,7 +43,7 @@ extern uint64_t cfg_server_ack_period_us,
 		server_ack_timeout_lim,
 		server_chunk_size;
 
-extern int8_t is_wav_mode;
+extern uint16_t is_wav_mode;
 
 extern uint8_t
 	cfg_server_print_config,

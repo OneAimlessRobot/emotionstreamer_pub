@@ -7,7 +7,7 @@
 
 req_type str_to_req_type(char* str){
 
-	
+
 	if(!strs_are_strictly_equal(str,"play")){
 
 		return PLAY;

@@ -171,7 +171,6 @@ return written;
 
 int play_from_sound_device_pa(pa_simple* handle,uint8_t* sound_buff_to_play,decoder_result_struct* result)
 {
-    //if (pa_simple_write(handle, sound_buff_to_play, result->nsamples*result->channels*SIZE, NULL) < 0) {
     if (pa_simple_write(handle, sound_buff_to_play, result->total_bytes_in_chunk, NULL) < 0) {
         fprintf(stderr, "pa_simple_write() failed to play %d bytes:\nerrno: %d\nerror string: %s\n",result->nsamples*result->sample_size*result->channels,errno,pa_strerror(errno));
 	print_decoder_frame_result(result,1);

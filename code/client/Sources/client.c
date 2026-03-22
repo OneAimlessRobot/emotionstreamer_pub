@@ -37,7 +37,6 @@ static atomic_int is_on=1;
 static int libao_initialized=0;
 static int fp=-1;
 static struct sigaction sa;
-static char extension_from_server[PATHSIZE]={0};
 static	char method_buff[PATHSIZE]={0},
 	req_buff[DEF_DATASIZE/4]={0},
 	file_path[PATHSIZE*3-1]={0},
@@ -78,13 +77,13 @@ void exit_emergency_func(void){
 }
 static int64_t down_file_size(void){
 
-		int64_t down_size=-1;
+		int32_t down_size=-1;
 		clear_con_data(&client_con_obj);
 		if(logging){
 			printf("Recebendo tamanho!!!\n");
 		}
+		uint8_t curr_packet_pos=0;
 		int ret_read=con_read(&client_con_obj,client_data_times_pair);
-		sscanf((char*)client_con_obj.tcp_data,"%ld %s %hhd",&down_size,extension_from_server,&is_wav_mode);
 		if(ret_read<=0){
 
 			if(client_con_obj.is_ssl){
@@ -96,28 +95,33 @@ static int64_t down_file_size(void){
 			char* reason= down_size ? UNSUCESSFUL_DOWNLOAD_CON_ERROR:UNSUCESSFUL_DOWNLOAD_NOFILE ;
 			if(logging){
 				printf(UNSUCESSFUL_DOWNLOAD,reason);
-				printf("String recebida do server upon entry: |%s|\n",(char*)client_con_obj.tcp_data);
 			}
 			clear_ports_and_quit(SIGINT,NULL);
 		}
+		down_size=ntohl(*((int32_t*)(&client_con_obj.tcp_data[curr_packet_pos])));
+		curr_packet_pos+=(sizeof(int32_t));
+		is_wav_mode=ntohs(*((uint16_t*)(&client_con_obj.tcp_data[curr_packet_pos])));
 		clear_con_data(&client_con_obj);
 		if(logging){
-			printf(CONTENT_DOWNLOAD_INCOMMING,down_size,extension_from_server);
+			printf(CONTENT_DOWNLOAD_INCOMMING,down_size,is_wav_mode?".wav":".mp3");
 		}
 		return down_size;
 
 }
-static void play_func(void){
+static void play_func(char* file_name){
 		down_file_size();
-		uint64_t chunk_size=0;
+		uint32_t chunk_size=0;
 		con_read(&client_con_obj,client_data_times_pair);
-		sscanf((char*)client_con_obj.tcp_data,"%lu",&chunk_size);
+		chunk_size=ntohl(*((uint32_t*)(&client_con_obj.tcp_data[0])));
+		char* base_file_name=strrchr(file_name, '/');
+		base_file_name=((base_file_name)?(base_file_name+1):file_name);
+		strncpy(song_name_global,base_file_name,min(strlen(file_name),sizeof(song_name_global)-1));
 		player_init_stream(&client_con_obj,chunk_size,play_way);
 }
 static void down_func(char* file_name){
 
 		int64_t down_size=down_file_size();
-		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,extension_from_server);
+		snprintf(file_path,sizeof(file_path)-1,"%s%s%s",curr_dir,file_name,is_wav_mode?".wav":".mp3");
 		snprintf(file_path2,sizeof(file_path2),"%s",file_path);
 		_mkdir(dirname(file_path2));
 		if((fp=creat(file_path,0777))<0){
@@ -279,7 +283,7 @@ int clientStart(char* req_field,char* file_name){
 	switch(the_type){
 
 	case PLAY:
-		play_func();
+		play_func(file_name);
 		break;
 	case DOWN:
 		down_func(file_name);

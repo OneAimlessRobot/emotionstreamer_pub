@@ -54,14 +54,15 @@ extern uint16_t cfg_client_chunk_size,
 
 extern float cfg_ui_framerate_fps;
 
-extern int8_t is_wav_mode;
+extern int16_t is_wav_mode;
 extern char generalized_config_filepath_buff[PATHSIZE+1],
 	cfg_client_device_name_if_alsa[PATHSIZE+1],
 	cfg_client_device_output_if_alsa[PATHSIZE+1],
 	server_ip_address_buff[PATHSIZE+1],
 	client_ip_address_buff[PATHSIZE+1],
 	client_music_folder_path[PATHSIZE],
-	client_logs_file_name[PATHSIZE];
+	client_logs_file_name[PATHSIZE],
+	song_name_global[PATHSIZE];
 
 extern int_pair client_data_times_pair,
 		client_con_times_pair;

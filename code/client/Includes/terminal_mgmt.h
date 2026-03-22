@@ -35,5 +35,7 @@ void enable_ncurses(void);
 
 void endwin_wrapper(void);
 
+int putsome(int fd,char buff[],size_t size,int_pair times);
+int getsome(int fd,char buff[],size_t size,int_pair times);
 
 #endif

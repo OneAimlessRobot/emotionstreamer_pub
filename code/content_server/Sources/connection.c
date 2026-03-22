@@ -64,13 +64,11 @@ static int open_file(char* filepath){
 }
 static void send_download_sizes(int fd,char* file_path, struct stat file_info){
 			clear_con_data(&server_con_obj);
-			if(fd>0){
-				stat(file_path,&file_info);
-				snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%ld %s %hhd",file_info.st_size,server_working_extension,is_wav_mode);
-			}
-			else{
-				snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"-1");
-			}
+			stat(file_path,&file_info);
+			uint8_t curr_pos_in_packet=0;
+			*((int32_t*)(&server_con_obj.tcp_data[curr_pos_in_packet]))=fd>0?(int32_t)htonl(file_info.st_size):-1;
+			curr_pos_in_packet+=4;
+			*((uint16_t*)(&server_con_obj.tcp_data[curr_pos_in_packet]))=htons(is_wav_mode);
 			int ret_send=con_send(&server_con_obj,server_data_times_pair);
 			if(ret_send<0){
 				if(server_con_obj.is_ssl){
@@ -93,7 +91,7 @@ void con_go(int sockfd_tcp){
 			logstream=stdout;
 			char extension_buff[EXTENSION_SIZE+1]={0};
 			strncpy(extension_buff,server_working_extension,EXTENSION_SIZE+1);
-			is_wav_mode=(int8_t)(!strs_are_strictly_equal(extension_buff,WAV_MODE_EXTENSION));
+			is_wav_mode=(uint16_t)(!strs_are_strictly_equal(extension_buff,WAV_MODE_EXTENSION));
 			if(is_wav_mode){
 				printf("Launched in '.wav' mode!!!\n");
 			}
@@ -185,7 +183,7 @@ void con_go(int sockfd_tcp){
 					}
 					break;
 				case PLAY:
-					snprintf((char*)server_con_obj.tcp_data,DEF_DATASIZE,"%lu",server_chunk_size);
+					*((uint32_t*)(&server_con_obj.tcp_data[0]))=htonl(server_chunk_size);
 					if(con_send(&server_con_obj,server_data_times_pair)<=0){
 
 						cleanup();

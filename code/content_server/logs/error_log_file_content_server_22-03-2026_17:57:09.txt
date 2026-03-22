@@ -1,0 +1,70 @@
+Successful connection
+192.168.0.100
+Socket operation on non-socket
+Não conectado.
+Successful connection!
+Operation now in progress
+Não conectado.
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+We could not read a frame info thing!
+Error: Success
+Select error: Interrupted system call
+Connection reset by peer
+Não foi possivel: Connection refused
+Não foi possivel conectar. Numero limite de tentativas (3) atingido!!!
+Conexão ao port mapper para devolver porta unica mal sucedida! Abortando
+: Connection refused
+Não foi possivel: Connection refused
+Não foi possivel conectar. Numero limite de tentativas (3) atingido!!!
+Conexão ao port mapper para devolver porta unica mal sucedida! Abortando
+: Connection refused

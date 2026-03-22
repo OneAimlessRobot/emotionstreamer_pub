@@ -72,8 +72,8 @@ RESDIR= ./resources
 
 CURRDIR=`pwd`
 
-CC= cc
-#CC= gcc
+#CC= cc
+CC= gcc
 #CC=clang
 DEPFLAGS= -MP -MD
 

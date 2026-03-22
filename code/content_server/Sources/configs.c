@@ -54,7 +54,7 @@ uint64_t cfg_server_ack_period_us=DEF_SERVER_ACK_PERIOD_US;
 
 
 uint64_t server_chunk_size=SERVER_CHUNK_SIZE;
-int8_t is_wav_mode=1;
+uint16_t is_wav_mode=1;
 static void clean_buff(void){
 
 	memset(&curr_line_buff,0,CONFIG_READ_LINE_BUFF_SIZE);

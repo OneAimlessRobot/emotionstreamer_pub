@@ -32,53 +32,86 @@ static int is_cursor_visible_fd[TOTAL_NUM_TERM_FDS]={0};
 
 static struct termios orig_fd[TOTAL_NUM_TERM_FDS]={{0}};
 
-static int putsome(int fd,char buff[],u_int64_t size,int_pair times){
-                int iResult;
-                struct timeval tv;
-                fd_set wfds;
-                FD_ZERO(&wfds);
-                FD_SET(fd,&wfds);
-                tv.tv_sec=times[0];
-                tv.tv_usec=times[1];
-                iResult=select(fd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
-                if(iResult>0){
+int getsome(int fd,char buff[],size_t size,int_pair times){
+	if(fd>=0){
+		int iResult;
+		struct timeval tv;
+		size_t read_total=0;
+		ssize_t r=0;
+		while(read_total<size){
+		fd_set rfds;
+		FD_ZERO(&rfds);
+		FD_SET(fd,&rfds);
+		tv.tv_sec=times[0];
+		tv.tv_usec=times[1];
+		iResult=select(fd+1,&rfds,(fd_set*)0,(fd_set*)0,&tv);
+		if(iResult>0){
+			read_total+= (r=read(fd,buff+read_total,size-read_total));
+			if (r < 0){
+				return -1;
+			}
+			if (r == 0){
+				return read_total;
+			}
+			}
+			else if(!iResult){
+					return -2;
+			}
+			else{
+			if(logging){
 
-                return write(fd,buff,size);
-                }
-                        else if(!iResult){
-                return -2;
-                }
-                else{
-                if(logging){
-
-                fprintf(logstream, "SELECT ERROR!!!!! TERMINAL MGMT WRITE\n%s\n",strerror(errno));
-                }
-                return -1;
-                }
+			fprintf(logstream, "SELECT ERROR!!!!! FD READ\n%s\n",strerror(errno));
+			}
+			if(use_exit_func){
+				exit_func_for_this_module();
+		    	}
+			return -1;
+			}
+		}
+		return read_total;
+	}
+	return -1;
 }
-static int getsome(int fd,char buff[],u_int64_t size,int_pair times){
-                int iResult;
-                struct timeval tv;
-                fd_set rfds;
-                FD_ZERO(&rfds);
-                FD_SET(fd,&rfds);
-                tv.tv_sec=times[0];
-                tv.tv_usec=times[1];
-                iResult=select(fd+1,&rfds,(fd_set*)0,(fd_set*)0,&tv);
-                if(iResult>0){
 
-                return read(fd,buff,size);
-                }
-                        else if(!iResult){
-                return -2;
-                }
-                else{
-                if(logging){
+int putsome(int fd,char buff[],size_t size,int_pair times){
+	if(fd>=0){
+		int iResult;
+		struct timeval tv;
+		size_t write_total=0;
+		ssize_t w=0;
+		while(write_total<size){
+		fd_set wfds;
+		FD_ZERO(&wfds);
+		FD_SET(fd,&wfds);
+		tv.tv_sec=times[0];
+		tv.tv_usec=times[1];
+		iResult=select(fd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
+		if(iResult>0){
+			write_total+= (w=write(fd,buff+write_total,size-write_total));
+			if (w < 0){
+				return -1;
+			}
+			if (w == 0){
+				return write_total;
+			}
+			}
+			else if(!iResult){
+					return -2;
+			}
+			else{
+			if(logging){
 
-                fprintf(logstream, "SELECT ERROR!!!!! TERMINAL MGMT WRITE\n%s\n",strerror(errno));
-                }
-                return -1;
-                }
+			fprintf(logstream, "SELECT ERROR!!!!! FD READ\n%s\n",strerror(errno));
+			}
+			if(use_exit_func){
+				exit_func_for_this_module();
+		    	}
+			return -1;
+			}
+		}
+		return write_total;
+	}
+	return -1;
 }
 
 void enable_raw(terminal_mgmt_fd fd) {
@@ -92,7 +125,6 @@ void enable_raw(terminal_mgmt_fd fd) {
     }
     int flags = fcntl(fd_mappings[(int)fd], F_GETFL, 0);
     fcntl(fd_mappings[(int)fd], F_SETFL, flags | O_NONBLOCK);
-    
     raw = orig_fd[fd];
 
     // Input modes: no break, CR to NL, no parity check, no strip char,
@@ -191,8 +223,7 @@ void endwin_wrapper(void){
 	}
 	pthread_mutex_unlock(&close_ncurses_mtx);
 }
-
-static void ncurses_heartbeat(void){
+void ncurses_heartbeat(void){
 	for(int i=0;i<200;i++){
 		erase();
 		mvprintw(0,0,"heartbeat: %d\n",i);
@@ -238,4 +269,33 @@ printf("\033[?25h"); // show
 printf("\033[31m");   // red text
 printf("\033[42m");   // green background
 printf("\033[0m");    // reset
+*/
+
+/*
+Just in case I need it its here
+struct termios oldt, newt;
+
+(place in streamer input func)
+
+Place this part before "inited" var loop
+
+if(!stream_enable_ncurses){
+
+	tcgetattr(STDIN_FILENO, &oldt);
+
+	newt = oldt;
+	newt.c_lflag &= ~(ICANON | ECHO);  // no line buffering, no echo
+
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+
+}
+
+Place this one after "inited" var loop
+if(!stream_enable_ncurses){
+
+
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+}
+
 */

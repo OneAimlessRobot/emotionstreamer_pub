@@ -5,9 +5,12 @@
 
 #define PROTO_ARR_SIZE (PROTO_ARR_NUM_CELLS* sizeof(uint16_t))
 
+
+
 typedef uint16_t proto_arr[PROTO_ARR_NUM_CELLS];
 
 typedef uint16_t port_array[DEF_DATASIZE+1];
+
 
 extern port_array attempted_port_arr;
 

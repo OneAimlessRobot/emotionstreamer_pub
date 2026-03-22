@@ -21,31 +21,16 @@
 #include "../Includes/chunk_queue.h"
 #include "../Includes/queue_menus.h"
 #include "../Includes/mp3module.h"
-
 #include "../Includes/chunk_player.h"
-
 #include "../Includes/streamer_client.h"
 #include "../Includes/terminal_mgmt.h"
 #include "../Includes/client_aux_funcs.h"
 
 
-static int read_result=-1;
 static uint8_t read_tcp_chk[sizeof(mp3_stream_chunk)]={0};
-static int decode_queue_full=0,
-	pause_value=0,
-	rx_result=1,
-	play_queue_empty=0;
-
-static int decode_queue_empty=0,
-	play_queue_full=0,
-	decode_ret_val=MPG123_NEED_MORE;
-
 static clock_t stats_start, stats_end;
 static float stats_cpu_time_used,
 	stats_time_diff;
-static int stats_pct_full_decoding=0,
-	stats_time_ms=0,
-	stats_pct_full_playing=0;
 
 static const int play=1;
 static const int decode=1;
@@ -54,7 +39,7 @@ static struct sigaction sa;
 static struct sigaction sa_winch;
 
 static char decode_print_buff[DEF_DATASIZE]={0},
-		stats_print_buff[DEF_DATASIZE+1]={0},
+		stats_print_buff[DEF_DATASIZE*2+1]={0},
 		input_buff[DEF_DATASIZE+1]={0};
 
 static decoder_result_struct stats_result_struct={0};
@@ -87,16 +72,26 @@ static pid_t tid_rx,
 	  	tid_input,
 	  	tid_stats;
 
-static atomic_int
-
-		lost_packet=0,
+static atomic_int lost_packet=0,
 		reading=0,
 		decoding=0,
 		playing=0,
 		showing=0,
 		paused=0,
 		ready_2_go=0,
-		is_first_player_chunk=1;
+		is_first_player_chunk=1,
+		stats_pct_full_decoding=0,
+		stats_time_ms=0,
+		stats_pct_full_playing=0,
+		decode_queue_empty=0,
+		play_queue_full=0,
+		decode_ret_val=MPG123_NEED_MORE,
+		read_result=-1,
+		decode_queue_full=0,
+		pause_value=0,
+		rx_result=1,
+		play_queue_empty=0;
+
 
 
 static atomic_int innited=0;
@@ -279,14 +274,12 @@ static void* dec_thread_func(void* args){
 				if(decode_ret_val==MPG123_DONE){
 					snprintf(decode_print_buff,sizeof(decode_print_buff)-1,"Stream done!\n");
 					print_log_string(decode_print_buff);
-					print_log_string("Thread de decoding parado!!!\n");
-					return args;
+					goto decoder_exit;
 				}
 				else if(decode_ret_val==MPG123_ERR){
 					snprintf(decode_print_buff,sizeof(decode_print_buff)-1,"Decoding error: %s\n",mpg123_strerror(stream_struct.decoder->dec));
 					print_log_string(decode_print_buff);
-					print_log_string("Thread de decoding parado!!!\n");
-					return args;
+					goto decoder_exit;
 				}
 			}
 	}
@@ -299,9 +292,10 @@ static void* dec_thread_func(void* args){
 	}
 	pthread_mutex_unlock(&decoder_mtx);
 	}
-	print_log_string("Thread de decoding parado!!!\n");
-
-	return  args;
+	decoder_exit:
+		print_log_string("Thread de decoding parado!!!\n");
+		decode_queue_empty=1;
+		return  args;
 }
 
 static void* play_thread_func(void* args){
@@ -348,8 +342,8 @@ static void* play_thread_func(void* args){
 	}
 	pthread_mutex_unlock(&player_mtx);
 	}
-	playing=0;
 	print_log_string("Thread de playing parado!!!\n");
+	play_queue_empty=1;
 	return  args;
 }
 static void* show_stats(void* args){
@@ -384,7 +378,6 @@ static void* show_stats(void* args){
 		}
 		if(stream_enable_ncurses){
 			clear();
-			//clearok(stdscr,1);
 		}
 		else{
 			if(will_redraw){
@@ -393,7 +386,8 @@ static void* show_stats(void* args){
 			}
 			printf("\033[H");
 		}
-		snprintf(stats_print_buff,sizeof(stats_print_buff)-1,"buffer: %d ms\nplaying pct: %d\ndecoding pct: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nWAV innited? %s\n\n",
+		snprintf(stats_print_buff,sizeof(stats_print_buff)-1,"Song name: %s\n\nbuffer: %d ms\nplaying pct: %d\ndecoding pct: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nWAV innited? %s\n\n",
+					song_name_global,
 					stats_time_ms,
 					stats_pct_full_playing,
 					stats_pct_full_decoding,
@@ -434,13 +428,16 @@ static void* input_thread_func(void* args){
 	tid_input=gettid_here();
 	set_this_thread_name(tid_input, input_thread_name);
 	print_log_string("Thread de input alcançado!\n");
+
 	while(innited){
 		memset(input_buff,0,sizeof(input_buff)-1);
 		if(stream_enable_ncurses){
 			input_buff[0]=getchar();
 		}
 		else{
-			scanf("%s",input_buff);
+			int_pair the_pair={3,0};
+			getsome(0,input_buff,2,the_pair);
+			fflush(stdin);
 		}
 		switch(input_buff[0]){
 
@@ -456,14 +453,6 @@ static void* input_thread_func(void* args){
 			case 's':
 				pthread_mutex_lock(&input_mtx);
 				print_log_string("Tentando sair!\n");
-				raise(SIGINT);
-				stop_client_stream();
-				pthread_mutex_unlock(&input_mtx);
-			break;
-			case 3:
-				pthread_mutex_lock(&input_mtx);
-				print_log_string("Tentando sair!\n");
-				raise(SIGINT);
 				stop_client_stream();
 				pthread_mutex_unlock(&input_mtx);
 			break;
@@ -537,16 +526,15 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		printf("Decoder thread (named %s) initialized successfully\n",decode_thread_name);
 	}
 	rx_thread_func(NULL);
-	while(innited&&(playing||decoding)){
-		usleep(S_TO_US(1));
+	while(innited&&!(play_queue_empty&&decode_queue_empty)){
+		usleep(MS_TO_US(100));
 	}
+	stop_client_stream();
 	pthread_mutex_lock(&running_mtx);
 	while(innited){
-
 		pthread_cond_wait(&running_cond,&running_mtx);
 	}
 	pthread_mutex_unlock(&running_mtx);
-	stop_client_stream();
 	if(stream_show_stats){
 		join_client_thread(t_stats,(char*)stats_thread_name);
 	}
@@ -558,11 +546,11 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		join_client_thread(t_dec,(char*)decode_thread_name);
 	}
 	if(play){
-#if EMSTREAM_ON_TERMUX
+	#if EMSTREAM_ON_TERMUX
 		join_client_thread(t_play,(char*)play_thread_name);
-#else
+	#else
 		join_client_thread_with_timeout(t_play,(char*)play_thread_name);
-#endif
+	#endif
 	}
 	perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
 	if(!is_wav_compat_mode()){
@@ -585,7 +573,6 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 
 void exit_emergency_func_stream(void){
 
-	raise(SIGINT);
 	stop_client_stream();
 }
 
