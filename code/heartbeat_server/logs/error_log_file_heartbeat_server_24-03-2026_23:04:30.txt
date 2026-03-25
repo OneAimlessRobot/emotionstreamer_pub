@@ -1,0 +1,2 @@
+Erro a inicializar address de slave em heartbeat server!!!
+: Invalid argument

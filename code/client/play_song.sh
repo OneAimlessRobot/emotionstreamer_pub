@@ -7,22 +7,31 @@ print_help(){
 	echo "(num args supplied: $?)"
 	echo "1- backend"
 	echo "2- expression for song"
-	echo "3- > 0 => multiplas tocadas no caso de multiplos resultados de pesquisa"
+	echo "3- > 1 => multiplas tocadas no caso de multiplos resultados de pesquisa"
+	echo "4- > 1 => escolher inicio"
 }
-
-exit_wait=3
-if [ "$#" -ne 3 ];
-then
-	print_help
-	exit
-fi
+between_track_wait=10
+startup_wait=0
+at_startup=1
 
 song_arr=()
 
 pattern="$2"
 backend="$1"
 playlist="$3"
+choose_start=0
+curr_song_index=0
+count=0
 
+if [ "$#" -lt 3 ];
+then
+	print_help
+	exit
+
+elif [ "$#" -gt 3 ];
+then
+	choose_start="$4"
+fi
 
 
 fill_up_song_dir(){
@@ -37,32 +46,63 @@ fill_up_song_dir(){
 print_song_dir(){
 	for((i=0; i<$count; i++));
 	do
-		echo "${song_arr[$i]}"
+		echo "Musica numero $i = ${song_arr[$i]}"
 	done
 }
-exit_prompt(){
+
+song_choice_prompt(){
+	timeout_song_prompt="$1"
+	chosen_index=0
+	print_song_dir
+	startup_sequence "Choose your option in..:" "$timeout_song_prompt"&
+	proc_pid="$!"
+	read -t "$timeout_song_prompt" chosen_index
+	result_of_read="$?"
+	kill -TERM "$proc_pid"
+
+	curr_song_index=$chosen_index
+	if [ $at_startup -eq 0 ]
+	then
+		((curr_song_index--))
+	fi
+}
+continue_func(){
+
+	echo "Continuing..."
+
+}
+exit_func(){
+
+	echo "Exiting as requested!"
+	exit
+
+}
+pause_prompt(){
 
 	timeout="$1"
 	echo "Do you want to leave?"
-	echo "type anything different from \"0\" to leave"
-	echo "And \"0\" to continue"
-	answer="1"
-	startup_sequence "Choose your option in..:" "$timeout" &
+	echo "type:"
+	echo ""
+	echo "\"c\" -  continue"
+	echo "\"g\" - go to song"
+	echo "\"other\" - leave"
+	answer="c"
+	startup_sequence "Choose your option in..:" "$timeout"&
 	proc_pid="$!"
 	read -t "$timeout" answer
 	result_of_read="$?"
 	kill -TERM "$proc_pid"
 	if [ "$result_of_read" -gt 128 ]
 	then
-		echo "Continuing"
-
-	elif [ "$answer" = "0" ];
+		continue_func
+	elif [ "$answer" = "c" ];
 	then
-		echo "Continuing!"
-
+		continue_func
+	elif [ "$answer" = "g" ];
+	then
+		song_choice_prompt 10
 	else
-		echo "Exiting as requested!"
-		exit
+		exit_func
 	fi
 }
 startup_sequence(){
@@ -79,32 +119,58 @@ startup_sequence(){
 	done
 
 }
+ambiguous_request(){
+
+	echo "Foi devolvido mais de um resultado!! Tenta especializar mais na proxima pesquisa!"
+	echo "Caso pretendas tocar todas em sequencia,"
+	echo "Tenta correr atribuindo \"1\" ao quarto termo argumento a contar do nome do script"
+
+}
+play_song_list(){
+
+
+	if [ $count -gt 1 ]
+	then
+		startup_sequence "These songs shall be played in sequence in..." "${startup_wait}"
+		if [ $choose_start -gt 0 ]
+		then
+			pause_prompt "${between_track_wait}"
+		fi
+	fi
+	at_startup=0
+	for((;$curr_song_index >= 0 && $curr_song_index< $count; curr_song_index++));
+	do
+		echo "Musica \"${song_arr[$curr_song_index]}\" ira ser tocada!"
+		echo "(Numero $curr_song_index)"
+		echo "ira ser tocada!"
+		./emotionstreamer_client.exe play:${backend} ${song_arr[$curr_song_index]}
+		if [ $count -gt 1 ]
+		then
+			pause_prompt "${between_track_wait}"
+		fi
+	done
+
+}
+play_single_song(){
+
+	echo "Musica \"${song_arr[0]}\" ira ser tocada!"
+		./emotionstreamer_client.exe play:${backend} ${song_arr[0]}
+}
 play_wrapper_function(){
 
 	if [ $count -lt 1 ]
 	then
-
 		echo "Não foram devolvidos resultados do servidor para o padrao fornecido!"
 
 	elif [ $playlist -gt 0 ]
 	then
-		startup_sequence "Uma lista de ${count} musicas foi carregada para a memoria e tocadas em sequência em..." 5
+		play_song_list
 
-		for((i=0; i< $count; i++));
-		do
-			echo "Musica \"${song_arr[$i]}\" ira ser tocada!"
-			./emotionstreamer_client.exe play:${backend} ${song_arr[$i]}
-			exit_prompt "${exit_wait}"
-		done
 	elif [ $count -gt 1  ]
 	then
-
-		echo "Foi devolvido mais de um resultado!! Tenta especializar mais na proxima pesquisa!"
-		echo "Caso pretendas tocar todas em sequencia,"
-		echo "Tenta correr atribuindo \"1\" ao quarto termo argumento a contar do nome do script"
+		ambiguous_request
 	else
-		echo "Musica \"${song_arr[0]}\" ira ser tocada!"
-		./emotionstreamer_client.exe play:${backend} ${song_arr[0]}
+		play_song_list
 	fi
 }
 main(){
@@ -113,14 +179,13 @@ main(){
 
 	touch $result_file
 	./emotionstreamer_client.exe peek "${pattern}" > $result_file
-	count=0
 
 	fill_up_song_dir
 	rm -rf $result_file
 
-	print_song_dir
+	echo "Obtivemos $count resultados de uma pesquisa pelo padrão \"${pattern}\""
 
-	echo "Obtivemos $count da pesquisa pelo padrão: \"${pattern}\""
+	print_song_dir
 
 	play_wrapper_function
 

@@ -1,0 +1,177 @@
+port_mapper_timeouts_con: 1s 500000 us
+port_mapper_print_config: 1
+port_mapper_show_splash: 0
+port_mapper_logging: 0
+port_mapper_init_port: 11007
+port_mapper_num_ports: 5000
+port_mapper_use_port_mapper_file: 0
+port_mapper_remove_port_file_on_exit: 1
+Generalized cfg:
+Entry de address <ip>:<port>  192.168.0.100:7777
+Normal cfg:
+Curr dir: /mnt/SUPER_CAVALEIRO/progsBackup/emotionstreamer/code/port_mapper
+O endereço desta socket é:
+
+Endereço: 
+192.168.0.100 Porta: 7777
+Thread de input do port mapper acordou!
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11007
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11008
+Connection accepted!
+Recebemos esta string de request: 'c-can_i_j-...j--_erm--'
+Porta enviada!!! 11008
+conseguimos receber porta do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'hey!_lemme_in!!!!'
+Porta enviadas!!! 9 delas!
+conseguimos enviar portas do port mapper!!!!!!
+String que recebemos: ""thx_FRIENNND!!!!!!!""
+Connection accepted!
+Recebemos esta string de request: 'see_you_lateeer!!!'
+Recebemos estas portas para fechar!!
+8 delas!
+Porta 1: 11010
+Porta 2: 11011
+Porta 3: 11012
+Porta 4: 11013
+Porta 5: 11014
+Porta 6: 11015
+Porta 7: 11016
+Porta 8: 11017
+
+Connection accepted!
+Recebemos esta string de request: 'ok--_okay,_bye!'
+Recebemos esta porta para fechar!!!
+11007
+Saimos do thread de input!
+Saimos do main thread!

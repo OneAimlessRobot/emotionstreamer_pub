@@ -536,8 +536,7 @@ void connection_attempt_circuit(int* socket_fd, void (*quit_handler)(int, void*)
 
                                 fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n\nsocket_fd fd; %d\n",result_con,(*socket_fd));
                         }
-                        quit_handler(SIGINT,ptr);
-			return;
+			continue;
                 }
                 else if(result_con>0){
                         free_attempted_ports(curr_attempts,port_mapper_ent);

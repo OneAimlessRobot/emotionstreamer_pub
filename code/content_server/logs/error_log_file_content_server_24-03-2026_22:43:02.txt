@@ -1,0 +1,6 @@
+Successful connection
+192.168.0.100
+Erro a inicializar address de master em server!!!
+: Invalid argument
+Invalid argument
+Não conectado.
