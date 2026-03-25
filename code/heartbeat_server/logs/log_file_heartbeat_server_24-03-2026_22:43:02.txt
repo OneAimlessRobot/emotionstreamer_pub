@@ -1,4 +1,0 @@
-Curr dir: /mnt/SUPER_CAVALEIRO/progsBackup/emotionstreamer/code/heartbeat_server
-Erro a obter address a partir de hostname!!
-Hostname tendado: |lenasattic.ddns.net|
-Erro: No address associated with hostname
