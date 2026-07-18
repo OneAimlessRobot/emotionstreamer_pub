@@ -2,6 +2,7 @@
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/connection.h"
+#include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../Includes/configs.h"
 #include "../Includes/heart_beat.h"
@@ -64,18 +65,21 @@ void read_values_cfg_hb(void){
                 clean_and_exit();
         }
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"hb_print_config: %hhu",&cfg_hb_print_config);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"hb_show_splash: %hhu",&cfg_hb_show_splash);
 	clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
@@ -83,6 +87,7 @@ void read_values_cfg_hb(void){
         }
         sscanf(curr_line_buff,"hb_server_logging: %hhu",&cfg_hb_server_logging);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
@@ -90,6 +95,7 @@ void read_values_cfg_hb(void){
         }
         sscanf(curr_line_buff,"hb_timeouts_con: %lu %lu",&hb_con_times_pair[0],&hb_con_times_pair[1]);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
@@ -97,6 +103,7 @@ void read_values_cfg_hb(void){
         }
         sscanf(curr_line_buff,"hb_timeouts_data: %lu %lu",&hb_data_times_pair[0],&hb_data_times_pair[1]);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
@@ -104,6 +111,7 @@ void read_values_cfg_hb(void){
         }
         sscanf(curr_line_buff,"hb_timeouts_ack: %lu %lu",&hb_ack_times_pair[0],&hb_ack_times_pair[1]);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
@@ -111,6 +119,7 @@ void read_values_cfg_hb(void){
 	}
 	sscanf(curr_line_buff,"hb_ack_period_us: %lu",&cfg_hb_ack_period_us);
 	clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
@@ -118,6 +127,7 @@ void read_values_cfg_hb(void){
         }
         sscanf(curr_line_buff,"upper_server_ip_address: %s",upper_ip_address_buff);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
@@ -125,12 +135,14 @@ void read_values_cfg_hb(void){
         }
         sscanf(curr_line_buff,"hb_server_name: %s",hb_server_name_buff);
         clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
         }
         sscanf(curr_line_buff,"hb_using_tls: %hu",&will_use_tls);
         clean_buff();
+	skip_config_comments(cfg_fp);
 	if(will_use_tls){
 
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -139,14 +151,16 @@ void read_values_cfg_hb(void){
 	        }
 	        sscanf(curr_line_buff,"hb_auth_cert_file_path: %s",auth_cert_file_path);
 	        clean_buff();
-			if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+		skip_config_comments(cfg_fp);
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	                clean_and_exit();
 	        }
 	        sscanf(curr_line_buff,"hb_host_cert_file_path: %s",host_cert_file_path);
 	        clean_buff();
+		skip_config_comments(cfg_fp);
 
-			if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	                clean_and_exit();
 	        }

@@ -11,8 +11,8 @@ print_help(){
 	echo "4- > 1 => escolher inicio"
 }
 between_track_wait=10
+choose_track_wait=10
 startup_wait=0
-at_startup=1
 
 song_arr=()
 
@@ -60,11 +60,8 @@ song_choice_prompt(){
 	result_of_read="$?"
 	kill -TERM "$proc_pid"
 
-	curr_song_index=$chosen_index
-	if [ $at_startup -eq 0 ]
-	then
-		((curr_song_index--))
-	fi
+	curr_song_index=$(($chosen_index % $count))
+	echo $curr_song_index
 }
 continue_func(){
 
@@ -100,7 +97,7 @@ pause_prompt(){
 		continue_func
 	elif [ "$answer" = "g" ];
 	then
-		song_choice_prompt 10
+		song_choice_prompt "${between_track_wait}"
 	else
 		exit_func
 	fi

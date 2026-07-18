@@ -88,6 +88,7 @@ static void parse_wav_header_into_player_result(chunk_player* player){
 	player->current_result.sample_size=(((int)ceil((((float)player->current_result.bps)/8.0f))));
 	player->current_result.total_bytes_in_chunk=player->chunk_size;
 	print_decoder_frame_result(&player->current_result,1);
+	printf("Wav innited?\n");
 }
 
 static void cleanALSA(chunk_player* player){
@@ -245,7 +246,7 @@ if ((err =snd_pcm_set_params(player->play_stream_alsa,
 					MS_TO_US(cfg_client_alsa_device_latency_if_alsa_ms)) ) < 0 ){
 
 
-		printf("Playback open error: %s\n", snd_strerror(err));
+		printf("Playback open error: %s\nDevice name: %s\n", snd_strerror(err),tmp_dev_string);
  		raise(SIGINT);
 		stop_client_stream();
 		return;

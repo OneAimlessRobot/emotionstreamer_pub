@@ -1,6 +1,7 @@
 #include "../../Includes/preprocessor.h"
 #include "../Includes/sockio.h"
 #include "../Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../Includes/generalized_config.h"
 #include "../Includes/fileshit.h"
 
@@ -40,6 +41,7 @@ void parse_generalized_cfg(void){
                 raise(SIGINT);
         }
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 fclose(cfg_fp);
@@ -47,6 +49,7 @@ void parse_generalized_cfg(void){
         }
         sscanf(curr_line_buff,"port_mapper_timeouts_con: %lu %lu",&port_mapper_times_pair[0],&port_mapper_times_pair[1]);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 raise(SIGINT);
@@ -54,8 +57,7 @@ void parse_generalized_cfg(void){
         }
         sscanf(curr_line_buff,"port_mapper_ip_address: %s",port_mapper_ip_address_buff);
         clean_buff();
-        fclose(cfg_fp);
-
+	fclose(cfg_fp);
 	process_ip_cache_entries();
 
 }

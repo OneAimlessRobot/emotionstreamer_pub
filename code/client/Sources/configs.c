@@ -7,6 +7,7 @@
 #include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../converter_tool/Includes/converter.h"
+#include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
@@ -102,42 +103,49 @@ void read_values_cfg_client(void){
 	}
 
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_print_config: %hhu",&cfg_client_print_config);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_show_splash: %hhu",&cfg_client_show_splash);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 		clean_and_exit();
 
 	}
 	sscanf(curr_line_buff,"client_logging: %hhu",&cfg_client_logging);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"stream_enable_ncurses: %hhu",&stream_enable_ncurses);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"stream_show_stats: %hhu",&stream_show_stats);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"stream_show_frames: %hhu",&stream_show_frames);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
@@ -145,33 +153,39 @@ void read_values_cfg_client(void){
 	sscanf(curr_line_buff,"ui_framerate_fps: %f",&cfg_ui_framerate_fps);
 	cfg_ui_frame_period_us=UI_FRAME_PERIOD_US(cfg_ui_framerate_fps);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"latency_ms: %lu",&cfg_latency_ms);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"decoder_cache_num_chunks: %lu",&cfg_stream_decoder_cache_size_chunks);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"player_cache_num_chunks: %lu",&cfg_stream_player_cache_size_chunks);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"cache_almost_full_pct: %hhu",&cfg_cache_almost_full_pct);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"cache_almost_empty_pct: %hhu",&cfg_cache_almost_empty_pct);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
@@ -179,6 +193,7 @@ void read_values_cfg_client(void){
 	sscanf(curr_line_buff,"show_decoder_queue_length: %lu",&cfg_show_decoder_queue_length);
 	cfg_show_decoder_queue_length=min(cfg_stream_decoder_cache_size_chunks,max(MIN_PRINT_SIZE,cfg_show_decoder_queue_length));
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	clean_and_exit();
@@ -187,6 +202,7 @@ void read_values_cfg_client(void){
 	sscanf(curr_line_buff,"show_player_queue_length: %lu",&cfg_show_player_queue_length);
 	cfg_show_player_queue_length=min(cfg_stream_player_cache_size_chunks,max(MIN_PRINT_SIZE,cfg_show_player_queue_length));
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
@@ -199,66 +215,77 @@ void read_values_cfg_client(void){
 	}
 	sscanf(curr_line_buff,"show_player_queue: %hhu",&stream_show_player_queue);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_chunk_size: %hu",&cfg_client_chunk_size);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_timeouts_con: %lu %lu",&client_con_times_pair[0],&client_con_times_pair[1]);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_timeouts_data: %lu %lu",&client_data_times_pair[0],&client_data_times_pair[1]);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_music_folder_path: %s",client_music_folder_path);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"log_file_name: %s",client_logs_file_name);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_device_name_if_alsa: %s",cfg_client_device_name_if_alsa);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_device_output_if_alsa: %s",cfg_client_device_output_if_alsa);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_alsa_device_latency_if_alsa_ms: %lu",&cfg_client_alsa_device_latency_if_alsa_ms);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_ip_address: %s", server_ip_address_buff);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"client_using_tls: %hu", &will_use_tls);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(will_use_tls){
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
@@ -266,12 +293,14 @@ void read_values_cfg_client(void){
 		}
 		sscanf(curr_line_buff,"client_auth_cert_path: %s", auth_cert_file_path);
 		clean_buff();
+		skip_config_comments(cfg_fp);
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 			clean_and_exit();
 		}
 		sscanf(curr_line_buff,"client_host_cert_path: %s", host_cert_file_path);
 		clean_buff();
+		skip_config_comments(cfg_fp);
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 			clean_and_exit();

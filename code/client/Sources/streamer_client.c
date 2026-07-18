@@ -80,9 +80,9 @@ static atomic_int lost_packet=0,
 		paused=0,
 		ready_2_go=0,
 		is_first_player_chunk=1,
-		stats_pct_full_decoding=0,
+		/*stats_pct_full_decoding=0,*/
 		stats_time_ms=0,
-		stats_pct_full_playing=0,
+		/*stats_pct_full_playing=0,*/
 		decode_queue_empty=0,
 		play_queue_full=0,
 		decode_ret_val=MPG123_NEED_MORE,
@@ -188,28 +188,33 @@ static void* rx_thread_func(void *args){
 	set_this_thread_name(tid_rx, rx_thread_name);
 	while(innited){
 		ready_2_go=1;
+		reading=1;
 		if(!is_wav_compat_mode()){
 			print_log_string("Lets poke the decoder thread!\n");
 			pthread_cond_signal(&decoder_cond);
 			print_log_string("Decoder thread poked!\n");
 		}
 		while(innited){
+			if(paused){
+				break;
+			}
 			rx_result=read_chunk(&stream_struct,client_data_times_pair);
 			if(rx_result<=0){
 				print_string("Thread de reading parado (early)!!!\n");
 				return args;
 			}
+			else{
+
+			}
 			if(!is_wav_compat_mode()){
 				pthread_cond_signal(&decoder_cond);
 			}
 			else if(!is_first_player_chunk){
+
 				pthread_cond_signal(&player_cond);
 			}
 			if(input_enabled){
 				pthread_cond_signal(&input_cond);
-			}
-			if(paused){
-				break;
 			}
 			decode_queue_full=perform_queue_op(is_wav_compat_mode()?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,is_wav_compat_mode()?(q_op){Q_LOOK,Q_IS_FULL}:(q_op){Q_LOOK,Q_IS_FULL});
 			if(decode_queue_full){
@@ -219,9 +224,6 @@ static void* rx_thread_func(void *args){
 					print_log_string("Decoder thread poked!\n");
 				}
 				print_log_string("Breaking loop due to full decoding/playing queue!\n");
-				break;
-			}
-			if(is_first_player_chunk){
 				break;
 			}
 		}
@@ -305,7 +307,7 @@ static void* play_thread_func(void* args){
 		pthread_cond_wait(&player_cond,&player_mtx);
 	}
 	pthread_mutex_unlock(&player_mtx);
-	usleep(cfg_latency_ms*1000);
+	usleep(1000*1000);
 	tid_play=gettid_here();
 	set_this_thread_name(tid_play, play_thread_name);
 	print_log_string("Thread de play alcançado!\n");
@@ -372,10 +374,6 @@ static void* show_stats(void* args){
 	        memset(stats_print_buff,0,sizeof(stats_print_buff)-1);
 	        stats_start = clock();
 		stats_time_ms=perform_queue_op(stream_struct.player_que,NULL,&stats_result_struct,(q_op){Q_GET_TIME,Q_LOOK_NA});
-		stats_pct_full_playing=perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
-		if(!is_wav_compat_mode()){
-			stats_pct_full_decoding=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_GET_PCT});
-		}
 		if(stream_enable_ncurses){
 			clear();
 		}
@@ -386,11 +384,9 @@ static void* show_stats(void* args){
 			}
 			printf("\033[H");
 		}
-		snprintf(stats_print_buff,sizeof(stats_print_buff)-1,"Song name: %s\n\nbuffer: %d ms\nplaying pct: %d\ndecoding pct: %d\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nWAV innited? %s\n\n",
+		snprintf(stats_print_buff,sizeof(stats_print_buff)-1,"Song name: %s\n\nbuffer: %d ms\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nWAV innited? %s\n\n",
 					song_name_global,
 					stats_time_ms,
-					stats_pct_full_playing,
-					stats_pct_full_decoding,
 					reading ? "READING ": "    ",
 					decoding ? "DECODING ": "    ",
 					playing ? "PLAYING ": "    ",

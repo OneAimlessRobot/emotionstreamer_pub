@@ -3,6 +3,7 @@
 #include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
@@ -50,18 +51,21 @@ void read_values_cfg_port_mapper(void){
                 clean_and_exit();
         }
         clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"port_mapper_print_config: %hhu",&cfg_port_mapper_print_config);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"port_mapper_show_splash: %hhu",&cfg_port_mapper_show_splash);
 	clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 
@@ -69,6 +73,7 @@ void read_values_cfg_port_mapper(void){
         }
         sscanf(curr_line_buff,"port_mapper_logging: %hhu",&cfg_port_mapper_logging);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 
@@ -76,6 +81,7 @@ void read_values_cfg_port_mapper(void){
         }
         sscanf(curr_line_buff,"port_mapper_init_port: %hu",&cfg_init_port);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 
@@ -83,6 +89,7 @@ void read_values_cfg_port_mapper(void){
         }
         sscanf(curr_line_buff,"port_mapper_num_ports: %hu",&cfg_num_ports);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 
@@ -90,6 +97,7 @@ void read_values_cfg_port_mapper(void){
         }
         sscanf(curr_line_buff,"port_mapper_use_port_mapper_file: %hhu",&cfg_port_mapper_use_port_mapper_file);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 

@@ -1,6 +1,7 @@
 #include "../../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
+#include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
@@ -54,18 +55,21 @@ void read_values_cfg_browser(void){
                 clean_and_exit();
         }
         clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"browser_print_config: %hhu",&cfg_browser_print_config);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"browser_show_splash: %hhu",&cfg_browser_show_splash);
 	clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 
@@ -73,6 +77,7 @@ void read_values_cfg_browser(void){
         }
         sscanf(curr_line_buff,"browser_logging: %hhu",&cfg_server_browser_logging);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 
@@ -80,6 +85,7 @@ void read_values_cfg_browser(void){
         }
         sscanf(curr_line_buff,"browser_timeouts_con: %lu %lu",&browser_con_times_pair[0],&browser_con_times_pair[1]);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 
@@ -87,12 +93,14 @@ void read_values_cfg_browser(void){
         }
         sscanf(curr_line_buff,"browser_timeouts_data: %lu %lu",&browser_data_times_pair[0],&browser_data_times_pair[1]);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
         }
         sscanf(curr_line_buff,"browser_using_tls: %hu",&will_use_tls);
         clean_buff();
+	skip_config_comments(cfg_fp);
 	if(will_use_tls){
 
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -101,14 +109,15 @@ void read_values_cfg_browser(void){
 	        }
 	        sscanf(curr_line_buff,"browser_auth_cert_file_path: %s",auth_cert_file_path);
 	        clean_buff();
-			if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+		skip_config_comments(cfg_fp);
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	                clean_and_exit();
 	        }
 	        sscanf(curr_line_buff,"browser_host_cert_file_path: %s",host_cert_file_path);
 	        clean_buff();
-
-			if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+		skip_config_comments(cfg_fp);
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	                clean_and_exit();
 	        }

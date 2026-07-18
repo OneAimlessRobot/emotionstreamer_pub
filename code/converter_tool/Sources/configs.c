@@ -1,6 +1,7 @@
 #include "../../Includes/preprocessor.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/connection.h"
 #include "../Includes/configs.h"
@@ -42,13 +43,16 @@ void read_values_cfg_converter(void){
 		clean_and_exit();
         }
         clean_buff();
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+        skip_config_comments(cfg_fp);
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
 
         }
         sscanf(curr_line_buff,"input_dir: %s",converter_in_dir);
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+        clean_buff();
+        skip_config_comments(cfg_fp);
+	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
 

@@ -3,6 +3,7 @@
 #include "../../extra_funcs/Includes/sockio.h"
 #include "../../converter_tool/Includes/converter.h"
 #include "../../extra_funcs/Includes/streamer_const.h"
+#include "../../extra_funcs/Includes/auxfuncs.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include "../../extra_funcs/Includes/generalized_config.h"
 #include "../../extra_funcs/Includes/fileshit.h"
@@ -188,24 +189,28 @@ void read_values_cfg_server(void){
 		clean_and_exit();
 	}
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_print_config: %hhu",&cfg_server_print_config);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_show_splash: %hhu",&cfg_server_show_splash);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_logging: %hhu",&cfg_server_logging);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
@@ -213,67 +218,77 @@ void read_values_cfg_server(void){
 	sscanf(curr_line_buff,"server_chunk_size: %lu",&server_chunk_size);
 	server_chunk_size=max(0,min(MAX_MP3_STREAM_CHUNK_BUFF_SIZE,server_chunk_size));
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
  	}
 	sscanf(curr_line_buff,"server_timeouts_con: %lu %lu",&server_con_times_pair[0],&server_con_times_pair[1]);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
  	}
 	sscanf(curr_line_buff,"server_timeouts_data: %lu %lu",&server_data_times_pair[0],&server_data_times_pair[1]);
 	clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
  	}
 	sscanf(curr_line_buff,"server_timeouts_ack: %lu %lu",&server_ack_times_pair[0],&server_ack_times_pair[1]);
 	clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
         }
         sscanf(curr_line_buff,"server_ack_period_us: %lu",&cfg_server_ack_period_us);
         clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
  	}
 	sscanf(curr_line_buff,"server_timeouts_drop_chunks: %lu %lu",&server_drop_chunks_times_pair[0],&server_drop_chunks_times_pair[1]);
 	clean_buff();
-
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_music_folder_path: %s",server_music_folder_path);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	        clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_music_quarantine_folder_path: %s",server_music_quarantine_folder_path);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	        clean_and_exit();
 	}
 	sscanf(curr_line_buff,"server_working_extension: %s",server_working_extension);
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
         }
         sscanf(curr_line_buff,"upper_server_ip_address: %s",upper_ip_address_buff);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
         }
         sscanf(curr_line_buff,"server_is_auto_mode: %u",&is_auto_mode);
         clean_buff();
+	skip_config_comments(cfg_fp);
         if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
@@ -281,40 +296,45 @@ void read_values_cfg_server(void){
         sscanf(curr_line_buff,"rotation_filepath_if_auto: %s",server_auto_mode_rotation_filename);
 	prepare_nightmare_blunt_rotation();
 	clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
         }
         sscanf(curr_line_buff,"server_name: %s",server_name_buff);
         clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
         }
         sscanf(curr_line_buff,"server_is_slave_mode: %hhu",&cfg_server_slave_mode);
         clean_buff();
+	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
         }
         sscanf(curr_line_buff,"server_using_tls: %hu",&will_use_tls);
         clean_buff();
+	skip_config_comments(cfg_fp);
 	if(will_use_tls){
 
-			if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	                clean_and_exit();
 	        }
 	        sscanf(curr_line_buff,"server_auth_cert_file_path: %s",auth_cert_file_path);
 	        clean_buff();
-			if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+		skip_config_comments(cfg_fp);
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	                clean_and_exit();
 	        }
 	        sscanf(curr_line_buff,"server_host_cert_file_path: %s",host_cert_file_path);
 	        clean_buff();
-
-			if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+		skip_config_comments(cfg_fp);
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	                clean_and_exit();
 	        }

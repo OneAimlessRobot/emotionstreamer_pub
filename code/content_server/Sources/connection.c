@@ -152,19 +152,21 @@ void con_go(int sockfd_tcp){
 				cleanup();
 			}
 			else{
-				if(!is_wav_mode&&(recvd_type==PLAY)){
-			 		printf("We are NOT in WAV mode bruuuhhhhh\n");
-					char fp_boundary_path[PATHSIZE*10]={0};
-					snprintf(fp_boundary_path,sizeof(fp_boundary_path)-1,"%s%s",file_path,BOUNDARY_FILE_EXT);
-					if((fp_boundary=open_file(fp_boundary_path))<0){
-						perror("Could not open boundary file!!!\n");
-						cleanup();
+				if(recvd_type==PLAY){
+					if(!is_wav_mode){
+				 		printf("We are NOT in WAV mode bruuuhhhhh\n");
+						char fp_boundary_path[PATHSIZE*10]={0};
+						snprintf(fp_boundary_path,sizeof(fp_boundary_path)-1,"%s%s",file_path,BOUNDARY_FILE_EXT);
+						if((fp_boundary=open_file(fp_boundary_path))<0){
+							perror("Could not open boundary file!!!\n");
+							cleanup();
+						}
+						printf("sucessfully opened boundary file at %s\n",fp_boundary_path);
 					}
-					printf("sucessfully opened boundary file at %s\n",fp_boundary_path);
-				}
-				else{
+					else{
 
-					printf("We are in wav mode! getting read of header at the start!\n");
+						printf("We are in wav mode!\n");
+					}
 				}
 				printf("A file path é: %s\n",file_path);
 				send_download_sizes(fp,file_path,file_info);
