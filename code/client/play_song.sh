@@ -10,7 +10,7 @@ print_help(){
 	echo "3- > 1 => multiplas tocadas no caso de multiplos resultados de pesquisa"
 	echo "4- > 1 => escolher inicio"
 }
-between_track_wait=10
+between_track_wait=3
 choose_track_wait=100
 startup_wait=0
 
@@ -151,6 +151,8 @@ play_song_list(){
 		if [ $count -gt 1 ]
 		then
 			pause_prompt "${between_track_wait}"
+		else
+			break;
 		fi
 	done
 
