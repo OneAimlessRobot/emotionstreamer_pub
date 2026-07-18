@@ -11,11 +11,11 @@ print_help(){
 	echo "4- > 1 => escolher inicio"
 }
 between_track_wait=10
-choose_track_wait=10
+choose_track_wait=100
 startup_wait=0
 
 song_arr=()
-
+at_startup=1
 pattern="$2"
 backend="$1"
 playlist="$3"
@@ -59,14 +59,21 @@ song_choice_prompt(){
 	read -t "$timeout_song_prompt" chosen_index
 	result_of_read="$?"
 	kill -TERM "$proc_pid"
-
-	curr_song_index=$(($chosen_index % $count))
+	if [ "$result_of_read" -gt 128 ]
+	then
+		continue_func
+	else
+		curr_song_index=$(($chosen_index % $count))
+	fi
 	echo $curr_song_index
 }
 continue_func(){
 
 	echo "Continuing..."
-
+	if [ $at_startup -eq 0 ]
+	then
+		curr_song_index=$(($curr_song_index + 1))
+	fi
 }
 exit_func(){
 
@@ -97,7 +104,7 @@ pause_prompt(){
 		continue_func
 	elif [ "$answer" = "g" ];
 	then
-		song_choice_prompt "${between_track_wait}"
+		song_choice_prompt "${choose_track_wait}"
 	else
 		exit_func
 	fi
@@ -111,7 +118,7 @@ startup_sequence(){
 
 	for(( i=$countdown;i>0 ; i--));
 	do
-		echo "$i ..."
+		#echo "$i ..."
 		sleep 1
 	done
 
@@ -135,7 +142,7 @@ play_song_list(){
 		fi
 	fi
 	at_startup=0
-	for((;$curr_song_index >= 0 && $curr_song_index< $count; curr_song_index++));
+	for((;$curr_song_index >= 0 && $curr_song_index< $count; ));
 	do
 		echo "Musica \"${song_arr[$curr_song_index]}\" ira ser tocada!"
 		echo "(Numero $curr_song_index)"
