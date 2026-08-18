@@ -9,9 +9,11 @@
 #include "../Includes/load_html.h"
 #include <sys/wait.h>
 
+#define tmpOne "%s/.emotionstreamer_dir_find_results.tmp%lx.html"
+#define tmpTwo "%s/.emotionstreamer_dir_find_results.tmp1%lx.html"
 
 static char* close_keyword = "end_of_contents;";
-static char* tmpOne=".tmp.html",* tmpTwo=".tmp1.html";
+
 
 static char tmpDir[PATHSIZE*2]={0},tmpDir2[PATHSIZE*2]={0},currSearchedDir[PATHSIZE*2]={0};
 
@@ -146,8 +148,8 @@ char *get_file_extension(const char *path) {
 char* generateDirListing(char* pattern){
 	logging=1;
 	logstream=stderr;
-        snprintf(tmpDir,PATHSIZE*2-1,"%s%s",curr_dir,tmpOne);
-        snprintf(tmpDir2,PATHSIZE*2-1,"%s%s",curr_dir,tmpTwo);
+        snprintf(tmpDir,PATHSIZE*2-1,tmpOne,server_tmp_dir_path,curr_request_id);
+        snprintf(tmpDir2,PATHSIZE*2-1,tmpTwo,server_tmp_dir_path,curr_request_id);
 	int fd=	open(tmpDir2,O_TRUNC|O_WRONLY|O_CREAT,0777);
 	if(fd<0){
 		if(logging){

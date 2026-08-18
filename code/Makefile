@@ -79,7 +79,7 @@ DEPFLAGS= -MP -MD
 
 #CFLAGS += -fsanitize=thread -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
 #CFLAGS += -fsanitize=address -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
-CFLAGS += -Wall -DPROGRAMPATHAUX="$(CURRDIR)/"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
+CFLAGS += -Wall -DPROGRAMPATHAUX="$(CURRDIR)/" -Wpedantic -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
 
 CFLAGS2 :=  $(CFLAGS) $(SDL_CFLAGS) -O0
 

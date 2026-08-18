@@ -17,6 +17,8 @@
 #include "../Includes/connection.h"
 #include <sys/wait.h>
 
+u_int64_t curr_request_id = 0;
+
 static server_state state;
 static pthread_t hb_tid;
 static pthread_mutex_t hb_mtx=PTHREAD_MUTEX_INITIALIZER;
@@ -102,8 +104,15 @@ static int con_accepting_loop(void){
 				if(sock>=0){
 					char buff[128]={0};
 					snprintf(buff,sizeof(buff)-1,"%d",sock);
-					char* args_module_cmd[]={"./emotionstreamer_content_server.exe","0",buff,NULL};
-					printf("Connection accepted! Args to be passed:\nExec type: %s\nSocket to be passed: %s\n",args_module_cmd[1],args_module_cmd[2]);
+					char buff_request_id[128]={0};
+					snprintf(buff,sizeof(buff)-1,"%d",sock);
+					snprintf(buff_request_id,sizeof(buff_request_id)-1,"%lx",curr_request_id);
+					char* args_module_cmd[]={"./emotionstreamer_content_server.exe","0",buff,buff_request_id,NULL};
+					curr_request_id++;
+					printf("Connection accepted! Args to be passed:\nExec type: %s\nSocket to be passed: %s\nRequest id to be passed: %s\n",
+							args_module_cmd[1],
+							args_module_cmd[2],
+							args_module_cmd[3]);
 					pid=1;
 					child_pid=pid=fork();
 					switch(pid){
@@ -112,7 +121,7 @@ static int con_accepting_loop(void){
 							perror("execvp");
 							break;
 						case -1:
-							perror("fork");
+							perror("execvp");
 							raise(SIGTERM);
 							return 1;
 						default:
@@ -230,6 +239,9 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 		memcpy(&arg_s.data_times_pair,&server_data_times_pair,sizeof(int_pair));
 		memcpy(&arg_s.ack_times_pair,&server_ack_times_pair,sizeof(int_pair));
 		pthread_create(&hb_tid,NULL,slave_thread,(void*)&arg_s);
+	}
+	if(!does_dir_exist_aux(server_tmp_dir_path)){
+		mkdir(server_tmp_dir_path, 0777);
 	}
 
 	int result=con_accepting_loop();

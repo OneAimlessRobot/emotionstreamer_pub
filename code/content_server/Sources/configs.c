@@ -22,6 +22,7 @@ char server_name_buff[PATHSIZE+1]={0};
 ip_cache_entry server_ip_cache_entry={{0},0};
 ip_cache_entry upper_ip_cache_entry={{0},0};
 
+char* server_tmp_dir_path=NULL;
 char server_music_folder_path[PATHSIZE+1]={0};
 char server_music_quarantine_folder_path[PATHSIZE+1]={0};
 char curr_server_quarantine_dir_buff[PATHSIZE+1]={0};
@@ -101,8 +102,8 @@ static void prepare_nightmare_blunt_rotation(void){
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,rotation_file_stream))){
                 	clean_and_exit();
         	}
-        	sscanf(curr_line_buff,"%lu",&(rotation_period.tv_sec));
-		printf("The rotation period will be %lu seconds!\n",(rotation_period.tv_sec));
+        	sscanf(curr_line_buff,"%ld",&(rotation_period.tv_sec));
+		printf("The rotation period will be %ld seconds!\n",(rotation_period.tv_sec));
 	        if(((uint32_t)(rotation_period.tv_sec))<=(server_con_times_pair[0]+1)){
 			fprintf(stderr,"The rotation time is equal or less\nThan the ammount of connection timeout seconds +1!\n(which is: %lu +1)!\nIllegal value: Exiting...\n",server_con_times_pair[0]);
 			clean_and_exit();
@@ -315,7 +316,7 @@ void read_values_cfg_server(void){
 
                 clean_and_exit();
         }
-        sscanf(curr_line_buff,"server_using_tls: %hu",&will_use_tls);
+	sscanf(curr_line_buff,"server_using_tls: %hu",&will_use_tls);
         clean_buff();
 	skip_config_comments(cfg_fp);
 	if(will_use_tls){
@@ -349,7 +350,14 @@ void read_values_cfg_server(void){
 	host_cert_file_path[sizeof(host_cert_file_path)-1]=0;
 	host_pkey_file_path[sizeof(host_pkey_file_path)-1]=0;
 	process_ip_cache_entries();
-
+	server_tmp_dir_path = getenv("server_tmp_dir_path");
+	if(!server_tmp_dir_path){
+		printf("the value from the server_tmp_dir_path environment variable could not be obtained!\n"
+				"Please execute the server\n"
+				"Using \"server_start.sh\"\n"
+				"exiting...\n");
+		clean_and_exit();
+	}
 
 }
 
@@ -424,6 +432,8 @@ void print_values_cfg_server(int fd){
         dprintf(fd,"server_name: %s\n",server_name_buff);
 
         dprintf(fd,"server_is_slave_mode: %hhu\n",cfg_server_slave_mode);
+
+        dprintf(fd,"server_tmp_dir_path: %s\n",server_tmp_dir_path);
 
         dprintf(fd,"server_using_tls: %hu\n",will_use_tls);
 

@@ -33,10 +33,10 @@ void print_sock_addr(int socket){
 }
 int init_addr(struct sockaddr_in* addr, char* hostname_str,uint16_t port){
 
-        addr->sin_family=AF_INET;
+    addr->sin_family=AF_INET;
 	struct addrinfo *addr_info_struct=NULL;
 	int error=0;
-        if((error=getaddrinfo(hostname_str, NULL, NULL, &addr_info_struct))){
+    if((error=getaddrinfo(hostname_str, NULL, NULL, &addr_info_struct))){
 		if(logging){
 			printf("Erro a obter address a partir de hostname!!\nHostname tendado: |%s|\nErro: %s\n",hostname_str?hostname_str:"(null)",gai_strerror(error));
 		}

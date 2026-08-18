@@ -1,5 +1,6 @@
 #include "../../Includes/preprocessor.h"
 #include "../Includes/auxfuncs.h"
+#include <dirent.h>
 
 void print_out_logo(void){
 	FILE* logo_fp=NULL;
@@ -59,6 +60,17 @@ int acess_var_mtx(pthread_mutex_t* mtx,int* var,int value_if_change,var_op op){
 
 
 }
+
+int does_dir_exist_aux(char* path){
+
+	DIR* directory=opendir(path);
+	if(directory){
+		closedir(directory);
+	}
+	errno=0;
+	return (directory!=NULL);
+}
+
 uint16_t acess_var_mtx_uint16(pthread_mutex_t* mtx,uint16_t* var,uint16_t value_if_change,var_op op){
 
 
@@ -141,7 +153,7 @@ int max(int first,int second){
 
 }
 void print_addr_aux(char* prompt,struct sockaddr_in* addr){
-         printf("%s\nEndereço: \n%s Porta: %u\n",prompt,inet_ntoa(addr->sin_addr),ntohs(addr->sin_port));
+	printf("%s\nEndereço: \n%s Porta: %u\n",prompt,inet_ntoa(addr->sin_addr),ntohs(addr->sin_port));
 
 }
 void snprint_addr_aux(char* dst,uint16_t* port,uint32_t size,struct sockaddr_in* addr){
@@ -283,19 +295,7 @@ void skip_config_comments(FILE* fp){
 	ungetc(curr_char,fp);
 
 	if(curr_char==';'){
-	//
-		/*result=fgets(buff,strlen(COMMENT_STRING)+1,fp);
-		buff[strlen(COMMENT_STRING)]=0;
-		if(!feof(fp)&&strings_are_equal(buff,COMMENT_STRING)){
-			printf("\nComment string: %s\nString lida: '%s'\n",COMMENT_STRING,buff);
-			//printf("\nComment string: %s\n",COMMENT_STRING);
-			for(size_t i=strlen(COMMENT_STRING);i>0;i--){
-				ungetc(buff[i-1],fp);
-			}
-			while(((curr_char=fgetc(fp))!='\n')&&curr_char!=EOF);
-			ungetc(curr_char,fp);
-
-		}*/
+	
 		if((curr_char=fgetc(fp))!=EOF){
 			ungetc(curr_char,fp);
 			while(((curr_char=fgetc(fp))!='\n')&&curr_char!=EOF);

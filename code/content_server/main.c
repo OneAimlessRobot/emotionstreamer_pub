@@ -13,7 +13,7 @@ static int this_process_type=0;
 int main(int argc, char* argv[]){
 
 	printf("We got %d args at startup!\n",argc);
-	if(argc>=4 || argc <= 0){
+	if(argc>=5 || argc <= 0){
 		printf("Wrong number of args! Exiting...\n");
 		return -1;
 
@@ -49,9 +49,15 @@ int main(int argc, char* argv[]){
 				printf("Filedescriptor was not given! Exiting...\n");
 				return 1;
 			}
+			else if(argc<=3){
+				printf("request_id was not given! Exiting...\n");
+				return 1;
+			}
 			else{
 				sockd = atoi(argv[2]);
+				curr_request_id = strtoull(argv[3], NULL, 16);
 				printf("Filedescriptor was given! The number is: %d\n",sockd);
+				printf("Request id was given! The id is: %lx\n",curr_request_id);
 			}
 			memset(curr_server_quarantine_dir_buff,0,PATHSIZE+1);
 			getcwd(curr_server_quarantine_dir_buff,PATHSIZE);
