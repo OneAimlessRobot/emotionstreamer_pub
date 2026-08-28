@@ -4,7 +4,7 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="PES_GAMES_UEFA_CHAMPIONS_LEAGUE_THEME_SONGS/"
+song_subdirectory="adult_issues/"
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0

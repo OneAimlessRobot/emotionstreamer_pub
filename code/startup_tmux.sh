@@ -38,23 +38,23 @@ pushd "${directory}"
 
 tmux new-session -d -s "${session_name}"
 
-start_another_proc_func "bash -lc 'cd \"./port_mapper\" && ./emotionstreamer_port_mapper.exe >./tmux_logs/log_file_port_mapper_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./tmux_logs/error_log_file_port_mapper_$(date +%d-%m-%Y_%H:%M:%S).txt  ; exec bash'"
+start_another_proc_func "bash -lc 'cd \"./port_mapper\" ; ./emotionstreamer_port_mapper.exe >./tmux_logs/log_file_port_mapper_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./tmux_logs/error_log_file_port_mapper_$(date +%d-%m-%Y_%H:%M:%S).txt  ; exec bash'"
 
-start_another_proc_func "bash -lc 'cd \"./master_server\" && ./emotionstreamer_master_server.exe >./tmux_logs/log_file_master_server_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./tmux_logs/error_log_file_master_server_$(date +%d-%m-%Y_%H:%M:%S).txt  ; exec bash'"
+#start_another_proc_func "bash -lc 'cd \"./master_server\" ; ./emotionstreamer_master_server.exe >./tmux_logs/log_file_master_server_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./tmux_logs/error_log_file_master_server_$(date +%d-%m-%Y_%H:%M:%S).txt  ; exec bash'"
 
-start_another_proc_func "bash -lc 'cd \"./heartbeat_server\" && ./emotionstreamer_heartbeat_server.exe >./tmux_logs/log_file_heartbeat_server_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./tmux_logs/error_log_file_heartbeat_server_$(date +%d-%m-%Y_%H:%M:%S).txt  ; exec bash'"
+#start_another_proc_func "bash -lc 'cd \"./heartbeat_server\" ; ./emotionstreamer_heartbeat_server.exe >./tmux_logs/log_file_heartbeat_server_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./tmux_logs/error_log_file_heartbeat_server_$(date +%d-%m-%Y_%H:%M:%S).txt  ; exec bash'"
 
-start_another_proc_func "bash -lc 'cd \"./content_server\" && bash start_content_server.sh >./tmux_logs/log_file_content_server_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./tmux_logs/error_log_file_content_server_$(date +%d-%m-%Y_%H:%M:%S).txt  ; exec bash'"
+#start_another_proc_func "bash -lc 'cd \"./content_server\" ; bash start_content_server.sh >./tmux_logs/log_file_content_server_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./tmux_logs/error_log_file_content_server_$(date +%d-%m-%Y_%H:%M:%S).txt  ; exec bash'"
 
 start_another_proc_func "bash -lc 'cd \"./client\"; exec bash'"
 
 start_another_proc_func "bash -lc 'cd \"./server_browser\"; exec bash'"
 
-start_another_proc_func "bash -lc 'bash ./edit_configs.sh; exec bash'"
+#start_another_proc_func "bash -lc 'bash ./edit_configs.sh; exec bash'"
 
-start_another_proc_func "bash -lc 'cd \"./converter_tool\" ; exec bash'"
+#start_another_proc_func "bash -lc 'cd \"./converter_tool\" ; exec bash'"
 
-sleep $(echo "${sleep_time}*${sleep_time_mult_attach_cmd_proc}" | bc) && tmux attach -t "${session_name}"
+sleep $(echo "${sleep_time}*${sleep_time_mult_attach_cmd_proc}" | bc) ; tmux attach -t "${session_name}"
 
 cat "${termux_tmp_pid_file}"
 

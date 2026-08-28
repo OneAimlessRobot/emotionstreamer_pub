@@ -401,7 +401,7 @@ int readalltofd(int sock,int fd,size_t size,int_pair times,uint8_t is_ssl,SSL* c
 					}
 				}
 			}
-	        }
+		}
 
 	}
 	if(!(total-size)){
