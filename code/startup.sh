@@ -1,31 +1,21 @@
 #!/bin/bash
-
 sleep_time=0.5
 
-directory=$(pwd)
+sleep_time_mult_attach_cmd_proc=0.5
 
-tmp_pid_file=".tmp_pids"
+curr_term_started=1
 
-term_exec_string=""
-
-term_exec_string_case_wayland="wayst -e bash -c"
-
-term_exec_string_case_X11="xterm -e"
+session_name="my_stuff"
 
 
+directory="$(pwd)"
 
-if [ -z "${DISPLAY}"  ];
-then
-	term_exec_string="${term_exec_string_case_wayland}"
-else
-	term_exec_string="${term_exec_string_case_X11}"
-fi
+
 
 start_another_proc_func_inner(){
 
-
-	echo "$BASHPID" >> "${tmp_pid_file}"
-	${term_exec_string} "$1"
+	tmux new-window -t "${session_name}":"${curr_term_started}" "$1"
+	curr_term_started=$(("${curr_term_started}"+1))
 
 }
 
@@ -33,18 +23,13 @@ start_another_proc_func(){
 
 	sleep "${sleep_time}"
 
-	start_another_proc_func_inner "$1"&
+	start_another_proc_func_inner "$1"
 
 }
-if [ -f "${termux_tmp_pid_file}"  ]
-then
-	chmod a+rwx "${tmp_pid_file}"
-fi
-
 
 pushd "${directory}"
 
-
+tmux new-session -d -s "${session_name}"
 
 start_another_proc_func "pushd $directory ; pushd port_mapper ; ./emotionstreamer_port_mapper.exe >./logs/log_file_port_mapper_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./logs/error_log_file_port_mapper_$(date +%d-%m-%Y_%H:%M:%S).txt ; exec bash"
 
@@ -64,4 +49,4 @@ start_another_proc_func "pushd $directory ; pushd master_server ; bash ./no-ip-s
 
 start_another_proc_func "pushd $directory ; exec bash"
 
-cat "${tmp_pid_file}"
+sleep $(echo "${sleep_time}*${sleep_time_mult_attach_cmd_proc}" | bc) ; tmux attach -t "${session_name}"
