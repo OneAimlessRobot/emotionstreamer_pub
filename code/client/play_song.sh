@@ -75,6 +75,15 @@ continue_func(){
 		curr_song_index=$(($curr_song_index + 1))
 	fi
 }
+repeating_func(){
+
+	if [ $at_startup -eq 0 ]
+	then
+		echo "Take it back!"
+	else
+		echo "It behaves like a continuation!"
+	fi
+}
 exit_func(){
 
 	echo "Exiting as requested!"
@@ -88,6 +97,7 @@ pause_prompt(){
 	echo "type:"
 	echo ""
 	echo "\"c\" -  continue"
+	echo "\"r\" -  repeat last song"
 	echo "\"g\" - go to song"
 	echo "\"other\" - leave"
 	answer="c"
@@ -102,6 +112,9 @@ pause_prompt(){
 	elif [ "$answer" = "c" ];
 	then
 		continue_func
+	elif [ "$answer" = "r" ];
+	then
+		repeating_func
 	elif [ "$answer" = "g" ];
 	then
 		song_choice_prompt "${choose_track_wait}"
