@@ -11,29 +11,37 @@ num_of_songs=0
 
 while IFS= read -r filename;
 do
-	if [ -f "$filename$boundary_extension" ];
+	if [ -f "${filename}${boundary_extension}" ];
 	then
-    		echo "File ${filename} already_compiled! Not adding!!"
-	elif [ -f "$filename" ];
+    		echo "File already_compiled!"
+    		echo "\"${filename}${boundary_extension}\" exists!"
+    		echo "Not adding!!"
+	elif [ -f "${filename}" ];
 	then
 		song_basenames[$num_of_songs]=$(basename "$filename");
 		let num_of_songs=num_of_songs+1;
 		echo $num_of_songs;
 		echo "$filename";
 	fi
-done < <(find "${song_directory}" -type  f -iwholename "*${song_subdirectory}*${expression_to_search}*${mp3_extension}*")
+done < <(find "${song_directory}${song_subdirectory}" -type  f -iwholename "*${expression_to_search}*${mp3_extension}")
 
-for ((i=0;i<num_of_songs;i++));
-do
-	echo ${song_basenames[i]};
+print_func(){
+	for ((i=0;i<num_of_songs;i++));
+	do
+		echo "${song_basenames[i]}";
 
-done
+	done
+}
 
 
+convert_func(){
+	for ((i=0;i<num_of_songs;i++));
+	do
+		./emotionstreamer_converter_tool.exe "${song_subdirectory}${song_basenames[i]}" "${song_subdirectory}${song_basenames[i]}"
+	done
+	echo "Done compiling all the songs!";
+}
 
-for ((i=0;i<num_of_songs;i++));
-do
-    ./emotionstreamer_converter_tool.exe "${song_subdirectory}${song_basenames[i]}" "${song_subdirectory}${song_basenames[i]}"
-done
+print_func
 
-echo "Done compiling all the songs!";
+convert_func
