@@ -113,7 +113,8 @@ void con_go(int sockfd_tcp){
 			memcpy(req_string_buff,server_con_obj.tcp_data,DEF_DATASIZE);
 			memcpy(proto_array,req_string_buff,PROTO_ARR_SIZE);
 			recvd_type=ntohs(proto_array[0]);
-			sscanf((char*)&req_string_buff[sizeof(uint16_t)],"%s",file_name);
+			snprintf(file_name,sizeof(file_name),"%s",(char*)&req_string_buff[sizeof(uint16_t)]);
+			//sscanf(,"%s",file_name);
 			if(recvd_type==PLAY||recvd_type==DOWN){
 				if(is_auto_mode){
 					printf("Musica ignorada! Escolhendo a proxima da rotation!\n");

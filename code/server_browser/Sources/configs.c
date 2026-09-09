@@ -107,22 +107,25 @@ void read_values_cfg_browser(void){
 
 	                clean_and_exit();
 	        }
-	        sscanf(curr_line_buff,"browser_auth_cert_file_path: %s",auth_cert_file_path);
-	        clean_buff();
+	        curr_line_buff[strlen(curr_line_buff)-1]=0;
+		snprintf(auth_cert_file_path,sizeof(auth_cert_file_path),"%s",(char*)&curr_line_buff[strlen("browser_auth_cert_file_path: ")]);
+	       	clean_buff();
 		skip_config_comments(cfg_fp);
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	                clean_and_exit();
 	        }
-	        sscanf(curr_line_buff,"browser_host_cert_file_path: %s",host_cert_file_path);
-	        clean_buff();
+	        curr_line_buff[strlen(curr_line_buff)-1]=0;
+		snprintf(host_cert_file_path,sizeof(host_cert_file_path),"%s",(char*)&curr_line_buff[strlen("browser_host_cert_file_path: ")]);
+	       	clean_buff();
 		skip_config_comments(cfg_fp);
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 	                clean_and_exit();
 	        }
-	        sscanf(curr_line_buff,"browser_host_pkey_file_path: %s",host_pkey_file_path);
-	        clean_buff();
+	        curr_line_buff[strlen(curr_line_buff)-1]=0;
+		snprintf(host_pkey_file_path,sizeof(host_pkey_file_path),"%s",(char*)&curr_line_buff[strlen("browser_host_pkey_file_path: ")]);
+	       	clean_buff();
 	}
 	fclose(cfg_fp);
 	auth_cert_file_path[sizeof(auth_cert_file_path)-1]=0;

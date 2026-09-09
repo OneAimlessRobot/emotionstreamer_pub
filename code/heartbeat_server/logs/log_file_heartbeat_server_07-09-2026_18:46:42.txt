@@ -1,0 +1,28 @@
+Curr dir: /mnt/SUPER_CAVALEIRO/progsBackup/emotionstreamer/code/heartbeat_server
+ip address: 
+Endereço: 
+85.139.81.75 Porta: 11007
+Demos free a um addr info!!!
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Tentando conectar a:
+Endereço: 
+192.168.0.100 Porta: 7777
+(Tentativa 1)
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Address em questão:
+Endereço: 
+192.168.0.100 Porta: 7777
+ip address: 
+Endereço: 
+192.168.0.100 Porta: 7777
+Demos free a um addr info!!!
+Tentando conectar a:
+Endereço: 
+192.168.0.100 Porta: 7777
+(Tentativa 1)

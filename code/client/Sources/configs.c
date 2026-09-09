@@ -241,14 +241,16 @@ void read_values_cfg_client(void){
 
 		clean_and_exit();
 	}
-	sscanf(curr_line_buff,"client_music_folder_path: %s",client_music_folder_path);
-	clean_buff();
+	curr_line_buff[strlen(curr_line_buff)-1]=0;
+	snprintf(client_music_folder_path,sizeof(client_music_folder_path),"%s",(char*)&curr_line_buff[strlen("client_music_folder_path: ")]);
+        clean_buff();
 	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 		clean_and_exit();
 	}
-	sscanf(curr_line_buff,"log_file_name: %s",client_logs_file_name);
+	curr_line_buff[strlen(curr_line_buff)-1]=0;
+	snprintf(client_logs_file_name,sizeof(client_logs_file_name),"%s",(char*)&curr_line_buff[strlen("log_file_name: ")]);
 	clean_buff();
 	skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
@@ -291,21 +293,24 @@ void read_values_cfg_client(void){
 
 			clean_and_exit();
 		}
-		sscanf(curr_line_buff,"client_auth_cert_path: %s", auth_cert_file_path);
+		curr_line_buff[strlen(curr_line_buff)-1]=0;
+		snprintf(auth_cert_file_path,sizeof(auth_cert_file_path),"%s",(char*)&curr_line_buff[strlen("client_auth_cert_path: ")]);
 		clean_buff();
 		skip_config_comments(cfg_fp);
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 			clean_and_exit();
 		}
-		sscanf(curr_line_buff,"client_host_cert_path: %s", host_cert_file_path);
+		curr_line_buff[strlen(curr_line_buff)-1]=0;
+		snprintf(host_cert_file_path,sizeof(host_cert_file_path),"%s",(char*)&curr_line_buff[strlen("client_host_cert_path: ")]);
 		clean_buff();
 		skip_config_comments(cfg_fp);
 		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
 			clean_and_exit();
 		}
-		sscanf(curr_line_buff,"client_host_pkey_path: %s", host_pkey_file_path);
+		curr_line_buff[strlen(curr_line_buff)-1]=0;
+		snprintf(host_pkey_file_path,sizeof(host_pkey_file_path),"%s",(char*)&curr_line_buff[strlen("client_host_pkey_path: ")]);
 		clean_buff();
 	}
 	fclose(cfg_fp);

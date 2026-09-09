@@ -1,0 +1,35 @@
+Successful connection
+192.168.0.100
+Opened database successfully
+Pera pera pera...
+Ahhhhh...
+Done. no more rows available
+Socket operation on non-socket
+Não conectado.
+Successful connection!
+Operation now in progress
+Não conectado.
+Done. no more rows available
+Handshake failed
+: Connection reset by peer
+Handshake failed
+: Success
+Handshake failed
+: Connection reset by peer
+Handshake failed
+: Success
+Success
+Done. no more rows available
+Success
+Successful connection
+192.168.0.100
+Bad file descriptor
+Não conectado.
+Bad file descriptor
+Não conectado.
+Successful connection
+192.168.0.100
+Successful connection
+192.168.0.100
+Done. no more rows available
+Closed database successfully

@@ -4,24 +4,24 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="filthy/"
+song_subdirectory="死んだ僕の彼女 - Hades (The Nine Stages Of Change At The Deceased Remains)/"
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0
 
-for filename in $(ls ${song_directory}${song_subdirectory}*${expression_to_search}*${mp3_extension})
+while IFS= read -r filename;
 do
-	if [ -f $filename$boundary_extension ];
+	if [ -f "$filename$boundary_extension" ];
 	then
     		echo "File ${filename} already_compiled! Not adding!!"
-	elif [ -f $filename ];
+	elif [ -f "$filename" ];
 	then
-		song_basenames[$num_of_songs]=$(basename $filename);
+		song_basenames[$num_of_songs]=$(basename "$filename");
 		let num_of_songs=num_of_songs+1;
 		echo $num_of_songs;
-		echo $filename;
+		echo "$filename";
 	fi
-done
+done < <(find "${song_directory}" -type  f -iwholename "*${song_subdirectory}*${expression_to_search}*${mp3_extension}*")
 
 for ((i=0;i<num_of_songs;i++));
 do

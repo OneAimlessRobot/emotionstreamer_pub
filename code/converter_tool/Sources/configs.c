@@ -49,16 +49,18 @@ void read_values_cfg_converter(void){
                 clean_and_exit();
 
         }
-        sscanf(curr_line_buff,"input_dir: %s",converter_in_dir);
-        clean_buff();
+        curr_line_buff[strlen(curr_line_buff)-1]=0;
+        snprintf(converter_in_dir,sizeof(converter_in_dir),"%s",(char*)&curr_line_buff[strlen("input_dir: ")]);
+	clean_buff();
         skip_config_comments(cfg_fp);
 	if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
 
                 clean_and_exit();
 
         }
-        sscanf(curr_line_buff,"output_dir: %s",converter_out_dir);
-        clean_buff();
+        curr_line_buff[strlen(curr_line_buff)-1]=0;
+        snprintf(converter_out_dir,sizeof(converter_out_dir),"%s",(char*)&curr_line_buff[strlen("output_dir: ")]);
+	clean_buff();
  	fclose(cfg_fp);
 }
 

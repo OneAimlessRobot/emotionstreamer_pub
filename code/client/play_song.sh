@@ -160,7 +160,7 @@ play_song_list(){
 		echo "Musica \"${song_arr[$curr_song_index]}\" ira ser tocada!"
 		echo "(Numero $curr_song_index)"
 		echo "ira ser tocada!"
-		./emotionstreamer_client.exe play:${backend} ${song_arr[$curr_song_index]}
+		./emotionstreamer_client.exe "play:${backend}" "${song_arr[$curr_song_index]}"
 		if [ $count -gt 1 ]
 		then
 			pause_prompt "${between_track_wait}"
@@ -173,7 +173,7 @@ play_song_list(){
 play_single_song(){
 
 	echo "Musica \"${song_arr[0]}\" ira ser tocada!"
-		./emotionstreamer_client.exe play:${backend} ${song_arr[0]}
+		./emotionstreamer_client.exe "play:${backend}" "${song_arr[0]}"
 }
 play_wrapper_function(){
 

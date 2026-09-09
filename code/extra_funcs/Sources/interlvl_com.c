@@ -420,7 +420,8 @@ void* acceptor_func(void* args){
 				case LOG:
 					getpeername(con.sockfd_tcp, (struct sockaddr*)&their_addr, &socklenvar[1]);
 					module_type_to_string((module_type)ntohs(proto_array[1]),type_buff);
-					sscanf((char*)&req_buff[PROTO_ARR_SIZE],"%s %s",extension_buff,name_buff);
+					sscanf((char*)&req_buff[PROTO_ARR_SIZE],"%s",extension_buff);
+					snprintf(name_buff,sizeof(name_buff),"%s",(char*)&req_buff[PROTO_ARR_SIZE+strnlen(extension_buff,4)]);
 					result=con_send(&con,arg_a->con_times_pair);
 					clear_con_data(&con);
 					if(logging){
