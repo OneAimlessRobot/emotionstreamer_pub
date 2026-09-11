@@ -4,7 +4,7 @@
 #include "../Includes/client_aux_funcs.h"
 
 
-pid_t gettid_here()
+pid_t gettid_here(void)
 {
     return syscall(SYS_gettid);
 }

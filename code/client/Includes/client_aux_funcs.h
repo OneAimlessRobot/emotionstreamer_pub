@@ -1,9 +1,9 @@
 #ifndef CLIENT_AUX_FUNCS_H
 #define CLIENT_AUX_FUNCS_H
 
-typedef typeof(void *(void *)) thread_func;
+typedef void* (*thread_func)(void*);
 
-pid_t gettid_here();
+pid_t gettid_here(void);
 
 int set_this_thread_name(pid_t tid,const char * name);
 int get_this_thread_name(pid_t tid,char name_storing_buff[DEF_DATASIZE]);

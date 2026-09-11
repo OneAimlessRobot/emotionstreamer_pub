@@ -2,8 +2,8 @@
 #define INTERLVL_COM_H
 
 typedef enum{SERVER=40,HB_SERVER=60,M_SERVER=80,TYPE_NA=100}module_type;
-typedef typeof(void (int))  *quit_func;
-typedef typeof(void (void))  *cleanup_func;
+typedef void (*quit_func)(int);
+typedef void (*cleanup_func)(void);
 
 //NULL TERMI8ed
 module_type string_to_module_type(char*str);

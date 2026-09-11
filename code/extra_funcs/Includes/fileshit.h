@@ -14,7 +14,7 @@ typedef uint16_t port_array[DEF_DATASIZE+1];
 
 extern port_array attempted_port_arr;
 
-typedef typeof(void (void)) *exit_func_t;
+typedef void (*exit_func_t)(void);
 
 extern FILE* logstream;
 

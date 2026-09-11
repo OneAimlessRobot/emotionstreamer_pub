@@ -72,8 +72,8 @@ uint8_t stream_show_decoder_queue=0;
 uint8_t stream_show_player_queue=1;
 uint8_t stream_show_frames=1;
 int16_t is_wav_mode=0;
-int_pair client_data_times_pair=(int_pair){CLIENT_TIMEOUT_DATA_SEC,CLIENT_TIMEOUT_DATA_USEC};
-int_pair client_con_times_pair=(int_pair){CLIENT_TIMEOUT_CON_SEC,CLIENT_TIMEOUT_CON_USEC};
+int_pair client_data_times_pair={CLIENT_TIMEOUT_DATA_SEC,CLIENT_TIMEOUT_DATA_USEC};
+int_pair client_con_times_pair={CLIENT_TIMEOUT_CON_SEC,CLIENT_TIMEOUT_CON_USEC};
 
 static void clean_buff(void){
 

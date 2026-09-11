@@ -29,9 +29,9 @@ ip_cache_entry upper_ip_cache_entry={{0},0},
 
 //EM BYTES E HZ!
 
-int_pair hb_data_times_pair=(int_pair){HB_TIMEOUT_DATA_SEC,HB_TIMEOUT_DATA_USEC};
-int_pair hb_con_times_pair=(int_pair){HB_TIMEOUT_CON_SEC,HB_TIMEOUT_CON_USEC};
-int_pair hb_ack_times_pair=(int_pair){HB_TIMEOUT_ACK_SEC,HB_TIMEOUT_ACK_USEC};
+int_pair hb_data_times_pair={HB_TIMEOUT_DATA_SEC,HB_TIMEOUT_DATA_USEC};
+int_pair hb_con_times_pair={HB_TIMEOUT_CON_SEC,HB_TIMEOUT_CON_USEC};
+int_pair hb_ack_times_pair={HB_TIMEOUT_ACK_SEC,HB_TIMEOUT_ACK_USEC};
 
 uint64_t cfg_hb_ack_period_us=DEF_HB_ACK_PERIOD_US;
 uint8_t cfg_hb_server_logging=0;

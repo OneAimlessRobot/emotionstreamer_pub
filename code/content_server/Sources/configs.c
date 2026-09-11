@@ -47,10 +47,10 @@ struct timeval rotation_period={DEFAULT_ROTATION_PERIOD,0},
 		curr_song_waited_time={0,0};
 //EM BYTES E HZ!
 
-int_pair server_data_times_pair=(int_pair){SERVER_TIMEOUT_DATA_SEC,SERVER_TIMEOUT_DATA_USEC};
-int_pair server_con_times_pair=(int_pair){SERVER_TIMEOUT_CON_SEC,SERVER_TIMEOUT_CON_USEC};
-int_pair server_ack_times_pair=(int_pair){SERVER_TIMEOUT_ACK_SEC,SERVER_TIMEOUT_ACK_USEC};
-int_pair server_drop_chunks_times_pair=(int_pair){SERVER_DROP_CHUNK_TIMEOUT_SEC,SERVER_DROP_CHUNK_TIMEOUT_USEC};
+int_pair server_data_times_pair={SERVER_TIMEOUT_DATA_SEC,SERVER_TIMEOUT_DATA_USEC};
+int_pair server_con_times_pair={SERVER_TIMEOUT_CON_SEC,SERVER_TIMEOUT_CON_USEC};
+int_pair server_ack_times_pair={SERVER_TIMEOUT_ACK_SEC,SERVER_TIMEOUT_ACK_USEC};
+int_pair server_drop_chunks_times_pair={SERVER_DROP_CHUNK_TIMEOUT_SEC,SERVER_DROP_CHUNK_TIMEOUT_USEC};
 
 uint64_t cfg_server_ack_period_us=DEF_SERVER_ACK_PERIOD_US;
 

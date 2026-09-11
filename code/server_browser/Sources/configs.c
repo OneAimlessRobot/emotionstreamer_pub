@@ -17,8 +17,8 @@ static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 ip_cache_entry server_browser_ip_cache_entry={{0},0};
 
 
-int_pair browser_data_times_pair=(int_pair){BROWSER_TIMEOUT_DATA_SEC,BROWSER_TIMEOUT_DATA_USEC};
-int_pair browser_con_times_pair=(int_pair){BROWSER_TIMEOUT_CON_SEC,BROWSER_TIMEOUT_CON_USEC};
+int_pair browser_data_times_pair={BROWSER_TIMEOUT_DATA_SEC,BROWSER_TIMEOUT_DATA_USEC};
+int_pair browser_con_times_pair={BROWSER_TIMEOUT_CON_SEC,BROWSER_TIMEOUT_CON_USEC};
 
 uint8_t	cfg_browser_print_config,
 	cfg_browser_show_splash;

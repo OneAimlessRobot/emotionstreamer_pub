@@ -21,9 +21,9 @@ uint8_t	cfg_master_print_config,
 
 ip_cache_entry master_ip_cache_entry = {{0},0};
 
-int_pair master_data_times_pair=(int_pair){MASTER_TIMEOUT_DATA_SEC,MASTER_TIMEOUT_DATA_USEC};
-int_pair master_con_times_pair=(int_pair){MASTER_TIMEOUT_CON_SEC,MASTER_TIMEOUT_CON_USEC};
-int_pair master_ack_times_pair=(int_pair){MASTER_TIMEOUT_ACK_SEC,MASTER_TIMEOUT_ACK_USEC};
+int_pair master_data_times_pair={MASTER_TIMEOUT_DATA_SEC,MASTER_TIMEOUT_DATA_USEC};
+int_pair master_con_times_pair={MASTER_TIMEOUT_CON_SEC,MASTER_TIMEOUT_CON_USEC};
+int_pair master_ack_times_pair={MASTER_TIMEOUT_ACK_SEC,MASTER_TIMEOUT_ACK_USEC};
 
 uint8_t cfg_master_server_logging=0;
 
