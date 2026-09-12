@@ -21,6 +21,7 @@ backend="$1"
 playlist="$3"
 choose_start=0
 curr_song_index=0
+looping=0
 count=0
 
 if [ "$#" -lt 3 ];
@@ -69,10 +70,15 @@ song_choice_prompt(){
 }
 continue_func(){
 
-	echo "Continuing..."
 	if [ $at_startup -eq 0 ]
 	then
-		curr_song_index=$(($curr_song_index + 1))
+		if [ $looping -eq 0 ]
+		then
+			echo "Continuing..."
+			curr_song_index=$(($curr_song_index + 1))
+		else
+			echo "In looping mode!"
+		fi
 	fi
 }
 repeating_func(){
@@ -82,6 +88,18 @@ repeating_func(){
 		echo "Take it back!"
 	else
 		echo "It behaves like a continuation!"
+	fi
+}
+set_loop_func(){
+
+	if [ $looping -eq 0 ]
+	then
+		looping=1
+		echo "Looping mode enabled!"
+	else
+		looping=0
+		echo "Looping mode disabled!"
+		continue_func
 	fi
 }
 exit_func(){
@@ -98,6 +116,7 @@ pause_prompt(){
 	echo ""
 	echo "\"c\" -  continue"
 	echo "\"r\" -  repeat last song"
+	echo "\"l\" -  toggle loop mode (Automatically repeats last song)"
 	echo "\"g\" - go to song"
 	echo "\"other\" - leave"
 	answer="c"
@@ -108,13 +127,21 @@ pause_prompt(){
 	kill -TERM "$proc_pid"
 	if [ "$result_of_read" -gt 128 ]
 	then
-		continue_func
+		if [ $looping -eq 0 ]
+		then
+			continue_func
+		else
+			repeating_func
+		fi
 	elif [ "$answer" = "c" ];
 	then
 		continue_func
 	elif [ "$answer" = "r" ];
 	then
 		repeating_func
+	elif [ "$answer" = "l" ];
+	then
+		set_loop_func
 	elif [ "$answer" = "g" ];
 	then
 		song_choice_prompt "${choose_track_wait}"
