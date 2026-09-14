@@ -9,6 +9,8 @@
 #include "../Includes/server_db_driving.h"
 #include "../Includes/interlvl_proto.h"
 #include "../Includes/interlvl_com.h"
+#include "../Includes/generalized_config.h"
+
 typedef struct sockaddr_in sockaddr_in_struct;
 
 static void do_indexed_overseer_con_op(int i,overseer_args* arg_s,int is_reply,int reply_result[2]){
@@ -138,6 +140,14 @@ void* slave_thread(void* args){
 
 
 }
+static int init_on_all_ifaces(struct sockaddr_in* sockaddr_buff_local,uint16_t port){
+
+	sockaddr_buff_local->sin_family=AF_INET;
+	sockaddr_buff_local->sin_port= htons(port);
+	sockaddr_buff_local->sin_addr.s_addr = htonl(INADDR_ANY);
+
+	return 1;
+}
 void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper,ip_cache_entry* port_mapper_cache_entry){
 
 
@@ -155,7 +165,12 @@ void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct so
         if(!is_port_mapper){
  		ask_for_port(&port,port_mapper_cache_entry);
 	}
-	if(!port||init_addr(&sockaddr_buff_local,addr,port)){
+
+	if(!port||bind_on_any_if
+				?
+			!init_on_all_ifaces(&sockaddr_buff_local,port)
+				:
+			init_addr(&sockaddr_buff_local,addr,port)){
 		perror("Erro a inicalizar address bind em bootstrapper de listening!!!\n");
 		close(*sockptr);
 		raise(exit_signal);

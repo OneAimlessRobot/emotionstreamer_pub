@@ -4,7 +4,7 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="死んだ僕の彼女 - Hades (The Nine Stages Of Change At The Deceased Remains)/"
+song_subdirectory="test file name with spaces/"
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0
