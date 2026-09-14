@@ -18,6 +18,7 @@
 #include <netdb.h>
 #include <pthread.h>
 #include <string.h>
+#include <ifaddrs.h>
 #include <unistd.h>
 #include <limits.h>
 #include <stdint.h>
@@ -36,6 +37,7 @@
 #include <netinet/in.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <linux/if_link.h>
 
 
 #define CONSTANT_TO_PRINT_TO_CLEAR_SCREEN_WITH_PRINTF "\033[3J\033[H\033[2J"

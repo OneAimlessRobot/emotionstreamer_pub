@@ -36,7 +36,7 @@ int main(int argc, char* argv[]){
 				print_values_generalized_cfg(1);
 				print_values_cfg_server(1);
 			}
-			result=serverInit(&server_ip_cache_entry,&upper_ip_cache_entry);
+			result=serverInit(content_server_ip_address,&upper_ip_cache_entry);
 
 		       if(result){
 

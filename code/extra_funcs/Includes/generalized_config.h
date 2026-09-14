@@ -20,11 +20,15 @@
 #define F_US_TO_MS(x) ((x/1000.0))
 
 
+
 extern int_pair port_mapper_times_pair;
+
 extern ip_cache_entry port_mapper_ip_cache_entry;
+
 extern char port_mapper_ip_address_buff[PATHSIZE+1];
 
 extern uint8_t bind_on_any_if;
+
 //NULL terminated
 void parse_generalized_cfg(void);
 

@@ -109,7 +109,7 @@ void init_browser(char* hostname, char* req,uint16_t port){
 	init_con(&con_obj,con_obj.sockfd_tcp,CLIENT_C,&port_mapper_ip_cache_entry,will_use_tls);
 	connection_attempt_circuit(&con_obj.sockfd_tcp,cleanup_and_send_ports_back,&our_addr,
                                 &hb_server_addr,
-                                       &server_browser_ip_cache_entry,&port_mapper_ip_cache_entry,browser_con_times_pair,NULL);
+                                       &port_mapper_ip_cache_entry,browser_con_times_pair,NULL);
         clear_con_data(&con_obj);
 	interlvl_cmd cmd= str_to_interlvl_cmd_type(req);
 	if(greet(&con_obj,browser_con_times_pair)){

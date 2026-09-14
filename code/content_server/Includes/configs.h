@@ -15,47 +15,58 @@
 
 extern const uint8_t server_display_splash;
 
-extern u_int64_t curr_request_id;
-extern int child_pid;
-extern char server_music_folder_path[PATHSIZE+1];
-extern char server_music_quarantine_folder_path[PATHSIZE+1];
+extern char server_music_folder_path[PATHSIZE+1],
+	server_music_quarantine_folder_path[PATHSIZE+1],
+	* server_tmp_dir_path,
+	server_working_extension[EXTENSION_SIZE],
+	server_name_buff[PATHSIZE+1],
+	curr_server_quarantine_dir_buff[PATHSIZE+1],
+	server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILENAME_LENGTH],
+	server_auto_mode_rotation_filename[CONFIG_READ_LINE_BUFF_SIZE],
+	content_server_ip_address[PATHSIZE+1];
 
-extern char* server_tmp_dir_path;
-extern char server_working_extension[EXTENSION_SIZE];
-extern ip_cache_entry server_ip_cache_entry;
+
 extern ip_cache_entry upper_ip_cache_entry;
-extern char server_name_buff[PATHSIZE+1];
-extern char curr_server_quarantine_dir_buff[PATHSIZE+1];
 
-extern char server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILENAME_LENGTH];
-extern char server_auto_mode_rotation_filename[CONFIG_READ_LINE_BUFF_SIZE];
-
-extern uint8_t cfg_server_slave_mode;
-
-extern unsigned int is_auto_mode,
-		curr_num_songs_rotation,
-		curr_song_index_rotation;
 
 extern struct timeval rotation_period,
                 	curr_song_waited_time;
 
 
+extern int_pair server_data_times_pair,
+	server_con_times_pair,
+	server_ack_times_pair,
+	server_drop_chunks_times_pair;
+
+
+
+/*
+
+	ints
+
+*/
+
+extern unsigned int is_auto_mode,
+		curr_num_songs_rotation,
+		curr_song_index_rotation;
+
+extern int child_pid;
+
+
+
 
 extern uint64_t cfg_server_ack_period_us,
 		server_ack_timeout_lim,
-		server_chunk_size;
+		server_chunk_size,
+		curr_request_id;
 
 extern uint16_t is_wav_mode;
 
 extern uint8_t
 	cfg_server_print_config,
 	cfg_server_show_splash,
-	cfg_server_logging;
-
-extern int_pair server_data_times_pair,
-	server_con_times_pair,
-	server_ack_times_pair,
-	server_drop_chunks_times_pair;
+	cfg_server_logging,
+	cfg_server_slave_mode;
 
 
 void read_values_cfg_server(void);

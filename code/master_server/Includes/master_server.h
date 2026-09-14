@@ -18,7 +18,7 @@ typedef struct master_acceptor{
 
 
 
-void start_master(char* hostname, uint16_t port);
+void start_master(char* this_hostname);
 
 
 

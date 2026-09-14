@@ -164,7 +164,7 @@ static int con_accepting_loop(void){
 
 }
 
-int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
+int serverInit(char* this_hostname,ip_cache_entry* ent_upper){
 
         sa.sa_handler = serverStop;
         sigemptyset(&sa.sa_mask);
@@ -203,8 +203,7 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 	memset(&state,0,sizeof(server_state));
 	state.name=buff;
 	memcpy(&arg_s.slave_port_mapper_ip_cache_entry,&port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
-	memcpy(&arg_s.slave_ip_cache_entry,ent_this,sizeof(ip_cache_entry));
-	init_module_tcp_stuff(&state.server_sock_tcp,ent_this->hostname,ent_this->port,&state.server_tcp_addr,SIGTERM,MAX_CLIENTS_HARD_LIMIT,0,&arg_s.slave_port_mapper_ip_cache_entry);
+	init_module_tcp_stuff(&state.server_sock_tcp,this_hostname,&state.server_tcp_addr,SIGTERM,MAX_CLIENTS_HARD_LIMIT,0,&arg_s.slave_port_mapper_ip_cache_entry);
 	InitializeSSL();
 	if(cfg_server_slave_mode){
 
@@ -224,13 +223,6 @@ int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 		arg_s.extension_buff=extension_buff;
 		if(init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port)){
 			perror("Erro a inicializar address de master em server!!!\n");
-	                raise(SIGINT);
-	                call_sigint();
-			return 1;
-		}
-		if(init_addr(&arg_s.this_addr,ent_this->hostname, ntohs(state.server_tcp_addr.sin_port))){
-
-			perror("Erro a inicializar address de slave em server!!!\n");
 	                raise(SIGINT);
 	                call_sigint();
 			return 1;

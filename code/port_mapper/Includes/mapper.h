@@ -26,7 +26,6 @@ typedef enum port_state{PORT_RESERVED=-1,
 
 typedef struct port_mapper{
 
-	
 	int32_t* port_arr; //its a 32 bit int because it makes using my mtx functions more convenient
 	uint16_t curr_num_ports;
 	int socket;
@@ -35,7 +34,7 @@ typedef struct port_mapper{
 }port_mapper;
 
 
-void port_mapper_init(ip_cache_entry* ent);
+void port_mapper_init(void);
 
 
 #endif

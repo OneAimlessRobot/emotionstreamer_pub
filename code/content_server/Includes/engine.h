@@ -13,7 +13,7 @@ typedef struct server_state{
 
 
 //Strings null terminated
-int serverInit(ip_cache_entry* ent_this,ip_cache_entry* ent_upper);
+int serverInit(char* this_hostname,ip_cache_entry* ent_upper);
 
 
 

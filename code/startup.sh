@@ -31,7 +31,9 @@ pushd "${directory}"
 
 tmux new-session -d -s "${session_name}"
 
-start_another_proc_func "pushd $directory ; pushd port_mapper ; ./emotionstreamer_port_mapper.exe >./logs/log_file_port_mapper_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./logs/error_log_file_port_mapper_$(date +%d-%m-%Y_%H:%M:%S).txt"
+#start_another_proc_func "pushd $directory ; pushd port_mapper ; ./emotionstreamer_port_mapper.exe >./logs/log_file_port_mapper_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./logs/error_log_file_port_mapper_$(date +%d-%m-%Y_%H:%M:%S).txt"
+
+start_another_proc_func "pushd $directory ; pushd port_mapper ; ./emotionstreamer_port_mapper.exe"
 
 #start_another_proc_func "pushd $directory ; pushd master_server ; ./emotionstreamer_master_server.exe >./logs/log_file_master_server_$(date +%d-%m-%Y_%H:%M:%S).txt 2>./logs/error_log_file_master_server_$(date +%d-%m-%Y_%H:%M:%S).txt"
 

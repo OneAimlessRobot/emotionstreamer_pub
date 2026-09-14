@@ -66,7 +66,7 @@ void exit_emergency_func(void){
 	sigint_handler(1);
 
 }
-void start_master(char* hostname, uint16_t port){
+void start_master(char* this_hostname){
 
 	sa.sa_handler = sigint_handler;
 	sigemptyset(&sa.sa_mask);
@@ -97,10 +97,9 @@ void start_master(char* hostname, uint16_t port){
         con_set set={0};
 
 
-
 	memcpy(&arg_a.acceptor_port_mapper_ip_cache_entry,&port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
 
-        init_module_tcp_stuff(&arg_a.accept_sockfd,hostname,port,&arg_a.accept_addr,SIGPIPE,MAX_HB_SERVERS,0,&arg_a.acceptor_port_mapper_ip_cache_entry);
+        init_module_tcp_stuff(&arg_a.accept_sockfd,this_hostname,&arg_a.accept_addr,SIGPIPE,MAX_HB_SERVERS,0,&arg_a.acceptor_port_mapper_ip_cache_entry);
 	InitializeSSL();
 	is_on=1;
         arg_a.is_on=&is_on;

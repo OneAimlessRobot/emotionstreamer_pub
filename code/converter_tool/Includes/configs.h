@@ -5,9 +5,8 @@
 
 extern const uint8_t converter_tool_display_splash;
 
-extern char converter_in_dir[PATHSIZE];
-
-extern char converter_out_dir[PATHSIZE];
+extern char converter_in_dir[PATHSIZE],
+	converter_out_dir[PATHSIZE];
 
 
 void read_values_cfg_converter(void);

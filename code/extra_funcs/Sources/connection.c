@@ -482,71 +482,110 @@ void free_attempted_ports(uint16_t port_that_works,ip_cache_entry*ent){
 void connection_attempt_circuit(int* socket_fd, void (*quit_handler)(int, void*),
 					struct sockaddr_in* src_address,
 					struct sockaddr_in* dst_address,
-					ip_cache_entry* src_ent,
 					ip_cache_entry* port_mapper_ent,
 					int_pair con_times_pair,
 					void* ptr){
 
-        ask_for_ports(port_mapper_ent);
-        int result_con=0;
-	uint16_t curr_attempts=0;
-        uint16_t limit_of_attempts=attempted_port_arr[0];
-        while(curr_attempts<limit_of_attempts){
-                (*socket_fd)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-                if((*socket_fd)<0){
+	struct ifaddrs *ifaddr;
+	int  s;
+	char host[NI_MAXHOST];
 
-                        quit_handler(SIGINT,ptr);
-                	return;
+	if (getifaddrs(&ifaddr) == -1) {
+
+		perror("getifaddrs");
+		quit_handler(SIGINT,ptr);
+	        return;
+
+	}
+	ask_for_ports(port_mapper_ent);
+	uint16_t limit_of_attempts=attempted_port_arr[0];
+	for (struct ifaddrs *ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
+
+		int result_con=0;
+		uint16_t curr_attempts=0;
+
+		if (ifa->ifa_addr == NULL){
+			continue;
 		}
-                set_sock_reuseaddr(socket_fd,1);
-                setNonBlocking(socket_fd);
-                if(!attempted_port_arr[curr_attempts+1]||init_addr(src_address,src_ent->hostname,(attempted_port_arr[curr_attempts+1]))){
-                        if(logging){
-				perror("Não conseguimos inicializar address no client!!!\n");
-                        }
+		if(ifa->ifa_addr->sa_family!=AF_INET){
+			continue;
+		}
+		s = getnameinfo(ifa->ifa_addr,sizeof(struct sockaddr_in),
+				host, NI_MAXHOST,
+		   		NULL,
+				0,
+				NI_NUMERICHOST);
+		if (s != 0) {
+			printf("getnameinfo() failed: %s\n", gai_strerror(s));
+			freeifaddrs(ifaddr);
 			quit_handler(SIGINT,ptr);
 			return;
-                }
-		curr_attempts++;
-		if(!memcmp(src_address,dst_address,sizeof(struct sockaddr_in))){
-			if(logging){
 
-                                fprintf(logstream,"addresses src e dst iguais!\n");
-                        	print_addr_aux("Este é o address:",src_address);
-                        }
-			quit_handler(SIGINT,ptr);
 		}
-		if(bind((*socket_fd),(struct sockaddr *)src_address,socklenvar[1])){
-                        if(logging){
-				perror("Não conseguimos dar bind na socket_fd do client!!!\n");
-                        	print_addr_aux("Este é o address:",src_address);
-                        }
-			quit_handler(SIGINT,ptr);
-                	return;
-		}
-                else{
 
-                        if(logging){
-				print_addr_aux("Bind com sucesso!!!:",src_address);
-                        }
-			setLinger(socket_fd,1,1);
-                }
-                if(!(result_con=tryConnect(socket_fd,con_times_pair,dst_address))){
-                        if(logging){
+	        printf("\t\t trying address: <%s>\n", host);
+	     	while(curr_attempts<limit_of_attempts){
+	                (*socket_fd)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+	                if((*socket_fd)<0){
 
-                                fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n\nsocket_fd fd; %d\n",result_con,(*socket_fd));
-                        }
-			continue;
-                }
-                else if(result_con>0){
-                        free_attempted_ports(curr_attempts,port_mapper_ent);
-                        return;
-                }
-                close((*socket_fd));
-        }
+				freeifaddrs(ifaddr);
+	                        quit_handler(SIGINT,ptr);
+	                	return;
+			}
+	                set_sock_reuseaddr(socket_fd,1);
+	                setNonBlocking(socket_fd);
+	                curr_attempts++;
+			if(!attempted_port_arr[curr_attempts]||init_addr(src_address,host,(attempted_port_arr[curr_attempts]))){
+	                        if(logging){
+					perror("Não conseguimos inicializar address no client!!!\n");
+	                        }
+				close((*socket_fd));
+				continue;
+	                }
+			if(!memcmp(src_address,dst_address,sizeof(struct sockaddr_in))){
+				if(logging){
+
+	                                fprintf(logstream,"addresses src e dst iguais!\n");
+	                        	print_addr_aux("Este é o address:",src_address);
+	                        }
+				close((*socket_fd));
+				continue;
+			}
+                        if(bind((*socket_fd),(struct sockaddr *)src_address,socklenvar[1])){
+	                        if(logging){
+					perror("Não conseguimos dar bind na socket_fd do client!!!\n");
+	                        	print_addr_aux("Este é o address:",src_address);
+	                        }
+				close((*socket_fd));
+				continue;
+			}
+	                else{
+
+	                        if(logging){
+					print_addr_aux("Bind com sucesso!!!:",src_address);
+	                        }
+				setLinger(socket_fd,1,1);
+	               	}
+	                if(!(result_con=tryConnect(socket_fd,con_times_pair,dst_address))){
+	                        if(logging){
+
+	                                fprintf(logstream,"Initiating forceful teardown!\nResult = %d\n\nsocket_fd fd; %d\n",result_con,(*socket_fd));
+	                        }
+	                	close((*socket_fd));
+				continue;
+	                }
+	                else if(result_con>0){
+	                        free_attempted_ports(curr_attempts,port_mapper_ent);
+	                        freeifaddrs(ifaddr);
+				return;
+	                }
+	                close((*socket_fd));
+	        }
+	}
 	if(logging){
 		perror("We tried all the ports that were given to us. None of them worked. Exiting...\n");
        	}
+	freeifaddrs(ifaddr);
 	quit_handler(SIGINT,ptr);
 	return;
 }

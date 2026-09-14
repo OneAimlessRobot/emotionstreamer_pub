@@ -26,7 +26,7 @@ int main(void){
 		print_values_cfg_port_mapper(1);
         }
 	printf("Curr dir: %s\n", curr_dir);
-	port_mapper_init(&port_mapper_ip_cache_entry);
+	port_mapper_init();
 
         printf("Saimos do port mapper!!!!!!\n");
         return 0;

@@ -53,7 +53,7 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works);
 void free_attempted_ports(uint16_t port_that_works,ip_cache_entry* ent);
 void connection_attempt_circuit(int* socket_fd,void (*quit_handler)(int, void*),struct sockaddr_in* src_address,
 				struct sockaddr_in* dst_address,
-					ip_cache_entry* src_ent,ip_cache_entry* port_mapper_ent,
+					ip_cache_entry* port_mapper_ent,
 					int_pair con_times_pair,
 					void*ptr);
 

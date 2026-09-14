@@ -4,7 +4,6 @@
 #define CONFIG_FILE_PATH_BROWSER "./configs/sizes.cfg"
 
 extern const uint8_t browser_display_splash;
-extern ip_cache_entry server_browser_ip_cache_entry;
 
 extern int_pair browser_data_times_pair,
 		browser_ack_times_pair,

@@ -12,12 +12,15 @@ extern int_pair master_data_times_pair,
 	master_ack_times_pair,
         master_con_times_pair;
 
+extern char master_server_ip_address[PATHSIZE+1];
+
 extern uint64_t cfg_master_ack_period_us;
 
 extern uint8_t
 	cfg_master_print_config,
 	cfg_master_show_splash,
 	cfg_master_server_logging;
+
 
 extern uint16_t master_ack_timeout_lim;
 

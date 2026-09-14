@@ -11,6 +11,8 @@ int_pair port_mapper_times_pair={REMAPPER_TIMEOUT_CON_SEC,REMAPPER_TIMEOUT_CON_U
 char port_mapper_ip_address_buff[PATHSIZE+1]={0};
 ip_cache_entry port_mapper_ip_cache_entry={{0},0};
 
+static uint16_t port_mapper_port = 0;
+
 uint8_t bind_on_any_if = 0;
 
 static char cfg_full_file_path[PATHSIZE*3+1]={0};
@@ -57,15 +59,8 @@ void parse_generalized_cfg(void){
                 raise(SIGINT);
 
         }
-        sscanf(curr_line_buff,"port_mapper_ip_address: %s",port_mapper_ip_address_buff);
-        clean_buff();
-	skip_config_comments(cfg_fp);
-        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
-
-                raise(SIGINT);
-
-        }
-        sscanf(curr_line_buff,"bind_on_any_if: %hhu",&bind_on_any_if);
+        sscanf(curr_line_buff,"port_mapper_port: %hu",&port_mapper_port);
+	snprintf(port_mapper_ip_address_buff,sizeof(port_mapper_ip_address_buff),"127.0.0.1:%hu",port_mapper_port);
         clean_buff();
 	fclose(cfg_fp);
 	process_ip_cache_entries();
@@ -77,8 +72,6 @@ void print_values_generalized_cfg(int fd){
 	dprintf(fd,"port_mapper_timeouts_con: %lus %lu us\n",port_mapper_times_pair[0],port_mapper_times_pair[1]);
 
 	print_ip_cache_entry(stdout,&port_mapper_ip_cache_entry);
-
-	dprintf(fd,"bind_on_any_if: %s\n",bind_on_any_if?"Yes!":"No...");
 
 
 }

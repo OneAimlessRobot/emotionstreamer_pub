@@ -71,7 +71,7 @@ void exit_emergency_func(void){
 	sigint_handler(1);
 
 }
-void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
+void start_heart_beats(char* this_hostname, ip_cache_entry* ent_upper){
 
  	sa.sa_handler = sigint_handler;
         sigemptyset(&sa.sa_mask);
@@ -113,14 +113,13 @@ void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper){
 
 	memcpy(&arg_s.slave_port_mapper_ip_cache_entry,&port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
 	memcpy(&arg_a.acceptor_port_mapper_ip_cache_entry,&port_mapper_ip_cache_entry,sizeof(ip_cache_entry));
-	memcpy(&arg_s.slave_ip_cache_entry,ent_this,sizeof(ip_cache_entry));
 	if(init_addr(&arg_s.master_addr,ent_upper->hostname,ent_upper->port)){
 		perror("Erro a inicializar address de slave em heartbeat server!!!\n");
 		exit(-1);
 		return;
 	}
 
-	init_module_tcp_stuff(&arg_a.accept_sockfd,ent_this->hostname,ent_this->port,&arg_a.accept_addr,SIGPIPE,MAX_SERVERS,0,&arg_a.acceptor_port_mapper_ip_cache_entry);
+	init_module_tcp_stuff(&arg_a.accept_sockfd,this_hostname,&arg_a.accept_addr,SIGPIPE,MAX_SERVERS,0,&arg_a.acceptor_port_mapper_ip_cache_entry);
 	InitializeSSL();
 	memcpy(&arg_s.this_addr,&arg_a.accept_addr,sizeof(struct sockaddr_in));
 

@@ -25,7 +25,7 @@ int main(void){
 		print_values_cfg_master(1);
 	}
 	printf("Curr dir: %s\n", curr_dir);
-	start_master(master_ip_cache_entry.hostname,master_ip_cache_entry.port);
+	start_master(master_server_ip_address);
 
 	printf("Saimos do server!!!!!!\n");
 

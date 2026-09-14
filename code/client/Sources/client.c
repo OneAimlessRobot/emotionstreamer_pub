@@ -248,7 +248,7 @@ int clientStart(char* req_field,char* file_name){
 	init_con(&client_con_obj,client_con_obj.sockfd_tcp,CLIENT_C,&port_mapper_ip_cache_entry,will_use_tls);
 	connection_attempt_circuit(&client_con_obj.sockfd_tcp,clear_ports_and_quit,&client_ip_address,
                                 &server_ip_address,
-                                        &client_ip_cache_entry,&port_mapper_ip_cache_entry,client_con_times_pair,NULL);
+                                        &port_mapper_ip_cache_entry,client_con_times_pair,NULL);
 	if(is_new<0){
 
 		insert_ip_addr_entry(&server_ip_cache_entry,&cache);

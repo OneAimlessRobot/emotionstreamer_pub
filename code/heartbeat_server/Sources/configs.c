@@ -16,16 +16,16 @@
 static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
-static char upper_ip_address_buff[PATHSIZE+1]={0};
+char hb_server_ip_address[PATHSIZE+1]={0},
+	upper_ip_address_buff[PATHSIZE+1]={0},
+	hb_server_name_buff[PATHSIZE+1]={0};
 
-char hb_server_name_buff[PATHSIZE+1]={0};
 
 uint8_t	cfg_hb_print_config,
 	cfg_hb_show_splash;
 
 
-ip_cache_entry upper_ip_cache_entry={{0},0},
-	heartbeat_ip_cache_entry={{0},0};
+ip_cache_entry upper_ip_cache_entry={{0},0};
 
 //EM BYTES E HZ!
 
@@ -38,7 +38,6 @@ uint8_t cfg_hb_server_logging=0;
 
 static void process_ip_cache_entries(void){
 
-	parse_ip_cache_entry(port_mapper_ip_address_buff,&heartbeat_ip_cache_entry);
 	parse_ip_cache_entry(upper_ip_address_buff,&upper_ip_cache_entry);
 
 }
@@ -171,7 +170,25 @@ void read_values_cfg_hb(void){
 		snprintf(host_pkey_file_path,sizeof(host_pkey_file_path),"%s",(char*)&curr_line_buff[strlen("hb_host_pkey_file_path: ")]);
 	        clean_buff();
 	}
-        fclose(cfg_fp);
+        skip_config_comments(cfg_fp);
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                clean_and_exit();
+
+	}
+        sscanf(curr_line_buff,"bind_on_any_if: %hhu",&bind_on_any_if);
+        clean_buff();
+        skip_config_comments(cfg_fp);
+        if(!bind_on_any_if){
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+	                clean_and_exit();
+
+		}
+	        sscanf(curr_line_buff,"hb_server_ip_address: %s",hb_server_ip_address);
+	        clean_buff();
+	}
+	fclose(cfg_fp);
 	auth_cert_file_path[sizeof(auth_cert_file_path)-1]=0;
 	host_cert_file_path[sizeof(host_cert_file_path)-1]=0;
 	host_pkey_file_path[sizeof(host_pkey_file_path)-1]=0;
@@ -209,4 +226,12 @@ void print_values_cfg_hb(int fd){
 
 	print_ip_cache_entry(stdout,&upper_ip_cache_entry);
 
+	dprintf(fd,"bind_on_any_if: %s\n",bind_on_any_if?"Yes!":"No...");
+
+	if(!bind_on_any_if){
+
+
+		dprintf(fd,"We will only bind on: %s\n",hb_server_ip_address);
+
+	}
 }

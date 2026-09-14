@@ -67,7 +67,7 @@ static int is_no_more_room(void){
 }
 static int is_empty(void){
 
-	
+
 	return !acess_var_mtx_uint16(&running_mtx,&mapper.curr_num_ports,0,V_LOOK);
 
 
@@ -447,7 +447,7 @@ static void* accepted_connection_thread(void* args){
 }
 void* port_mapper_main_loop(void* args){
 
-	
+
 	while(running){
 		 struct timeval tv;
 		 int sock=-1;
@@ -486,7 +486,6 @@ void* port_mapper_main_loop(void* args){
 		       raise(SIGINT);
 		       cleanup();
 		       break;
-	
 		}
 		pthread_cond_signal(&input_cond);
 	}
@@ -498,7 +497,7 @@ void* port_mapper_main_loop(void* args){
 
 
 
-void port_mapper_init(ip_cache_entry* ent){
+void port_mapper_init(void){
 
 	sa.sa_handler = sigint_handler;
         sigemptyset(&sa.sa_mask);
@@ -519,8 +518,8 @@ void port_mapper_init(ip_cache_entry* ent){
 
 		fetch_port_mapper_file(&mapper);
 	}
-	init_addr(&mapper.addr_struct, ent->hostname,ent->port);
-	init_module_tcp_stuff(&mapper.socket,ent->hostname,ent->port,&mapper.addr_struct,SIGINT,cfg_num_ports,1,NULL);
+	init_addr(&mapper.addr_struct, port_mapper_ip_cache_entry.hostname,port_mapper_ip_cache_entry.port);
+	init_module_tcp_stuff(&mapper.socket,port_mapper_ip_cache_entry.hostname,&mapper.addr_struct,SIGINT,cfg_num_ports,1,&port_mapper_ip_cache_entry);
 	running=1;
 	input_enabled=1;
         pthread_create(&input_tid,NULL,port_mapper_input_loop,NULL);

@@ -25,7 +25,7 @@ int main(void){
         }
 	printf("Curr dir: %s\n", curr_dir);
 
-	start_heart_beats(&heartbeat_ip_cache_entry,&upper_ip_cache_entry);
+	start_heart_beats(hb_server_ip_address,&upper_ip_cache_entry);
 
 	printf("Saimos do server!!!!!!\n");
 

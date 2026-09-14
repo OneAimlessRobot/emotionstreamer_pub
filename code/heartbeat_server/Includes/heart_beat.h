@@ -9,7 +9,7 @@
 
 
 
-void start_heart_beats(ip_cache_entry* ent_this,ip_cache_entry* ent_upper);
+void start_heart_beats(char* this_hostname,ip_cache_entry* ent_upper);
 
 
 

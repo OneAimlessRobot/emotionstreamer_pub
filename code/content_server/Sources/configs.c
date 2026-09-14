@@ -11,25 +11,29 @@
 #include "../Includes/load_html.h"
 #include "../Includes/configs.h"
 
-static FILE* cfg_fp=NULL;
-static FILE* rotation_file_stream=NULL;
-static int tmp_cfg_fd=-1;
-static int tmp_rotation_fd=-1;
-static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
+static FILE* cfg_fp=NULL,
+	* rotation_file_stream=NULL;
 
-static char upper_ip_address_buff[PATHSIZE+1]={0};
-char server_name_buff[PATHSIZE+1]={0};
-ip_cache_entry server_ip_cache_entry={{0},0};
+static int tmp_cfg_fd=-1,
+	tmp_rotation_fd=-1;
+
 ip_cache_entry upper_ip_cache_entry={{0},0};
 
-char* server_tmp_dir_path=NULL;
-char server_music_folder_path[PATHSIZE+1]={0};
-char server_music_quarantine_folder_path[PATHSIZE+1]={0};
-char curr_server_quarantine_dir_buff[PATHSIZE+1]={0};
+char server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILENAME_LENGTH]={{0}},
+	server_auto_mode_rotation_filename[CONFIG_READ_LINE_BUFF_SIZE]={0},
+	curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0},
+	upper_ip_address_buff[PATHSIZE+1]={0},
+	server_name_buff[PATHSIZE+1]={0},
+	* server_tmp_dir_path=NULL,
+	server_music_folder_path[PATHSIZE+1]={0},
+	server_music_quarantine_folder_path[PATHSIZE+1]={0},
+	curr_server_quarantine_dir_buff[PATHSIZE+1]={0},
+	server_working_extension[EXTENSION_SIZE]={0},
+	content_server_ip_address[PATHSIZE+1]={0};
 
 
-char server_working_extension[EXTENSION_SIZE]={0};
 const uint8_t server_display_splash=1;
+
 
 uint8_t
 	cfg_server_print_config,
@@ -37,8 +41,6 @@ uint8_t
 	cfg_server_logging=0;
 
 uint8_t cfg_server_slave_mode=1;
-char server_auto_mode_rotation[ROTATION_LENGTH_LIMIT][ROTATION_SONG_FILENAME_LENGTH]={{0}};
-char server_auto_mode_rotation_filename[CONFIG_READ_LINE_BUFF_SIZE]={0};
 unsigned int is_auto_mode=0,
            curr_num_songs_rotation=0,
            curr_song_index_rotation=0;
@@ -65,7 +67,6 @@ static void clean_buff(void){
 
 static void process_ip_cache_entries(void){
 
-        parse_ip_cache_entry(port_mapper_ip_address_buff,&server_ip_cache_entry);
         parse_ip_cache_entry(upper_ip_address_buff,&upper_ip_cache_entry);
 
 }
@@ -346,6 +347,24 @@ void read_values_cfg_server(void){
 		snprintf(host_pkey_file_path,sizeof(host_pkey_file_path),"%s",(char*)&curr_line_buff[strlen("server_host_pkey_file_path: ")]);
         	clean_buff();
 	}
+	skip_config_comments(cfg_fp);
+        if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+                clean_and_exit();
+
+	}
+        sscanf(curr_line_buff,"bind_on_any_if: %hhu",&bind_on_any_if);
+        clean_buff();
+	skip_config_comments(cfg_fp);
+	if(!bind_on_any_if){
+		if(!(fgets(curr_line_buff,CONFIG_READ_LINE_BUFF_SIZE,cfg_fp))){
+
+	                clean_and_exit();
+
+		}
+	        sscanf(curr_line_buff,"content_server_ip_address: %s",content_server_ip_address);
+	        clean_buff();
+	}
 	fclose(cfg_fp);
 	server_working_extension[sizeof(server_working_extension)-1]=0;
 	server_music_folder_path[sizeof(server_music_folder_path)-1]=0;
@@ -451,5 +470,14 @@ void print_values_cfg_server(int fd){
 
 	}
 	print_ip_cache_entry_fd(fd,&upper_ip_cache_entry);
+
+	dprintf(fd,"bind_on_any_if: %s\n",bind_on_any_if?"Yes!":"No...");
+
+	if(!bind_on_any_if){
+
+
+		dprintf(fd,"We will only bind on: %s\n",content_server_ip_address);
+
+	}
 
 }

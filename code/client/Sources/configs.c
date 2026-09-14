@@ -26,7 +26,6 @@ char client_logs_file_name[PATHSIZE]={0};
 char client_music_folder_path[PATHSIZE]={0};
 char song_name_global[PATHSIZE]={0};
 ip_cache_entry server_ip_cache_entry={{0},0};
-ip_cache_entry client_ip_cache_entry={{0},0};
 
 char server_ip_address_buff[PATHSIZE+1]={0};
 char cfg_client_device_name_if_alsa[PATHSIZE+1]={0};
@@ -83,7 +82,6 @@ static void clean_buff(void){
 static void process_ip_cache_entries(void){
 
 	parse_ip_cache_entry(server_ip_address_buff,&server_ip_cache_entry);
-	parse_ip_cache_entry(port_mapper_ip_address_buff,&client_ip_cache_entry);
 
 }
 

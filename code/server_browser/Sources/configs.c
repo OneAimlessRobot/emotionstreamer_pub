@@ -14,9 +14,6 @@ static FILE* cfg_fp=NULL;
 static char curr_line_buff[CONFIG_READ_LINE_BUFF_SIZE]={0};
 
 
-ip_cache_entry server_browser_ip_cache_entry={{0},0};
-
-
 int_pair browser_data_times_pair={BROWSER_TIMEOUT_DATA_SEC,BROWSER_TIMEOUT_DATA_USEC};
 int_pair browser_con_times_pair={BROWSER_TIMEOUT_CON_SEC,BROWSER_TIMEOUT_CON_USEC};
 
@@ -43,10 +40,6 @@ static void clean_buff(void){
 
 }
 
-static void process_ip_cache_entries(void){
-
-        parse_ip_cache_entry(port_mapper_ip_address_buff,&server_browser_ip_cache_entry);
-}
 
 void read_values_cfg_browser(void){
 
@@ -131,7 +124,6 @@ void read_values_cfg_browser(void){
 	auth_cert_file_path[sizeof(auth_cert_file_path)-1]=0;
 	host_cert_file_path[sizeof(host_cert_file_path)-1]=0;
 	host_pkey_file_path[sizeof(host_pkey_file_path)-1]=0;
-	process_ip_cache_entries();
 
 
 }

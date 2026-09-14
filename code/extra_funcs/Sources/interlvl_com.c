@@ -74,8 +74,7 @@ void* slave_thread(void* args){
 	init_con(arg_struct->con_obj,arg_struct->con_obj->sockfd_tcp,CLIENT_C,&arg_struct->slave_port_mapper_ip_cache_entry,arg_struct->is_tls);
 	connection_attempt_circuit(&arg_struct->con_obj->sockfd_tcp,slave_thread_exit_func,&arg_struct->this_con_addr,
                                 &arg_struct->master_addr,
-                                        &arg_struct->slave_ip_cache_entry,
-					&arg_struct->slave_port_mapper_ip_cache_entry,
+                                        &arg_struct->slave_port_mapper_ip_cache_entry,
 					arg_struct->con_times_pair,
 					(void*)(arg_struct));
 
@@ -141,14 +140,17 @@ void* slave_thread(void* args){
 
 }
 static int init_on_all_ifaces(struct sockaddr_in* sockaddr_buff_local,uint16_t port){
+	if(!port){
 
+		return 0;
+	}
 	sockaddr_buff_local->sin_family=AF_INET;
 	sockaddr_buff_local->sin_port= htons(port);
 	sockaddr_buff_local->sin_addr.s_addr = htonl(INADDR_ANY);
 
 	return 1;
 }
-void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper,ip_cache_entry* port_mapper_cache_entry){
+void init_module_tcp_stuff(int* sockptr,char* addr,struct sockaddr_in * sockaddr_buff,int exit_signal,int max_connected,int is_port_mapper,ip_cache_entry* port_mapper_cache_entry){
 
 
         (*sockptr)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
@@ -159,13 +161,15 @@ void init_module_tcp_stuff(int* sockptr,char* addr,uint16_t tcp_s_port,struct so
 
         }
         int ptr=1;
+	uint16_t port=0;
 	setsockopt((*sockptr),SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeof(ptr));
-	uint16_t port=tcp_s_port;
 	struct sockaddr_in sockaddr_buff_local={0};
         if(!is_port_mapper){
  		ask_for_port(&port,port_mapper_cache_entry);
 	}
-
+	else{
+		port = port_mapper_cache_entry->port;
+	}
 	if(!port||bind_on_any_if
 				?
 			!init_on_all_ifaces(&sockaddr_buff_local,port)

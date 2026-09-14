@@ -7,10 +7,11 @@
 extern const uint8_t hb_display_splash;
 
 
-extern ip_cache_entry heartbeat_ip_cache_entry,
-		upper_ip_cache_entry;
+extern ip_cache_entry upper_ip_cache_entry;
 
-extern char hb_server_name_buff[PATHSIZE+1];
+extern char hb_server_name_buff[PATHSIZE+1],
+	hb_server_ip_address[PATHSIZE+1];
+
 extern int_pair hb_data_times_pair,
 	hb_ack_times_pair,
         hb_con_times_pair;
