@@ -53,12 +53,6 @@ void exit_emergency_func(void){
 
 
 }
-static int port_in_range(uint16_t port){
-
-	return (port>=cfg_init_port)&&(port<=(cfg_init_port+cfg_num_ports));
-
-
-}
 static int is_no_more_room(void){
 
 	return (acess_var_mtx_uint16(&running_mtx,&mapper.curr_num_ports,0,V_LOOK)>=cfg_num_ports);
@@ -143,42 +137,9 @@ static int fetch_single_port_to_give(uint16_t* port,int actually_change){
 
 		}
 	}
-	
 	return 0;
 
 }
-static int reserve_port(int port){
-
-	if(port_in_range(port)){
-		if(!is_no_more_room()){
-			if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_LOOK)!=PORT_ALLOCATED){
-				acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),PORT_RESERVED,V_SET);
-				acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)+1,V_SET);
-				return 1;
-			}
-
-		}
-	}
-	return 0;
-
-}
-static int unreserve_port(int port){
-
-	if(port_in_range(port)){
-		if(!is_empty()){
-			if(acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),0,V_LOOK)<0){
-				acess_var_mtx(&variable_mtx,&(mapper.port_arr[port-cfg_init_port]),PORT_FREE,V_SET);
-				acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,acess_var_mtx_uint16(&variable_mtx,&mapper.curr_num_ports,0,V_LOOK)-1,V_SET);
-				return 1;
-			}
-
-		}
-	}
-	return 0;
-
-
-}
-
 static void port_mapper_print(int fd){
 
 
@@ -211,7 +172,7 @@ static void port_mapper_print(int fd){
 						is_no_more_room()?"Yes!":"No....",
 						is_empty()?"Yes!":"No....",
 						acess_var_mtx_uint16(&running_mtx,&mapper.curr_num_ports,0,V_LOOK));
-	
+
 	dprintf(fd,"%s",buff);
 
 }
@@ -357,9 +318,9 @@ void* port_mapper_input_loop(void* args){
         }
         pthread_mutex_unlock(&input_mtx);
 	printf("Thread de input do port mapper acordou!\n");
-	
+
 	while(running){
-  		
+
 		char string[128]={0};
 		uint16_t port_to_check=0;
 		scanf("%s",string);
@@ -404,7 +365,7 @@ void* port_mapper_input_loop(void* args){
 
 }
 static void* accepted_connection_thread(void* args){
-	
+
 
 	int sock= ((int*)args)[0];
 	pthread_mutex_lock(&con_mtx);

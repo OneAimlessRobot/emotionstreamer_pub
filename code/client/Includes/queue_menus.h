@@ -5,6 +5,8 @@
 
 #define MIN_PRINT_SIZE 30
 
+#define BUFFSIZE 2048
+
 typedef enum queue_op{Q_READ_FROM,Q_LOOK,Q_GET_TIME,Q_READ_TO,Q_CLEAN,Q_PRINT,Q_NA}queue_op;
 typedef enum queue_look_op{Q_IS_FULL,Q_IS_EMPTY,Q_IS_ALMOST_FULL,Q_IS_ALMOST_EMPTY,Q_GET_PCT,Q_LOOK_NA}queue_look_op;
 
@@ -20,7 +22,7 @@ typedef struct q_state{
 	uint64_t recv_cursor;
 	uint64_t n_occupied;
 	uint64_t sub_chunk_occupied;
-	
+
 }q_state;
 
 int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, decoder_result_struct* result,q_op op);

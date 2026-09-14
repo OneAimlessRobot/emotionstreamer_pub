@@ -15,7 +15,7 @@
 #include "../Includes/queue_menus.h"
 #include "../Includes/terminal_mgmt.h"
 
-#define BUFFSIZE 2048
+
 static int dequeue_chunk(chunk_queue* que,uint8_t* buff){
 
 	if(!que_is_empty(que)){
@@ -109,7 +109,7 @@ static void circular_q_visual_print(chunk_queue* que){
 	uint64_t recv_cursor_bar_pos=1+(que->recv_cursor*que->display_size)/que->max_occupied;
 	bar[play_cursor_bar_pos]='P';
 	bar[recv_cursor_bar_pos]='R';
-	for(uint64_t i=circular_int_inc(que->display_size+1,play_cursor_bar_pos);(play_cursor_bar_pos!=recv_cursor_bar_pos)&&(i!=recv_cursor_bar_pos);i=circular_int_inc(que->display_size+1,i)){
+	for(uint64_t i=circular_int_inc(que->display_size+1,play_cursor_bar_pos);(i!=recv_cursor_bar_pos);i=circular_int_inc(que->display_size+1,i)){
 
 		if(i&&(i<=que->display_size)){
 			bar[i]='=';
