@@ -278,10 +278,6 @@ void init_openssl_libs_client_side(void){
 		global_client_ctx = SSL_CTX_new(TLS_client_method());
 		SSL_CTX_set_verify(global_client_ctx, SSL_VERIFY_PEER, verify_callback);
 
-		char cwd[PATH_MAX];
-		getcwd(cwd, sizeof(cwd));
-		printf("Current working dir: %s\n", cwd);
-
 		/* Load CA certificate to verify the server */
 		if (!SSL_CTX_load_verify_locations(global_client_ctx, auth_cert_file_path, NULL)) {
 		    ERR_print_errors_fp(stderr);
