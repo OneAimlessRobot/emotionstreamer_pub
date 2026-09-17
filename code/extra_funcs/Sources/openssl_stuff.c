@@ -63,8 +63,10 @@ void InitializeSSL(void){
 		}
 		SSL_on_in_process=1;
 	}
-    printf("OpenSSL version: %s\n", OPENSSL_VERSION_TEXT);
-    printf("OpenSSL version text func: %s\n", OpenSSL_version(OPENSSL_VERSION));
+    if(logging){
+	printf("OpenSSL version: %s\n", OPENSSL_VERSION_TEXT);
+    	printf("OpenSSL version text func: %s\n", OpenSSL_version(OPENSSL_VERSION));
+    }
     SSL_load_error_strings();
     SSL_library_init();
     OpenSSL_add_all_algorithms();

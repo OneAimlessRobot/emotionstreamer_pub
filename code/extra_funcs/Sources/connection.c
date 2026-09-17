@@ -492,7 +492,9 @@ void connection_attempt_circuit(int* socket_fd, void (*quit_handler)(int, void*)
 
 	if (getifaddrs(&ifaddr) == -1) {
 
-		perror("getifaddrs");
+		if(logging){
+			fprintf(logstream,"getifaddrs: %s\n",strerror(errno));
+		}
 		quit_handler(SIGINT,ptr);
 	        return;
 
@@ -516,15 +518,20 @@ void connection_attempt_circuit(int* socket_fd, void (*quit_handler)(int, void*)
 				0,
 				NI_NUMERICHOST);
 		if (s != 0) {
-			printf("getnameinfo() failed: %s\n", gai_strerror(s));
+			if(logging){
+				fprintf(logstream,"getnameinfo() failed: %s\n", gai_strerror(s));
+			}
 			freeifaddrs(ifaddr);
 			quit_handler(SIGINT,ptr);
 			return;
 
 		}
 
-	        printf("\t\t trying address: <%s>\n", host);
-	     	while(curr_attempts<limit_of_attempts){
+	        if(logging){
+
+			fprintf(logstream,"\t\t trying address: <%s>\n", host);
+	     	}
+		while(curr_attempts<limit_of_attempts){
 	                (*socket_fd)= socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	                if((*socket_fd)<0){
 
@@ -537,7 +544,7 @@ void connection_attempt_circuit(int* socket_fd, void (*quit_handler)(int, void*)
 	                curr_attempts++;
 			if(!attempted_port_arr[curr_attempts]||init_addr(src_address,host,(attempted_port_arr[curr_attempts]))){
 	                        if(logging){
-					perror("Não conseguimos inicializar address no client!!!\n");
+					fprintf(logstream,"Não conseguimos inicializar address no client!!!: %s\n",strerror(errno));
 	                        }
 				close((*socket_fd));
 				continue;
@@ -583,7 +590,7 @@ void connection_attempt_circuit(int* socket_fd, void (*quit_handler)(int, void*)
 	        }
 	}
 	if(logging){
-		perror("We tried all the ports that were given to us. None of them worked. Exiting...\n");
+		fprintf(logstream,"We tried all the ports that were given to us. None of them worked. Exiting...\n%s\n",strerror(errno));
        	}
 	freeifaddrs(ifaddr);
 	quit_handler(SIGINT,ptr);
