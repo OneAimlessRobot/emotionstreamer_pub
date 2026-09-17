@@ -85,7 +85,7 @@ int downloadtofd(int sock,int fd,int64_t size,int_pair times,uint8_t is_ssl,SSL*
 			len=readsome_ssl(cSSL,buff,DEF_DATASIZE,times);
                 }
 		else{
-			len=readsome(sock,buff,DEF_DATASIZE,times);
+			len=readsome(sock,buff,DEF_DATASIZE,times,0);
 
 		}
 		if(len==-2){
@@ -143,7 +143,7 @@ int downloadtofd(int sock,int fd,int64_t size,int_pair times,uint8_t is_ssl,SSL*
 	       sendsome_ssl(cSSL,buff,DEF_DATASIZE,times);
 	}
 	else{
-	       sendsome(sock,buff,DEF_DATASIZE,times);
+	       sendsome(sock,buff,DEF_DATASIZE,times,0);
 	}
 
         return 0;

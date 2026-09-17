@@ -11,6 +11,8 @@ extern uint8_t SSL_on_in_process;
 
 extern uint8_t CLIENT_SSL_initted_in_process;
 
+int is_tls_connection(int client_fd);
+
 void InitializeSSL(void);
 
 void DestroySSL(void);

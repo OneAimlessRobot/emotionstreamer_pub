@@ -227,10 +227,12 @@ int serverInit(char* this_hostname,ip_cache_entry* ent_upper){
 	                call_sigint();
 			return 1;
 		}
+		memcpy(&arg_s.this_addr,&state.server_tcp_addr,sizeof(state.server_tcp_addr));
 		memcpy(&arg_s.con_times_pair,&server_con_times_pair,sizeof(int_pair));
 		memcpy(&arg_s.data_times_pair,&server_data_times_pair,sizeof(int_pair));
 		memcpy(&arg_s.ack_times_pair,&server_ack_times_pair,sizeof(int_pair));
 		pthread_create(&hb_tid,NULL,slave_thread,(void*)&arg_s);
+
 	}
 	if(!does_dir_exist_aux(server_tmp_dir_path)){
 		mkdir(server_tmp_dir_path, 0777);

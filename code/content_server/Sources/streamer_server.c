@@ -49,7 +49,7 @@ static int send_chunk(server_stream_t* strm,int_pair pair){
 		result = sendsome_ssl(strm->con_obj->con_ssl,(char*)strm->chunk_data_cache,strm->chunk_size+(is_wav_mode?0:sizeof(frame_info_t)+4),pair);
 	}
 	else{
-		result = sendsome(strm->con_obj->sockfd_tcp,(char*)strm->chunk_data_cache,strm->chunk_size+(is_wav_mode?0:sizeof(frame_info_t)+4),pair);
+		result = sendsome(strm->con_obj->sockfd_tcp,(char*)strm->chunk_data_cache,strm->chunk_size+(is_wav_mode?0:sizeof(frame_info_t)+4),pair,0);
 
 	}
 	return result;

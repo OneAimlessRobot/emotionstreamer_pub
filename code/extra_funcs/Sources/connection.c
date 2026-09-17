@@ -76,7 +76,7 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 	}
 
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_AWKWARD_LEAVE_STRING);
-	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair,0);
 	if(result<=0){
 		if(logging){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
@@ -86,7 +86,7 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 
 	}
 	memset(buff_for_ports,0,DEF_DATASIZE+1);
-	result=readsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+	result=readsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair,0);
 	if(result<=0){
 		if(logging){
 			perror("Não conseguimos enviar o request de fecho de porta ao port mapper!!!!!!\n");
@@ -95,7 +95,7 @@ void send_port_back(uint16_t port,ip_cache_entry* ent){
 		return;
 
 	}
-	result=sendsome(tmp_socket,(char*)&port,sizeof(port),port_mapper_times_pair);
+	result=sendsome(tmp_socket,(char*)&port,sizeof(port),port_mapper_times_pair,0);
 	if(result<=0){
 		if(logging){
 
@@ -149,7 +149,7 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 	}
 
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_LEAVE_STRING);
-	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair,0);
 	if(result<=0){
 		if(logging){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
@@ -159,7 +159,7 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 
 	}
 	memset(buff_for_ports,0,DEF_DATASIZE+1);
-	result=readsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+	result=readsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair,0);
 	if(result<=0){
 		if(logging){
 			perror("Não conseguimos enviar o request de fecho de portas ao port mapper!!!!!!\n");
@@ -172,7 +172,7 @@ void send_ports_back(ip_cache_entry* ent,uint16_t port_that_works){
 	if(port_that_works){
 		memmove(&attempted_port_arr[port_that_works],&attempted_port_arr[port_that_works+1],(attempted_port_arr[0]-(port_that_works)+1)*sizeof(attempted_port_arr[0]));
 	}
-	result=sendsome(tmp_socket,(char*)attempted_port_arr,sizeof(port_array),port_mapper_times_pair);
+	result=sendsome(tmp_socket,(char*)attempted_port_arr,sizeof(port_array),port_mapper_times_pair,0);
 	memset(attempted_port_arr,0,sizeof(port_array));
 	if(result<=0){
 		if(logging){
@@ -250,12 +250,12 @@ void init_con(con_t* con_obj,int sockfd_tcp,con_type type,ip_cache_entry *ent,ui
 
 int con_send(con_t* con_obj,int_pair pair){
 
-	return con_obj->is_ssl?sendsome_ssl(con_obj->con_ssl,(const char*)con_obj->tcp_data, DEF_DATASIZE, pair):sendsome(con_obj->sockfd_tcp,(char*)con_obj->tcp_data,DEF_DATASIZE,pair);
+	return con_obj->is_ssl?sendsome_ssl(con_obj->con_ssl,(const char*)con_obj->tcp_data, DEF_DATASIZE, pair):sendsome(con_obj->sockfd_tcp,(char*)con_obj->tcp_data,DEF_DATASIZE,pair,0);
 }
 
 int con_read(con_t* con_obj,int_pair pair){
 
-	return con_obj->is_ssl?readsome_ssl(con_obj->con_ssl,(char*)con_obj->tcp_data, DEF_DATASIZE, pair):readsome(con_obj->sockfd_tcp,(char*)con_obj->tcp_data,DEF_DATASIZE,pair);
+	return con_obj->is_ssl?readsome_ssl(con_obj->con_ssl,(char*)con_obj->tcp_data, DEF_DATASIZE, pair):readsome(con_obj->sockfd_tcp,(char*)con_obj->tcp_data,DEF_DATASIZE,pair,0);
 }
 
 void ask_for_port(uint16_t* port,ip_cache_entry* ent){
@@ -287,7 +287,7 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 	}
 
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_AWKWARD_JOIN_STRING);
-	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair,0);
 	if(result<=0){
 		if(logging){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
@@ -296,7 +296,7 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 		return;
 
 	}
-	result=readsome(tmp_socket,(char*)port,sizeof((*port)),port_mapper_times_pair);
+	result=readsome(tmp_socket,(char*)port,sizeof((*port)),port_mapper_times_pair,0);
 	if(result<=0){
 		if(logging){
 			perror("Não conseguimos receber porta do port mapper!!!!!!\n");
@@ -312,7 +312,7 @@ void ask_for_port(uint16_t* port,ip_cache_entry* ent){
 	}
 	memset(buff_for_ports,0,DEF_DATASIZE+1);
         snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_JOIN_GOT_IT_STRING);
-        result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+        result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair,0);
         if(result<=0){
 
                 if(logging){
@@ -355,7 +355,7 @@ void ask_for_ports(ip_cache_entry* ent){
 	}
 
 	snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_JOIN_STRING);
-	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+	result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair,0);
 	if(result<=0){
 		if(logging){
 			perror("O port mapper nâo recebeu o nosso request!!!\n");
@@ -364,7 +364,7 @@ void ask_for_ports(ip_cache_entry* ent){
 		return;
 
 	}
-	result=readsome(tmp_socket,(char*)attempted_port_arr,sizeof(port_array),port_mapper_times_pair);
+	result=readsome(tmp_socket,(char*)attempted_port_arr,sizeof(port_array),port_mapper_times_pair,0);
 	if(result<=0){
 		if(logging){
 			perror("Não conseguimos receber portas do port mapper!!!!!!\n");
@@ -380,7 +380,7 @@ void ask_for_ports(ip_cache_entry* ent){
 	}
 	memset(buff_for_ports,0,DEF_DATASIZE+1);
         snprintf(buff_for_ports,DEF_DATASIZE,"%s",PORT_MAPPER_JOIN_GOT_IT_STRING);
-        result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair);
+        result=sendsome(tmp_socket,buff_for_ports,DEF_DATASIZE,port_mapper_times_pair,0);
         if(result<=0){
 
                 if(logging){

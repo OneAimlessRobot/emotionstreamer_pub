@@ -218,7 +218,7 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 return read_total;
 
 }
-int sendsome(int sd,char buff[],size_t size,int_pair times){
+int sendsome(int sd,char buff[],size_t size,int_pair times, int flags){
 	if(sd>=0){
 		int iResult;
 		struct timeval tv;
@@ -232,7 +232,7 @@ int sendsome(int sd,char buff[],size_t size,int_pair times){
 		tv.tv_usec=times[1];
 		iResult=select(sd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
 		if(iResult>0){
-			send_total+= (s=send(sd,buff+send_total,size-send_total,0));
+			send_total+= (s=send(sd,buff+send_total,size-send_total,flags));
 			if (s < 0){
 				return -1;
 			}
@@ -259,7 +259,7 @@ int sendsome(int sd,char buff[],size_t size,int_pair times){
 	return -1;
 }
 
-int readsome(int sd,char buff[],size_t size,int_pair times){
+int readsome(int sd,char buff[],size_t size,int_pair times, int flags){
 	if(sd>=0){
 		int iResult;
 		struct timeval tv;
@@ -273,7 +273,7 @@ int readsome(int sd,char buff[],size_t size,int_pair times){
 			tv.tv_usec=times[1];
 			iResult=select(sd+1,&rfds,(fd_set*)0,(fd_set*)0,&tv);
 			if(iResult>0){
-				read_total+= (r=recv(sd,buff+read_total,size-read_total,0));
+				read_total+= (r=recv(sd,buff+read_total,size-read_total,flags));
 				if(r < 0){
 					return -1;
 				}
@@ -309,7 +309,7 @@ while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
     int totalsent = 0;
     while (totalsent < numread) {
         errno=0;
-	sent = is_ssl?sendsome_ssl(cSSL, buff + totalsent,  numread - totalsent,times):sendsome(sock, buff + totalsent,  numread - totalsent,times);
+	sent = is_ssl?sendsome_ssl(cSSL, buff + totalsent,  numread - totalsent,times):sendsome(sock, buff + totalsent,  numread - totalsent,times,0);
 	if(sent==-2){
 
 		if(logging){
@@ -383,7 +383,7 @@ int readalltofd(int sock,int fd,size_t size,int_pair times,uint8_t is_ssl,SSL* c
 	}
 	else{
 		for(;(len==-2||len>0)&&(total!=size);){
-	                len=readsome(sock,buff,DEF_DATASIZE,times);
+	                len=readsome(sock,buff,DEF_DATASIZE,times,0);
 	                if(len > 0){
 				size_t written_total = 0;
 				while(written_total < (size_t)len){

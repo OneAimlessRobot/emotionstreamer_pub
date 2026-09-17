@@ -3,11 +3,11 @@
 #include "sockio.h"
 
 
-int sendsome(int sd,char buff[],size_t size,int_pair times);
+int sendsome(int sd,char buff[],size_t size,int_pair times, int flags);
 
 int sendallfd(int sock,int fd,int_pair times,uint8_t is_ssl,SSL* cSSL);
 
-int readsome(int sd,char buff[],size_t size,int_pair times);
+int readsome(int sd,char buff[],size_t size,int_pair times, int flags);
 
 int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times);
 

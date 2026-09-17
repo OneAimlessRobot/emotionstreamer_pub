@@ -151,7 +151,7 @@ static int read_chunk(client_stream_t* strm,int_pair pair){
 		}
 		else{
 
-			read_result= readsome(strm->con_obj->sockfd_tcp,(char*)(strm->player->h_chunk),strm->player->chunk_size,pair);
+			read_result= readsome(strm->con_obj->sockfd_tcp,(char*)(strm->player->h_chunk),strm->player->chunk_size,pair,0);
 		}
 	}
 	else{
@@ -159,7 +159,7 @@ static int read_chunk(client_stream_t* strm,int_pair pair){
 			read_result= readsome_ssl(strm->con_obj->con_ssl,(char*)(is_wav_compat_mode()?strm->player->r_chunk:read_tcp_chk),is_wav_compat_mode()?strm->player->chunk_size:strm->decoder->d_chunk_size,pair);
 		}
 		else{
-			read_result= readsome(strm->con_obj->sockfd_tcp,(char*)(is_wav_compat_mode()?strm->player->r_chunk:read_tcp_chk),is_wav_compat_mode()?strm->player->chunk_size:strm->decoder->d_chunk_size,pair);
+			read_result= readsome(strm->con_obj->sockfd_tcp,(char*)(is_wav_compat_mode()?strm->player->r_chunk:read_tcp_chk),is_wav_compat_mode()?strm->player->chunk_size:strm->decoder->d_chunk_size,pair,0);
 		}
 		if(decode&&!is_wav_mode){
 			memcpy(strm->decoder->r_chunk,&read_tcp_chk,strm->decoder->d_chunk_size);

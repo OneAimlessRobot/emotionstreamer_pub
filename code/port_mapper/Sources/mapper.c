@@ -189,7 +189,7 @@ static void print_help(void){
 }
 static void close_ports_from_client(int sock,char* ports_and_info_buff,port_array port_arr){
 
-	int result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
+	int result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair,0);
 	if(result<=0){
 
 		printf("timeout no port mapper");
@@ -197,7 +197,7 @@ static void close_ports_from_client(int sock,char* ports_and_info_buff,port_arra
 		return;
 	}
 	memset(port_arr,0,sizeof(port_array));
-	result=readsome(sock,(char*)port_arr,sizeof(port_array),port_mapper_times_pair);
+	result=readsome(sock,(char*)port_arr,sizeof(port_array),port_mapper_times_pair,0);
 	if(result<=0){
 
 		printf("timeout no port mapper");
@@ -236,7 +236,7 @@ static void check_port_func(uint16_t port_to_check){
 }
 static void send_single_client_port(int sock,char* ports_and_info_buff,uint16_t* port){
 
-	int result=sendsome(sock,(char*)port,sizeof((*port)),port_mapper_times_pair);
+	int result=sendsome(sock,(char*)port,sizeof((*port)),port_mapper_times_pair,0);
 	if(result<=0){
 
 		printf("Portas não enviada!!! %hu\n",*port);
@@ -248,7 +248,7 @@ static void send_single_client_port(int sock,char* ports_and_info_buff,uint16_t*
 
 
 	}
-	result=readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
+	result=readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair,0);
 	if(result<=0){
                  fprintf(stderr,"Não conseguimos receber porta do port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",ports_and_info_buff,strerror(errno));
 		 close(sock);
@@ -263,7 +263,7 @@ static void send_single_client_port(int sock,char* ports_and_info_buff,uint16_t*
 static void send_client_ports(int sock,char* ports_and_info_buff,port_array port_arr){
 
 
-	int result=sendsome(sock,(char*)port_arr,sizeof(port_array),port_mapper_times_pair);
+	int result=sendsome(sock,(char*)port_arr,sizeof(port_array),port_mapper_times_pair,0);
 	if(result<=0){
 
 		printf("Portas não enviadas!!! %hu delas!\n",port_arr[0]);
@@ -275,7 +275,7 @@ static void send_client_ports(int sock,char* ports_and_info_buff,port_array port
 
 
 	}
-        result=readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
+        result=readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair,0);
 	if(result<=0){
                  fprintf(stderr,"Não conseguimos enviar portas do port mapper!!!!!!\nString que recebemos: \"%s\"\nError string: %s\n",ports_and_info_buff,strerror(errno));
 		 close(sock);
@@ -289,7 +289,7 @@ static void send_client_ports(int sock,char* ports_and_info_buff,port_array port
 }
 static void close_single_port_from_client(int sock,char* ports_and_info_buff,uint16_t* port){
 
-	int result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
+	int result=sendsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair,0);
 	if(result<=0){
 
 		printf("timeout no port mapper");
@@ -297,7 +297,7 @@ static void close_single_port_from_client(int sock,char* ports_and_info_buff,uin
 		return;
 	}
 	memset(ports_and_info_buff,0,4096);
-	result=readsome(sock,(char*)port,sizeof((*port)),port_mapper_times_pair);
+	result=readsome(sock,(char*)port,sizeof((*port)),port_mapper_times_pair,0);
 	if(result<=0){
 
 		printf("timeout no port mapper");
@@ -374,7 +374,7 @@ static void* accepted_connection_thread(void* args){
 	char ports_and_info_buff[4096]={0};
 	port_array ports_to_work_with={0};
 	uint16_t port_to_work_with[1]={0};
-	readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair);
+	readsome(sock,ports_and_info_buff,DEF_DATASIZE,port_mapper_times_pair,0);
 	sscanf(ports_and_info_buff,"%s",request_buff);
 	fflush(stdout);
 	printf("Recebemos esta string de request: '%s'\n",request_buff);
