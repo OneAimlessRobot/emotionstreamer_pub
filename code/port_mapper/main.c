@@ -17,7 +17,7 @@ int main(void){
 	parse_generalized_cfg();
         read_values_cfg_port_mapper();
         if(cfg_port_mapper_show_splash){
-		print_out_logo();
+		print_out_logo(1);
 	}
         if(cfg_port_mapper_print_config){
 		printf("Generalized cfg:\n");

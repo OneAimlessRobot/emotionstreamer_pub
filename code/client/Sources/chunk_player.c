@@ -70,7 +70,7 @@ static ao_sample_format format={0};
 
 static char tmp_dev_string[DEF_DATASIZE]={0},
 	/*number_string_for_oss_ao_plugin_buffer_time[DEF_DATASIZE]={0},*/
-	alsa_device_print_buff[DEF_DATASIZE]={0};
+	alsa_device_print_buff[DEF_DATASIZE*6]={0};
 
 static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
 

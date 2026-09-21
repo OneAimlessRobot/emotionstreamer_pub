@@ -43,7 +43,7 @@ static	char method_buff[PATHSIZE]={0},
 	file_path2[PATHSIZE*3-1]={0};
 static struct sockaddr_in server_ip_address,
 	client_ip_address;
-ip_cache_t cache=(ip_cache_t){NULL,0};
+ip_cache_t cache={NULL,0};
 static con_t client_con_obj;
 static method play_way=PLAY_PA;
 
@@ -283,9 +283,15 @@ int clientStart(char* req_field,char* file_name){
 	switch(the_type){
 
 	case PLAY:
+		if(cfg_client_show_splash){
+			print_out_logo(1);
+		}
 		play_func(file_name);
 		break;
 	case DOWN:
+		if(cfg_client_show_splash){
+			print_out_logo(1);
+		}
 		down_func(file_name);
 		break;
 	case CONFIG:

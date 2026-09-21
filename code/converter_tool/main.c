@@ -7,7 +7,7 @@
 int main(int argc, char ** argv){
 
 	if(converter_tool_display_splash){
-		print_out_logo();
+		print_out_logo(1);
 	}
 	if(argc!=3){
 

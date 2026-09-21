@@ -15,7 +15,7 @@ int main(int argc, char ** argv){
 	parse_generalized_cfg();
         read_values_cfg_browser();
         if(cfg_browser_show_splash){
-        	print_out_logo();
+        	print_out_logo(1);
 	}
         if(cfg_browser_print_config){
 		print_values_generalized_cfg(1);

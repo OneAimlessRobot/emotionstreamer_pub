@@ -355,7 +355,7 @@ void* acceptor_func(void* args){
 	uint16_t master_stored_port=0;
 	char req_buff[DEF_DATASIZE+1]={0};
         char ip_buff[PATHSIZE/4]={0};
-        char name_buff[PATHSIZE/4]={0};
+        char name_buff[PATHSIZE+4]={0};
         char type_buff[PATHSIZE/4]={0};
 	int result=0;
 	uint16_t useless_arg=0;
@@ -440,7 +440,7 @@ void* acceptor_func(void* args){
 					getpeername(con.sockfd_tcp, (struct sockaddr*)&their_addr, &socklenvar[1]);
 					module_type_to_string((module_type)ntohs(proto_array[1]),type_buff);
 					sscanf((char*)&req_buff[PROTO_ARR_SIZE],"%s",extension_buff);
-					snprintf(name_buff,sizeof(name_buff),"%s",(char*)&req_buff[PROTO_ARR_SIZE+strnlen(extension_buff,4)]);
+					snprintf(name_buff,sizeof(name_buff)-1,"%s",(char*)&req_buff[PROTO_ARR_SIZE+strnlen(extension_buff,4)]);
 					result=con_send(&con,arg_a->con_times_pair);
 					clear_con_data(&con);
 					if(logging){

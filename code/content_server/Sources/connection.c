@@ -21,12 +21,14 @@
 
 static con_t server_con_obj;
 static int sock_tcp;
-static char file_name[PATHSIZE]={0},
+static char file_name[PATHSIZE+4]={0},
 	* dir_listing_str=NULL,
 	file_path[PATHSIZE*3 +4]={0},
 	req_string_buff[DEF_DATASIZE+1]={0},
 	rep_file_path[PATHSIZE*3 +4]={0},
-	rep_file_path_2[PATHSIZE*3 +4]={0};
+	rep_file_path_2[PATHSIZE*3 +4]={0},
+	extension_buff[EXTENSION_SIZE+1]={0};
+
 static proto_arr proto_array={0};
 static struct sigaction sa;
 
@@ -89,7 +91,6 @@ void con_go(int sockfd_tcp){
 
 			logging=cfg_server_logging;
 			logstream=stdout;
-			char extension_buff[EXTENSION_SIZE+1]={0};
 			strncpy(extension_buff,server_working_extension,EXTENSION_SIZE+1);
 			is_wav_mode=(uint16_t)(!strs_are_strictly_equal(extension_buff,WAV_MODE_EXTENSION));
 			if(is_wav_mode){

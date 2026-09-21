@@ -17,7 +17,7 @@ int main(void){
         parse_generalized_cfg();
         read_values_cfg_master();
         if(cfg_master_show_splash){
-		print_out_logo();
+		print_out_logo(1);
 	}
         if(cfg_master_print_config){
 

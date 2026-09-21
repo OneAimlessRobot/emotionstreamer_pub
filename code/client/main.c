@@ -15,9 +15,6 @@ int main(int argc, char ** argv){
         getcwd(curr_dir,PATHSIZE-1);
         parse_generalized_cfg();
 	read_values_cfg_client();
-	if(cfg_client_show_splash){
-		print_out_logo();
-	}
 	if(cfg_client_print_config){
 	        printf("Generalized cfg:\n");
 		print_values_generalized_cfg(1);

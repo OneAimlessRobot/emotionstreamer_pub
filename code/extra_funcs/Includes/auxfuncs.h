@@ -62,7 +62,7 @@ https://gist.github.com/radxene/f1e286301763b921baf06074ea46c800
 
 typedef enum var_op{V_LOOK,V_SET}var_op;
 
-void print_out_logo(void);
+void print_out_logo(int fd);
 
 int acess_var_mtx(pthread_mutex_t* mtx,int* var,int value_if_change,var_op op);
 

@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
 
 		case SERVER:
 			if(cfg_server_show_splash){
-				print_out_logo();
+				print_out_logo(1);
 			}
 			if(cfg_server_print_config){
 				print_values_generalized_cfg(1);

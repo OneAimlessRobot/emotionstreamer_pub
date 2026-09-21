@@ -2,12 +2,16 @@
 #include "../Includes/auxfuncs.h"
 #include <dirent.h>
 
-void print_out_logo(void){
+void print_out_logo(int fd){
+	if(fd < 0){
+		dprintf(fd,"Could not display logo!\nInvalid file descriptor! %d < 0!\n",fd);
+		return;
+	}
 	FILE* logo_fp=NULL;
 	char line_buff[DEF_DATASIZE];
 	if(!(logo_fp=fopen(LOGO_ASCII_ART_FILE_PATH,"r"))){
 
-		fprintf(stderr,"Could not display logo!\nError: %s\n",strerror(errno));
+		dprintf(fd,"Could not display logo!\nError: %s\n",strerror(errno));
 		return;
 	}
         printf(ANSI_BACKGROUND_WHITE ANSI_COLOR_BLUE ANSI_STYLE_BOLD);
@@ -19,15 +23,15 @@ void print_out_logo(void){
                 if(result){
 			line_buff[strlen(line_buff)-1]=0;
 			usleep(MS_TO_US(LOGO_ASCII_ART_FILE_SLEEP_PRINT_TIME_MS));
-	        	printf("%s\n",line_buff);
+	        	dprintf(fd,"%s\n",line_buff);
 		}
 		else{
 			if(feof(logo_fp)){
 
-				fprintf(stdout,"We reached the end of the logo file and stopped printing!\n");
+				dprintf(fd,"We reached the end of the logo file and stopped printing!\n");
 			}
 			else{
-				fprintf(stderr,"We stopped printing due to some error!!!!\nError: %s\n",strerror(errno));
+				dprintf(fd,"We stopped printing due to some error!!!!\nError: %s\n",strerror(errno));
 			}
 			fclose(logo_fp);
 			logo_fp=NULL;
