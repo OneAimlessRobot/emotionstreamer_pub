@@ -14,16 +14,15 @@ void print_out_logo(int fd){
 		dprintf(fd,"Could not display logo!\nError: %s\n",strerror(errno));
 		return;
 	}
-        printf(ANSI_BACKGROUND_WHITE ANSI_COLOR_BLUE ANSI_STYLE_BOLD);
+        dprintf(fd,ANSI_BACKGROUND_WHITE ANSI_COLOR_BLUE ANSI_STYLE_BOLD);
 	while(1){
 
 
 		memset(line_buff,0,sizeof(line_buff));
 		char* result=fgets(line_buff,sizeof(line_buff)-1,logo_fp);
                 if(result){
-			line_buff[strlen(line_buff)-1]=0;
 			usleep(MS_TO_US(LOGO_ASCII_ART_FILE_SLEEP_PRINT_TIME_MS));
-	        	dprintf(fd,"%s\n",line_buff);
+	        	dprintf(fd,"%s",line_buff);
 		}
 		else{
 			if(feof(logo_fp)){
@@ -38,7 +37,7 @@ void print_out_logo(int fd){
 			break;
 		}
 	}
-	printf(ANSI_RESET_ALL ANSI_BACKGROUND_BLACK ANSI_COLOR_WHITE);
+	dprintf(fd,ANSI_RESET_ALL ANSI_BACKGROUND_BLACK ANSI_COLOR_WHITE);
 
 
 
