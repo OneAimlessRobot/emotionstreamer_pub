@@ -68,7 +68,7 @@ static pa_sample_spec ss={0};
 
 static ao_sample_format format={0};
 
-static char tmp_dev_string[DEF_DATASIZE]={0},
+static char tmp_dev_string[DEF_DATASIZE*3]={0},
 	/*number_string_for_oss_ao_plugin_buffer_time[DEF_DATASIZE]={0},*/
 	alsa_device_print_buff[DEF_DATASIZE*6]={0};
 
@@ -223,7 +223,7 @@ print_log_string(alsa_device_print_buff);
 
 static void initALSA(chunk_player* player){
 
-list_alsa_devices();
+//list_alsa_devices();
 int err;
 memset(tmp_dev_string,0,sizeof(tmp_dev_string));
 snprintf(tmp_dev_string,strlen(cfg_client_device_name_if_alsa)+strlen(cfg_client_device_output_if_alsa)+10,"%s%s%s",cfg_client_device_name_if_alsa,strlen(cfg_client_device_output_if_alsa)?",":"",cfg_client_device_output_if_alsa);
@@ -327,7 +327,7 @@ static void initAO(chunk_player*player){
         ao_option* options=NULL;
 
 	print_driver_infos();
-	driver_id = ao_driver_id("pulse");
+	driver_id = ao_driver_id("oss");
 	if(driver_id<0){
 		print_log_string("Error opening libao sound driver.\n");
 		raise(SIGINT);

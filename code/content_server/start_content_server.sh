@@ -7,6 +7,8 @@ server_tmp_dir_path="/tmp/emotionstreamer_tmp_dir_path_thing_mabobber"
 
 rm -rf "${server_tmp_dir_path}"
 server_tmp_dir_path="${server_tmp_dir_path}" $(pwd)/"${executable_name}"
+#version for gdb
+#server_tmp_dir_path="${server_tmp_dir_path}" gdb "$(pwd)/${executable_name}"
 rm -rf "${server_tmp_dir_path}"
 
 

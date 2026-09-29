@@ -184,38 +184,41 @@ int clientStart(char* req_field,char* file_name){
 		exit(-1);
 	}
 
+	if(the_type==PLAY||the_type==DOWN){
+		if(cfg_client_show_splash){
+			print_out_logo(1);
+		}
+		if(the_type==PLAY){
+			if(!strs_are_strictly_equal(method_buff,"alsa")){
 
+				fprintf(logstream,"Playing with ALSA library!\n");
+				play_way=PLAY_ALSA;
 
-	if(the_type==PLAY){
-	if(!strs_are_strictly_equal(method_buff,"alsa")){
+			}
+			else if(!strs_are_strictly_equal(method_buff,"pulse")){
 
-		fprintf(logstream,"Playing with ALSA library!\n");
-		play_way=PLAY_ALSA;
+				fprintf(logstream,"Playing with pulse_audio library!\n");
+				play_way=PLAY_PA;
 
-	}
-	else if(!strs_are_strictly_equal(method_buff,"pulse")){
+			}
+			else if(!strs_are_strictly_equal(method_buff,"ao")){
 
-		fprintf(logstream,"Playing with pulse_audio library!\n");
-		play_way=PLAY_PA;
+				fprintf(logstream,"Playing with libao library!\n");
+				ao_initialize();
+				libao_initialized=1;
+				play_way=PLAY_AO;
 
-	}
-	else if(!strs_are_strictly_equal(method_buff,"ao")){
+			}
+			else if(!strs_are_strictly_equal(method_buff,"oss")){
 
-		fprintf(logstream,"Playing with libao library!\n");
-		ao_initialize();
-    		libao_initialized=1;
-		play_way=PLAY_AO;
+				fprintf(logstream,"Playing using bare file descriptors!\n(AKA rawest shit you've ever seen, my man)\n");
+				play_way=PLAY_BARE;
 
-	}
-	else if(!strs_are_strictly_equal(method_buff,"oss")){
-
-		fprintf(logstream,"Playing using bare file descriptors!\n(AKA rawest shit you've ever seen, my man)\n");
-		play_way=PLAY_BARE;
-
-	}
-	else{
-		fprintf(logstream,"Unknown media library!\nDefaulting to attempting Pulse!\n");
-	}
+			}
+			else{
+				fprintf(logstream,"Unknown media library!\nDefaulting to attempting Pulse!\n");
+			}
+		}
 	}
 
 
@@ -283,15 +286,9 @@ int clientStart(char* req_field,char* file_name){
 	switch(the_type){
 
 	case PLAY:
-		if(cfg_client_show_splash){
-			print_out_logo(1);
-		}
 		play_func(file_name);
 		break;
 	case DOWN:
-		if(cfg_client_show_splash){
-			print_out_logo(1);
-		}
 		down_func(file_name);
 		break;
 	case CONFIG:

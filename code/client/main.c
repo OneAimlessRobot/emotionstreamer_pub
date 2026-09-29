@@ -47,12 +47,13 @@ int main(int argc, char ** argv){
 
 
 	result= strnlen(client_music_folder_path,PATHSIZE-1);
-        if(!result){
+        int the_strlen=strlen(curr_dir);
+	if(!result){
 
-                snprintf(curr_dir+strlen(curr_dir),PATHSIZE,"%s",MUSIC_CLIENT_INPUT_PATH);
+                snprintf(curr_dir+the_strlen,PATHSIZE-the_strlen,"%s",MUSIC_CLIENT_INPUT_PATH);
         }
         else{
-                 snprintf(curr_dir+strlen(curr_dir),PATHSIZE,"%s",client_music_folder_path);
+                 snprintf(curr_dir+the_strlen,PATHSIZE-the_strlen,"%s",client_music_folder_path);
 	}
 	if(logging){
 		printf("Curr dir: %s\n", curr_dir);

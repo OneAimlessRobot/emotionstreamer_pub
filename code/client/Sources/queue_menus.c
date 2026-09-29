@@ -112,7 +112,7 @@ static void circular_q_visual_print(chunk_queue* que){
 	bar[play_cursor_bar_pos]='P';
 	bar[recv_cursor_bar_pos]='R';
 
-	uint64_t num_to_render = (((que->n_occupied*que->display_size)/que->max_occupied)-1);
+	uint64_t num_to_render = max((((que->n_occupied*que->display_size)/que->max_occupied)-1),0);
 	/*
 		lets do this to skip one
 		in case it is full
@@ -132,7 +132,7 @@ static void circular_q_visual_print(chunk_queue* que){
 	}
 	char buff[BUFFSIZE]={0};
 	int inc=snprintf(buff,BUFFSIZE-1,"Queue name: %s\n",que->queue_name);
-	snprintf(buff+inc,BUFFSIZE-1,"%s\n",bar);
+	snprintf(buff+inc,BUFFSIZE-inc,"%s\n",bar);
 	print_string(buff);
 }
 int perform_queue_op(chunk_queue* que,uint8_t* buff_if_insert, decoder_result_struct* frame_data_struct,q_op op){

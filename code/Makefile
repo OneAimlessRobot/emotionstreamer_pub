@@ -77,11 +77,9 @@ CC= cc
 #CC=clang
 DEPFLAGS= -MP -MD
 
-#CFLAGS += -fsanitize=thread -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
-#CFLAGS += -fsanitize=address -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
-CFLAGS += -Wall -DPROGRAMPATHAUX="$(CURRDIR)/" -Wpedantic -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS)
-
-CFLAGS2 :=  $(CFLAGS) $(SDL_CFLAGS) -O0
+#CFLAGS += -fsanitize=thread -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS) -O3
+#CFLAGS += -fsanitize=address -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS) -O3
+CFLAGS += -Wall -DPROGRAMPATHAUX="$(CURRDIR)/" -Wpedantic -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS) -O3
 
 
 SOURCEFILES=$(foreach D,$(SOURCES), $(wildcard $(D)/*.c))

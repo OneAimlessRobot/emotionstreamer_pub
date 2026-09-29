@@ -14,6 +14,7 @@
 #include "../../extra_funcs/Includes/generalized_config.h"
 #include "../Includes/configs.h"
 #include "../../extra_funcs/Includes/sockio_tcp.h"
+#include "../../extra_funcs/Includes/sock_ops.h"
 #include "../../extra_funcs/Includes/openssl_stuff.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/connection.h"
@@ -40,9 +41,8 @@ static struct sigaction sa_winch;
 
 static char decode_print_buff[DEF_DATASIZE]={0},
 		stats_print_buff[DEF_DATASIZE*2+1]={0},
-		input_buff[DEF_DATASIZE+1]={0};
-
-static char error_buff_decoder[DEF_DATASIZE]={0},
+		input_buff[DEF_DATASIZE+1]={0},
+		error_buff_decoder[DEF_DATASIZE]={0},
 		error_buff_stats[DEF_DATASIZE]={0},
 		error_buff_play[DEF_DATASIZE]={0},
 		error_buff_input[DEF_DATASIZE]={0},
@@ -92,13 +92,13 @@ static atomic_int lost_packet=0,
 		decoding=0,
 		playing=0,
 		showing=0,
+		input_thread_alive=1,
+		terminating=0,
 		paused=0,
 		ready_2_go=0,
 		is_first_player_chunk=1,
 		we_got_the_stats=0,
-		/*stats_pct_full_decoding=0,*/
 		stats_time_ms=0,
-		/*stats_pct_full_playing=0,*/
 		decode_queue_empty=0,
 		play_queue_full=0,
 		decode_ret_val=MPG123_NEED_MORE,
@@ -132,6 +132,7 @@ void stop_client_stream(void){
 
 	innited=0;
         reading=0;
+	paused=0;
 	decoding=1;
 	playing=1;
 	pthread_cond_signal(&running_cond);
@@ -145,10 +146,17 @@ void stop_client_stream(void){
 static void sigint_handler(int useless){
 
         innited=0*useless;
-        reading=0;
+	reading=0;
+	paused=0;
 	decoding=1;
 	playing=1;
-	stop_client_stream();
+	pthread_cond_signal(&running_cond);
+	pthread_cond_signal(&player_cond);
+	pthread_cond_signal(&decoder_cond);
+	pthread_cond_signal(&reading_cond);
+	pthread_cond_signal(&input_cond);
+	pthread_cond_signal(&stats_cond);
+
 }
 static void sigwinch_handler(int useless){
 
@@ -232,10 +240,9 @@ static void* rx_thread_func(void *args){
 			}
 			rx_result=read_chunk(&stream_struct,client_data_times_pair);
 			if(rx_result<=0){
-				print_string("Thread de reading parado (early)!!!\n");
+
+				print_string(rx_result?"Thread de reading parado (early)!!!\n":"Server parou de enviar dados! Encerrando...\n");
 				return args;
-			}
-			else{
 
 			}
 			if(!is_wav_compat_mode()){
@@ -260,11 +267,11 @@ static void* rx_thread_func(void *args){
 			}
 		}
 		pthread_mutex_lock(&reading_mtx);
-		while(innited&&(paused||(perform_queue_op(is_wav_compat_mode()?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,is_wav_compat_mode()?Q_IS_FULL:Q_IS_ALMOST_FULL}))
-					||
-					(!is_wav_compat_mode()&&!decoding&&!(perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY}))))){
+		while(innited&&(paused||(perform_queue_op(is_wav_compat_mode()?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,is_wav_compat_mode()?Q_IS_FULL:Q_IS_ALMOST_FULL})))){
+
 			reading=0;
 			pthread_cond_wait(&reading_cond,&reading_mtx);
+
 		}
 		pthread_mutex_unlock(&reading_mtx);
 	}
@@ -297,13 +304,6 @@ static void* dec_thread_func(void* args){
 				}
 			}
 			pthread_cond_signal(&reading_cond);
-			if(paused){
-				break;
-			}
-			decode_queue_empty=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY});
-			if(decode_queue_empty){
-				break;
-			}
 			if(!(decode_ret_val==MPG123_NEED_MORE)){
 				memset(decode_print_buff,0,sizeof(decode_print_buff));
 				if(decode_ret_val==MPG123_DONE){
@@ -317,6 +317,17 @@ static void* dec_thread_func(void* args){
 					goto decoder_exit;
 				}
 			}
+			if(paused){
+				break;
+			}
+			decode_queue_empty=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY});
+			if(decode_queue_empty){
+				if(rx_result<=0){
+					goto decoder_exit;
+				}
+				break;
+			}
+
 	}
 	pthread_mutex_lock(&decoder_mtx);
 
@@ -329,7 +340,7 @@ static void* dec_thread_func(void* args){
 	}
 	decoder_exit:
 		print_log_string("Thread de decoding parado!!!\n");
-		decode_queue_empty=1;
+		input_thread_alive=0;
 		return  args;
 }
 
@@ -365,6 +376,9 @@ static void* play_thread_func(void* args){
 			}
 			play_queue_empty=perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY});
 			if(play_queue_empty){
+				if(rx_result){
+					goto end_player;
+				}
 				break;
 			}
 			perform_play_op(stream_struct.player,NULL,P_REAL_PLAY);
@@ -376,9 +390,14 @@ static void* play_thread_func(void* args){
 	}
 	pthread_mutex_unlock(&player_mtx);
 	}
-	print_log_string("Thread de playing parado!!!\n");
-	play_queue_empty=1;
-	return  args;
+	end_player:
+		print_log_string("Thread de playing parado!!!\n");
+		play_queue_empty=1;
+		if(is_wav_compat_mode()){
+			input_thread_alive=0;
+			terminating=1;
+		}
+		return  args;
 }
 static void* show_stats(void* args){
 
@@ -472,8 +491,19 @@ static void* input_thread_func(void* args){
 	pthread_mutex_unlock(&input_mtx);
 	set_thread_name_wrapper(error_buff_input,input_thread_name);
 	print_log_string("Thread de input alcançado!\n");
+	struct termios ttystate, ttysave;
 
-	while(innited){
+
+	if(!stream_enable_ncurses){
+		//get the terminal state
+		tcgetattr(STDIN_FILENO, &ttystate);
+		ttysave = ttystate;
+		//turn off canonical mode and echo
+		ttystate.c_lflag &= ~(ICANON | ECHO);
+		//minimum of number input read.
+		ttystate.c_cc[VMIN] = 2;
+	}
+	while(input_thread_alive&&innited){
 		memset(input_buff,0,sizeof(input_buff)-1);
 		if(stream_enable_ncurses){
 			input_buff[0]=getchar();
@@ -497,15 +527,26 @@ static void* input_thread_func(void* args){
 			case 's':
 				pthread_mutex_lock(&input_mtx);
 				print_log_string("Tentando sair!\n");
+				input_thread_alive=0;
 				stop_client_stream();
 				pthread_mutex_unlock(&input_mtx);
 			break;
 			default:
+				print_log_string("No input!\n");
 			break;
 		}
 
 
 	}
+	if(!stream_enable_ncurses){
+		ttystate.c_lflag |= ICANON | ECHO;
+		//set the terminal attributes.
+		tcsetattr(STDIN_FILENO, TCSANOW, &ttysave);
+		// report success
+	}
+	fflush(stdin);
+	terminating=1;
+	stop_client_stream();
 	return args;
 
 }
@@ -570,12 +611,8 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		printf("Stats thread (named %s) initialized sucessfully\n",stats_thread_name);
 	}
 	rx_thread_func(NULL);
-	while(innited&&!(play_queue_empty&&decode_queue_empty)){
-		usleep(MS_TO_US(100));
-	}
-	stop_client_stream();
 	pthread_mutex_lock(&running_mtx);
-	while(innited){
+	while(innited&&(!terminating||!play_queue_empty)){
 		pthread_cond_wait(&running_cond,&running_mtx);
 	}
 	pthread_mutex_unlock(&running_mtx);
@@ -601,7 +638,6 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_CLEAN,Q_LOOK_NA});
 		perform_dec_op(stream_struct.decoder,D_CLEAN,0);
 	}
-	stop_client_stream();
 	perform_play_op(stream_struct.player,NULL,P_CLEAN);
 	pthread_mutex_lock(&exit_mtx);
 	if(!exiting&&acess_var_mtx(&variable_acess_mtx,&stream_struct.con_obj->is_on,0,V_LOOK)){

@@ -12,6 +12,8 @@
 #include "../Includes/port_mapper_file.h"
 #include "../Includes/configs.h"
 
+#define ESTUPIDA_ESTA_MERDA_CARALHO_PUTA_ANTI_FORTIFY_WARNING_SAFEGURD_BUFF 4096
+
 static pthread_mutex_t running_mtx=PTHREAD_MUTEX_INITIALIZER,
 			input_mtx=PTHREAD_MUTEX_INITIALIZER,
 			con_mtx=PTHREAD_MUTEX_INITIALIZER,
@@ -143,37 +145,51 @@ static int fetch_single_port_to_give(uint16_t* port,int actually_change){
 static void port_mapper_print(int fd){
 
 
-	char buff[4096+cfg_num_ports+4096];
-	memset(buff,0,4096+cfg_num_ports+4096);
-	char* ptr=buff,*prev_ptr;
-	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"Aqui está o estado atual do port mapper!\nPortas a fornecer: de %d a %d\n\n\n",cfg_init_port,cfg_init_port+cfg_num_ports);
-	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%sReservadas: 'r'\nAllocadas: 't'\nLivres: '-'\n[",prev_ptr);
+	char buff[ESTUPIDA_ESTA_MERDA_CARALHO_PUTA_ANTI_FORTIFY_WARNING_SAFEGURD_BUFF
+			+
+			cfg_num_ports
+			+
+		ESTUPIDA_ESTA_MERDA_CARALHO_PUTA_ANTI_FORTIFY_WARNING_SAFEGURD_BUFF],
+
+		MINI_BUFFFFFFF[ESTUPIDA_ESTA_MERDA_CARALHO_PUTA_ANTI_FORTIFY_WARNING_SAFEGURD_BUFF+cfg_num_ports];
+
+	char* ptr=buff;
+	uint64_t obtained_increment=0;
+	obtained_increment=snprintf(MINI_BUFFFFFFF,sizeof(MINI_BUFFFFFFF),"Aqui está o estado atual do port mapper!\nPortas a fornecer: de %d a %d\n\n\n",cfg_init_port,cfg_init_port+cfg_num_ports);
+	snprintf(ptr,obtained_increment+1,"%s",MINI_BUFFFFFFF);
+	ptr+=obtained_increment;
+	obtained_increment=snprintf(MINI_BUFFFFFFF,sizeof(MINI_BUFFFFFFF),"Reservadas: 'r'\nAllocadas: 't'\nLivres: '-'\n[");
+	snprintf(ptr,obtained_increment+1,"%s",MINI_BUFFFFFFF);
+	ptr+=obtained_increment;
 	for(int i=0;i<cfg_num_ports;i++){
 		int port_state=acess_var_mtx(&variable_mtx,&(mapper.port_arr[i]),0,V_LOOK);
-		ptr[i]=(port_state?((port_state>0)?'t':'r'):'-');
+		MINI_BUFFFFFFF[i]=(port_state?((port_state>0)?'t':'r'):'-');
 
 	}
-	prev_ptr=ptr+=cfg_num_ports;
+	obtained_increment=cfg_num_ports;
+	snprintf(ptr,cfg_num_ports+1,"%s",MINI_BUFFFFFFF);
+	ptr+=obtained_increment;
 	port_array arr={0};
 	fetch_ports_to_give(arr,0);
-	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%s]\n\nAqui estão as portas que seriam entregues a seguir:\nSeriam entregues %d portas!\n",prev_ptr,arr[0]);
-
+	obtained_increment=snprintf(MINI_BUFFFFFFF,sizeof(MINI_BUFFFFFFF),"]\n\nAqui estão as portas que seriam entregues a seguir:\nSeriam entregues %d portas!\n",arr[0]);
+	snprintf(ptr,obtained_increment+1,"%s",MINI_BUFFFFFFF);
+	ptr+=obtained_increment;
 	for(int i=1;i<=NUM_PORTS_TO_GIVE;i++){
-	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%s-%d\n",prev_ptr,arr[i]);
-
+		obtained_increment=snprintf(MINI_BUFFFFFFF,sizeof(MINI_BUFFFFFFF),"-%d\n",arr[i]);
+		snprintf(ptr,obtained_increment+1,"%s",MINI_BUFFFFFFF);
+		ptr+=obtained_increment;
 	}
-	prev_ptr=ptr+=snprintf(ptr,sizeof(buff),"%s\n\n"
+	obtained_increment=snprintf(MINI_BUFFFFFFF,sizeof(MINI_BUFFFFFFF),"\n\n"
 						"\nPort mapper está a correr? %s"
 						"\nEstamos cheios? %s"
 						"\nEstamos vazios? %s"
 						"\nNumero atual de portas:%d\n\n",
-						prev_ptr,
 						running?"Yes!":"No...",
 						is_no_more_room()?"Yes!":"No....",
 						is_empty()?"Yes!":"No....",
 						acess_var_mtx_uint16(&running_mtx,&mapper.curr_num_ports,0,V_LOOK));
-
-	dprintf(fd,"%s",buff);
+	snprintf(ptr,obtained_increment+1,"%s",MINI_BUFFFFFFF);
+	dprintf(fd,"%s\n",buff);
 
 }
 static void print_help(void){
@@ -427,7 +443,7 @@ void* port_mapper_main_loop(void* args){
 			}
 			else{
 
-				perror("Rejected connection!\n");
+				perror("Accept function call failed at main port mapper loop!\n");
 				raise(SIGINT);
 				cleanup();
 				break;

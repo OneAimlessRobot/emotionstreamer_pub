@@ -62,25 +62,27 @@ int main(int argc, char* argv[]){
 			memset(curr_server_quarantine_dir_buff,0,PATHSIZE+1);
 			getcwd(curr_server_quarantine_dir_buff,PATHSIZE);
 			result= strnlen(server_music_folder_path,PATHSIZE);
+			int the_curr_dir_strlen=strlen(curr_dir),
+				the_quarantine_file_strlen=strlen(curr_server_quarantine_dir_buff);
 			if(!result){
 
-				snprintf(curr_dir+strlen(curr_dir),PATHSIZE+1,"%s",MUSIC_SERVER_INPUT_PATH);
+				snprintf(curr_dir+the_curr_dir_strlen,PATHSIZE-the_curr_dir_strlen,"%s",MUSIC_SERVER_INPUT_PATH);
 
 			}
 			else{
 
-				snprintf(curr_dir+strlen(curr_dir),PATHSIZE+1,"%s",server_music_folder_path);
+				snprintf(curr_dir+the_curr_dir_strlen,PATHSIZE-the_curr_dir_strlen,"%s",server_music_folder_path);
 
 			}
 			result= strnlen(server_music_quarantine_folder_path,PATHSIZE);
 			if(!result){
 
-				snprintf(curr_server_quarantine_dir_buff+strlen(curr_server_quarantine_dir_buff),PATHSIZE+1,"%s",MUSIC_SERVER_QUARANTINE_PATH);
+				snprintf(curr_server_quarantine_dir_buff+the_quarantine_file_strlen,PATHSIZE-the_quarantine_file_strlen,"%s",MUSIC_SERVER_QUARANTINE_PATH);
 
 			}
 			else{
 
-				snprintf(curr_server_quarantine_dir_buff+strlen(curr_server_quarantine_dir_buff),PATHSIZE+1,"%s",server_music_quarantine_folder_path);
+				snprintf(curr_server_quarantine_dir_buff+the_quarantine_file_strlen,PATHSIZE-the_quarantine_file_strlen,"%s",server_music_quarantine_folder_path);
 
 			}
 			con_go(sockd);

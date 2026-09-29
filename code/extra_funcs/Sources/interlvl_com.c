@@ -96,7 +96,7 @@ void* slave_thread(void* args){
 	proto_array[2]=the_port_to_give;
 	proto_array[3]=(uint16_t)htons(arg_struct->is_tls);
 	memcpy(arg_struct->con_obj->tcp_data,proto_array,PROTO_ARR_SIZE);
-	snprintf((char*)&arg_struct->con_obj->tcp_data[PROTO_ARR_SIZE],DEF_DATASIZE-2,"%s %s",arg_struct->extension_buff,arg_struct->lower_name);
+	snprintf((char*)&arg_struct->con_obj->tcp_data[PROTO_ARR_SIZE],DEF_DATASIZE-PROTO_ARR_SIZE,"%s %s",arg_struct->extension_buff,arg_struct->lower_name);
         int result=con_send(arg_struct->con_obj,arg_struct->ack_times_pair);
         if(result<0){
 
