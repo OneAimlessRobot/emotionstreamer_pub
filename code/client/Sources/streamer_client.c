@@ -148,6 +148,8 @@ static void sigint_handler(int useless){
         innited=0*useless;
 	reading=0;
 	paused=0;
+	input_thread_alive=0;
+	terminating=1;
 	decoding=1;
 	playing=1;
 	pthread_cond_signal(&running_cond);
@@ -340,7 +342,6 @@ static void* dec_thread_func(void* args){
 	}
 	decoder_exit:
 		print_log_string("Thread de decoding parado!!!\n");
-		input_thread_alive=0;
 		return  args;
 }
 
@@ -376,7 +377,7 @@ static void* play_thread_func(void* args){
 			}
 			play_queue_empty=perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY});
 			if(play_queue_empty){
-				if(rx_result){
+				if(rx_result<=0){
 					goto end_player;
 				}
 				break;
@@ -392,11 +393,8 @@ static void* play_thread_func(void* args){
 	}
 	end_player:
 		print_log_string("Thread de playing parado!!!\n");
-		play_queue_empty=1;
-		if(is_wav_compat_mode()){
-			input_thread_alive=0;
-			terminating=1;
-		}
+		input_thread_alive=0;
+		terminating=1;
 		return  args;
 }
 static void* show_stats(void* args){
@@ -503,7 +501,7 @@ static void* input_thread_func(void* args){
 		//minimum of number input read.
 		ttystate.c_cc[VMIN] = 2;
 	}
-	while(input_thread_alive&&innited){
+	while(input_thread_alive){
 		memset(input_buff,0,sizeof(input_buff)-1);
 		if(stream_enable_ncurses){
 			input_buff[0]=getchar();
@@ -612,7 +610,7 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	}
 	rx_thread_func(NULL);
 	pthread_mutex_lock(&running_mtx);
-	while(innited&&(!terminating||!play_queue_empty)){
+	while(innited&&!terminating){
 		pthread_cond_wait(&running_cond,&running_mtx);
 	}
 	pthread_mutex_unlock(&running_mtx);
