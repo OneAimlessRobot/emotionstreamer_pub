@@ -107,13 +107,28 @@ static void circular_q_visual_print(chunk_queue* que){
 	bar[que->display_size+1]=']';
 	uint64_t play_cursor_bar_pos=1+(que->play_cursor*que->display_size)/que->max_occupied;
 	uint64_t recv_cursor_bar_pos=1+(que->recv_cursor*que->display_size)/que->max_occupied;
+	uint8_t are_they_equal = (play_cursor_bar_pos == recv_cursor_bar_pos);
+	play_cursor_bar_pos = (are_they_equal?circular_int_inc(que->display_size+1,recv_cursor_bar_pos):play_cursor_bar_pos);
 	bar[play_cursor_bar_pos]='P';
 	bar[recv_cursor_bar_pos]='R';
-	for(uint64_t i=circular_int_inc(que->display_size+1,play_cursor_bar_pos);(i!=recv_cursor_bar_pos);i=circular_int_inc(que->display_size+1,i)){
 
-		if(i&&(i<=que->display_size)){
-			bar[i]='=';
-		}
+	uint64_t num_to_render = (((que->n_occupied*que->display_size)/que->max_occupied)-1);
+	/*
+		lets do this to skip one
+		in case it is full
+		so that the equal signs do not ead
+		the R letter
+		(It will be zero or one)
+	*/
+	uint64_t num_rendered = are_they_equal*1;
+
+	for(uint64_t i=circular_int_inc(que->display_size+1,play_cursor_bar_pos);num_rendered<num_to_render;i=circular_int_inc(que->display_size+1,i),num_rendered++){
+
+		(i?
+		bar[i]='='
+		:
+		num_rendered--);
+
 	}
 	char buff[BUFFSIZE]={0};
 	int inc=snprintf(buff,BUFFSIZE-1,"Queue name: %s\n",que->queue_name);

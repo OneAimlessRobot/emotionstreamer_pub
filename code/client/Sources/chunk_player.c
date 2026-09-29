@@ -290,7 +290,7 @@ static void initPA(chunk_player*player){
      ss.format =PA_SAMPLE_S16LE;
      ss.rate = player->current_result.hz;
      ss.channels = player->current_result.channels;
-     if (!(player->play_stream_pa = pa_simple_new(NULL, "client.exe", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, &attr, &errno))) {
+     if (!(player->play_stream_pa = pa_simple_new(NULL, play_thread_name, PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, &attr, &errno))) {
          fprintf(stderr, "pa_simple_new() failed: %s\n", pa_strerror(errno));
         raise(SIGINT);
 	stop_client_stream();

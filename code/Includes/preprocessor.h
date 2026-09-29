@@ -21,6 +21,8 @@
 #include <ifaddrs.h>
 #include <unistd.h>
 #include <limits.h>
+#include <linux/prctl.h>  /* Definition of PR_* constants */
+#include <sys/prctl.h>
 #include <stdint.h>
 #include <stdatomic.h>
 #include <time.h>

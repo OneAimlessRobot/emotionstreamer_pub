@@ -24,7 +24,7 @@
 
 #define LOGO_ASCII_ART_FILE_PATH "../config/logo.txt"
 
-#define LOGO_ASCII_ART_FILE_SLEEP_PRINT_TIME_MS 100
+#define LOGO_ASCII_ART_FILE_SLEEP_PRINT_TIME_MS 35
 /*
 credits for stdout colors:
 

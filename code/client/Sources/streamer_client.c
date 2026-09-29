@@ -42,6 +42,12 @@ static char decode_print_buff[DEF_DATASIZE]={0},
 		stats_print_buff[DEF_DATASIZE*2+1]={0},
 		input_buff[DEF_DATASIZE+1]={0};
 
+static char error_buff_decoder[DEF_DATASIZE]={0},
+		error_buff_stats[DEF_DATASIZE]={0},
+		error_buff_play[DEF_DATASIZE]={0},
+		error_buff_input[DEF_DATASIZE]={0},
+		error_buff_rx[DEF_DATASIZE]={0};
+
 static decoder_result_struct stats_result_struct={0};
 
 static pthread_cond_t reading_cond=PTHREAD_COND_INITIALIZER,
@@ -66,11 +72,20 @@ static pthread_t t_play,
 	  	t_input,
 	  	t_stats;
 
+/*
+
+Not needed, for now
+But leave them here
+Lets save just a wee bit of memory
+cuz why not
+
 static pid_t tid_rx,
 		tid_play,
 	  	tid_dec,
 	  	tid_input,
 	  	tid_stats;
+
+*/
 
 static atomic_int lost_packet=0,
 		reading=0,
@@ -80,6 +95,7 @@ static atomic_int lost_packet=0,
 		paused=0,
 		ready_2_go=0,
 		is_first_player_chunk=1,
+		we_got_the_stats=0,
 		/*stats_pct_full_decoding=0,*/
 		stats_time_ms=0,
 		/*stats_pct_full_playing=0,*/
@@ -144,6 +160,23 @@ static int is_wav_compat_mode(void){
 	return (is_wav_mode||!decode);
 
 }
+/*
+
+size of buff must be DEF_DATASIZE!
+
+*/
+static void set_thread_name_wrapper(char *error_buff, const char* the_name_to_set){
+	int set_name_result = set_this_thread_name(the_name_to_set);
+
+	if(logging){
+		(set_name_result ?
+		snprintf(error_buff,DEF_DATASIZE-1, "Error setting thread name! %s\n",strerror(errno))
+						:
+		snprintf(error_buff,DEF_DATASIZE-1, "Sucessfully set thread name to %s\n", the_name_to_set));
+
+		print_log_string(error_buff);
+	}
+}
 static int read_chunk(client_stream_t* strm,int_pair pair){
 	if(is_first_player_chunk){
 		if(strm->con_obj->is_ssl){
@@ -184,8 +217,7 @@ static int read_chunk(client_stream_t* strm,int_pair pair){
 
 static void* rx_thread_func(void *args){
 	print_log_string("Thread de reading alcançado!\n");
-	tid_rx=gettid_here();
-	set_this_thread_name(tid_rx, rx_thread_name);
+	set_thread_name_wrapper(error_buff_rx,rx_thread_name);
 	while(innited){
 		ready_2_go=1;
 		reading=1;
@@ -228,7 +260,9 @@ static void* rx_thread_func(void *args){
 			}
 		}
 		pthread_mutex_lock(&reading_mtx);
-		while(innited&&(paused||(perform_queue_op(is_wav_compat_mode()?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,is_wav_compat_mode()?Q_IS_FULL:Q_IS_ALMOST_FULL})))){
+		while(innited&&(paused||(perform_queue_op(is_wav_compat_mode()?stream_struct.player_que:stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,is_wav_compat_mode()?Q_IS_FULL:Q_IS_ALMOST_FULL}))
+					||
+					(!is_wav_compat_mode()&&!decoding&&!(perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY}))))){
 			reading=0;
 			pthread_cond_wait(&reading_cond,&reading_mtx);
 		}
@@ -246,8 +280,7 @@ static void* dec_thread_func(void* args){
 		print_log_string("Waiting loop de thread de decoding triggered com cond!\n");
 	}
 	pthread_mutex_unlock(&decoder_mtx);
-	tid_dec=gettid_here();
-	set_this_thread_name(tid_dec, decode_thread_name);
+	set_thread_name_wrapper(error_buff_decoder,decode_thread_name);
 	print_log_string("Thread de decoding alcançado!\n");
 	while(innited){
 		decoding=1;
@@ -307,10 +340,9 @@ static void* play_thread_func(void* args){
 		pthread_cond_wait(&player_cond,&player_mtx);
 	}
 	pthread_mutex_unlock(&player_mtx);
-	usleep(1000*1000);
-	tid_play=gettid_here();
-	set_this_thread_name(tid_play, play_thread_name);
 	print_log_string("Thread de play alcançado!\n");
+	set_thread_name_wrapper(error_buff_play,play_thread_name);
+	usleep(1000*1000);
 	while(innited){
 		playing=1;
 		while(innited){
@@ -355,10 +387,8 @@ static void* show_stats(void* args){
 		pthread_cond_wait(&stats_cond,&stats_mtx);
 	}
 	pthread_mutex_unlock(&stats_mtx);
-	tid_stats=gettid_here();
-	set_this_thread_name(tid_stats, stats_thread_name);
+	set_thread_name_wrapper(error_buff_stats,stats_thread_name);
 	print_string("Thread de stats alcançado!\n");
-	perform_play_op(stream_struct.player,&stats_result_struct,P_GET_FRAME_DATA);
 	if(stream_enable_ncurses){
         	enable_ncurses();
 		clearok(stdscr,1);
@@ -371,9 +401,7 @@ static void* show_stats(void* args){
 
 	}
 	while(innited){
-	        memset(stats_print_buff,0,sizeof(stats_print_buff)-1);
 	        stats_start = clock();
-		stats_time_ms=perform_queue_op(stream_struct.player_que,NULL,&stats_result_struct,(q_op){Q_GET_TIME,Q_LOOK_NA});
 		if(stream_enable_ncurses){
 			clear();
 		}
@@ -384,14 +412,35 @@ static void* show_stats(void* args){
 			}
 			printf("\033[H");
 		}
-		snprintf(stats_print_buff,sizeof(stats_print_buff)-1,"Song name: %s\n\nbuffer: %d ms\nReading?: %sDecoding?: %s Playing?: %s Paused?: %s\nWAV innited? %s\n\n",
-					song_name_global,
-					stats_time_ms,
+		memset(stats_print_buff,0,sizeof(stats_print_buff)-1);
+	        char* stats_print_buff_ptr=stats_print_buff;
+		if(!we_got_the_stats){
+			perform_play_op(stream_struct.player,&stats_result_struct,P_GET_FRAME_DATA);
+			we_got_the_stats= (stats_result_struct.nsamples>0);
+		}
+		if(we_got_the_stats){
+			stats_time_ms=perform_queue_op(stream_struct.player_que,NULL,&stats_result_struct,(q_op){Q_GET_TIME,Q_LOOK_NA});
+		}
+		stats_print_buff_ptr+=snprintf(stats_print_buff_ptr,(sizeof(stats_print_buff)-1)-(stats_print_buff_ptr-stats_print_buff),
+					"Song name: %s\n\n",
+					song_name_global);
+
+		stats_print_buff_ptr+=(we_got_the_stats?
+				snprintf(stats_print_buff_ptr,(sizeof(stats_print_buff)-1)-(stats_print_buff_ptr-stats_print_buff),
+					"buffer: %d ms\n",
+					stats_time_ms)
+						:
+				snprintf(stats_print_buff_ptr,(sizeof(stats_print_buff)-1)-(stats_print_buff_ptr-stats_print_buff),
+					"We have no timing data, at this point\n"));
+
+		stats_print_buff_ptr+=snprintf(stats_print_buff_ptr,(sizeof(stats_print_buff)-1)-(stats_print_buff_ptr-stats_print_buff),
+					"Reading?: %sDecoding?: %s Playing?: %s Paused?: %s\nWAV innited? %s\n\n",
 					reading ? "READING ": "    ",
 					decoding ? "DECODING ": "    ",
 					playing ? "PLAYING ": "    ",
 					paused ? "PAUSED ": "    ",
 					is_wav_mode?(is_first_player_chunk ? "YES! ": "NO..."):"Not in WAV mode...");
+
 		print_string(stats_print_buff);
 		if(stream_show_decoder_queue&&decode&&!is_wav_mode){
 			perform_queue_op(stream_struct.decoder_que,NULL,&stats_result_struct,(q_op){Q_PRINT,Q_LOOK_NA});
@@ -421,8 +470,7 @@ static void* input_thread_func(void* args){
                 pthread_cond_wait(&input_cond,&input_mtx);
         }
 	pthread_mutex_unlock(&input_mtx);
-	tid_input=gettid_here();
-	set_this_thread_name(tid_input, input_thread_name);
+	set_thread_name_wrapper(error_buff_input,input_thread_name);
 	print_log_string("Thread de input alcançado!\n");
 
 	while(innited){
@@ -501,11 +549,6 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 	}
 	stream_struct.con_obj=con_obj;
 	innited=1;
-	if(stream_show_stats){
-		printf("Stats thread (named %s) to be initialized\n",stats_thread_name);
-		create_client_thread(&t_stats,show_stats);
-		printf("Stats thread (named %s) initialized sucessfully\n",stats_thread_name);
-	}
 	if(play){
 		printf("Player thread (named %s) to be initialized\n",play_thread_name);
 		create_client_thread(&t_play,play_thread_func);
@@ -520,6 +563,11 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		printf("Decoder thread (named %s) to be initialized\n",decode_thread_name);
 		create_client_thread(&t_dec,dec_thread_func);
 		printf("Decoder thread (named %s) initialized successfully\n",decode_thread_name);
+	}
+	if(stream_show_stats){
+		printf("Stats thread (named %s) to be initialized\n",stats_thread_name);
+		create_client_thread(&t_stats,show_stats);
+		printf("Stats thread (named %s) initialized sucessfully\n",stats_thread_name);
 	}
 	rx_thread_func(NULL);
 	while(innited&&!(play_queue_empty&&decode_queue_empty)){

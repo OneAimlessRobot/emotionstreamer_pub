@@ -5,8 +5,15 @@ typedef void* (*thread_func)(void*);
 
 pid_t gettid_here(void);
 
-int set_this_thread_name(pid_t tid,const char * name);
-int get_this_thread_name(pid_t tid,char name_storing_buff[DEF_DATASIZE]);
+pid_t gettid_here_old(void);
+
+int set_thread_comm_string(pid_t tid,const char * name);
+
+int get_thread_comm_string(pid_t tid,char name_storing_buff[DEF_DATASIZE]);
+
+int set_this_thread_name(const char * name);
+
+int get_this_thread_name(char name_storing_buff[16]);
 
 void create_client_thread(pthread_t* tid_ptr,thread_func func);
 

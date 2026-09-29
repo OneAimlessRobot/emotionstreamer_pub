@@ -6,17 +6,24 @@
 
 pid_t gettid_here(void)
 {
+    return gettid();
+}
+pid_t gettid_here_old(void)
+{
     return syscall(SYS_gettid);
 }
-int set_this_thread_name(pid_t tid,const char * name)
-{
-    char filename[DEF_DATASIZE]={0};
 
-    if(strlen(name) > 15)
+int set_thread_comm_string(pid_t tid,const char * name)
+{
+
+    char filename[DEF_DATASIZE]={0};
+    char name_copy[DEF_DATASIZE]={0};
+    int the_len=snprintf(name_copy,sizeof(name_copy),"%s",name);
+    if(the_len > 15)
     {
-        errno = EINVAL;
-        return -1;
+    	name_copy[15] = 0;
     }
+
     snprintf(filename, sizeof(filename), "/proc/%d/comm", tid);
 
     FILE * comm=NULL;
@@ -24,11 +31,12 @@ int set_this_thread_name(pid_t tid,const char * name)
 	fprintf(stderr,"Erro a extrair nome de thread numero %d!\nErro: %s\nNome de ficheiro: %s\n",tid,strerror(errno),filename);
 	return -1;
     }
-    fprintf(comm, "%s", name);
+    fprintf(comm, "%s", name_copy);
     fclose(comm);
+
     return 0;
 }
-int get_this_thread_name(pid_t tid,char name_storing_buff[DEF_DATASIZE])
+int get_thread_comm_string(pid_t tid,char name_storing_buff[DEF_DATASIZE])
 {
     char filename[DEF_DATASIZE]={0};
 
@@ -44,6 +52,19 @@ int get_this_thread_name(pid_t tid,char name_storing_buff[DEF_DATASIZE])
     fclose(comm);
     return 0;
 }
+int set_this_thread_name(const char* name)
+{
+
+	return prctl(PR_SET_NAME, name);
+
+}
+
+int get_this_thread_name(char name_storing_buff[16])
+{
+	return prctl(PR_GET_NAME, name_storing_buff);
+}
+
+
 void create_client_thread(pthread_t* tid_ptr,thread_func func){
         pthread_create(tid_ptr,NULL,func,NULL);
 }
