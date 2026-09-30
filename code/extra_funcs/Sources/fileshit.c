@@ -15,7 +15,7 @@ char auth_cert_file_path[PATHSIZE]={0};
 char host_cert_file_path[PATHSIZE]={0};
 char host_pkey_file_path[PATHSIZE]={0};
 
-char curr_dir[PATHSIZE]={0};
+char curr_dir[PATHSIZE+1]={0};
 
 SSL_CTX *global_server_ctx=NULL,
 	*global_client_ctx=NULL;

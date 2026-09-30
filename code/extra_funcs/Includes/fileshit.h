@@ -29,7 +29,7 @@ extern u_int16_t will_use_tls;
 
 
 
-extern char curr_dir[PATHSIZE];
+extern char curr_dir[PATHSIZE+1];
 
 extern char auth_cert_file_path[PATHSIZE];
 

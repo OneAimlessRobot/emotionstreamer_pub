@@ -11,7 +11,7 @@
 int main(int argc, char ** argv){
 
 	memset(curr_dir,0,PATHSIZE);
-        getcwd(curr_dir,PATHSIZE-1);
+        (void)(getcwd(curr_dir,PATHSIZE-1));
 	parse_generalized_cfg();
         read_values_cfg_browser();
         if(cfg_browser_show_splash){

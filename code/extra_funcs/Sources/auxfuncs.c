@@ -313,3 +313,17 @@ void skip_config_comments(FILE* fp){
 		goto skip_comment;
 	}
 }
+
+void replaceStringCharacter(char *s,char dirty,char wantthisoneinstead){
+
+	int size=strlen(s);
+	for(int i=0;i<size;i++){
+		if(s[i]==dirty){
+			s[i]=wantthisoneinstead;
+
+		}
+	}
+
+
+
+}

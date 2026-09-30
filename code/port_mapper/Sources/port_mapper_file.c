@@ -22,10 +22,10 @@ int save_port_mapper_file(port_mapper* mapper){
                 perror("Nao foi possivel abrir ficheiro para truncar!!!! Saindo!!!\n");
 		return -1;
         }
-	write(port_mapper_local_file_fd,&cfg_num_ports,sizeof(uint16_t));
-	write(port_mapper_local_file_fd,&cfg_init_port,sizeof(uint16_t));
-	write(port_mapper_local_file_fd,&mapper->curr_num_ports,sizeof(uint16_t));
-        write(port_mapper_local_file_fd,mapper->port_arr,sizeof(int32_t)*cfg_num_ports);
+	(void)write(port_mapper_local_file_fd,&cfg_num_ports,sizeof(uint16_t));
+	(void)write(port_mapper_local_file_fd,&cfg_init_port,sizeof(uint16_t));
+	(void)write(port_mapper_local_file_fd,&mapper->curr_num_ports,sizeof(uint16_t));
+        (void)write(port_mapper_local_file_fd,mapper->port_arr,sizeof(int32_t)*cfg_num_ports);
         close(port_mapper_local_file_fd);
 	fprintf(stdout,"Sucessfully saved array from port mapper file with:\n- %hu declared ports\n- %hu initial port\n- And %hu current stored ports\n",cfg_num_ports,cfg_init_port,mapper->curr_num_ports);
 	return 0;

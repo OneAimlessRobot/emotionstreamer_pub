@@ -51,6 +51,7 @@ static void generateDirListingPrimitive(char* pattern){
 	char* pattern_arg= (strlen(pattern)?pattern:"");
 	char* extension_arg1=(server_working_extension);
 	char* extension_arg2=(is_wav_mode?"":BOUNDARY_FILE_EXT);
+	replaceStringCharacter(pattern_arg,' ', '*');
 	snprintf(buff,sizeof(buff)-3,"*%s*%s*%s*",pattern_arg,extension_arg1,extension_arg2);
 	char* args_cmd_find[]={"find",".", "-type","f","-iwholename", buff,NULL},
 		*args_cmd_sort[]={"sort",NULL};

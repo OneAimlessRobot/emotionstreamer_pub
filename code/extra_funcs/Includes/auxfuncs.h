@@ -85,6 +85,8 @@ int randInteger(int min, int max);
 
 char* randStr(int size, char* buff);
 
+void replaceStringCharacter(char *s,char dirty,char wantthisoneinstead);
+
 void snprint_addr_aux(char* dst,uint16_t* port,uint32_t size,struct sockaddr_in* addr);
 
 int proto_is_tcp(int proto);

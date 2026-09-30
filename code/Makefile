@@ -79,7 +79,7 @@ DEPFLAGS= -MP -MD
 
 #CFLAGS += -fsanitize=thread -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS) -O3
 #CFLAGS += -fsanitize=address -Wall -DPROGRAMPATHAUX="$(CURRDIR)"  -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS) -O3
-CFLAGS += -Wall -DPROGRAMPATHAUX="$(CURRDIR)/" -Wpedantic -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS) -O3
+CFLAGS += -Wall -DPROGRAMPATHAUX="$(CURRDIR)/" -Wpedantic -Wextra -g $(foreach D, $(INCLUDE), -I$(D)) $(DEPFLAGS) -O3 --std=c99
 
 
 SOURCEFILES=$(foreach D,$(SOURCES), $(wildcard $(D)/*.c))

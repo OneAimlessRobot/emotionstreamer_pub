@@ -17,7 +17,7 @@ int main(int argc, char ** argv){
 		exit(-1);
 	}
 	memset(curr_dir,0,PATHSIZE);
-        getcwd(curr_dir,PATHSIZE-1);
+        (void)(getcwd(curr_dir,PATHSIZE-1));
 	read_values_cfg_converter();
         print_values_cfg_converter(1);
 	start_frame_info_machine(argv[1],argv[2],0);
