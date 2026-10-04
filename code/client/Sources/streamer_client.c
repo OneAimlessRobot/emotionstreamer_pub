@@ -27,7 +27,6 @@
 #include "../Includes/terminal_mgmt.h"
 #include "../Includes/client_aux_funcs.h"
 
-
 static uint8_t read_tcp_chk[sizeof(mp3_stream_chunk)]={0};
 static clock_t stats_start, stats_end;
 static float stats_cpu_time_used,
@@ -108,6 +107,10 @@ static atomic_int lost_packet=0,
 		rx_result=1,
 		play_queue_empty=0;
 
+
+#define READ_RESULT_INVALID(a) ((a<=0)&&(a!=(-2)))
+
+#define READ_RESULT_TIMEOUT(a) ((a==(-2)))
 
 
 static atomic_int innited=0;
@@ -241,10 +244,16 @@ static void* rx_thread_func(void *args){
 				break;
 			}
 			rx_result=read_chunk(&stream_struct,client_data_times_pair);
-			if(rx_result<=0){
+			if(READ_RESULT_INVALID(rx_result)){
 
 				print_string(rx_result?"Thread de reading parado (early)!!!\n":"Server parou de enviar dados! Encerrando...\n");
 				return args;
+
+			}
+			if(READ_RESULT_INVALID(rx_result)){
+
+				print_log_string("Timeout in rx (reader) thread!\n");
+				continue;
 
 			}
 			if(!is_wav_compat_mode()){
@@ -324,7 +333,7 @@ static void* dec_thread_func(void* args){
 			}
 			decode_queue_empty=perform_queue_op(stream_struct.decoder_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY});
 			if(decode_queue_empty){
-				if(rx_result<=0){
+				if(READ_RESULT_INVALID(rx_result)){
 					goto decoder_exit;
 				}
 				break;
@@ -377,7 +386,7 @@ static void* play_thread_func(void* args){
 			}
 			play_queue_empty=perform_queue_op(stream_struct.player_que,NULL,NULL,(q_op){Q_LOOK,Q_IS_EMPTY});
 			if(play_queue_empty){
-				if(rx_result<=0){
+				if(READ_RESULT_INVALID(rx_result)){
 					goto end_player;
 				}
 				break;

@@ -37,6 +37,7 @@
 #include <openssl/err.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <linux/if_link.h>

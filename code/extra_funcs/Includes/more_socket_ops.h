@@ -2,6 +2,15 @@
 #define MORE_SOCKET_OPS_H
 
 
+
+void set_sock_os_keepalive(int* socket, int on_or_off);
+
+void set_tcp_socket_keep_idle(int * socket, int secs);
+
+void set_tcp_socket_keep_itvl(int* socket, int secs_period);
+
+void set_tcp_socket_keep_cnt(int* socket, int times);
+
 void create_safety_pipe(int safety_pipe[2],char* pipe_desc,char* module_desc,int flags);
 
 void set_sock_reuseaddr(int*socket,int on_off);

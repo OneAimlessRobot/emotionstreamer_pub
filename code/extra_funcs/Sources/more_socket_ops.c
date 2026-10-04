@@ -5,6 +5,52 @@
 #include "../Includes/more_socket_ops.h"
 #include "../Includes/fileshit.h"
 
+void set_sock_os_keepalive(int* socket, int on_or_off){
+
+	if (setsockopt((*socket), SOL_SOCKET, SO_KEEPALIVE, &on_or_off, sizeof(on_or_off)) < 0) {
+		perror("Error setting SO_KEEPALIVE");
+		close(*socket);
+		exit(-1);
+	}
+
+
+}
+
+void set_tcp_socket_keep_idle(int * socket, int secs){
+
+	if(setsockopt((*socket), IPPROTO_TCP, TCP_KEEPIDLE, &secs, sizeof(secs))<0){
+                perror("Erro a meter TCP_KEEPALIVE (IPPROTO_TCP)  na socket (setsockopt)\n");
+		close(*socket);
+		exit(-1);
+	}
+
+}
+
+void set_tcp_socket_keep_itvl(int* socket, int secs_period){
+
+	if(setsockopt((*socket), IPPROTO_TCP, TCP_KEEPINTVL, &secs_period, sizeof(secs_period))<0){
+
+		perror("Erro a meter TCP_KEEPINTVL (IPPROTO_TCP)  na socket (setsockopt)\n");
+		close(*socket);
+		exit(-1);
+
+	}
+
+}
+
+void set_tcp_socket_keep_cnt(int* socket, int times){
+
+	if(setsockopt((*socket), IPPROTO_TCP, TCP_KEEPCNT, &times, sizeof(times))<0){
+
+		perror("Erro a meter TCP_KEEPCNT (IPPROTO_TCP)  na socket (setsockopt)\n");
+		close(*socket);
+		exit(-1);
+
+	}
+
+
+}
+
 
 
 void create_safety_pipe(int safety_pipe[2],char* pipe_desc,char* module_desc,int flags){
@@ -41,7 +87,7 @@ void set_sock_reuseaddr(int *socket,int on_off){
         if(setsockopt(*socket,SOL_SOCKET,SO_REUSEADDR,(char*)&ptr,sizeofbuff)){
                 perror("Erro a meter SO_REUSEADDR  na socket (setsockopt)\n");
                 close(*socket);
-        exit(-1);
+        	exit(-1);
         }
 }
 

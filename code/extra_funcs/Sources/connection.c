@@ -398,6 +398,14 @@ void ask_for_ports(ip_cache_entry* ent){
 
 static int greet_server(con_t* con_obj, int_pair pair){
 
+	set_sock_os_keepalive(&con_obj->sockfd_tcp, 1);
+
+	set_tcp_socket_keep_idle(&con_obj->sockfd_tcp, 30);
+
+	set_tcp_socket_keep_itvl(&con_obj->sockfd_tcp, 5);
+
+	set_tcp_socket_keep_cnt(&con_obj->sockfd_tcp, 10);
+
 	if(con_obj->is_ssl){
 		convert_server_con_to_ssl(&con_obj->con_ssl,con_obj->sockfd_tcp,pair);
 		if(!con_obj->con_ssl){
@@ -434,6 +442,14 @@ static int greet_server(con_t* con_obj, int_pair pair){
 }
 
 static int greet_client(con_t* con_obj,int_pair pair){
+
+	set_sock_os_keepalive(&con_obj->sockfd_tcp, 1);
+
+	set_tcp_socket_keep_idle(&con_obj->sockfd_tcp, 30);
+
+	set_tcp_socket_keep_itvl(&con_obj->sockfd_tcp, 5);
+
+	set_tcp_socket_keep_cnt(&con_obj->sockfd_tcp, 10);
 
 	if(con_obj->is_ssl){
 		convert_client_con_to_ssl(&con_obj->con_ssl,con_obj->sockfd_tcp,pair);

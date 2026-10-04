@@ -1,5 +1,4 @@
 #!/bin/bash
-
 backup_one="/mnt/SUPER_CAVALEIRO/progsBackup"
 backup_two="/mnt/REBORN/FASTERprogs"
 backup_three="/mnt/FASTstorage/FASTprogs"
