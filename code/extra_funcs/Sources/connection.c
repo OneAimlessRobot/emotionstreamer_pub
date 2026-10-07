@@ -248,14 +248,23 @@ void init_con(con_t* con_obj,int sockfd_tcp,con_type type,ip_cache_entry *ent,ui
 
 }
 
-int con_send(con_t* con_obj,int_pair pair){
+int64_t con_send(con_t* con_obj,int_pair pair){
 
-	return con_obj->is_ssl?sendsome_ssl(con_obj->con_ssl,(const char*)con_obj->tcp_data, DEF_DATASIZE, pair):sendsome(con_obj->sockfd_tcp,(char*)con_obj->tcp_data,DEF_DATASIZE,pair,0);
+
+	/*
+		int64_t sendall(con_obj->sockfd_tcp,con_obj->con_ssl, (char*)con_obj->tcp_data, DEF_DATASIZE, con_obj->is_tls,pair);
+
+		int64_t readall(con_obj->sockfd_tcp,con_obj->con_ssl,(char*)con_obj->tcp_data, DEF_DATASIZE, con_obj->is_tls, pair);
+
+		return con_obj->is_ssl?sendsome_ssl(con_obj->con_ssl,(const char*)con_obj->tcp_data, DEF_DATASIZE, pair):sendsome(con_obj->sockfd_tcp,(char*)con_obj->tcp_data,DEF_DATASIZE,pair,0);
+
+	*/
+	return sendall(con_obj->sockfd_tcp,con_obj->con_ssl, (char*)con_obj->tcp_data, DEF_DATASIZE, con_obj->is_ssl,pair);
 }
 
-int con_read(con_t* con_obj,int_pair pair){
+int64_t con_read(con_t* con_obj,int_pair pair){
 
-	return con_obj->is_ssl?readsome_ssl(con_obj->con_ssl,(char*)con_obj->tcp_data, DEF_DATASIZE, pair):readsome(con_obj->sockfd_tcp,(char*)con_obj->tcp_data,DEF_DATASIZE,pair,0);
+	return readall(con_obj->sockfd_tcp,con_obj->con_ssl,(char*)con_obj->tcp_data, DEF_DATASIZE, con_obj->is_ssl, pair);
 }
 
 void ask_for_port(uint16_t* port,ip_cache_entry* ent){

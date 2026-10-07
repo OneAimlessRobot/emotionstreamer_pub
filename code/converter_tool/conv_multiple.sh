@@ -4,7 +4,7 @@
 boundary_extension=".boundary"
 mp3_extension=".mp3"
 song_directory="../../../raw_songs/"
-song_subdirectory="Cynthoni - COAGULATION - ANNIHILATION/"
+song_subdirectory="sablina era/"
 expression_to_search="*"
 song_basenames=()
 num_of_songs=0

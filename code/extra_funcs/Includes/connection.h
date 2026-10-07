@@ -35,9 +35,9 @@ void init_con(con_t* con_obj, int sockfd_tcp,con_type type,ip_cache_entry* ent,u
 
 void close_con(con_t* con_obj, int RIGHT_NOW,int close_for_good);
 
-int con_send(con_t* con_obj,int_pair pair);
+int64_t con_send(con_t* con_obj,int_pair pair);
 
-int con_read(con_t* con_obj,int_pair pair);
+int64_t con_read(con_t* con_obj,int_pair pair);
 
 //initialize con_obj first!!!
 void clear_con_data(con_t* con_obj);

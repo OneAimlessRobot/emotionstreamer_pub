@@ -5,11 +5,16 @@
 #include "../Includes/fileshit.h"
 
 
-int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
+int64_t sendsome_ssl(SSL* ssl, const char* buf, int64_t len, int_pair times) {
 
+	if(!ssl){
+		return -1;
+	}
 	int sd= SSL_get_fd(ssl);
-	size_t send_total = 0;
-	while (send_total < len) {
+	if(sd < 0){
+		return -1;
+	}
+	int64_t send_total = 0;
 	struct timeval tv;
 	tv.tv_sec=times[0];
 	tv.tv_usec=times[1];
@@ -18,15 +23,11 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 	FD_SET(sd, &wrfds);
 	int iResult=select(sd + 1, (fd_set*)0, &wrfds, (fd_set*)0, &tv);
 	if(iResult>0){
-		int ret = SSL_write(ssl, buf + send_total, len - send_total);
-	        if (ret > 0) {
-	            send_total += ret;
-	            continue;
+		send_total = SSL_write(ssl, buf, len);
+	        if (send_total >= 0) {
+	            return send_total;
 	        }
-		else if (ret == 0) {
-			return send_total;
-		}
-		int ssl_err = SSL_get_error(ssl, ret);
+		int ssl_err = SSL_get_error(ssl, send_total);
 		if (ssl_err == SSL_ERROR_WANT_READ) {
 			struct timeval mtv;
 			mtv.tv_sec=times[0];
@@ -35,7 +36,7 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 			FD_ZERO(&mrfds);
 			FD_SET(sd, &mrfds);
 			select(sd + 1, &mrfds, (fd_set*)0, (fd_set*)0, &mtv);
-			continue;
+			return -2;
 		}
 		else if (ssl_err == SSL_ERROR_WANT_WRITE) {
 			struct timeval mtv;
@@ -45,7 +46,7 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 			FD_ZERO(&mwfds);
 			FD_SET(sd, &mwfds);
 			select(sd + 1, (fd_set*)0, &mwfds, (fd_set*)0, &mtv);
-			continue;
+			return -2;
 		}
 		else if (ssl_err == SSL_ERROR_ZERO_RETURN) {
 			return send_total;
@@ -58,10 +59,10 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 		    }
 		    if(errno==EAGAIN){
 
-			continue;
+			return -2;
 		    }
 		    if(errno == EWOULDBLOCK){
-			   continue;
+			return -2;
 			}
 		     else{
 			    if(logging){
@@ -78,17 +79,17 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 		    ERR_print_errors_fp(stderr);
 		    if(errno==EAGAIN){
 
-			continue;
+			return -2;
 		    }
 		    if(errno == EWOULDBLOCK){
-			   continue;
-			}
+			return -2;
+		    }
 		if(logging){
 
 			fprintf(logstream, "SSL FATAL ERROR AT SSL SEND\n%s\nWill emergency func be called? %s\n",strerror(errno),use_exit_func?"Yes!":"No..:");
 		}
 	           if(use_exit_func){
-				exit_func_for_this_module();
+			exit_func_for_this_module();
 		    }
 		    return -1;
 		}
@@ -106,17 +107,27 @@ int sendsome_ssl(SSL* ssl, const char* buf, size_t len, int_pair times) {
 		}
 		return -1;
 	}
-
-}
-return send_total;
+	return send_total;
 
 
 }
 
-int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
+int64_t readsome_ssl(SSL* ssl, char* buf, int64_t len, int_pair times) {
+	if(!ssl){
+		return -1;
+	}
 	int sd= SSL_get_fd(ssl);
-	size_t read_total = 0;
-	while (read_total < len) {
+	if(sd < 0){
+		return -1;
+	}
+	int has_pending_result=SSL_has_pending(ssl);
+	int pending_result=SSL_pending(ssl);
+	if(has_pending_result){
+		if(pending_result > 0){
+			goto read_label;
+		}
+	}
+	int64_t read_total = 0;
 	struct timeval tv;
 	tv.tv_sec=times[0];
 	tv.tv_usec=times[1];
@@ -125,15 +136,12 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 	FD_SET(sd, &rfds);
 	int iResult=select(sd + 1, &rfds, (fd_set*)0, (fd_set*)0, &tv);
 	if(iResult>0){
-		int ret = SSL_read(ssl, buf + read_total, len - read_total);
-		if (ret > 0) {
-			read_total += ret;
-			continue;
-		}
-		else if (ret == 0) {
+		read_label:
+		read_total = SSL_read(ssl, buf, len);
+		if (read_total >= 0) {
 			return read_total;
 		}
-		int ssl_err = SSL_get_error(ssl, ret);
+		int ssl_err = SSL_get_error(ssl, read_total);
 		if (ssl_err == SSL_ERROR_WANT_READ) {
 			struct timeval mtv;
 			mtv.tv_sec=times[0];
@@ -142,7 +150,7 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 			FD_ZERO(&mrfds);
 			FD_SET(sd, &mrfds);
 			select(sd + 1, &mrfds, (fd_set*)0, (fd_set*)0, &mtv);
-			continue;
+			return -2;
 		}
 		else if (ssl_err == SSL_ERROR_WANT_WRITE) {
 			struct timeval mtv;
@@ -152,7 +160,7 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 			FD_ZERO(&wfds);
 			FD_SET(sd, &wfds);
 			select(sd + 1, (fd_set*)0, &wfds, (fd_set*)0, &mtv);
-			continue;
+			return -2;
 		}
 		else if (ssl_err == SSL_ERROR_ZERO_RETURN) {
 			return read_total;
@@ -165,10 +173,10 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 		    }
 		    if(errno==EAGAIN){
 
-			continue;
+			return -2;
 		    }
 		    if(errno == EWOULDBLOCK){
-			   continue;
+			return -2;
 			}
 		    else{
 			    if(logging){
@@ -185,17 +193,17 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 		    ERR_print_errors_fp(stderr);
 		    if(errno==EAGAIN){
 
-			continue;
+			return -2;
 		    }
 		    if(errno == EWOULDBLOCK){
-			   continue;
-			}
-		   if(logging){
+			return -2;
+		    }
+		    if(logging){
 
-				fprintf(logstream, "SSL FATAL ERROR AT SSL READ\n%s\nWill emergency func be called? %s\n",strerror(errno),use_exit_func?"Yes!":"No..:");
+			fprintf(logstream, "SSL FATAL ERROR AT SSL READ\n%s\nWill emergency func be called? %s\n",strerror(errno),use_exit_func?"Yes!":"No..:");
 		    }
 		    if(use_exit_func){
-				exit_func_for_this_module();
+			exit_func_for_this_module();
 		    }
 		    return -1;
 		}
@@ -213,93 +221,161 @@ int readsome_ssl(SSL* ssl, char* buf, size_t len, int_pair times) {
 		}
 	        return -1;
 	}
+	return read_total;
 
 }
-return read_total;
-
-}
-int sendsome(int sd,char buff[],size_t size,int_pair times, int flags){
-	if(sd>=0){
-		int iResult;
-		struct timeval tv;
-		size_t send_total=0;
-		ssize_t s=0;
-		while(send_total<size){
-		fd_set wfds;
-		FD_ZERO(&wfds);
-		FD_SET(sd,&wfds);
-		tv.tv_sec=times[0];
-		tv.tv_usec=times[1];
-		iResult=select(sd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
-		if(iResult>0){
-			send_total+= (s=send(sd,buff+send_total,size-send_total,flags));
-			if (s < 0){
-				return -1;
-			}
-			if (s == 0){
-				return send_total;
-			}
-			}
-			else if(!iResult){
-					return -2;
-			}
-			else{
-			if(logging){
-
-			fprintf(logstream, "SELECT ERROR!!!!! SEND\n%s\n",strerror(errno));
-			}
-			if(use_exit_func){
-				exit_func_for_this_module();
-		    	}
+int64_t sendsome(int sd,char buff[],int64_t size,int_pair times, int flags){
+	if(sd<0){
+		return -1;
+	}
+	int iResult;
+	struct timeval tv;
+	int64_t send_total=0;
+	fd_set wfds;
+	FD_ZERO(&wfds);
+	FD_SET(sd,&wfds);
+	tv.tv_sec=times[0];
+	tv.tv_usec=times[1];
+	iResult=select(sd+1,(fd_set*)0,&wfds,(fd_set*)0,&tv);
+	if(iResult>0){
+		send_total=send(sd,buff,size,flags);
+		if (send_total  < 0){
 			return -1;
-			}
 		}
 		return send_total;
+		}
+	else if(!iResult){
+			return -2;
 	}
-	return -1;
+	else{
+		if(logging){
+
+			fprintf(logstream, "SELECT ERROR!!!!! SEND\n%s\n",strerror(errno));
+		}
+		if(use_exit_func){
+			exit_func_for_this_module();
+	    	}
+		return -1;
+	}
+	return send_total;
 }
 
-int readsome(int sd,char buff[],size_t size,int_pair times, int flags){
-	if(sd>=0){
-		int iResult;
-		struct timeval tv;
-		size_t read_total=0;
-		ssize_t r=0;
-		while(read_total<size){
-			fd_set rfds;
-			FD_ZERO(&rfds);
-			FD_SET(sd,&rfds);
-			tv.tv_sec=times[0];
-			tv.tv_usec=times[1];
-			iResult=select(sd+1,&rfds,(fd_set*)0,(fd_set*)0,&tv);
-			if(iResult>0){
-				read_total+= (r=recv(sd,buff+read_total,size-read_total,flags));
-				if(r < 0){
-					return -1;
-				}
-				if(r == 0){
-					return read_total;
-				}
-			}
-			else if(!iResult){
-	               	return -2;
-			}
-			else{
-			if(logging){
+int64_t readsome(int sd,char buff[],int64_t size,int_pair times, int flags){
+	if(sd<0){
+		return -1;
+	}
+	int iResult;
+	struct timeval tv;
+	int64_t read_total=0;
+	fd_set rfds;
+	FD_ZERO(&rfds);
+	FD_SET(sd,&rfds);
+	tv.tv_sec=times[0];
+	tv.tv_usec=times[1];
+	iResult=select(sd+1,&rfds,(fd_set*)0,(fd_set*)0,&tv);
+	if(iResult>0){
+		read_total=recv(sd,buff,size,flags);
+		if(read_total < 0){
+			return -1;
+		}
+		return read_total;
+	}
+	else if(!iResult){
+       		return -2;
+	}
+	else{
+		if(logging){
 
 			fprintf(logstream, "SELECT ERROR!!!!! READ\n%s\n",strerror(errno));
-			}
-			if(use_exit_func){
-				exit_func_for_this_module();
-		    	}
-			return -1;
-			}
-			}
-			return read_total;
 		}
+		if(use_exit_func){
+			exit_func_for_this_module();
+	    	}
 		return -1;
+	}
+	return read_total;
 }
 
+int64_t readall(int socket,SSL*ctx_if_ssl,char* buff, int64_t total_to_read, uint8_t is_tls, int_pair times){
+	int64_t total=0,
+		len=0;
+	while(1){
+		len=is_tls?readsome_ssl(ctx_if_ssl,buff+total, total_to_read-total,times):readsome(socket,buff+total,total_to_read-total, times ,0);
+		if(len<0){
+			if (errno == EAGAIN || errno == EWOULDBLOCK) {
+				if(logging > 49){
+					fprintf(logstream,"Would block/Try again later!!!!\n");
+				}
+				continue;
+			}
+			else if(errno==EPIPE){
+
+				if(logging){
+					fprintf(logstream,"Pipe partido!!!\n");
+				}
+				return -2;
+			}
+			else if(errno==ENOTCONN){
+				if(logging){
+					fprintf(logstream,"Li %ld ao todo!!!! readall saiu com erro!!!!!:\nAvisando para desconectar!\n%s\n",total,strerror(errno));
+				}
+				return -1;
+			}
+			else if(len!=-2){
+				if(logging){
+					fprintf(logstream,"Li %ld ao todo!!!! readall saiu com erro!!!!!:\n%s\n",total,strerror(errno));
+				}
+				return -1;
+			}
+		}
+		else if(len >=0){
+			total+=len;
+			break;
+		}
+	}
+	return total;
+
+}
+int64_t sendall(int socket,SSL*ctx_if_ssl,char* buff, int64_t total_to_send, uint8_t is_tls,int_pair times){
+	int64_t total=0,
+		len=0;
+	while(1){
+		len=is_tls?sendsome_ssl(ctx_if_ssl,buff+total, total_to_send-total, times):sendsome(socket,buff+total,total_to_send-total, times ,0);
+		if(len<0){
+			if (errno == EAGAIN || errno == EWOULDBLOCK) {
+				if(logging > 49){
+					fprintf(logstream,"Would block/Try again later!!!!\n");
+				}
+				continue;
+			}
+			else if(errno==EPIPE){
+
+				if(logging){
+					fprintf(logstream,"Pipe partido!!!\n");
+				}
+				return -2;
+			}
+			else if(errno==ENOTCONN){
+				if(logging){
+					fprintf(logstream,"Li %ld ao todo!!!! readall saiu com erro!!!!!:\nAvisando para desconectar!\n%s\n",total,strerror(errno));
+				}
+				return -1;
+			}
+			else if(len!=-2){
+				if(logging){
+					fprintf(logstream,"Li %ld ao todo!!!! readall saiu com erro!!!!!:\n%s\n",total,strerror(errno));
+				}
+				return -1;
+			}
+		}
+		else if(len >=0){
+			total+=len;
+			break;
+		}
+	}
+	return total;
+
+}
 int sendallfd(int sock,int fd,int_pair times,uint8_t is_ssl,SSL* cSSL){
 
 char buff[DEF_DATASIZE];
@@ -354,9 +430,9 @@ while ((numread = read(fd,buff,DEF_DATASIZE)) > 0) {
 
 return 0;
 }
-int readalltofd(int sock,int fd,size_t size,int_pair times,uint8_t is_ssl,SSL* cSSL){
+int readalltofd(int sock,int fd,int64_t size,int_pair times,uint8_t is_ssl,SSL* cSSL){
     int32_t len=1;
-	size_t total=0;
+	int64_t total=0;
 	char buff[DEF_DATASIZE];
 	memset(buff,0,DEF_DATASIZE);
 	if(is_ssl){
