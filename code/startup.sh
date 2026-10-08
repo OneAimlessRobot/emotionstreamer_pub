@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep_time=0.5
+sleep_time=1.3
 
 sleep_time_mult_attach_cmd_proc=0.5
 
