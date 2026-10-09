@@ -4,6 +4,12 @@ SERVERBIN= ./content_server/emotionstreamer_content_server.exe
 
 CLIENTBIN= ./client/emotionstreamer_client.exe
 
+CLIENTBIN_NAME= emotionstreamer_client.exe
+
+CLIENT_WRAPPER_NAME= emotionstreamer_client_wrapper
+
+CLIENT_WRAPPER_SCRIPT_FILE_NAME= ./client/play_song.sh
+
 BROWSERBIN= ./server_browser/emotionstreamer_server_browser.exe
 
 HEARTBEATBIN= ./heartbeat_server/emotionstreamer_heartbeat_server.exe
@@ -71,6 +77,7 @@ CONVERTER_TOOL_RESOURCES= ./converter_tool/resources
 RESDIR= ./resources
 
 CURRDIR=`pwd`
+
 
 CC= cc
 #CC= gcc
@@ -267,4 +274,8 @@ clean_converter_tool:
 	rm -rf$(CONVERTER_TOOL_BIN) $(CONVERTER_TOOL_MODULES) $(DEPFILES) $(CONVERTER_TOOL_DEPFILES)
 
 
+
+uninstall_client:
+	sudo unlink /usr/bin/$(CLIENT_WRAPPER_NAME)
+	sudo unlink /usr/bin/$(CLIENTBIN_NAME)
 
