@@ -272,11 +272,16 @@ printf("\033[0m");    // reset
 
 //change window title
 https://stackoverflow.com/questions/2218159/how-to-set-c-console-window-title
+
+
+
+https://stackoverflow.com/questions/2218159/how-to-set-c-console-window-title
+//printf("\033]0;%s%s\007", "Emotionstreamer Client - ", song_name_global );
+//printf("\033]0;%s\007", "Emotionstreamer Client");
+//printf("\033]0;%s(%s)\007", "Emotionstreamer Client - ", song_name_global );
+
 printf("\033]0;%s%s\007", "Emotionstreamer Client - ", song_name_global );
 
-*/
-
-/*
 Just in case I need it its here
 struct termios oldt, newt;
 

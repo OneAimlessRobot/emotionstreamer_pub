@@ -14,6 +14,8 @@ between_track_wait=3
 choose_track_wait=100
 startup_wait=0
 
+
+streamer_name="Emotion Streamer"
 song_arr=()
 at_startup=1
 pattern="$2"
@@ -187,6 +189,8 @@ play_song_list(){
 		echo "Musica \"${song_arr[$curr_song_index]}\" ira ser tocada!"
 		echo "(Numero $curr_song_index)"
 		echo "ira ser tocada!"
+		#local this_song_name="${song_arr[$curr_song_index]##*/}"
+		#exec -a "${streamer_name} - ${this_song_name}" ./emotionstreamer_client.exe "play:${backend}" "${song_arr[$curr_song_index]}"
 		./emotionstreamer_client.exe "play:${backend}" "${song_arr[$curr_song_index]}"
 		if [ $count -gt 1 ]
 		then

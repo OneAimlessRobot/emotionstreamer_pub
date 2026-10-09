@@ -7,14 +7,22 @@
 #include <sys/ioctl.h> //for ioctl()
 #include <linux/soundcard.h> //SOUND_PCM*
 #include "../../extra_funcs/Includes/sockio.h"
+#include "../../extra_funcs/Includes/sockio_tcp.h"
 #include "../../extra_funcs/Includes/fileshit.h"
 #include "../../extra_funcs/Includes/ip_cache_file.h"
 #include <ao/ao.h>
 #include "../Includes/configs.h"
 #include <alsa/asoundlib.h>
+#include <sys/un.h>
 #include "../../extra_funcs/Includes/streamer_const.h"
 #include "../Includes/ripped_code.h"
 #include "../Includes/mp3module.h"
+
+#define SUN_PATH_LENGTH 108
+
+#define RPC_BUFF_SIZE 8192
+
+
 static pthread_mutex_t ncurses_mtx=PTHREAD_MUTEX_INITIALIZER;
 
 static const char* frame_print_format="Estes sao os dados deste frame:\n"

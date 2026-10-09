@@ -46,4 +46,5 @@ int play_from_sound_device_pa(pa_simple* handle,uint8_t* buff_to_play,decoder_re
 int play_from_sound_device_ao(ao_device *handle,uint8_t* buff_to_play,decoder_result_struct*result);
 void print_decoder_frame_result(decoder_result_struct* result,int fd);
 void print_decoder_frame_result_ncurses(decoder_result_struct* result);
+
 #endif

@@ -618,16 +618,6 @@ static int init_client_stream(con_t* con_obj, uint16_t chunk_size,method which_m
 		printf("Stats thread (named %s) initialized sucessfully\n",stats_thread_name);
 	}
 
-	/*
-
-
-		https://stackoverflow.com/questions/2218159/how-to-set-c-console-window-title
-
-	*/
-
-	//printf("\033]0;%s%s\007", "Emotionstreamer Client - ", song_name_global );
-	//printf("\033]0;%s\007", "Emotionstreamer Client");
-	printf("\033]0;%s(%s)\007", "Emotionstreamer Client - ", song_name_global );
 	rx_thread_func(NULL);
 	pthread_mutex_lock(&running_mtx);
 	while(innited&&!terminating){
